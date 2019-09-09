@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="推荐系统 机器学习 算法," />
 
 
 
@@ -76,25 +76,26 @@
   
 
 
-  <link rel="alternate" href="/atom.xml" title="明朝鄙陋" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="明朝的博客" type="application/atom+xml" />
 
 
 
 
 
 
-<meta name="description" content="##1.【开篇】用知识去对抗技术不平等 推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和推荐系统走得越来越近，最近十年">
+<meta name="description" content="参考原作: 推荐系统三十六式-刑无刀 1.【开篇】用知识去对抗技术不平等推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习">
+<meta name="keywords" content="推荐系统 机器学习 算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="明朝鄙陋">
+<meta property="og:title" content="推荐系统三十六式--读书笔记（1-4概念篇）">
 <meta property="og:url" content="http://yoursite.com/2019/09/08/推荐系统三十六式--读书笔记（1-4 概念篇）/index.html">
-<meta property="og:site_name" content="明朝鄙陋">
-<meta property="og:description" content="##1.【开篇】用知识去对抗技术不平等 推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和推荐系统走得越来越近，最近十年">
+<meta property="og:site_name" content="明朝的博客">
+<meta property="og:description" content="参考原作: 推荐系统三十六式-刑无刀 1.【开篇】用知识去对抗技术不平等推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.postimg.cc/g0n9L5dj/image.jpg">
-<meta property="og:updated_time" content="2019-09-08T09:11:05.810Z">
+<meta property="og:updated_time" content="2019-09-09T15:32:57.144Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="明朝鄙陋">
-<meta name="twitter:description" content="##1.【开篇】用知识去对抗技术不平等 推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和推荐系统走得越来越近，最近十年">
+<meta name="twitter:title" content="推荐系统三十六式--读书笔记（1-4概念篇）">
+<meta name="twitter:description" content="参考原作: 推荐系统三十六式-刑无刀 1.【开篇】用知识去对抗技术不平等推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习">
 <meta name="twitter:image" content="https://i.postimg.cc/g0n9L5dj/image.jpg">
 
 
@@ -131,7 +132,7 @@
 
 
 
-  <title> | 明朝鄙陋</title>
+  <title>推荐系统三十六式--读书笔记（1-4概念篇） | 明朝的博客</title>
   
 
 
@@ -161,7 +162,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">明朝鄙陋</span>
+        <span class="site-title">明朝的博客</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -317,7 +318,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明朝鄙陋">
+      <meta itemprop="name" content="明朝的博客">
     </span>
 
     
@@ -325,7 +326,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--读书笔记（1-4概念篇）</h1>
         
 
         <div class="post-meta">
@@ -375,8 +376,8 @@
       
 
       
-        <p>##1.【开篇】用知识去对抗技术不平等</p>
-<p>推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。</p>
+        <p><a href="https://time.geekbang.org/column/intro/74" target="_blank" rel="noopener">参考原作: 推荐系统三十六式-刑无刀</a></p>
+<h2 id="1-【开篇】用知识去对抗技术不平等"><a href="#1-【开篇】用知识去对抗技术不平等" class="headerlink" title="1.【开篇】用知识去对抗技术不平等"></a>1.【开篇】用知识去对抗技术不平等</h2><p>推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。</p>
 <p>后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和推荐系统走得越来越近，最近十年，深度学习和强化学习又将推荐系统带向了新的高度。</p>
 <p>推荐系统也是现在热门的 AI 分支之一，但凡AI类的落地，都需要具备这几个基本元素才行：数据、算法、场景、计算力。推荐系统也不例外。有一个趋势我是确信无疑的：世界在向网状发展，万事万物倾向于相互连接构成复杂网络。复杂网络具有无尺度特点，表现是：少数节点集聚了大量连接。这个现象不陌生，叫做马太效应，社交网络粉丝数、网页链接引用量、电商网站商品销量等等，无不如此。推荐系统的使命，就是要用技术来对抗这种不平等。</p>
 <p><strong>一个推荐系统如何才能从 0 到 1 诞生，这需要去了解哪些知识</strong></p>
@@ -395,10 +396,8 @@
 <li>团队篇：从个人来说，就是该怎么学习和成长；从团队来说，就是该招多少人，该有哪些人，以及产品经理和工程师该如何合作等问题</li>
 </ul>
 <hr>
-<p>##2.【概念篇】你真的需要个性化推荐系统吗?</p>
-<p>####<strong>什么是推荐系统？</strong><br>按照维基百科的定义：它是一种信息过滤系统，手段是预测用户（User）对物品（Item）的评分和偏好。这个定义不是很好理解，也不恰当。它用“怎么做”来定义了“是什么”，这相当于变相规定了推荐系统的实现路径。</p>
-<p>####<strong>换一个角度回答三个问题来重新定义</strong></p>
-<ul>
+<h2 id="2-【概念篇】你真的需要个性化推荐系统吗"><a href="#2-【概念篇】你真的需要个性化推荐系统吗" class="headerlink" title="2.【概念篇】你真的需要个性化推荐系统吗?"></a>2.【概念篇】你真的需要个性化推荐系统吗?</h2><h4 id="什么是推荐系统？"><a href="#什么是推荐系统？" class="headerlink" title="什么是推荐系统？"></a><strong>什么是推荐系统？</strong></h4><p>按照维基百科的定义：它是一种信息过滤系统，手段是预测用户（User）对物品（Item）的评分和偏好。这个定义不是很好理解，也不恰当。它用“怎么做”来定义了“是什么”，这相当于变相规定了推荐系统的实现路径。</p>
+<h4 id="换一个角度回答三个问题来重新定义"><a href="#换一个角度回答三个问题来重新定义" class="headerlink" title="换一个角度回答三个问题来重新定义"></a><strong>换一个角度回答三个问题来重新定义</strong></h4><ul>
 <li>它能做什么 </li>
 <li>它需要什么</li>
 <li>它怎么做</li>
@@ -421,24 +420,24 @@
 <p><strong>回答第二个问题“它需要什么”：推荐系统需要已经存在的连接，从已有的连接去预测未来的连接。</strong></p>
 <p><strong>对于第三个问题：怎么做？维基百科的定义提供了一个说法：预测用户评分和偏好。这是推荐系统背后相关算法和技术的两大分类，在后面的专栏内容中我会讲到；但比这个定义更抽象的实现方式分类是：机器推荐和人工推荐，也就是通常说的“个性化推荐”和“编辑推荐”。</strong></p>
 <p>&nbsp;</p>
-<p>####<strong>总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？</strong></p>
-<p>已经根据“能做什么”“需要什么”“怎么做”三个方面，讨论了什么是推荐系统。那么只要前两个条件成熟，你就需要一个推荐系统，至于“怎么做”的问题则简单得多，否则的话就是暂时不需要。那么，如何判断条件是否成熟了呢？我们可以考虑两点。</p>
+<h4 id="总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？"><a href="#总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？" class="headerlink" title="总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？"></a><strong>总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？</strong></h4><p>已经根据“能做什么”“需要什么”“怎么做”三个方面，讨论了什么是推荐系统。那么只要前两个条件成熟，你就需要一个推荐系统，至于“怎么做”的问题则简单得多，否则的话就是暂时不需要。那么，如何判断条件是否成熟了呢？我们可以考虑两点。</p>
 <blockquote>
 <p>第一，看看产品的目的。如果一款产品的目的是建立越多连接越好，那么它最终需要一个推荐系统。有哪些产品的目的不是建立连接呢？一种典型的产品就是工具类，如果是单纯提高人类某些工作的效率而存在的产品，比如一个视频编辑器，则不需要。虽然如今很多产品都从工具切入最后做成社区了，至少在工具属性很强时不需要推荐系统。<br>第二，看看产品现有的连接。如果你的产品中物品很少，少到用人工就可以应付过来，那么用户产生的连接肯定不多，因为连接数量的瓶颈在于物品的数量，这时候不适合搭建推荐系统。</p>
 </blockquote>
-<p><strong>长尾理论</strong>可以帮助我们理解，如何把用户和物品各种可能的连接汇总，包括用户属性、物品属性等，应该要有长尾效应才可能让推荐系统发挥效果。这里我介绍一个简单指标，用于判断是不是需要推荐系统：<br>$$\frac{\Delta connection}{\Delta user \times \Delta item}$$</p>
-<blockquote>
+<p><strong>长尾理论</strong>可以帮助我们理解，如何把用户和物品各种可能的连接汇总，包括用户属性、物品属性等，应该要有长尾效应才可能让推荐系统发挥效果。这里我介绍一个简单指标，用于判断是不是需要推荐系统：</p>
+<script type="math/tex; mode=display">\frac{\Delta connection}{\Delta user \times \Delta item}</script><blockquote>
 <p>分子是增加的连接数，分母是增加的活跃用户数和增加的有效物品数：<br>如果增加的连接数主要靠增加的活跃用户数和增加的物品数贡献，则该值会较小，不适合加入推荐系统； 如果增加的连接数和新增活跃用户和物品关系不大，那说明连接数已经有自发生长的趋势了，适合加入推荐系统加速这一过程。<br>不过，具体并没有判断标准，因产品而异。</p>
 </blockquote>
 <hr>
-<p>##3.【概念篇】个性化推荐系统那些绕不开的经典问题<br>推荐系统的预测问题模式，从达成的连接目标角度区分，有两大类： </p>
+<h2 id="3-【概念篇】个性化推荐系统那些绕不开的经典问题"><a href="#3-【概念篇】个性化推荐系统那些绕不开的经典问题" class="headerlink" title="3.【概念篇】个性化推荐系统那些绕不开的经典问题"></a>3.【概念篇】个性化推荐系统那些绕不开的经典问题</h2><p>推荐系统的预测问题模式，从达成的连接目标角度区分，有两大类： </p>
 <blockquote>
 <ol>
 <li>评分预测； </li>
 <li>行为预测。</li>
 </ol>
 </blockquote>
-<p>####<strong>评分预测</strong><br>评分预测相关算法模型研究的兴盛，最大的助攻是 Netflix 举办的推荐算法大赛。<br>Netflix 比赛的评判标准就是 RMSE ，即均方根误差：<br>$$RMSE=\sqrt{\frac{\sum_{t=1}^n (\hat y_t - y_t)^2}{n}}$$<br>这个公式中的t表示每一个样本，n表示总共的样本数，$\hat y_t$就是模型预测出的分数，是我们交的作业，$y_t$就是用户自己打的分数，是标准答案，然后一个样本一个样本地对答案，模型预测分数和用户自己打分相减，这就是我们预测的误差。</p>
+<h4 id="评分预测"><a href="#评分预测" class="headerlink" title="评分预测"></a><strong>评分预测</strong></h4><p>评分预测相关算法模型研究的兴盛，最大的助攻是 Netflix 举办的推荐算法大赛。<br>Netflix 比赛的评判标准就是 RMSE ，即均方根误差：</p>
+<script type="math/tex; mode=display">RMSE=\sqrt{\frac{\sum_{t=1}^n (\hat y_t - y_t)^2}{n}}</script><p>这个公式中的t表示每一个样本，n表示总共的样本数，$\hat y_t$就是模型预测出的分数，是我们交的作业，$y_t$就是用户自己打的分数，是标准答案，然后一个样本一个样本地对答案，模型预测分数和用户自己打分相减，这就是我们预测的误差。</p>
 <p>评分预测问题常见于各种点评类产品（如：书影音的点评），但评分类推荐存在以下问题：</p>
 <blockquote>
 <ol>
@@ -448,7 +447,7 @@
 </ol>
 </blockquote>
 <p>用户们给产品施舍的评分数据，我们又叫做显式反馈，意思是他们非常清晰明白地告诉了我们，他们对这个物品的态度；与之相对的还有隐式反馈，通常就是各类用户行为，也就是另一类推荐系统问题：行为预测。</p>
-<p>####<strong>行为预测</strong><br>推荐系统预测行为方式有很多，常见的有两种：</p>
+<h4 id="行为预测"><a href="#行为预测" class="headerlink" title="行为预测"></a><strong>行为预测</strong></h4><p>推荐系统预测行为方式有很多，常见的有两种：</p>
 <ul>
 <li>直接预测行为本身发生的概率</li>
 <li>预测物品的相对排序。</li>
@@ -489,7 +488,7 @@
 </ol>
 </blockquote>
 <hr>
-<p>##4.【概念篇】这些你必须应该具备的思维模式<br>推荐系统的四个关键元素：</p>
+<h2 id="4-【概念篇】这些你必须应该具备的思维模式"><a href="#4-【概念篇】这些你必须应该具备的思维模式" class="headerlink" title="4.【概念篇】这些你必须应该具备的思维模式"></a>4.【概念篇】这些你必须应该具备的思维模式</h2><p>推荐系统的四个关键元素：</p>
 <blockquote>
 <ol>
 <li>UI 和 UE； </li>
@@ -528,6 +527,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/推荐系统-机器学习-算法/" rel="tag"># 推荐系统 机器学习 算法</a>
+          
+        </div>
       
 
       
@@ -598,8 +603,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -627,6 +641,15 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
 
           </nav>
 
@@ -652,6 +675,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-【开篇】用知识去对抗技术不平等"><span class="nav-number">1.</span> <span class="nav-text">1.【开篇】用知识去对抗技术不平等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-【概念篇】你真的需要个性化推荐系统吗"><span class="nav-number">2.</span> <span class="nav-text">2.【概念篇】你真的需要个性化推荐系统吗?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是推荐系统？"><span class="nav-number">2.0.1.</span> <span class="nav-text">什么是推荐系统？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#换一个角度回答三个问题来重新定义"><span class="nav-number">2.0.2.</span> <span class="nav-text">换一个角度回答三个问题来重新定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？"><span class="nav-number">2.0.3.</span> <span class="nav-text">总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-【概念篇】个性化推荐系统那些绕不开的经典问题"><span class="nav-number">3.</span> <span class="nav-text">3.【概念篇】个性化推荐系统那些绕不开的经典问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#评分预测"><span class="nav-number">3.0.1.</span> <span class="nav-text">评分预测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#行为预测"><span class="nav-number">3.0.2.</span> <span class="nav-text">行为预测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-【概念篇】这些你必须应该具备的思维模式"><span class="nav-number">4.</span> <span class="nav-text">4.【概念篇】这些你必须应该具备的思维模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -853,6 +892,8 @@
   
 
   
+  
+
 
   
 
