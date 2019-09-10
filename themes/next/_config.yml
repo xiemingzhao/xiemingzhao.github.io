@@ -695,8 +695,14 @@ pace: false
 # pace_theme: pace-theme-center-simple
 pace_theme: pace-theme-minimal
 
+# --------------------------------------------------------------
+# background settings
+# --------------------------------------------------------------
+# add canvas-nest effect
+# see detail from https://github.com/hustcc/canvas-nest.js
+canvas_nest: true
 # Canvas-nest
-canvas_nest: false
+#canvas_nest: false
 
 # three_waves
 three_waves: false
@@ -804,6 +810,9 @@ vendors:
   # https://github.com/revir/need-more-share2
   needMoreShare2:
 
+# 文章末尾添加“本文结束”标记
+passage_end_tag:
+  enabled: true
 
 # Assets
 css: css
