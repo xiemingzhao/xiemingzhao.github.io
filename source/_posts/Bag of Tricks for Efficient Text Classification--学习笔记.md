@@ -4,7 +4,7 @@ date: 2019-03-17
 categories:
 - 学习笔记
 - 论文解析
-Tags:
+tags:
 - 机器学习
 - Classification
 - Bag of Tricks

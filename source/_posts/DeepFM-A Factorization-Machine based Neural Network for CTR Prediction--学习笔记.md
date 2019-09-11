@@ -4,16 +4,14 @@ date: 2019-06-29
 categories:
 - 学习笔记
 - 论文解析
-
-Tags:
+tags:
 - 机器学习
 - 推荐
 - 排序
 - CTR预估
 - 神经网络
 - DeepFM
-
-
+mathjax: true
 ---
 
 [原文地址：DeepFM:A Factorization-Machine based Neural Network for CTR Prediction](https://arxiv.org/pdf/1703.04247.pdf)
