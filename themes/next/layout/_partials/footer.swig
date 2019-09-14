@@ -31,6 +31,7 @@
   <span class="post-meta-divider">|</span>
 {% endif %}
 
+<!--
 {% if theme.footer.theme.enable %}
   <div class="theme-info">{#
   #}{{ __('footer.theme') }} &mdash; {#
@@ -39,7 +40,7 @@
   #}</a>{% if theme.footer.theme.version %} v{{ theme.version }}{% endif %}{#
 #}</div>
 {% endif %}
-
+-->
 
 {% if theme.footer.custom_text %}
   <div class="footer-custom">{#
@@ -49,7 +50,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">  |  博客全站共{{ totalcount(site) }}字</span>
+  <span class="post-count">博客全站共{{ totalcount(site) }}字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
