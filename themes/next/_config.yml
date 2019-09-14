@@ -100,6 +100,7 @@ menu:
   schedule: /schedule/ || calendar
   sitemap: /sitemap.xml || sitemap
   commonweal: /404/ || heartbeat
+  guestbook: /guestbook/ || comments
   others: /others/ || folder
 
 # Enable/Disable menu icons.
@@ -382,9 +383,9 @@ changyan:
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
 valine:
-  enable: false
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
+  enable: true
+  appid: TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz
+  appkey: NYRTcUPshFEJWpUk54Bfu4nX
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
   placeholder: Just go go # comment box placeholder
@@ -429,7 +430,7 @@ gitment:
 # This plugin is more useful in China, make sure you known how to use it.
 # And you can find the use guide at official webiste: http://www.jiathis.com/.
 # Warning: JiaThis does not support https.
-#jiathis:
+jiathis: true
   ##uid: Get this uid from http://www.jiathis.com/
 #add_this_id:
 
@@ -819,6 +820,9 @@ passage_end_tag:
 
 # 添加评论
 gentie_productKey: #your-gentie-product-key
+
+# Fireworks
+fireworks: false
 
 # Assets
 css: css
