@@ -9,9 +9,10 @@ tags:
 - 推荐系统
 - Wide & Deep
 mathjax: true
+copyright: true
 ---
 
-[原文地址：Wide & Deep Learning for Recommender Systems](http://scholar.google.com.hk/scholar_url?url=https://dl.acm.org/ft_gateway.cfm%3Fid%3D2988454%26type%3Dpdf&hl=zh-CN&sa=X&scisig=AAGBfm0TVpSA7DpxrGGn23_Zbb27fZpvyQ&nossl=1&oi=scholarr)
+[原始论文：Wide & Deep Learning for Recommender Systems](http://scholar.google.com.hk/scholar_url?url=https://dl.acm.org/ft_gateway.cfm%3Fid%3D2988454%26type%3Dpdf&hl=zh-CN&sa=X&scisig=AAGBfm0TVpSA7DpxrGGn23_Zbb27fZpvyQ&nossl=1&oi=scholarr)
 
 ## 推荐系统之Wide & Deep机器学习算法
 
@@ -20,12 +21,12 @@ mathjax: true
 
 **关键词**  Wide & Deep学习，推荐系统
 
+<!--more-->
+
 ### **1. 介绍**
 一个推荐系统可以被看作是一个搜索排序系统，其中输入的请求是一个用户和上下文信息的集合，输出则是一个物品列表的排序。给定一个请求，推荐系统的任务就是在数据集中找到相关的物品，并且根据一定的目标，例如点击和购买，将所有的项目进行排序。
 
 推荐系统的一个挑战是类似于一版的搜索排序问题，就是同时实现记忆和泛化的能力。记忆可以被宽泛地定义为学习物品或特征的频繁共现，并且开发历史数据中可用的相关性。另一方面，泛化是基于相关性的传递性和探索从来没有或很少发生在过去的新特征组合。推荐是基于记忆的，通常更具局部性并且与那些用户已经对其产生过行为的物品直接相关。与记忆相比，泛化倾向于改善推荐物品的多样性。在本文中，我们关注Google Play商店中应用程序推荐的问题，但方法应该适用于通用推荐系统。
-
-<!--more-->
 
 对于工业环境中的大规模在线推荐和排序系统，一般的线性模型例如逻辑回归都是被广泛使用的，因为它们是简单，可扩展和可解释的。模型经常是使用one-hot编码的二值化稀疏特征进行训练的。例如，二进制特征“user_installed_app = netflix”，如果用户安装了Netflix那么该特征具有值1。使用通过对稀疏特征进行交叉积变化可以有效地实现记忆功能，例如AND（user_installed_app = netflix，impres-sion_app = pandora），如果用户安装了Netflix后有显示了Pandora，则其值为1。这解释了特征对的共现与目标标签有多么的相关。泛化功能是可以通过使用那些颗粒度较小的特征来添加的，例如AND（user_installed_category = video，impression_category =music），但手动特征工程常常还是需要的。交叉积变化的一个限制是他们没有办法泛化出那些没有出现在训练数据中的请求-物品特征对。
 

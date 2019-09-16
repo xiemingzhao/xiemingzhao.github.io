@@ -10,8 +10,9 @@ tags:
 - Gradient Descent
 - Optimization
 mathjax: true
+copyright: true
 ---
-[原文地址：An overview of gradient descent optimization algorithms](http://ruder.io/optimizing-gradient-descent/)
+[原始论文：An overview of gradient descent optimization algorithms](http://ruder.io/optimizing-gradient-descent/)
 
 ## 梯度下降优化算法综述
 
@@ -25,7 +26,7 @@ mathjax: true
 
 本文旨在让读者对不同的优化梯度下降的算法有直观的认识，以帮助读者使用这些算法。在第2部分，我们首先介绍梯度下降的不同变形形式。在第3部分，我们将简要总结在训练的过程中所面临的挑战。随后，在第4部分，我们将介绍最常用的优化算法，包括这些算法在解决以上挑战时的动机以及如何得到更新规则的推导形式。在第5部分，我们将简单讨论在并行和分布式环境中优化梯度下降的算法和框架。最后，在第6部分，我们将思考对优化梯度下降有用的一些其他策略。
 
-梯度下降法是最小化目标函数$J(\theta)$的一种方法，其中，$θ \in \mathbb R^d$为模型参数，梯度下降法利用目标函数关于参数的梯度$\triangledown_{\theta}J(\theta)$的反方向更新参数。学习率$\eta$决定达到最小值或者局部最小值过程中所采用的步长的大小。即，我们沿着目标函数的斜面下降的方向，直到到达谷底。如果你对梯度下降法不熟悉，你可以从http://cs231n.github.io/optimization-1/找到介绍神经网络优化的材料。
+梯度下降法是最小化目标函数$J(\theta)$的一种方法，其中，$θ \in \mathbb R^d$为模型参数，梯度下降法利用目标函数关于参数的梯度$\triangledown_{\theta}J(\theta)$的反方向更新参数。学习率$\eta$决定达到最小值或者局部最小值过程中所采用的步长的大小。即，我们沿着目标函数的斜面下降的方向，直到到达谷底。如果你对梯度下降法不熟悉，你可以从[此处资料](http://cs231n.github.io/optimization-1/)找到介绍神经网络优化的材料。
 
 ### **2 梯度下降法的变形形式**
 梯度下降法有3中变形形式，它们之间的区别为我们在计算目标函数的梯度时使用到多少数据。根据数据量的不同，我们在参数更新的精度和更新过程中所需要的时间两个方面做出权衡。
@@ -43,7 +44,7 @@ for i in range(nb_epochs):
     params_grad = evaluate_gradient(loss_function, data, params)
     params = params - learning_rate * params_grad
 ```
-对于给定的迭代次数，首先，我们利用全部数据集计算损失函数关于参数向量params的梯度向量params_grad。注意，最新的深度学习库中提供了自动求导的功能，可以有效地计算关于参数梯度。如果你自己求梯度，那么，梯度检查是一个不错的主意（关于如何正确检查梯度的一些技巧可以参见http://cs231n.github.io/neural-networks-3/）。
+对于给定的迭代次数，首先，我们利用全部数据集计算损失函数关于参数向量params的梯度向量params_grad。注意，最新的深度学习库中提供了自动求导的功能，可以有效地计算关于参数梯度。如果你自己求梯度，那么，梯度检查是一个不错的主意（关于如何正确检查梯度的一些技巧可以参见[此处资料](http://cs231n.github.io/neural-networks-3/)）。
 
 然后，我们利用梯度的方向和学习率更新参数，学习率决定我们将以多大的步长更新参数。对于凸误差函数，批梯度下降法能够保证收敛到全局最小值，对于非凸函数，则收敛到一个局部最小值。
 
@@ -120,7 +121,7 @@ $$v_t = \gamma v_{t-1} + \eta \triangledown_{\theta}J(\theta - \gamma v_{t-1}) \
 
 ![optimizer-03.jpg](https://i.postimg.cc/8C5YHC56/optimizer-03.jpg)
 
-对于NAG的直观理解的另一种解释可以参见http://cs231n.github.io/neural-networks-3/，同时Ilya Sutskever在其博士论文[18]中给出更详细的综述。
+对于NAG的直观理解的另一种解释可以参见[此处资料](http://cs231n.github.io/neural-networks-3/)，同时Ilya Sutskever在其博士论文[18]中给出更详细的综述。
 
 既然我们能够使得我们的更新适应误差函数的斜率以相应地加速SGD，我们同样也想要使得我们的更新能够适应每一个单独参数，以根据每个参数的重要性决定大的或者小的更新。
 
@@ -285,6 +286,6 @@ $$\sigma_t^2 = \frac{\eta}{(1+t)^\gamma}$$
 ### **7 总结**
 在这篇博客文章中，我们初步研究了梯度下降的三个变形形式，其中，小批量梯度下降是最受欢迎的。 然后我们研究了最常用于优化SGD的算法：动量法，Nesterov加速梯度，Adagrad，Adadelta，RMSprop，Adam以及不同的优化异步SGD的算法。 最后，我们已经考虑其他一些改善SGD的策略，如洗牌和课程学习，批量归一化和early stopping。
 
-[参考博文：梯度下降优化算法综述](https://blog.csdn.net/google19890102/article/details/69942970)
+[参考博文：梯度下降优化算法综述-zhiyong_will](https://blog.csdn.net/google19890102/article/details/69942970)
 
 ---

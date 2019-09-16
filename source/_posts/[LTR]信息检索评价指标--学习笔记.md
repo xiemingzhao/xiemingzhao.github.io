@@ -9,6 +9,7 @@ tags:
 - 排序
 - LTR
 mathjax: true
+copyright: true
 ---
 
 ## 1 RP
@@ -147,7 +148,7 @@ $$ERR=\sum_{r=1}^n \varphi(r)P Pr=\sum_{r=1}^n \frac{1}{r} P Pr=\sum_{r=1}^n \fr
 可以看出，当 φ(r)=1/r 时就是 ERR，当 φ(r)=1/log2(r+1) 就是DCG。
 
 
-[参考文章1:https://www.cnblogs.com/memento/p/8673309.html](https://www.cnblogs.com/memento/p/8673309.html)
+[参考文章:https://www.cnblogs.com/memento/p/8673309.html](https://www.cnblogs.com/memento/p/8673309.html)
 
 
 

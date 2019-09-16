@@ -12,9 +12,10 @@ tags:
 - 神经网络
 - DeepFM
 mathjax: true
+copyright: true
 ---
 
-[原文地址：DeepFM:A Factorization-Machine based Neural Network for CTR Prediction](https://arxiv.org/pdf/1703.04247.pdf)
+[原始论文：DeepFM:A Factorization-Machine based Neural Network for CTR Prediction](https://arxiv.org/pdf/1703.04247.pdf)
 
 ## DeepFM:基于神经网络的因式分解机做点击率预估
 

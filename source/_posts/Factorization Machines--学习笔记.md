@@ -8,9 +8,10 @@ tags:
 - 机器学习
 - FM
 mathjax: true
+copyright: true
 ---
 
-[原文地址：Factorization Machines](https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf)
+[原始论文：Factorization Machines](https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf)
 
 ## 因式分解机
 
@@ -41,9 +42,9 @@ $U = \{Alice (A), Bob (B), Charlie (C), . . .\}$
 $I = \{Titanic (TI),Notting Hill (NH), Star Wars (SW),Star Trek (ST), . . .\}$
 
 用观察到的数据S表示：
-$S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),
-(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),
-(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$
+$S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$
+      $(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$
+      $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$
 任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。
 
 ![relate-papers18-1.jpg](https://i.postimg.cc/qRd59r8J/relate-papers18-1.jpg)
@@ -58,15 +59,15 @@ $S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),
 *A. 因式分解模型*
 1）模型方程：2维的因式分解机模型方程：
 
-$$\hat y(x):=w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n <v_i,v_j>x_i x_j$$
+$$\hat y(x):=w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i,v_j \rangle x_i x_j$$
 
 公式中的模型参数必须在下面的值域中进行估计：
 
 $$w_0 \in \mathbb{R}, w \in \mathbb{R}^n, V \in \mathbb{R}^{n \times k}$$
 
-其中，<·,·>表示长度为k的点乘，k是一个超参数：
+其中，$ \langle ·,· \rangle $表示长度为k的点乘，k是一个超参数：
 
-$$<v_i, v_j> := \sum_{f=1}^kv_{i,f} \cdot v_{j,f}$$
+$$ \langle v_i, v_j \rangle  := \sum_{f=1}^kv_{i,f} \cdot v_{j,f}$$
 
 V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+$是一个产参数定义了因式分解的维度。
 
@@ -74,11 +75,11 @@ V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+
 
 * $w_0$是全局偏置项。
 * $w_i$是模型中的第i个变量的权重。
-* $\hat w_{i,j}:=<v_i,v_j>$表示模型中第i个变量和第j个变量之间的交互项。如此就不是用唯一的模型参数$w_{i,j} \in \mathbb{R}$来作为FM模型中因式分解交互项的权重了。在后面我们将看到，当遇到高维且稀疏的数据的时候，这是进行高质量参数估计的关键点。
+* $ \hat w_{i,j}:= \langle v_i,v_j \rangle $表示模型中第i个变量和第j个变量之间的交互项。如此就不是用唯一的模型参数$w_{i,j} \in \mathbb{R}$来作为FM模型中因式分解交互项的权重了。在后面我们将看到，当遇到高维且稀疏的数据的时候，这是进行高质量参数估计的关键点。
 
 2）表达能力：我们知道对于正定矩阵W，存在矩阵V，使得$W=V\cdot V^t$，k足够大。这表明了当k足够大的时候FM能够表示矩阵W中的任何交互项。然而对于稀疏的情况，应该选择一个比较小的k，因为没有足够的数据去预测一个复杂的W。限制k，也就是FM的表达能力，能够提高稀疏情况下的相互关系矩阵的泛化性能。
 
-3）稀疏情况下的参数估计：在稀疏情况下，通常没有足够的数据进行直接的参数估计。因式分解机可以进行稀疏的估计，甚至在稀疏的情况下可以估计的很好，这是因为它打破了交互项参数和因式分解之间的独立性。总的来说是因为进行了因式分解之后，用来估计一个参数的数据也可以用来估计相关的另一个参数。我们将利用图1中的数据举个例子来更清晰地描述我们的想法。假设我们想估计Alice(A)和Star Trek(ST)交互项的参数来预测目标值y（这里是评分）。很显然，在一个样本中，两个用户$x_A,x_{ST}$的参数不会都是非0数，如果直接进行估计的话，那么A和ST的相互关系参数会估计成0。但是如果使用因式分解将参数分解长$<v_A,v_{ST}>$的话，在这个案例中我们就可以直接进行估计了。
+3）稀疏情况下的参数估计：在稀疏情况下，通常没有足够的数据进行直接的参数估计。因式分解机可以进行稀疏的估计，甚至在稀疏的情况下可以估计的很好，这是因为它打破了交互项参数和因式分解之间的独立性。总的来说是因为进行了因式分解之后，用来估计一个参数的数据也可以用来估计相关的另一个参数。我们将利用图1中的数据举个例子来更清晰地描述我们的想法。假设我们想估计Alice(A)和Star Trek(ST)交互项的参数来预测目标值y（这里是评分）。很显然，在一个样本中，两个用户$x_A,x_{ST}$的参数不会都是非0数，如果直接进行估计的话，那么A和ST的相互关系参数会估计成0。但是如果使用因式分解将参数分解长$ \langle v_A,v_{ST} \rangle $的话，在这个案例中我们就可以直接进行估计了。
 
 4）计算量：接下来，我们展示如何让FMs变得实际可用。前面提到的方程（1）的计算复杂度是O(kn2)，因为所有的称为交互项必须倍计算。但是改变一下之后将会使其复杂度降低到线性的。
 
@@ -86,13 +87,15 @@ V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+
 
 证明：由于所有的成对交互项都会做因式分解，于是模型中就没有需要直接利用两个变量进行直接估计的参数。所有成对的交互项可以进行如下的变化：
 
-\begin{align*}
-&\sum_{i=1}^n \sum_{j=i+1}^n <v_i, v_j>x_i x_j\\
-=& \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n <v_i, v_j>x_i x_j - \frac{1}{2} \sum_{i=1}^n <v_i, v_i>x_i x_i \\
-=& \frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
-=& \frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
-=& \frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
-\end{align*}
+$$
+\begin{align}
+&\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
+=&\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
+=&\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
+=&\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
+=&\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
+\end{align}
+$$
 
 以上的公式的结果仅仅有线性的计算复杂度，当k和n固定的时候，计算复杂度就为O(kn)。
 
@@ -111,13 +114,13 @@ V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+
 *C. 因式分解机的学习*
 我们已经证明，FMs有一个确定的模型公式使其计算复杂度达到线性的。因此，FMs的参数$（w_0,w , V）$可以通过梯度下降的方式来求解，例如随机梯度下降法(SGD).FM模型的梯度是：
 
-\begin{align*}
+$$
 \frac{\partial}{\partial \theta} \hat y(x)  = \begin{cases}
 1,& if \ \theta \ is \ w_0 \\
 x_i,& if \ \theta \ is \ w_i \\
 x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 \end{cases}
-\end{align*}
+$$
 
 其中，求和项$\sum_{j=1}^n v_{j,f}x_j$是和i无关的，可以事先求出来。总的来说，每个梯度都可以在O(1)时间内求得。对于给个案例(x,y)整体的参数更新的时间为O(kn)，稀疏数据的时候则为O(km(x))。
 
@@ -141,19 +144,19 @@ FMs的优点：
 
 ### 4、FMs vs. SVMs
 *A. SVM模型*
-我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) = <\phi (x),w>$，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：
+我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) =  \langle \phi (x),w \rangle $，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：
 
-$$K:\mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}, K(x,z) = <\phi (x),\phi(z)>$$
+$$K:\mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}, K(x,z) =  \langle \phi (x),\phi(z) \rangle $$
 
 下面我们通过分析SVMs主要形式来讨论FM和SVM之间的关系。
 
-*1）线性核*：最简单的核函数就是线性核：$K_l(x,z):=1 + <x,z>$，这对应的映射就是$\phi (x) := (1,x_1, \cdots , x_n)$。因此线性核的SVM模型等式可以重写为：
+*1）线性核*：最简单的核函数就是线性核：$ K_l(x,z):=1 +  \langle x,z \rangle  $，这对应的映射就是$\phi (x) := (1,x_1, \cdots , x_n)$。因此线性核的SVM模型等式可以重写为：
 
 $$\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i, w_0 \in \mathbb{R}, w \in \mathbb{R}^n$$
 
 很明显可以发现线性的SVM模型和FM为1阶的情况完全等效
 
-*2）多项式核*：多项式的核函数可以让SVM模型去拟合更高维的变量交互项。可以定义：$K(x,z) := (<x,z> + 1)^d$。例如当多项式为2阶的时候，对应如下的映射：
+*2）多项式核*：多项式的核函数可以让SVM模型去拟合更高维的变量交互项。可以定义：$K(x,z) := ( \langle x,z \rangle  + 1)^d$。例如当多项式为2阶的时候，对应如下的映射：
 
 $$\phi (x) := (1, \sqrt2 x_1, \cdots , \sqrt2 x_n, x_1^2, \cdots ,x_n^2, \sqrt2 x_1 x_2, \cdots , \sqrt2 x_1 x_n, \sqrt2 x_2 x_3, \cdots, \sqrt2 x_{n-1} x_n)$$
 
@@ -164,7 +167,7 @@ $$\hat y(x) = w_0 + \sqrt2 \sum_{i=1}^n w_i x_i + \sum_{i=1}^n w_{i,i}^{(2)} x_i
 其中模型的参数是：
 $$w_0 \in \mathbb{R}^n, w \in \mathbb{R}^n, W^{(2)} \in \mathbb{R}^{n \times n} (symmetric matix)$$
 
-对比多项式核函数的SVM模型和FM模型，可以发现的一点是两个模型交互项全部上升到了2维。而这主要的差别是参数：SVMs的所有交互项参数之间是相互独立的。相反，对于FMs模型来说所有的交互项参数都是经过因式分解的，因此$<v_i, v_j> \ and \ <v_i, v_l>$依赖于各自交叉共享的参数($v_i$)。
+对比多项式核函数的SVM模型和FM模型，可以发现的一点是两个模型交互项全部上升到了2维。而这主要的差别是参数：SVMs的所有交互项参数之间是相互独立的。相反，对于FMs模型来说所有的交互项参数都是经过因式分解的，因此$ \langle v_i, v_j \rangle  and  \langle v_i, v_l \rangle $依赖于各自交叉共享的参数($v_i$)。
 
 *B. 稀疏情况下的参数估计*
 我们下面解释一下为什么线性和多项式的SVM在稀疏的情况下表现不好。我们将使用用户和物品的表征向量的数据来证明这个协同过滤的例子。这里，特征向量是稀疏的，并且仅仅两个参数是非0的。
@@ -202,7 +205,7 @@ $$n:=|U \cup I|, x_j := \delta(j=i \vee j=u)$$
 
 使用这个特征向量x的FM模型与矩阵分解模型相同，因为$x_j$仅仅在当前u和i是非0的，所以其他的偏置项和交互项都可以舍去：
 
-$$\hat y(x)=w_0 + w_u + w_i + <v_u, v_i>$$
+$$\hat y(x)=w_0 + w_u + w_i +  \langle v_u, v_i \rangle $$
 
 
 同样的考虑，当有两个以上的分类变量的时候可以发现存在一样的问题，FM包括了一个嵌套并行因子分析模型（PARAFAC）。
@@ -210,18 +213,18 @@ $$\hat y(x)=w_0 + w_u + w_i + <v_u, v_i>$$
 *B.SVD++*
 对于评分预测任务（即回归）来说，Koren将矩阵分解模型改进成了SVD++模型。FM模型就可以使用下列的输入数据来模拟这个模型（就像图一中的前三组）：
 
-\begin{align*}
+$$
 \ n:=|U \cup I \cup L|, \ x_j  = \begin{cases}
 1,& if \ j=i \vee j=u \\
 \frac{1}{\sqrt{|N_u|}},& if \ j \in N_u \\
 0,& else
 \end{cases}
-\end{align*}
+$$
 
 其中$N_u$是当前用户曾经评论过的所有电影的集合。一个二维的FM模型将以如下方式处理这个数据集：
 
-$$\hat y(x) = w_0 + w_u + w_i + <v_u, v_i> + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U} <v_i, v_l> + \\
-\frac{1}{\sqrt{|N_u|}}\sum_{l \in N_U}(w_l + <v_u, v_l> + \frac{1}{\sqrt{|N_u|}}\sum_{l' \in N_u, l' > l}<v_l, v_l'>)$$
+$$\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  + \\
+\frac{1}{\sqrt{|N_u|}}\sum_{l \in N_U}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{\sqrt{|N_u|}}\sum_{l' \in N_u, l'  \rangle  l} \langle v_l, v_l' \rangle )$$
 
 其中第一部分（即第一行）就等价于一个SVD++模型。但FM还包含一些额外的用户和电影$N_u$之间的交互项，以及$N_u$中电影对之间的电影$N_u$本身和交互项的基础效应。
 
@@ -230,11 +233,11 @@ $$\hat y(x) = w_0 + w_u + w_i + <v_u, v_i> + \frac{1}{\sqrt{|N_u|}} \sum_{l \in 
 可以模仿这个模型。一个对于活动用户u，项目i和标签t有二值表示变量的分解机的可以写成以下模型：
 
 $$n:=|U \cup I \cup L|, x_j := \delta (j = i \vee j = u \vee j = t)\\
-\Longrightarrow \hat y(x)= w_0 + w_u + w_i + <v_u, v_i> + <v_u, v_t> + <v_i, v_t>$$
+\Longrightarrow \hat y(x)= w_0 + w_u + w_i +  \langle v_u, v_i \rangle  +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle $$
 
 由于该模型用于在相同的用户/项目组合（u，i）内的两个标签$t_A,t_B$之间进行排序的，两者都是始终致力于优化和预测案例$（u,i,t_A）和（u,i,t_B）之间的得分差异。因此对于成对排序的优化，FM模型等价于：
 
-$$\hat y(x) := w_t + <v_u, v_t> + <v_i, v_t>$$
+$$\hat y(x) := w_t +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle $$
 
 
 现在二元指标的原始PITF模型和FM模型几乎是相同的。唯一的区别在于（1）FM模型对t具有偏差项$w_t$，（2）$(u,t)-(i,t)$交叉项的标签之间的分解参数$(v_t)$在FM模型中是共享的，但是又不同于原始PITF模型。除了这个理论分析，图3显示了两种模型实现此任务的可比预测质量的经验分布。
@@ -246,23 +249,23 @@ FPMC模型尝试基于用户u的最后一次购买(时间t-1)在线上商店进�
 
 再一次仅仅用特征生成，一个二维的因式分解机可以来近似：
 
-\begin{align*}
+$$
 \ n:=|U \cup I \cup L|, \ x_j  = \begin{cases}
 1,& if \ j=i \vee j=u \\
 \frac{1}{|B_{t-1}^u|},& if \ j \in B_{t-1}^u \\
 0,& else
 \end{cases}
-\end{align*}
+$$
 
 其中$B_{t}^u \subseteq L$是一个用户u在时间t可购买的所有物品的集合，然后：
 
-$$\hat y(x) = w_0 + w_u + w_i + <v_u, v_i> + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u} <v_i, v_l> + \\
-\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l + <v_u, v_l> + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l' > l}<v_l, v_l'>)$$
+$$\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
+\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )$$
 
 
 就像标签推荐一样，这个模型被用来优化排名（这里是排序物品i），因此只有$(u,i_A,t)$和$(u,i_B,t)$之间的评分存在差异的时候会被用于预测和优化的评断标准中。因此，所有额外的不依赖于i都可以消失，FM模型的等式就相当于：
 
-$$\hat y(x) = w_i + <v_u, v_i> + \frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}<v_i, v_l> $$
+$$\hat y(x) = w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u} \langle v_i, v_l \rangle  $$
 
 现在人们可以看到原始的FPMC模型和FM模型几乎是相同的，仅在附加的偏置项$w_i$中有所不同，以及FM模型中的(u,i)和(i,l)交互项物品的分解参数的共享。
 
@@ -273,7 +276,7 @@ $$\hat y(x) = w_i + <v_u, v_i> + \frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}<v_i
 ### 6、结论
 在这片论文中，我们介绍了因式分解机。FMs融合了SVM模型的泛化能力以及因式分解模型的优势。不同于SVM模型，1)FMs可以在高稀疏的情况下进行参数估计，2)模型等式是线性的并且仅依赖于模型的参数，因此3)它们可以在原始等式中进行优化。FMs模型的解释力相当于多项式SVMs模型。不同于像PARAFAC这种张量因子分解模型，FMs是一个泛化的模型，它可以处理任何实值向量。再者，可以通过在输入特征向量中使用正确的表征来进行简化，FMs相对于其他特别高级的模型来说是更单一且非常简单的，不像那些模型仅仅只能应用在特定的任务重，例如MF, SVD++, PITF和FPMC。
 
-[参考博文:点击率预测《Factorization Machines》论文精读](https://www.jianshu.com/p/a194e05aeb53)
+[参考博文:点击率预测《Factorization Machines》论文精读-ronghuaiyang](https://www.jianshu.com/p/a194e05aeb53)
 
 ---
 

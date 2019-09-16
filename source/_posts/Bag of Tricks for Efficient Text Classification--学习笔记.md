@@ -9,9 +9,10 @@ tags:
 - Classification
 - Bag of Tricks
 mathjax: true
+copyright: true
 ---
 
-[原文地址：Bag of Tricks for Efficient Text Classification](https://arxiv.org/pdf/1607.01759v2.pdf)
+[原始论文：Bag of Tricks for Efficient Text Classification](https://arxiv.org/pdf/1607.01759v2.pdf)
 
 ## 有效的文本分类技巧
 
@@ -21,11 +22,11 @@ mathjax: true
 ## 1 介绍
 建立良好的文本分类表示是许多应用程序的重要任务，如Web搜索，信息检索，排序和文档分类。 最近，基于神经网络的模型在计算句子表示方面越来越受欢迎。 虽然这些模型在实践中取得了非常好的表现，但是在训练和测试时间，它们往往相对较慢，限制了它们在非常大的数据集上的使用。
 
+<!--more-->
+
 与此同时，简单的线性模型也显示出令人印象深刻的性能，同时计算效率非常高。 他们通常学习单词级别的表示，后来组合起来形成句子表示。 在这项工作中，我们提出了这些模型的扩展，以直接学习句子表示。 我们通过引入其他统计数据（如使用n-gram包）来显示，我们减少了线性和深度模型之间精度的差距，同时速度提高了许多个数量级。
 
 我们的工作与标准线性文本分类器密切相关。 与Wang和Manning类似，我们的动机是探索由用于学习无监督词表示的模型启发的简单基线。 与Le和Mikolov不同的是，我们的方法在测试时不需要复杂的推理，使得其学习表示很容易在不同问题上重复使用。 我们在两个不同的任务中评估模型的质量，即标签预测和情感分析。
-
-<!--more-->
 
 ## 2 模型架构
 句子分类的简单而有效的基线是将句子表示为词袋（BoW）并训练线性分类器，例如逻辑回归或支持向量机。 但是，线性分类器不能在特征和类之间共享参数，可能会限制泛化。 这个问题的常见解决方案是将线性分类器分解成低秩矩阵或使用多层神经网络。在神经网络的情况下，信息通过隐藏层共享。
@@ -108,7 +109,7 @@ FastText词向量与word2vec对比
 >Wordvec的目的是得到词向量，embedding层 到 input层的 共享权重矩阵 就是 词向量矩阵，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。 
 fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）
 
-[参考博文：https://blog.csdn.net/u011239443/article/details/80076720 ](https://blog.csdn.net/u011239443/article/details/80076720 )
+[参考博文：论文阅读：《Bag of Tricks for Efficient Text Classification-卓寿杰_SoulJoy](https://blog.csdn.net/u011239443/article/details/80076720 )
 
 ---
 

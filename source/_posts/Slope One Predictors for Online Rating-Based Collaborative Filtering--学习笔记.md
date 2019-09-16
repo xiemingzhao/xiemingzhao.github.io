@@ -8,9 +8,10 @@ tags:
 - 机器学习
 - CF
 mathjax: true
+copyright: true
 ---
 
-[原文地址：Slope One Predictors for Online Rating-Based Collaborative Filtering](https://epubs.siam.org/doi/pdf/10.1137/1.9781611972757.43)
+[原始论文：Slope One Predictors for Online Rating-Based Collaborative Filtering](https://epubs.siam.org/doi/pdf/10.1137/1.9781611972757.43)
 
 ## Slope One: 基于在线评分的协同过滤算法
 
@@ -50,11 +51,10 @@ CF有许多基于模型的方法。一些基于线性代数（SVD，PCA或Eigenv
 我们提出了三种新的CF方案，并将我们剔除的机制和之前提到的四中算法进行对比：PER USER AVERAGE, BIAS FROM MEAN, ADJUSTED COSINE ITEMBASED,这是一个基于模型的方案，以及PEARSON机制是代表基于记忆的方案。
 
 **3.1 符号**
-我们在算法描述中使用以下符号。来自给定用户的评分，称为*评估*，表示为一个不完整的数组u，其中$u_i$是该用户给出了物品i的评分。又被用户u评分过的所有物品组成的子集表示成S(u)。训练集中所有评估的集合表示成$\chi$。集合S中的元素个数是card(S)。用户u所有评分的平均评分为$\bar u$。集合$S_i(\chi)$是所有评估$u \in \chi$中包含物品$i(i \in S(u))$组成的集合。给定两个评估u，v，我们定义标量积$<u,v> = \sum_{i \in S(u) \cap S(v)} u_i v_i$。预测，我们写成P(u)，表示每个分量都是对应一个物品预测结果的向量：预测隐含地依赖于训练集c\chi$。
+我们在算法描述中使用以下符号。来自给定用户的评分，称为*评估*，表示为一个不完整的数组u，其中$u_i$是该用户给出了物品i的评分。又被用户u评分过的所有物品组成的子集表示成S(u)。训练集中所有评估的集合表示成$\chi$。集合S中的元素个数是card(S)。用户u所有评分的平均评分为$\bar u$。集合$S_i(\chi)$是所有评估$u \in \chi$中包含物品$i(i \in S(u))$组成的集合。给定两个评估u，v，我们定义标量积$(u,v) = \sum_{i \in S(u) \cap S(v)} u_i v_i$。预测，我们写成P(u)，表示每个分量都是对应一个物品预测结果的向量：预测隐含地依赖于训练集$\chi$。
 
 **3.2 基准方案**
-一个最基础的预测算法就是PER USER AVERAGE方案，给定的等式是$P(u)=\bar u$。也就是说，我们预测用户
-将根据该用户的平均评分对所有内容进行评级。
+一个最基础的预测算法就是PER USER AVERAGE方案，给定的等式是$P(u)=\bar u$。也就是说，我们预测用户将根据该用户的平均评分对所有内容进行评级。
 另一个简单的方案称为BIAS FROM MEAN（有时候也称为NON PERSONALIZED)。等式给定为：
 
 $$P(u)_i = \bar u + \frac{1}{card(S_i(\chi))} \sum_{v \in S_i(\chi)} v_i - \bar v$$
@@ -129,8 +129,7 @@ $$P^{bpS1}(u)_j = \frac{\sum_{i \in S^{like}(u) - {j}} P_{j,i}^{like} c_{j,i}^{l
 其中权重$c_{j,i}^{like} = card(S_{j,i}^{like})$以及$c_{j,i}^{dislike} = card(S_{j,i}^{dislike})$是类似于一个加权SLOPE ONE算法。
 
 ### **4 实验结果**
-一个给定的CF算法的有效性是可以被精确测算的。为此，我们使用了All But One Mean
-Average Error（MAE）[2]。在计算MAE时，我们先后从所有评估中每一次隐藏一个评分剩下的作为测试集，同时预测这个被隐藏的评分，计算我们在预测中犯的错误平均值。给定一个预测模型P以及一个用户的评论u，那么通过评论集合$\chi'$可以得到P的误差率可由下式给到：
+一个给定的CF算法的有效性是可以被精确测算的。为此，我们使用了All But One Mean Average Error（MAE）[2]。在计算MAE时，我们先后从所有评估中每一次隐藏一个评分剩下的作为测试集，同时预测这个被隐藏的评分，计算我们在预测中犯的错误平均值。给定一个预测模型P以及一个用户的评论u，那么通过评论集合$\chi'$可以得到P的误差率可由下式给到：
 
 $$MAE = \frac{1}{card(\chi')} \sum_{u \in \chi'} \frac{1}{card(S(u))} \sum_{i \in S(u)} |P(u^{(i)}) - u_i|$$
 

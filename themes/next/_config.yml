@@ -180,6 +180,7 @@ sidebar:
   # Sidebar Position, available value: left | right (only for Pisces | Gemini).
   position: left
   #position: right
+  width: 330
 
   # Sidebar Display, available value (only for Muse | Mist):
   #  - post    expand on posts automatically. Default.

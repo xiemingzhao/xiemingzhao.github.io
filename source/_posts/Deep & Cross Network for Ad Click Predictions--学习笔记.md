@@ -12,8 +12,9 @@ tags:
 - 神经网络
 - Deep & Cross
 mathjax: true
+copyright: true
 ---
-[原文地址：Deep & Cross Network for Ad Click Predictions](https://arxiv.org/pdf/1708.05123.pdf)
+[原始论文：Deep & Cross Network for Ad Click Predictions](https://arxiv.org/pdf/1708.05123.pdf)
 
 
 ## 深度和交叉网络的广告点击预测
@@ -204,7 +205,9 @@ DCN是在TensorFlow上实现的，我们简短地讨论一些DCN训练中的一�
 
 
 对于每个模型的最优超参数设置，我们也汇报了10次不同对数损失测试结果的均值和标准差：
-$DCN:0.4422 \pm 9 \times 10^{-5}, DNN:0.4430 \pm 3.7 \times 10^{-4},DC:0.4430 \pm 4.3 \times 10^{-4}$。
+$DCN:0.4422 \pm 9 \times 10^{-5}$
+$DNN:0.4430 \pm 3.7 \times 10^{-4}$
+$DC:0.4430 \pm 4.3 \times 10^{-4}$。
 如我们如看到的，DCN一致的大幅优于其他模型。
 
 **DCN和DNN之间的比较**。考虑到交叉网络仅仅额外引入了O(d)个参数，我们就将DCN和它——一个传统的DNN进行比较，并且将实验结果展现出来尽管存在较大的内存预算和损失公差。

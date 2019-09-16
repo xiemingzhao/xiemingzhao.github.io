@@ -9,9 +9,10 @@ tags:
 - 神经网络
 - LSTM
 mathjax: true
+copyright: true
 ---
 
-[原文地址：Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+[原始论文：Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 
 ## 循环神经网络
 人类并不是每时每刻都从一片空白的大脑开始他们的思考。在你阅读这篇文章时候，你都是基于自己已经拥有的对先前所见词的理解来推断当前词的真实含义。我们不会将所有的东西都全部丢弃，然后用空白的大脑进行思考。我们的思想拥有持久性。
@@ -139,6 +140,6 @@ LSTM 是我们在 RNN 中获得的重要成功。很自然地，我们也会考�
 
 注意力也不是 RNN 研究领域中唯一的发展方向。例如，Kalchbrenner, et al. (2015) 提出的 Grid LSTM 看起来也是很有前途。使用生成模型的 RNN，诸如Gregor, et al. (2015) Chung, et al. (2015) 和 Bayer & Osendorfer (2015) 提出的模型同样很有趣。在过去几年中，RNN 的研究已经相当的燃，而研究成果当然也会更加丰富！
 
-[参考博文：https://www.jianshu.com/p/9dc9f41f0b29#](https://www.jianshu.com/p/9dc9f41f0b29#)
+[参考博文：[译]理解 LSTM 网络-朱小虎](https://www.jianshu.com/p/9dc9f41f0b29#)
 
 ---
