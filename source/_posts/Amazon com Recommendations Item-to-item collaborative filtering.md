@@ -1,15 +1,16 @@
-﻿---
-title: Amazon.com Recommendations- Item-to-item collaborative filtering
-date: 2019-04-15
+---
+title: Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 推荐系统
-- CF
+  - 机器学习
+  - 推荐系统
+  - CF
 mathjax: true
 copyright: true
+abbrlink: 3c1887e0
+date: 2019-04-15 00:00:00
 ---
 
 [原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering](https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf)

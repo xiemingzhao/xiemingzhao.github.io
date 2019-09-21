@@ -1,15 +1,16 @@
-﻿---
+---
 title: LTR信息检索评价指标
-date: 2019-06-27
 categories:
-- 学习笔记
-- 算法总结
+  - 学习笔记
+  - 算法总结
 tags:
-- 机器学习
-- 排序
-- LTR
+  - 机器学习
+  - 排序
+  - LTR
 mathjax: true
 copyright: true
+abbrlink: 5fb7303d
+date: 2019-06-27 00:00:00
 ---
 
 ## 1 RP

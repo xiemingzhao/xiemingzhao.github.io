@@ -1,14 +1,15 @@
-﻿---
-title: The Learning Behind Gmail Priority Inbox
-date: 2019-03-19
+---
+title: The Learning Behind Gmail Priority Inbox (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 排序
+  - 机器学习
+  - 排序
 mathjax: true
 copyright: true
+abbrlink: d0f1b267
+date: 2019-03-19 00:00:00
 ---
 
 [原始论文：The Learning Behind Gmail Priority Inbox](https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/36955.pdf)

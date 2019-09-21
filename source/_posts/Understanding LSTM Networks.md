@@ -1,15 +1,16 @@
-﻿---
-title: Understanding LSTM Networks
-date: 2019-05-29
+---
+title: Understanding LSTM Networks (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 神经网络
-- LSTM
+  - 机器学习
+  - 神经网络
+  - LSTM
 mathjax: true
 copyright: true
+abbrlink: eff2088e
+date: 2019-05-29 00:00:00
 ---
 
 [原始论文：Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)

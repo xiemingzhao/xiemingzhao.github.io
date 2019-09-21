@@ -1,14 +1,15 @@
-﻿---
-title: Slope One Predictors for Online Rating-Based Collaborative Filtering
-date: 2019-04-19
+---
+title: Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- CF
+  - 机器学习
+  - CF
 mathjax: true
 copyright: true
+abbrlink: c800c340
+date: 2019-04-19 00:00:00
 ---
 
 [原始论文：Slope One Predictors for Online Rating-Based Collaborative Filtering](https://epubs.siam.org/doi/pdf/10.1137/1.9781611972757.43)

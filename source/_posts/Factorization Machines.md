@@ -1,14 +1,15 @@
-﻿---
-title: Factorization Machines
-date: 2019-04-15
+---
+title: Factorization Machines (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- FM
+  - 机器学习
+  - FM
 mathjax: true
 copyright: true
+abbrlink: 399ba6ee
+date: 2019-04-15 00:00:00
 ---
 
 [原始论文：Factorization Machines](https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf)

@@ -1,15 +1,16 @@
-﻿---
-title: XGBoost- A Scalable Tree Boosting System
-date: 2019-06-10
+---
+title: XGBoost A Scalable Tree Boosting System (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 算法
-- XGB
+  - 机器学习
+  - 算法
+  - XGB
 mathjax: true
 copyright: true
+abbrlink: 15b10533
+date: 2019-06-10 00:00:00
 ---
 
 [原始论文：XGBoost: A Scalable Tree Boosting System](http://delivery.acm.org/10.1145/2940000/2939785/p785-chen.pdf?)

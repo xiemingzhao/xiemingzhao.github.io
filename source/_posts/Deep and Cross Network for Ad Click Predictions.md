@@ -1,18 +1,19 @@
-﻿---
-title: Deep & Cross Network for Ad Click Predictions
-date: 2019-07-29
+---
+title: Deep and Cross Network for Ad Click Predictions (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 推荐
-- 排序
-- CTR预估
-- 神经网络
-- Deep & Cross
+  - 机器学习
+  - 推荐
+  - 排序
+  - CTR预估
+  - 神经网络
+  - Deep & Cross
 mathjax: true
 copyright: true
+abbrlink: 96501d7f
+date: 2019-07-29 00:00:00
 ---
 [原始论文：Deep & Cross Network for Ad Click Predictions](https://arxiv.org/pdf/1708.05123.pdf)
 

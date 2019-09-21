@@ -1,16 +1,17 @@
-﻿---
-title: An overview of gradient descent optimization algorithms
-date: 2019-06-11
+---
+title: An overview of gradient descent optimization algorithms (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 算法
-- Gradient Descent
-- Optimization
+  - 机器学习
+  - 算法
+  - Gradient Descent
+  - Optimization
 mathjax: true
 copyright: true
+abbrlink: eafa0d01
+date: 2019-06-11 00:00:00
 ---
 [原始论文：An overview of gradient descent optimization algorithms](http://ruder.io/optimizing-gradient-descent/)
 

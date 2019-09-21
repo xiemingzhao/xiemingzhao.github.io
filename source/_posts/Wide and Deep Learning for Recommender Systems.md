@@ -1,15 +1,16 @@
-﻿---
-title: Wide & Deep Learning for Recommender Systems
-date: 2019-06-12
+---
+title: Wide and Deep Learning for Recommender Systems (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- 推荐系统
-- Wide & Deep
+  - 机器学习
+  - 推荐系统
+  - Wide & Deep
 mathjax: true
 copyright: true
+abbrlink: e59f436c
+date: 2019-06-12 00:00:00
 ---
 
 [原始论文：Wide & Deep Learning for Recommender Systems](http://scholar.google.com.hk/scholar_url?url=https://dl.acm.org/ft_gateway.cfm%3Fid%3D2988454%26type%3Dpdf&hl=zh-CN&sa=X&scisig=AAGBfm0TVpSA7DpxrGGn23_Zbb27fZpvyQ&nossl=1&oi=scholarr)
