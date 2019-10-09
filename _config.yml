@@ -100,9 +100,12 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy: 
-  type: git
-  repo: git@github.com:xiemingzhao/xiemingzhao.github.io.git
-  branch: master
+  - type: git
+    repo: git@github.com:xiemingzhao/xiemingzhao.github.io.git
+    branch: master
+    message: blog update
+  
+  - type: baidu_url_submitter # 注意，这个为新增的
 
 live2d:
   enable: true
@@ -120,3 +123,9 @@ live2d:
     height: 300
   mobile:
     show: true
+
+baidu_url_submit:
+  count: 100 ## 比如100，代表提交最新的一百个链接
+  host: www.xiemingzhao.com ## 在百度站长平台中注册的域名
+  token: uybsi3UZhnLkRBZF ## 刚刚复制的秘钥，不要公布到任何地方。
+  path: baidu_urls.txt ## 文本文档的地址，新链接会保存在此文本文档里
