@@ -13,3 +13,4 @@ Disallow: /css/
 Disallow: /lib/
 
 Sitemap: https://www.xiemingzhao.com/sitemap.xml
+Sitemap: https://www.xiemingzhao.com/baidusitemap.xml
