@@ -17,6 +17,8 @@ date: 2019-05-27
 ### 1. github 创建分支
 不管你有无看过我的另一篇博客[使用Github+Hexo+Next免费搭建自己的博客（最细攻略）](https://www.xiemingzhao.com/posts/GithubHexoNextblog)，相信你自己博客的时候都是在yourname.github.io仓库下的master分支上创建的。既然我们是在本地上管理离线文档的，那我们就领创建一个分值，只用来存储每次更新的离线文件，相当于一个本地了。
 
+<!--more-->
+
 如下图，在分支的输入框中新建一个分支确认就好了，我这里已经新建好了，一般取名hexo打扰其他的也都OK：
 
 ![branch1](https://i.postimg.cc/yxKQvdvC/branch1.jpg)
