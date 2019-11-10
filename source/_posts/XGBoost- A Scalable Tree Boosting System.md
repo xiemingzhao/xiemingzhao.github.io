@@ -68,9 +68,9 @@ $$\mathcal L^{(t)} = \sum_{t=1}^n l(y_i,\hat y_i^{(t-1)} + f_t(x_i)) + \Omega(f_
 
 这意味着我们根据公式（2）贪婪地将$f_t$加到了目标函数中，这对我们模型提升最大（因为是沿梯度下降的）。一般情况下，二阶近似（泰勒二阶展开近似）可以用于快速优化目标函数。（因为有二阶信息，所以优化起来比一阶速度快。例如，牛顿法就比传统的梯度下降快）。
 
-$$\mathcal L^{(t)} \simeq \sum_{t=1}^n [l(y_i,\hat y_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)$$
+$$\mathcal L^{(t)} \simeq \sum_{t=1}^n [l(y_i,\hat y^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)$$
 
-其中，$g_i = \partial_{\hat y^{(t-1)}} l(y_i,\hat y_i^{(t-1)})$和$h_i = \partial_{\hat y^{(t-1)}}^2 l(y_i,\hat y_i^{(t-1)})$，分别为损失函数一阶和二阶的梯度值。在第$t$步迭代中，我们可以去掉常数项以简化目标函数。（t步的时候t-1步的损失已经是定值）
+其中，$g_i = \partial_{\hat y^{(t-1)}} l(y_i,\hat y^{(t-1)})$和$h_i = \partial_{\hat y^{(t-1)}}^2 l(y_i,\hat y^{(t-1)})$，分别为损失函数一阶和二阶的梯度值。在第$t$步迭代中，我们可以去掉常数项以简化目标函数。（t步的时候t-1步的损失已经是定值）
 
 $$\tilde{\mathcal L}^{(t)} \simeq \sum_{t=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)$$
 
