@@ -1,6 +1,6 @@
 ﻿---
 title: XGBoost原理细节详解
-date: 2019-08-01
+date: 2019-07-01
 abbrlink: XGBoostDetailAnalysis
 categories:
 - 学习笔记

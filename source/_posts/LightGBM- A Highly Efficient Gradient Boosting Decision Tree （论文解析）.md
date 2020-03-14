@@ -9,7 +9,7 @@ tags:
 mathjax: true
 copyright: true
 abbrlink: c7ab2b84
-date: 2019-05-23 00:00:00
+date: 2019-06-23 00:00:00
 ---
 
 [原始论文：LightGBM-A Highly Efficient Gradient Boosting Decision Tree](https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf)
