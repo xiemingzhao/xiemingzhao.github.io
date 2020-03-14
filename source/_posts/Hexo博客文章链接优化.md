@@ -22,6 +22,8 @@ copyright: true
 npm install hexo-abbrlink --save
 ```
 
+<!--more-->
+
 接着打开站点配置文件`_config.yml`，按照如下部分进行相关配置：
 ```
 # URL
