@@ -169,6 +169,7 @@ C_{ij} &= -\frac{1}{2}(1+S_{ij})log \frac{1}{1+e^{-\sigma(s_i-s_j)}} -\frac{1}{2
 $$
 
 其中：
+$$
 \begin{align*}
 C=\left\{
 \begin{array}{lr}
@@ -177,6 +178,7 @@ log(1+e^{-\sigma(s_j-s_i)}), & S_{ij}=-1 \\
 \end{array}
 \right.
 \end{align*}
+$$
 
 下面展示了当$S_{ij}$分别取1，0，-1的时候cost function以$s_i-s_j$为变量的示意图：
 
