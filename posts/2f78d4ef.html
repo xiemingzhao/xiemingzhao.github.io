@@ -100,17 +100,17 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 17.【MAB问题】简单却有效的Bandit算法推荐就是选择选择的困难在于不知道选择的后果，而且一旦错了就没有机会再来一次。在推荐系统中就对应了少了一次成功展示的机会。选择时不再聚焦到具体每个选项，而是去选择类别，这样压力是不是就小了很多？比如说，把推荐选择具体物品，上升到选择策略。如果后台算法中有三种策略：按照内容相似推荐，按照相似好友推荐，按照热门推荐。每次">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/xCnzsRYL/beta.png">
-<meta property="og:image" content="https://i.postimg.cc/vZn6kcNz/Bandit.jpg">
-<meta property="og:image" content="https://i.postimg.cc/G223wg8W/LinUCB.png">
-<meta property="og:image" content="https://i.postimg.cc/wBtHwyCz/COFIBA.png">
-<meta property="og:image" content="https://i.postimg.cc/FKxj8zJC/COFIBA.jpg">
-<meta property="og:image" content="https://i.postimg.cc/g00V9dqY/MBA.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.131Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/beta%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Bandit%20%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94%E5%9B%BE.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/LinUCB.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/COFIBA.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/COFIBA%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%88%AB.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/MBA%E9%97%AE%E9%A2%98.jpg">
+<meta property="og:updated_time" content="2021-10-23T17:00:19.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="推荐系统三十六式--学习笔记（17-19 MAB问题）">
 <meta name="twitter:description" content="参考原作：推荐系统三十六式-刑无刀 17.【MAB问题】简单却有效的Bandit算法推荐就是选择选择的困难在于不知道选择的后果，而且一旦错了就没有机会再来一次。在推荐系统中就对应了少了一次成功展示的机会。选择时不再聚焦到具体每个选项，而是去选择类别，这样压力是不是就小了很多？比如说，把推荐选择具体物品，上升到选择策略。如果后台算法中有三种策略：按照内容相似推荐，按照相似好友推荐，按照热门推荐。每次">
-<meta name="twitter:image" content="https://i.postimg.cc/xCnzsRYL/beta.png">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/beta%E5%88%86%E5%B8%83.png">
 
 
 
@@ -520,7 +520,7 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 </blockquote>
 </blockquote>
 <h4 id="1-汤普森采样算法"><a href="#1-汤普森采样算法" class="headerlink" title="1. 汤普森采样算法"></a><strong>1. 汤普森采样算法</strong></h4><p>原理：假设每个臂是否产生收益，起决定作用的是背后有一个概率分布，产生收益的概率为 p。每个臂背后绑定了一个概率分布；每次做选择时，让每个臂的概率分布各自独立产生一个随机数，按照这个随机数排序，输出产生最大随机数那个臂对应的物品。</p>
-<p><a href="https://postimg.cc/1g7XXD8z" target="_blank" rel="noopener"><img src="https://i.postimg.cc/xCnzsRYL/beta.png" alt="beta.png"></a></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/beta%E5%88%86%E5%B8%83.png" alt="beta.png"></p>
 <p>假设每个臂背后的概率分布是上图所示的beta分布，a 和 b 两个参数决定了分布的形状和位置：</p>
 <ul>
 <li>当 a+b 值越大，分布曲线就越窄，分布就越集中，这样的结果就是产生的随机数会容易靠近中心位置；</li>
@@ -564,7 +564,8 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 <li>先选一个 (0,1) 之间较小的数，叫做 Epsilon，也是这个算法名字来历。</li>
 <li>每次以概率 Epsilon 做一件事：所有候选臂中随机选一个，以 1-Epsilon 的概率去选择平均收益最大的那个臂。<br><strong>Epsilon 的值可以控制对探索和利用的权衡程度。这个值越接近 0，在探索上就越保守。</strong><br>相似的，还有一个更朴素的做法：先试几次，等每个臂都统计到收益之后，就一直选均值最大那个臂。</li>
 </ol>
-<h4 id="4-效果对比"><a href="#4-效果对比" class="headerlink" title="4. 效果对比"></a><strong>4. 效果对比</strong></h4><p>对于上述算法，可以用仿真的方法对比效果，结果如下图：<br><a href="https://postimg.cc/cvsH84Zg" target="_blank" rel="noopener"><img src="https://i.postimg.cc/vZn6kcNz/Bandit.jpg" alt="Bandit效果对比图.jpg"></a></p>
+<h4 id="4-效果对比"><a href="#4-效果对比" class="headerlink" title="4. 效果对比"></a><strong>4. 效果对比</strong></h4><p>对于上述算法，可以用仿真的方法对比效果，结果如下图：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Bandit%20%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94%E5%9B%BE.jpg" alt="Bandit效果对比图.jpg"></p>
 <blockquote>
 <p>从上到下分别是下面几种。</p>
 <ol>
@@ -663,7 +664,9 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 <script type="math/tex; mode=display">\hat \theta_{d \times 1} = (D_{m \times d}^T D_{m \times d} + I_{d \times d}) ^{-1} D_{m \times d}^T C_{m \times 1}</script><p>每一个候选臂都像这样去更新它的参数，同时，得到参数后，在真正做选择时，用面对上下文的特征和候选臂的参数一起。除了估算期望收益，还要计算置信区间的上边界，如果 x 是上下文特征，则期望收益和置信上边界的计算方法分别是下面的样子。期望收益：</p>
 <script type="math/tex; mode=display">\hat r = x_{d \times 1}^T \hat \theta_{d \times 1}</script><p>置信区间上边界：</p>
 <script type="math/tex; mode=display">\hat b = \alpha \sqrt{x_{d \times 1}^T(D_{m \times d}^T D_{m \times d} + I_{d \times d}) ^{-1} x_{d \times 1}}</script><p>这两个计算结果都是标量数值。置信区间计算公式虽然看起来复杂，实际上反应的思想也很直观，随着被选择次数的增加，也就是 m 增加，这个置信上边界是越来越小的。每一次选择时给每一个候选臂都计算这两个值，相加之后选择最大那个候选臂输出，就是 LinUCB 了。<br><strong>岭回归（ridge regression）主要用于当样本数小于特征数时，对回归参数进行修正。对于加了特征的 Bandit 问题，正好符合这个特点：试验次数（样本）少于特征数。</strong></p>
-<p>LinUCB基本算法描述如下图：<br><a href="https://postimg.cc/8F2gLHb4" target="_blank" rel="noopener"><img src="https://i.postimg.cc/G223wg8W/LinUCB.png" alt="LinUCB.png"></a><br><strong>算法详解：</strong></p>
+<p>LinUCB基本算法描述如下图：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/LinUCB.png" alt="LinUCB.png"></p>
+<p><strong>算法详解：</strong></p>
 <ol>
 <li>设定一个参数$\alpha$，这个参数决定了我们Explore的程度；</li>
 <li>开始试验迭代；</li>
@@ -734,7 +737,8 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 </ol>
 </blockquote>
 </blockquote>
-<p>算法流程如下图所示：<br><a href="https://postimg.cc/hJqHjj4Z" target="_blank" rel="noopener"><img src="https://i.postimg.cc/wBtHwyCz/COFIBA.png" alt="COFIBA.png"></a></p>
+<p>算法流程如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/COFIBA.png" alt="COFIBA.png"></p>
 <p> 对比LinUCB 算法，COFIBA 的不同有两点：</p>
 <ul>
 <li>基于用户聚类挑选最佳的物品，即相似用户集体动态决策；</li>
@@ -753,7 +757,8 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 <li>更新 user 聚类；</li>
 <li>更新 item 聚类。</li>
 </ol>
-<p>更新 user 和 item 的聚类的方法如下图所示：<br><a href="https://postimg.cc/Y4hGmpRQ" target="_blank" rel="noopener"><img src="https://i.postimg.cc/FKxj8zJC/COFIBA.jpg" alt="COFIBA.jpg"></a></p>
+<p>更新 user 和 item 的聚类的方法如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/COFIBA%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%88%AB.jpg" alt="COFIBA更新类别.jpg"></p>
 <blockquote>
 <p>步骤详解：<br>(a)    示意图中有 6 个用户，8 个物品，初始化时，用户和物品的类簇个数都是 1。<br>(b)    在某一轮推荐时，推荐系统面对的用户是 4。推荐过程就是遍历 1～8 每个物品，然后在面对每个物品时，用户 4 在哪个类簇中，把对应类簇中的用户聚合起来为这个物品集体预测收益值置信上边界。这里假设最终物品 5 胜出，被推荐出去了。</p>
 <blockquote>
@@ -785,7 +790,8 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 <li>探索兴趣的地方需要产品精心设计，让用户有耐心陪你玩儿；</li>
 <li>深度思考，这样才不会做出脑残的产品，产品不会早早夭折，才有可能让探索机制有用武之地。</li>
 </ol>
-<p><strong>Bandit 算法是一种不太常用在推荐系统的算法，究其原因，是它能同时处理的物品数量不能太多。但是，在冷启动和处理 EE 问题时，Bandit 算法简单好用，值得一试。</strong><br><a href="https://postimg.cc/yDwg9Mb5" target="_blank" rel="noopener"><img src="https://i.postimg.cc/g00V9dqY/MBA.jpg" alt="MBA问题.jpg"></a></p>
+<p><strong>Bandit 算法是一种不太常用在推荐系统的算法，究其原因，是它能同时处理的物品数量不能太多。但是，在冷启动和处理 EE 问题时，Bandit 算法简单好用，值得一试。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/MBA%E9%97%AE%E9%A2%98.jpg" alt="MBA问题.jpg"></p>
 <hr>
 
       
@@ -1096,7 +1102,7 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

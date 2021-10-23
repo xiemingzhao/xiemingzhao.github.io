@@ -100,12 +100,12 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 8.【近邻推荐】人以群分，你是什么人就看到什么世界协同过滤，普通且重要。 协同过滤推荐系统度过了只能使用基于内容的推荐阶段后,就有了大量的用户行为数据。这个用户物品的关系矩阵中填充的就是用户对物品的态度，但并不是每个位置都有，需要的就是把那些还没有的地方填起来。这个关系矩阵是协同过滤的命根子，一切都围绕它来进行。  协同过滤是一个比较大的算法范畴。通常划分为两类">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/v8g0JLnf/image.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.174Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E8%BF%91%E9%82%BB%E6%8E%A8%E8%8D%90.jpg">
+<meta property="og:updated_time" content="2021-10-23T16:12:00.350Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="推荐系统三十六式--学习笔记（8-10 近邻推荐）">
 <meta name="twitter:description" content="参考原作：推荐系统三十六式-刑无刀 8.【近邻推荐】人以群分，你是什么人就看到什么世界协同过滤，普通且重要。 协同过滤推荐系统度过了只能使用基于内容的推荐阶段后,就有了大量的用户行为数据。这个用户物品的关系矩阵中填充的就是用户对物品的态度，但并不是每个位置都有，需要的就是把那些还没有的地方填起来。这个关系矩阵是协同过滤的命根子，一切都围绕它来进行。  协同过滤是一个比较大的算法范畴。通常划分为两类">
-<meta name="twitter:image" content="https://i.postimg.cc/v8g0JLnf/image.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E8%BF%91%E9%82%BB%E6%8E%A8%E8%8D%90.jpg">
 
 
 
@@ -698,9 +698,7 @@
 <p><strong>余弦相似度适用于评分数据，杰卡德相似度适合用于隐式反馈数据。杰卡德相似度就只适合布尔值向量，余弦相似度弹性略大，适合两种向量。欧式距离度量的是绝对差异，余弦相似度度量的是方向差异，但是调整的余弦相似度则可以避免这个弱点。</strong></p>
 <p>一位网友的案例：<br>做社交网络好友相似的度量，粗略来说可以用这几个特征：<br>帖子发布数量，月均发帖数量，平均帖子字数，头像，一些标签数据，例如是否大V，是否营销号，是否网红，职业等标签数据。</p>
 <p>另外还可以统计发文Top关键词向量及词频。标签数据可计算杰卡的相似度，Top关键词可计算余弦相似度，发布量，字数等可计算欧氏距离，然后再融合这几种相似度得到总和相似度。</p>
-<p><a href="https://postimg.cc/6TKVRZYp" target="_blank" rel="noopener"><img src="https://i.postimg.cc/v8g0JLnf/image.jpg" alt="近邻推荐"></a></p>
-<hr>
-
+<h2 id><a href="#" class="headerlink" title></a><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E8%BF%91%E9%82%BB%E6%8E%A8%E8%8D%90.jpg" alt="近邻推荐"></h2>
       
     </div>
     
@@ -989,7 +987,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-【近邻推荐】人以群分，你是什么人就看到什么世界"><span class="nav-number">1.</span> <span class="nav-text">8.【近邻推荐】人以群分，你是什么人就看到什么世界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协同过滤"><span class="nav-number">1.1.</span> <span class="nav-text">协同过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于用户的协同过滤"><span class="nav-number">1.1.1.</span> <span class="nav-text">基于用户的协同过滤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-【近邻推荐】解密“看了又看”和“买了又买”"><span class="nav-number">2.</span> <span class="nav-text">9.【近邻推荐】解密“看了又看”和“买了又买”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于物品（Item-Based）"><span class="nav-number">2.1.</span> <span class="nav-text">基于物品（Item-Based）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算物品相似度"><span class="nav-number">2.1.2.</span> <span class="nav-text">计算物品相似度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算推荐结果"><span class="nav-number">2.1.3.</span> <span class="nav-text">计算推荐结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-【近邻推荐】协同过滤中的相似度计算方法有哪些"><span class="nav-number">3.</span> <span class="nav-text">10.【近邻推荐】协同过滤中的相似度计算方法有哪些</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相似度的本质"><span class="nav-number">3.1.</span> <span class="nav-text">相似度的本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相似度的计算方法"><span class="nav-number">3.2.</span> <span class="nav-text">相似度的计算方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据分类"><span class="nav-number">3.2.1.</span> <span class="nav-text">数据分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-欧氏距离"><span class="nav-number">3.2.2.</span> <span class="nav-text">1 欧氏距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-余弦相似度"><span class="nav-number">3.2.3.</span> <span class="nav-text">2 余弦相似度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-皮尔逊相关度"><span class="nav-number">3.2.4.</span> <span class="nav-text">3 皮尔逊相关度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-杰卡德（Jaccard）相似度"><span class="nav-number">3.2.5.</span> <span class="nav-text">4 杰卡德（Jaccard）相似度</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-【近邻推荐】人以群分，你是什么人就看到什么世界"><span class="nav-number">1.</span> <span class="nav-text">8.【近邻推荐】人以群分，你是什么人就看到什么世界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协同过滤"><span class="nav-number">1.1.</span> <span class="nav-text">协同过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于用户的协同过滤"><span class="nav-number">1.1.1.</span> <span class="nav-text">基于用户的协同过滤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-【近邻推荐】解密“看了又看”和“买了又买”"><span class="nav-number">2.</span> <span class="nav-text">9.【近邻推荐】解密“看了又看”和“买了又买”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于物品（Item-Based）"><span class="nav-number">2.1.</span> <span class="nav-text">基于物品（Item-Based）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算物品相似度"><span class="nav-number">2.1.2.</span> <span class="nav-text">计算物品相似度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算推荐结果"><span class="nav-number">2.1.3.</span> <span class="nav-text">计算推荐结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-【近邻推荐】协同过滤中的相似度计算方法有哪些"><span class="nav-number">3.</span> <span class="nav-text">10.【近邻推荐】协同过滤中的相似度计算方法有哪些</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相似度的本质"><span class="nav-number">3.1.</span> <span class="nav-text">相似度的本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相似度的计算方法"><span class="nav-number">3.2.</span> <span class="nav-text">相似度的计算方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据分类"><span class="nav-number">3.2.1.</span> <span class="nav-text">数据分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-欧氏距离"><span class="nav-number">3.2.2.</span> <span class="nav-text">1 欧氏距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-余弦相似度"><span class="nav-number">3.2.3.</span> <span class="nav-text">2 余弦相似度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-皮尔逊相关度"><span class="nav-number">3.2.4.</span> <span class="nav-text">3 皮尔逊相关度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-杰卡德（Jaccard）相似度"><span class="nav-number">3.2.5.</span> <span class="nav-text">4 杰卡德（Jaccard）相似度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text"></span></a></li></ol></div>
             
 
           </div>
@@ -1009,7 +1007,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

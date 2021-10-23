@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="1. 前言RF,GBDT,XGBoost,lightGBM都属于集成学习（Ensemble Learning），集成学习的目的是通过结合多个基学习器的预测结果来改善基本学习器的泛化能力和鲁棒性。  根据基本学习器的生成方式，目前的集成学习方法大致分为两大类：即基本学习器之间存在强依赖关系、必须串行生成的序列化方法；以及基本学习器间不存在强依赖关系、可同时生成的并行化方法。前者的代表就是Boosti">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-14T14:15:33.800Z">
+<meta property="og:updated_time" content="2020-03-22T14:50:45.256Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RF,GBDT,XGBOOST, LightGBM之间的爱恨情仇">
 <meta name="twitter:description" content="1. 前言RF,GBDT,XGBoost,lightGBM都属于集成学习（Ensemble Learning），集成学习的目的是通过结合多个基学习器的预测结果来改善基本学习器的泛化能力和鲁棒性。  根据基本学习器的生成方式，目前的集成学习方法大致分为两大类：即基本学习器之间存在强依赖关系、必须串行生成的序列化方法；以及基本学习器间不存在强依赖关系、可同时生成的并行化方法。前者的代表就是Boosti">
@@ -476,7 +476,7 @@
 <ol>
 <li>训练可以高度并行化，对于大数据时代的大样本训练速度有优势，算是主要优势；</li>
 <li>能够处理很高维的数据，并且不用特征选择，而且在训练完后，给出特征的重要性；</li>
-<li>相对于Boosting系列的Adaboost和GBDT， RF实现比较简单。。<br>　　<br>缺点：在噪声较大的分类或者回归问题上容易过拟合。</li>
+<li>相对于Boosting系列的Adaboost和GBDT， RF实现比较简单。<br>　　<br>缺点：在噪声较大的分类或者回归问题上容易过拟合。</li>
 </ol>
 <h2 id="3-GBDT（梯度提升决策树）"><a href="#3-GBDT（梯度提升决策树）" class="headerlink" title="3. GBDT（梯度提升决策树）"></a>3. GBDT（梯度提升决策树）</h2><h3 id="3-1-算法原理"><a href="#3-1-算法原理" class="headerlink" title="3.1 算法原理"></a>3.1 算法原理</h3><p>首先是基于Boosting的，提升树是加法模型，学习算法为前向分布算法时的算法。但GBDT与传统的Boosting区别较大，是对提升树的改进，不过它限定基本学习器为决策树。它的每一次计算都是为了减少上一次的残差，而为了消除残差，我们可以在<strong>残差减小的梯度方向上建立模型</strong>,所以说，在GradientBoost中，每个新的模型的建立是为了使得之前的模型的残差往梯度下降的方法，与传统的Boosting中关注正确错误的样本加权有着很大的区别。</p>
 <p>具体的算法求解过程可以参考<a href="https://www.jianshu.com/p/405f233ed04b" target="_blank" rel="noopener">这篇博客</a>或者<a href="https://www.jstor.org/stable/2699986" target="_blank" rel="noopener">原始论文</a>。</p>
@@ -485,10 +485,7 @@
 <h3 id="3-3-优缺点："><a href="#3-3-优缺点：" class="headerlink" title="3.3 优缺点："></a>3.3 优缺点：</h3><p>优点：</p>
 <ol>
 <li>它能灵活的处理各种类型的数据；</li>
-<li><ol>
 <li>在相对较少的调参时间下，预测的准确度较高，这个是相对SVM来说的。 </li>
-</ol>
-</li>
 </ol>
 <p>缺点：基学习器之前存在串行关系，难以并行训练数据。</p>
 <h2 id="4-XGBoost"><a href="#4-XGBoost" class="headerlink" title="4 XGBoost"></a>4 XGBoost</h2><h3 id="4-1-算法原理"><a href="#4-1-算法原理" class="headerlink" title="4.1 算法原理"></a>4.1 算法原理</h3><p>XGBoost的性能在GBDT上又有一步提升，而其性能也能通过各种比赛管窥一二。坊间对XGBoost最大的认知在于其能够自动地运用CPU的多线程进行并行计算，同时在算法精度上也进行了精度的提高。由于GBDT在合理的参数设置下，往往要生成一定数量的树才能达到令人满意的准确率，在数据集较复杂时，模型可能需要几千次迭代运算。但是XGBoost利用并行的CPU更好的解决了这个问题。</p>
@@ -508,7 +505,7 @@
 <blockquote>
 <p><strong>exact greedy algorithm</strong>—贪心算法获取最优切分点;<br><strong>approximate algorithm</strong>—近似算法，提出了候选分割点概念，先通过直方图算法获得候选分割点的分布情况，然后根据候选分割点将连续的特征信息映射到不同的buckets中，并统计汇总信息。详细见论文3.3节<br><strong>Weighted Quantile Sketch</strong>—分布式加权直方图算法，论文3.4节</p>
 </blockquote>
-<p>可并行的近似直方图算法。树节点在进行分裂时，我们需要计算每个特征的每个分割点对应的增益，即用贪心法枚举所有可能的分割点。当数据无法一次载入内存或者在分布式情况下，贪心算法效率就会变得很低，所以xgboost还提出了一种可并行的近似直方图算法，对特征排序后仅选择常数个候选分裂位置作为候选分裂点，用于高效地生成候选的分割点。这里的加权就是指当进行某一个特征划分点查找的时候，利用样本的二阶导即$\h_i$值作为样本的权重，而并不是按照样本原始个数取找分位数。</p>
+<p>可并行的近似直方图算法。树节点在进行分裂时，我们需要计算每个特征的每个分割点对应的增益，即用贪心法枚举所有可能的分割点。当数据无法一次载入内存或者在分布式情况下，贪心算法效率就会变得很低，所以xgboost还提出了一种可并行的近似直方图算法，对特征排序后仅选择常数个候选分裂位置作为候选分裂点，用于高效地生成候选的分割点。<strong>这里的加权就是指当进行某一个特征划分点查找的时候，利用样本的二阶导即$h_i$值作为样本的权重，而并不是按照样本原始个数取找分位数。</strong></p>
 <p><strong>4.2.7 对缺失值的处理。</strong><br>对于特征的值有缺失的样本，xgboost可以自动学习出它的分裂方向。<strong>稀疏感知算法</strong>，论文3.4节，Algorithm 3: Sparsity-aware Split Finding。具体处理方式可以概述如下：</p>
 <blockquote>
 <ol>
@@ -598,7 +595,7 @@
 <blockquote>
 <ul>
 <li><strong>目标函数添加正则项</strong>：叶子节点个数+叶子节点权重的L2正则化</li>
-<li>列抽样：训练的时候只用一部分特征（不考虑剩余的block块即可）</li>
+<li><strong>列抽样</strong>：训练的时候只用一部分特征（不考虑剩余的block块即可）</li>
 <li><strong>子采样</strong>：每轮计算可以不使用全部样本，使算法更加保守</li>
 <li><strong>shrinkage</strong>: 可以叫学习率或步长，为了给后面的训练留出更多的学习空间</li>
 <li><strong>剪枝</strong>：多种方式限制树的复杂度，参考4.2.12。</li>
@@ -610,7 +607,7 @@
 <p><strong>即这里每个样本最终在$q$结构的树上最终只会落在某一个叶子节点上，那么对应的$w$这个权重即为输出值。所以我们需要确定最优的$w$，而这个就需要根据最优的损失目标来确定。有$T$个叶子节点所以有$T$个$w$</strong></p>
 <p>定义$I_j = {i|q(x_i)=j}$为叶子结点j里面的样本，我们可以通过扩展$\Omega$来重写公式（3）：</p>
 <script type="math/tex; mode=display">\tilde{\mathcal L}^{(t)} = \sum_{t=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2 \\
-=\sum_{j=1}^T[(\sum_{i \in I_j} g_i) w_j + \frac{1}{2}(\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T</script><p>对于一个固定的结构$q(x)$，我们可以根据二次函数求最值的方法计算叶子结点$j$的最优权重$w_j^<em>$，即在$w_j^</em>$取如下值的时候目标函数能够取最小值：</p>
+=\sum_{j=1}^T[(\sum_{i \in I_j} g_i) w_j + \frac{1}{2}(\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T</script><p>对于一个固定的结构$q(x)$，我们可以根据二次函数求最值的方法计算叶子结点$j$的最优权重$w_j^{*}$，即在$w_j^{*}$取如下值的时候目标函数能够取最小值：</p>
 <script type="math/tex; mode=display">w_j^* = -\frac{\sum_{i \in I_j} g_i} {\sum_{i \in I_j} h_i + \lambda}</script><p>并通过下式计算相应的目标函数最优值：</p>
 <script type="math/tex; mode=display">\tilde{\mathcal{L}}^{(t)}(q)=-\frac{1}{2} \sum_{j=1}^{T} \frac{\left(\sum_{i \in I_{j}} g_{i}\right)^{2}}{\sum_{i \in I_{j}} h_{i}+\lambda}+\gamma T</script><p>我们需要检测这次分裂是否会给损失函数带来增益，增益的定义如下：</p>
 <script type="math/tex; mode=display">\mathcal{L}_{\text {split}}=\frac{1}{2}\left[\frac{\left(\sum_{i \in I_{L}} g_{i}\right)^{2}}{\sum_{i \in I_{L}} h_{i}+\lambda}+\frac{\left(\sum_{i \in I_{R}} g_{i}\right)^{2}}{\sum_{i \in I_{R}} h_{i}+\lambda}-\frac{\left(\sum_{i \in I} g_{i}\right)^{2}}{\sum_{i \in I} h_{i}+\lambda}\right]-\gamma</script><p><strong>4.4.7 XGBoost如何评价特征的重要性</strong><br>官方文档主要介绍了三种方法来评判XGBoost模型中特征的重要程度：</p>
@@ -1040,7 +1037,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

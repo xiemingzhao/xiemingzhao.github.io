@@ -100,20 +100,20 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 25.【常见架构】典型的信息流架构是什么样的在工程实践的部分中，我首先介绍的内容是当今最热门的信息流架构。信息流是推荐系统应用中的当红炸子鸡，它表现形式有很多：社交网络的动态信息流、新闻阅读的图文信息流、短视频信息流等等。 究竟。整体框架信息流，通常也叫作 feed，这个英文词也很有意思，就是“喂”给用户的意思。传统的信息流产品知识简单按照时间排序，而被推荐系统">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/wjMk557T/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/NFzGqxDj/fan-out.jpg">
-<meta property="og:image" content="https://i.postimg.cc/qBh2qZfw/fan-out-on-write.jpg">
-<meta property="og:image" content="https://i.postimg.cc/ryKJM8CY/Netflix.jpg">
-<meta property="og:image" content="https://i.postimg.cc/DwdQBmnm/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/vBj5cVL2/Netflix.jpg">
-<meta property="og:image" content="https://i.postimg.cc/59BtHz3H/Netflix.jpg">
-<meta property="og:image" content="https://i.postimg.cc/8CxtfYbS/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/XJ8B6Gqz/image.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.138Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E4%BF%A1%E6%81%AF%E6%B5%81%E6%8E%A8%E8%8D%90%E6%A1%86%E6%9E%B6.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/fan-out.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/fan-out-on-write.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%A6%BB%E7%BA%BF%E5%B1%82.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E7%AE%80%E5%8C%96%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84%E5%AF%B9%E6%AF%94.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%90%9C%E7%B4%A2%26%E6%8E%A8%E8%8D%90%26%E5%B9%BF%E5%91%8A.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%B8%B8%E8%A7%81%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:updated_time" content="2021-10-23T17:16:27.631Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="推荐系统三十六式--学习笔记（25-27 常见架构）">
 <meta name="twitter:description" content="参考原作：推荐系统三十六式-刑无刀 25.【常见架构】典型的信息流架构是什么样的在工程实践的部分中，我首先介绍的内容是当今最热门的信息流架构。信息流是推荐系统应用中的当红炸子鸡，它表现形式有很多：社交网络的动态信息流、新闻阅读的图文信息流、短视频信息流等等。 究竟。整体框架信息流，通常也叫作 feed，这个英文词也很有意思，就是“喂”给用户的意思。传统的信息流产品知识简单按照时间排序，而被推荐系统">
-<meta name="twitter:image" content="https://i.postimg.cc/wjMk557T/image.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E4%BF%A1%E6%81%AF%E6%B5%81%E6%8E%A8%E8%8D%90%E6%A1%86%E6%9E%B6.jpg">
 
 
 
@@ -492,7 +492,7 @@
 <li>如何给信息流内容按照兴趣重排序？</li>
 </ol>
 <a id="more"></a>
-<p><a href="https://postimg.cc/DSVsnXrt" target="_blank" rel="noopener"><img src="https://i.postimg.cc/wjMk557T/image.jpg" alt="image.jpg"></a><br>这张架构图划分成几个大的模块：<strong>日志收集、内容发布、机器学习、信息流服务、监控。</strong><br>这里分别介绍一下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E4%BF%A1%E6%81%AF%E6%B5%81%E6%8E%A8%E8%8D%90%E6%A1%86%E6%9E%B6.jpg" alt="信息流推荐框架.jpg"><br>这张架构图划分成几个大的模块：<strong>日志收集、内容发布、机器学习、信息流服务、监控。</strong><br>这里分别介绍一下：</p>
 <blockquote>
 <ol>
 <li>日志收集，是所有排序训练的数据来源，要收集的最核心数据就是用户在信息流上产生的行为，用于机器学习更新排序模型；</li>
@@ -531,8 +531,9 @@
 <ol>
 <li>获取用户所有连接的终点（如好友、关注对象、兴趣标签）；</li>
 <li>获取这些连接终点（关注对象）产生的新内容（Activity）；</li>
-<li>按照某个指标排序后输出。<br>上面这个步骤别看简单，在一个小型的社交网络上，通常很有效，而且 Twitter 早期也是这么做的。这就是江湖行话说的“拉”模式（Fan-out-on-load），即：<strong>信息流是在用户登录或者刷新后实时产生的</strong>。<br>这里有一个示意图:<br><a href="https://postimg.cc/jnyYyPBp" target="_blank" rel="noopener"><img src="https://i.postimg.cc/NFzGqxDj/fan-out.jpg" alt="fan-out.jpg"></a></li>
+<li>按照某个指标排序后输出。<br>上面这个步骤别看简单，在一个小型的社交网络上，通常很有效，而且 Twitter 早期也是这么做的。这就是江湖行话说的“拉”模式（Fan-out-on-load），即：<strong>信息流是在用户登录或者刷新后实时产生的</strong>。<br>这里有一个示意图:</li>
 </ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/fan-out.jpg" alt="fan-out.jpg"></p>
 <p>拉模式就是当用户访问时，信息流服务才会去相应的发布源拉取内容到自己的 feed 区来，这是一个阻塞同步的过程。“拉”模式的好处也显而易见，主要有下面两种。</p>
 <ol>
 <li>实现简单直接：一行 SQL 语句就搞定了。</li>
@@ -544,7 +545,9 @@
 <li>内存中要保留每个人产生的内容；</li>
 <li>服务很难做到高可用。</li>
 </ol>
-<p>与“拉”模式对应，还有一个“推”模式（Fan-out-on-write），如下图所示：<br><a href="https://postimg.cc/F1vYnpHk" target="_blank" rel="noopener"><img src="https://i.postimg.cc/qBh2qZfw/fan-out-on-write.jpg" alt="fan-out-on-write.jpg"></a><br>当一个 Actor 产生了一条 Activity 后，不管受众在不在线，刷没刷新，都会立即将这条内容推送给相应的用户（即和这个 Actor 建立了连接的人），系统为每一个用户单独开辟一个信息流存储区域，用于接收推送的内容。如此一来，当用户登录后，系统只需要读取他自己的信息流即可。</p>
+<p>与“拉”模式对应，还有一个“推”模式（Fan-out-on-write），如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/fan-out-on-write.jpg" alt="fan-out-on-write.jpg"></p>
+<p>当一个 Actor 产生了一条 Activity 后，不管受众在不在线，刷没刷新，都会立即将这条内容推送给相应的用户（即和这个 Actor 建立了连接的人），系统为每一个用户单独开辟一个信息流存储区域，用于接收推送的内容。如此一来，当用户登录后，系统只需要读取他自己的信息流即可。</p>
 <p>“推”模式的好处显而易见：<br>在用户访问自己的信息流时，几乎没有任何复杂的查询操作，所以服务可用性较高。</p>
 <p>“推”模式也有一些不足：</p>
 <ol>
@@ -619,7 +622,8 @@
 <li>快速实验多种策略。</li>
 </ol>
 <p>一种更符合经典推荐系统的架构，这就是著名的流媒体Netflix 的推荐系统架构。</p>
-<h3 id="经典架构"><a href="#经典架构" class="headerlink" title="经典架构"></a><strong>经典架构</strong></h3><p><a href="https://postimg.cc/RqxfTxYc" target="_blank" rel="noopener"><img src="https://i.postimg.cc/ryKJM8CY/Netflix.jpg" alt="Netflix.jpg"></a><br><strong>先整体看一下这个架构，一共分成三层：在线、近线、离线。</strong></p>
+<h3 id="经典架构"><a href="#经典架构" class="headerlink" title="经典架构"></a><strong>经典架构</strong></h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E6%9E%B6%E6%9E%84.jpg" alt="Netflix架构.jpg"></p>
+<p><strong>先整体看一下这个架构，一共分成三层：在线、近线、离线。</strong></p>
 <p>可以这样定义这三个层级：</p>
 <ol>
 <li>离线：不用实时数据，不提供实时服务；</li>
@@ -653,7 +657,9 @@
 </ol>
 </blockquote>
 <p>在线阶段要处理的对象一般是已经预处理后的推荐结果，是少量物品集合。比如说当用户访问一个物品详情页，需要做相关推荐，那么在线阶段给在线服务的 Rest API 传入用户身份以及当前的物品 ID，实时地取出物品 ID 对应的相关物品 ID，再根据用户信息对这些物品 ID 做一些重拍和过滤，就可以输出了，整个过程都是在 ms 级别完成。如果发生意外，比如说这个物品 ID 就没有相关的物品，那么这时候服务就需要降级，但是不能低于最低要求，这里的最低要求就是必须要返回东西，这就降级为取出热门排行榜返回。这就是服务的可用性。</p>
-<h4 id="3-离线层"><a href="#3-离线层" class="headerlink" title="3. 离线层"></a><strong>3. 离线层</strong></h4><p>讲完在线层，再来看看离线层。离线层就是躲在推荐系统的大后方，批量、周期性地执行一些计算任务。其特点是<strong>“不用实时数据，不提供实时服务”。</strong><br>离线层的示意图如下：<br><a href="https://postimg.cc/68qGQW7N" target="_blank" rel="noopener"><img src="https://i.postimg.cc/DwdQBmnm/image.jpg" alt="offline.jpg"></a><br>离线阶段主要面对的数据源就是 Hadoop，实质上是 HDFS。收集到的所有日志都存在这里面，是一个全量的数据中心。通过 Pig 或者 Hive 等工具，从全量日志中按照算法要求抽取出不同的数据，再加上其他数据变成了不同算法所需的数据源。</p>
+<h4 id="3-离线层"><a href="#3-离线层" class="headerlink" title="3. 离线层"></a><strong>3. 离线层</strong></h4><p>讲完在线层，再来看看离线层。离线层就是躲在推荐系统的大后方，批量、周期性地执行一些计算任务。其特点是<strong>“不用实时数据，不提供实时服务”。</strong><br>离线层的示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E7%A6%BB%E7%BA%BF%E5%B1%82.jpg" alt="offline.jpg"></p>
+<p>离线阶段主要面对的数据源就是 Hadoop，实质上是 HDFS。收集到的所有日志都存在这里面，是一个全量的数据中心。通过 Pig 或者 Hive 等工具，从全量日志中按照算法要求抽取出不同的数据，再加上其他数据变成了不同算法所需的数据源。</p>
 <p>如果这种数据源比较多时，就需要有专门的工具统一管理起来，这个管理上要求：</p>
 <ol>
 <li>数据准备好之后及时通知相关方，也就是要有订阅发布的模式；</li>
@@ -679,13 +685,16 @@
 <p>一个典型的近线计算任务是这样的：从事件队列中获取最新的一个或少许几个用户反馈行为，首先将这些用户已经反馈过的物品从离线推荐结果中剔除，进一步，用这几个反馈行为作为样本，以小批量梯度下降的优化方法去更新融合模型的参数。</p>
 <p>这两个计算任务都不会也不需要立即对用户做出响应，也不必须在下一次用户请求时就产生效果，就是说当用户实时请求时，不需要去等待近线任务的最新结果，因为两者是异步的。</p>
 <p>近线计算任务一个核心的组件就是流计算，因为它要处理的实时数据流。常用的流计算框架有<strong>Storm，Spark Streaming，FLink 等</strong>，Netflix 采用的内部流计算框架 Manhattan，这和Storm 类似。略有区别的是 Spark Streaming，实际上并不是实时流计算，而是小批量计算。</p>
-<h3 id="简化架构"><a href="#简化架构" class="headerlink" title="简化架构"></a><strong>简化架构</strong></h3><p>Netflix 是为全球多个国家同时提供在线服务的，因此推荐系统的架构略微复杂。倘若你现在刚刚接手一个新产品，要从 0 开始搭建一个推荐系统，那么可以以 Netflix 的架构作为蓝本，做一定的简化：<br><a href="https://postimg.cc/jwHD1C1y" target="_blank" rel="noopener"><img src="https://i.postimg.cc/vBj5cVL2/Netflix.jpg" alt="Netflix简化.jpg"></a><br>关键简化有两点：</p>
+<h3 id="简化架构"><a href="#简化架构" class="headerlink" title="简化架构"></a><strong>简化架构</strong></h3><p>Netflix 是为全球多个国家同时提供在线服务的，因此推荐系统的架构略微复杂。倘若你现在刚刚接手一个新产品，要从 0 开始搭建一个推荐系统，那么可以以 Netflix 的架构作为蓝本，做一定的简化：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E7%AE%80%E5%8C%96%E6%9E%B6%E6%9E%84.jpg" alt="Netflix简化架构.jpg"></p>
+<p>关键简化有两点：</p>
 <ol>
 <li>完全舍弃掉近线层；</li>
 <li>避免使用分布式系统。</li>
 </ol>
 <p>在一个新产品的场景下， 当数据量还没有那么大时，使用分布式存储或者计算框架，非常不划算。如果性能不足，请升级单机配置。根据经验，一个几千万用户，几十万到百万的物品的协同过滤或者矩阵分解，如果充分发挥单机的性能，综合效率会远远优于在 Spark 上运行。</p>
-<p><a href="https://postimg.cc/c6JW2rPZ" target="_blank" rel="noopener"><img src="https://i.postimg.cc/59BtHz3H/Netflix.jpg" alt="Netflix.jpg"></a><br>以上就是对这个架构的宏观总结对比。如前所说，其实架构都是进化出来的，你千万不必在一开始就追求完美的架构，满足最低要求就好。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Netflix%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84%E5%AF%B9%E6%AF%94.jpg" alt="Netflix三层架构对比.jpg"></p>
+<p>以上就是对这个架构的宏观总结对比。如前所说，其实架构都是进化出来的，你千万不必在一开始就追求完美的架构，满足最低要求就好。</p>
 <hr>
 <h2 id="27-【常见架构】总览推荐架构和搜索、广告的关系"><a href="#27-【常见架构】总览推荐架构和搜索、广告的关系" class="headerlink" title="27.【常见架构】总览推荐架构和搜索、广告的关系"></a>27.【常见架构】总览推荐架构和搜索、广告的关系</h2><h3 id="三种信息获取方式"><a href="#三种信息获取方式" class="headerlink" title="三种信息获取方式"></a><strong>三种信息获取方式</strong></h3><p>当用户想要从浩如烟海的网页中，找到对自己有用的信息，首选当然是搜索引擎，这是属于“已知的未知”需求，剩下的“未知的已知”和“未知的未知”则需要推荐系统去满足，只是推荐系统常常会出现画蛇添足去满足“已知的已知”这样的伪需求。<br>另外介于两者之间，还有一种商业化解决信息触达问题，就是广告系统。在线广告从条幅广告，到搜索广告再到社交精准广告，也逐渐形成了一个理念就是：把广告当成一种有用的信息去找到最需要它的人。</p>
 <h3 id="三者对比"><a href="#三者对比" class="headerlink" title="三者对比"></a><strong>三者对比</strong></h3><p>搜索，推荐和广告本质上都在解决信息过载的问题，各自解决的手段、目标不相同，各自诞生在产品生命周期不同阶段，以至于系统实现也不尽相同。我们从几个维度对比一下：</p>
@@ -745,7 +754,8 @@
 <li>基于内容的推荐，本质上就是一个小的搜索引擎。例如使用用户的兴趣标签召回推荐结果，就需要先对推荐候选池按照兴趣标签建立倒排索引，从而检索出候选集。</li>
 <li>广告是一个很特殊的存在，前面也说了，搜索和推荐都是为人找信息，而广告是为信息找人。但它在形式上又像推荐，总是“不请自来”，在技术实现上又兼有推荐和搜索两者特点。</li>
 </ul>
-<h3 id="架构抽象"><a href="#架构抽象" class="headerlink" title="架构抽象"></a><strong>架构抽象</strong></h3><p>我们抽象一下三者的需求共性：本质上都是在匹配，匹配用户的兴趣和需求（看成 context），但匹配的目标，条件和策略不尽相同。示意图如下：<br><a href="https://postimg.cc/R3QcjX8s" target="_blank" rel="noopener"><img src="https://i.postimg.cc/8CxtfYbS/image.jpg" alt="搜索&amp;推荐&amp;广告.jpg"></a></p>
+<h3 id="架构抽象"><a href="#架构抽象" class="headerlink" title="架构抽象"></a><strong>架构抽象</strong></h3><p>我们抽象一下三者的需求共性：本质上都是在匹配，匹配用户的兴趣和需求（看成 context），但匹配的目标，条件和策略不尽相同。示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%90%9C%E7%B4%A2%26%E6%8E%A8%E8%8D%90%26%E5%B9%BF%E5%91%8A.jpg" alt="搜索&amp;推荐&amp;广告.jpg"></p>
 <p><strong>我们再进一步抽象下去，又可以分为三步：过滤候选、排序候选、个性化输出。</strong></p>
 <h4 id="1-过滤候选"><a href="#1-过滤候选" class="headerlink" title="1. 过滤候选"></a><strong>1. 过滤候选</strong></h4><p>从查询关键字中解析得到查询意图，以及结构化的搜索条件，再用结构化的查询条件从倒排索引中检索出排序候选。与之相似的是广告系统，搜索广告也是查询关键字去检索候选广告，而联盟广告则是拿着用户标签去需求方获取广告候选。</p>
 <p>在推荐系统中，一再强调有挖掘、召回和排序三个阶段，其中的召回阶段就是过滤候选阶段，基于内容的就和搜索一样，用标签检索候选，协同过滤则检索出相似物品来，等等。</p>
@@ -761,7 +771,7 @@
 <li>另一方面，搜索可以积累用户兴趣数据；当二者结合起来考虑时，可以避免“搜什么推什么”的窘境，整个系统能够综合考虑哪些是即时快速需求，哪些是长期兴趣。</li>
 </ul>
 <p>广告系统，在技术上和搜索跟推荐并无本质差异，差异在意图不同，功能不同。对用户的信息需求满足，搜索和推荐离真正得到满足之间总是有一定的鸿沟，要么是信息不足，要么是信息过载，这些鸿沟可以利用经济手段进行调配，这就是广告系统。</p>
-<p><a href="https://postimg.cc/R6WZc0c7" target="_blank" rel="noopener"><img src="https://i.postimg.cc/XJ8B6Gqz/image.jpg" alt="常见架构.jpg"></a></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%B8%B8%E8%A7%81%E6%9E%B6%E6%9E%84.jpg" alt="常见架构.jpg"></p>
 <hr>
 
       
@@ -1072,7 +1082,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -100,13 +100,13 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法 评分预测问题只是很典型，其实并不大众,数据难收集，属于精英问题。行为预测，才是平民级推荐问题，处处可见。  缘起评分预测问题之所以“虽然小众却十分重要”，这一点得益于十多年前 Netflix Prize 的那一百万美元的悬赏效应。  公元 2006 年 10 月 2 号，对于很多人来说，这只">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/RCfd0CZD/ROC.png">
-<meta property="og:image" content="https://i.postimg.cc/pLqb1JNz/image.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.106Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3.jpg">
+<meta property="og:updated_time" content="2021-10-23T16:46:56.594Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="推荐系统三十六式--学习笔记（11-13 矩阵分解）">
 <meta name="twitter:description" content="参考原作：推荐系统三十六式-刑无刀 11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法 评分预测问题只是很典型，其实并不大众,数据难收集，属于精英问题。行为预测，才是平民级推荐问题，处处可见。  缘起评分预测问题之所以“虽然小众却十分重要”，这一点得益于十多年前 Netflix Prize 的那一百万美元的悬赏效应。  公元 2006 年 10 月 2 号，对于很多人来说，这只">
-<meta name="twitter:image" content="https://i.postimg.cc/RCfd0CZD/ROC.png">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png">
 
 
 
@@ -634,7 +634,8 @@
 </div>
 <p>真正例率（True Positive Rate , TPR）：</p>
 <script type="math/tex; mode=display">TPR=\frac{TP}{N_+} \approx p(\hat y=1|y=1)</script><p>假正例率(False Positive Rate  , FPR):</p>
-<script type="math/tex; mode=display">FPR=\frac{FP}{N_-} \approx p(\hat y=1|y=0)</script><p>TPR-FPR的相关图就是ROC曲线：<br><a href="https://postimg.cc/mhLCXsMY" target="_blank" rel="noopener"><img src="https://i.postimg.cc/RCfd0CZD/ROC.png" alt="ROC.png"></a></p>
+<script type="math/tex; mode=display">FPR=\frac{FP}{N_-} \approx p(\hat y=1|y=0)</script><p>TPR-FPR的相关图就是ROC曲线：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png" alt="ROC.png"></p>
 <h4 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a><strong>AUC</strong></h4><p>AUC 这个值在数学上等价于：模型把关心的那一类样本排在其他样本前面的概率。最大是 1，完美结果，而 0.5 就是随机排列，0 就是完美地全部排错。</p>
 <blockquote>
 <p><strong>AUC的计算步骤：</strong></p>
@@ -673,7 +674,7 @@
 <li>重复步骤 1，直到满足停止条件。</li>
 </ol>
 </blockquote>
-<p><a href="https://postimg.cc/21bK1vSS" target="_blank" rel="noopener"><img src="https://i.postimg.cc/pLqb1JNz/image.jpg" alt="矩阵分解"></a></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3.jpg" alt="矩阵分解"></p>
 <hr>
 
       
@@ -984,7 +985,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

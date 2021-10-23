@@ -100,20 +100,20 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳推荐系统在技术实现上一般划分为三个阶段：挖掘、召回、排序。  挖掘就是对用户和物品做非常深入的结构化分析，各个角度各个层面的特征都被呈现出来，并且建好索引，供召回阶段使用，大部分挖掘工作都是离线进行的。 召回，因为物品太多了，每次给一个用户计算推荐结果时，如果对全部物品挨个计算，那将是一场灾难，取而代之">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/DyVGyrtL/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/W1TJ02p4/sigmoid.png">
-<meta property="og:image" content="https://i.postimg.cc/pVZ68BHb/gbdt_lr.jpg">
-<meta property="og:image" content="https://i.postimg.cc/fySQWHH9/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/tCCfG410/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/CxncwBS2/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/Zq2B4nYw/image.jpg">
-<meta property="og:image" content="https://i.postimg.cc/28k6phFz/tensorflow.jpg">
-<meta property="og:image" content="https://i.postimg.cc/KzhG0M8h/image.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.120Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/sigmoid.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/gbdtlr.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/FM%E7%A4%BA%E4%BE%8B%E6%A0%B7%E6%9C%AC.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%AC%E5%9B%9E%E5%92%8C%E6%8E%92%E5%BA%8F.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%9B%9B%E7%A7%8D%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E5%9C%A8tensorflow%E4%B8%AD%E7%9A%84%E5%B1%95%E7%A4%BA.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%9B%BE.jpg">
+<meta property="og:updated_time" content="2021-10-23T16:55:10.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="推荐系统三十六式--学习笔记（14-16 模型融合）">
 <meta name="twitter:description" content="参考原作：推荐系统三十六式-刑无刀 14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳推荐系统在技术实现上一般划分为三个阶段：挖掘、召回、排序。  挖掘就是对用户和物品做非常深入的结构化分析，各个角度各个层面的特征都被呈现出来，并且建好索引，供召回阶段使用，大部分挖掘工作都是离线进行的。 召回，因为物品太多了，每次给一个用户计算推荐结果时，如果对全部物品挨个计算，那将是一场灾难，取而代之">
-<meta name="twitter:image" content="https://i.postimg.cc/DyVGyrtL/image.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg">
 
 
 
@@ -488,7 +488,8 @@
 <li>排序，针对筛选出的一部分靠谱的做一个统一的论资排辈，最后这个统一的排序就是下面的主题：融合。</li>
 </ul>
 <a id="more"></a>
-<p><a href="https://postimg.cc/SjrRgMQx" target="_blank" rel="noopener"><img src="https://i.postimg.cc/DyVGyrtL/image.jpg" alt="模型融合.jpg"></a><br><strong>可以注重学习一下图中的SVD,FM以及ALS算法</strong>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg" alt="模型融合.jpg"></p>
+<p><strong>可以注重学习一下图中的SVD,FM以及ALS算法</strong>。</p>
 <p>多种算法推出推荐结果后，需要模型融合的原因：</p>
 <blockquote>
 <ol>
@@ -512,7 +513,9 @@
 <li>第二个是权重，每个特征都有一个权重，权重就是特征的话事权。假设为w。</li>
 </ul>
 <p>sigmoid函数为：</p>
-<script type="math/tex; mode=display">\sigma (w \times x)=\frac {1}{1+e^{-w \times x}}</script><p>函数的图像如下：<br><a href="https://postimg.cc/mtpDsWHx" target="_blank" rel="noopener"><img src="https://i.postimg.cc/W1TJ02p4/sigmoid.png" alt="sigmoid函数.png"></a><br>逻辑回归特征的取值都要求要在 0 到 1 之间。</p>
+<script type="math/tex; mode=display">\sigma (w \times x)=\frac {1}{1+e^{-w \times x}}</script><p>函数的图像如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/sigmoid.png" alt="sigmoid函数.png"></p>
+<p>逻辑回归特征的取值都要求要在 0 到 1 之间。</p>
 <blockquote>
 <p>CTR预估，发现CTR预估一般都是用LR，而且特征都是离散的。<br>0、 离散特征的增加和减少都很容易，易于模型的快速迭代;<br>1、稀疏向量内积乘法运算速度快，计算结果方便存储，容易扩展；<br>2、离散化后的特征对异常数据有很强的鲁棒性;<br>3、逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，每个变量有单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合；<br>4、 离散化后可以进行特征交叉，加入特征 A 离散化为M个值，特征B离散为N个值，那么交叉之后会有M*N个变量，进一步引入非线性，提升表达能力；<br>5、特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。<br>6、特征离散化以后，起到了简化了逻辑回归模型的作用，降低了模型过拟合的风险。</p>
 </blockquote>
@@ -534,7 +537,9 @@
 <li>构建每一棵树时如果遇到实数值的特征，还需要将其分裂成若干区间，分裂指标有很多，可以参考 xgboost 中的计算分裂点收益，也可以参考决策树所用的信息增益。</li>
 </ol>
 <h4 id="二者结合"><a href="#二者结合" class="headerlink" title="二者结合"></a><strong>二者结合</strong></h4><p>将两者(LR+GBDT)结合在一起，用于做模型融合阶段的 CTR 预估。这是 Facebook 在其广告系统中使用的方法，其中 GBDT 的任务就是产生高阶特征组合。</p>
-<p>具体的做法是：GBDT 产生了 N 棵树，一条样本来了后，在每一棵树上都会从根节点走到叶子节点，到了叶子节点后，就是 1 或者 0，或者不变。把每一棵树的输出看成是一个组合特征，取值为 0 或者 1，一共 N 棵树就会产生 N 个新的特征，这 N 个新的特征作为输入进入 LR 模型，输出最终的结果。如下图所示：<br><a href="https://postimg.cc/qgNwHyqj" target="_blank" rel="noopener"><img src="https://i.postimg.cc/pVZ68BHb/gbdt_lr.jpg" alt="gbdt+lr.jpg"></a><br><strong>虽然简单，但在实际应用中非常的有效。</strong></p>
+<p>具体的做法是：GBDT 产生了 N 棵树，一条样本来了后，在每一棵树上都会从根节点走到叶子节点，到了叶子节点后，就是 1 或者 0，或者不变。把每一棵树的输出看成是一个组合特征，取值为 0 或者 1，一共 N 棵树就会产生 N 个新的特征，这 N 个新的特征作为输入进入 LR 模型，输出最终的结果。如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/gbdtlr.jpg" alt="gbdt+lr.jpg"></p>
+<p><strong>虽然简单，但在实际应用中非常的有效。</strong></p>
 <hr>
 <h2 id="15-【模型融合】一网打尽协同过滤、矩阵分解和线性模型"><a href="#15-【模型融合】一网打尽协同过滤、矩阵分解和线性模型" class="headerlink" title="15.【模型融合】一网打尽协同过滤、矩阵分解和线性模型"></a>15.【模型融合】一网打尽协同过滤、矩阵分解和线性模型</h2><h3 id="从特征组合说起"><a href="#从特征组合说起" class="headerlink" title="从特征组合说起"></a><strong>从特征组合说起</strong></h3><p>对逻辑回归    朴素的特征组合就是二阶笛卡尔乘积，但是你有没有想过这样暴力组合的问题所在。</p>
 <ol>
@@ -562,7 +567,9 @@
 <p>伪代码：<br>loop1 begin:循环k次，k就是隐因子向量的维度，其中，循环到第f次时做一下事情；<br>loop2 begin:循环n个特征，第i次循环时做这样的事情：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 1. 从第i个特征的隐因子向量中拿出第f维的值；<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 2. 计算两个值：A是特征值和f维的值相乘，B是A的平方；<br>loop2 end<br>把n个A累加起来，并平方得到C，把n个B也累加起来，得到D，用C减D得到E；<br>loop1 end<br>把k次循环得到的k个E累加起来，除以2。</p>
 </blockquote>
 <p><strong>二阶组合部分的实际计算方法，现在这样做的复杂度只是 O(kn)</strong></p>
-<h4 id="4-一网打尽其他模型"><a href="#4-一网打尽其他模型" class="headerlink" title="4. 一网打尽其他模型"></a><strong>4. 一网打尽其他模型</strong></h4><p>如下图示例的样本：<br><a href="https://postimg.cc/K3bHJ5hG" target="_blank" rel="noopener"><img src="https://i.postimg.cc/fySQWHH9/image.jpg" alt="FM示例样本.jpg"></a><br>这张图中每一条样本都记录了用户对电影的评分，最右边的 y 是评分，也就是预测目标；左边的特征有五种，用户 ID、当前评分的电影 ID、曾经评过的其他分、评分时间、上一次评分的电影。</p>
+<h4 id="4-一网打尽其他模型"><a href="#4-一网打尽其他模型" class="headerlink" title="4. 一网打尽其他模型"></a><strong>4. 一网打尽其他模型</strong></h4><p>如下图示例的样本：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/FM%E7%A4%BA%E4%BE%8B%E6%A0%B7%E6%9C%AC.jpg" alt="FM示例样本.jpg"></p>
+<p>这张图中每一条样本都记录了用户对电影的评分，最右边的 y 是评分，也就是预测目标；左边的特征有五种，用户 ID、当前评分的电影 ID、曾经评过的其他分、评分时间、上一次评分的电影。</p>
 <p>因子分解机可以实现带有特征组合的逻辑回归。假设图中的样本特征只留下用户 ID 和电影 ID，因子分解机模型就变成：</p>
 <script type="math/tex; mode=display">\hat y=w_0+w_u+w_i+<V_u,V_i></script><blockquote>
 <p>因为用户 ID 和电影 ID，在一条样本中，各自都只有一个维度是 1，其他都是 0，所以在一阶部分就没有了求和符合，直接是 wu 和 wi，二阶部分特征乘积也只剩下了一个 1，其他都为 0 了。这不就是带有偏置信息的 SVD 吗？在 SVD 基础上把样本中的特征加上用户历史评过分的电影 ID，再求隐因子向量，就是 SVD++！再加上时间信息，就变成了 time-SVD。</p>
@@ -583,7 +590,11 @@
 </ol>
 </blockquote>
 <p>深度学习在推荐领域的应用，其最大好处就是“洞悉本质般的精深”，优秀的泛化性能，可以给推荐很多惊喜。Google 在 2016 年就发表了他们在 Google Play 应用商店上实践检验过的 CTR 预估方法：Wide &amp; Deep 模型，让两者一起为用户们服务，这样就取得了良好效果。具体的可以参考这篇论文:<a href="https://arxiv.org/pdf/1606.07792.pdf" target="_blank" rel="noopener">Cheng H T, Koc L, Harmsen J, et al. Wide &amp; Deep Learning for Recommender Systems[J]. 2016:7-10.</a></p>
-<h3 id="Wide-amp-Deep-模型"><a href="#Wide-amp-Deep-模型" class="headerlink" title="Wide &amp; Deep 模型"></a><strong>Wide &amp; Deep 模型</strong></h3><p>推荐系统有召回和排序两部构成，不过，推荐系统的检索过程并不一定有显式的检索语句，通常是拿着用户特征和场景特征去检索召回，其中用户特征也就是在前面的专栏中提到的用户画像。<br><a href="https://postimg.cc/bdWLQ8HL" target="_blank" rel="noopener"><img src="https://i.postimg.cc/tCCfG410/image.jpg" alt="推荐系统的召回和排序.jpg"></a><br>深宽模型就是专门用于融合排序的，分成两部分来看。一部分是线性模型，一部分是深度非线性模型。整个示意图如下：<br><a href="https://postimg.cc/0zxYfN6G" target="_blank" rel="noopener"><img src="https://i.postimg.cc/CxncwBS2/image.jpg" alt="深宽模型.jpg"></a><br>首先，线性模型部分，也就是“宽模型”，形式如下：</p>
+<h3 id="Wide-amp-Deep-模型"><a href="#Wide-amp-Deep-模型" class="headerlink" title="Wide &amp; Deep 模型"></a><strong>Wide &amp; Deep 模型</strong></h3><p>推荐系统有召回和排序两部构成，不过，推荐系统的检索过程并不一定有显式的检索语句，通常是拿着用户特征和场景特征去检索召回，其中用户特征也就是在前面的专栏中提到的用户画像。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%AC%E5%9B%9E%E5%92%8C%E6%8E%92%E5%BA%8F.jpg" alt="推荐系统的召回和排序.jpg"></p>
+<p>深宽模型就是专门用于融合排序的，分成两部分来看。一部分是线性模型，一部分是深度非线性模型。整个示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B.jpg" alt="深宽模型.jpg"></p>
+<p>首先，线性模型部分，也就是“宽模型”，形式如下：</p>
 <script type="math/tex; mode=display">y=W^TX+b</script><p>这是线性模型的标准形式，逻辑回归只是在这基础上用 sigmoid 函数变换了一下。深度模型其实就是一个前馈神经网络。深度模型对原始的高维稀疏类别型特征，先进行嵌入学习，转换为稠密、低维的实值型向量，转换后的向量维度通常在 10-100 这个范围。这里的嵌入学习，就是先随机初始化嵌入向量，再直接扔到整个前馈网络中，用目标函数来优化学习。</p>
 <p>深度模型中增加隐藏层的含义就是提供了非线性转换。所谓深度学习，就是深度神经网络，就是有不止一层的隐藏层存在。层数越多，非线性越强，模型越复杂。还有两点需要说明：</p>
 <ul>
@@ -591,7 +602,8 @@
 <li>输出层的函数也不一定是 sigmoid 函数，这个根据预测目标而定，回归任务就是 i 直接输出求和部分，二分类是 sigmoid 函数，多分类则是 softmax。</li>
 </ul>
 <p>深模型中，每一个隐藏层激活方式表示如下:</p>
-<script type="math/tex; mode=display">a^{l+1}=f(W^la^l+b^l)</script><p>其中 l 表示第 l 个隐藏层，f 是激活函数，通常选用 ReLU，也叫整流线性单元，为什么选用ReLU 而不是 sigmoid 函数，原因主要是 sigmoid 函数在误差反向传播时梯度容易饱和。<br><a href="https://postimg.cc/QBgxqXT7" target="_blank" rel="noopener"><img src="https://i.postimg.cc/Zq2B4nYw/image.jpg" alt="四种激活函数.jpg"></a></p>
+<script type="math/tex; mode=display">a^{l+1}=f(W^la^l+b^l)</script><p>其中 l 表示第 l 个隐藏层，f 是激活函数，通常选用 ReLU，也叫整流线性单元，为什么选用ReLU 而不是 sigmoid 函数，原因主要是 sigmoid 函数在误差反向传播时梯度容易饱和。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%9B%9B%E7%A7%8D%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg" alt="四种激活函数.jpg"></p>
 <blockquote>
 <ol>
 <li>紫色是 sigmoid 函数，就是逻辑回归用的那个，输入值是任意范围，输出是 0 到 1 之间；</li>
@@ -602,14 +614,16 @@
 </blockquote>
 <p>最后，看看两者的融合，即深宽模型。深模型和宽模型，由逻辑回归作为最终输出单元，深模型最后一个隐藏层作为特征接入逻辑回归，宽模型的原始特征与之一起接入逻辑回归，然后训练参数。参数学习就是通常说的端到端，把深模型和宽模型以及最终融合的权重放在一个训练流程中，直接对目标函数负责，不存在分阶段训练。它与机器学习中的集成学习方法有所区别，集成学习的子模型是独立训练的，只在融合阶段才会学习权重，这里是整体。</p>
 <script type="math/tex; mode=display">P(Y=1|X)=\sigma(W_{wide}^T[X,\Phi(X)]+W_{deep}^Ta^{(lf)}+b)</script><p>上述输出公式中，Y 是我们要预估的行为，二值变量，如购买，或点击，Google 的应用场景为“是否安装APP”。$\sigma$是 sigmoid 函数，$W_{wide}^T$ 宽模型的权重，$\Phi(X)$ 是宽模型的组合特征，$W_{deep}^T$ 应用在深模型输出上的权重，$a^{(lf)}$ 是深模型的最后一层输出，b 是线性模型的偏置。</p>
-<h3 id="几点技巧"><a href="#几点技巧" class="headerlink" title="几点技巧"></a><strong>几点技巧</strong></h3><p>这个深宽模型已经在 TensorFlow 中有开源实现，具体落地时整个数据流如下图所示:<br><a href="https://postimg.cc/yWGBcJb5" target="_blank" rel="noopener"><img src="https://i.postimg.cc/28k6phFz/tensorflow.jpg" alt="深宽模型在tensorflow中的展示.jpg"></a><br><strong>整个流程分为三大块：数据生成，模型训练，模型应用。</strong></p>
+<h3 id="几点技巧"><a href="#几点技巧" class="headerlink" title="几点技巧"></a><strong>几点技巧</strong></h3><p>这个深宽模型已经在 TensorFlow 中有开源实现，具体落地时整个数据流如下图所示:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E5%9C%A8tensorflow%E4%B8%AD%E7%9A%84%E5%B1%95%E7%A4%BA.jpg" alt="深宽模型在tensorflow中的展示.jpg"></p>
+<p><strong>整个流程分为三大块：数据生成，模型训练，模型应用。</strong></p>
 <h4 id="1-数据生成"><a href="#1-数据生成" class="headerlink" title="1 数据生成"></a><strong>1 数据生成</strong></h4><p>几个要点：</p>
 <ul>
 <li>每一条曝光日志就生成一条样本，标签就是 1/0，安装了 App 就是 1，否则就是 0。</li>
 <li>将字符串形式的特征映射为 ID，需要用一个阈值过滤掉那些出现样本较少的特征。</li>
 <li>对连续值做归一化，归一化的方法是：对累积分布函数 P(X&lt;=x) 划分 nq 个分位，落入第 i 个分位的特征都归一化为下列所示：$\frac {i-1}{n_q-1}$</li>
 </ul>
-<h4 id="2-模型训练-1"><a href="#2-模型训练-1" class="headerlink" title="2    模型训练"></a><strong>2    模型训练</strong></h4><p><a href="https://postimg.cc/PLKnxNDS" target="_blank" rel="noopener"><img src="https://i.postimg.cc/KzhG0M8h/image.jpg" alt="深宽模型训练图.jpg"></a></p>
+<h4 id="2-模型训练-1"><a href="#2-模型训练-1" class="headerlink" title="2    模型训练"></a><strong>2    模型训练</strong></h4><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%9B%BE.jpg" alt="深宽模型训练图.jpg"></p>
 <blockquote>
 <p>其要点，在深度模型侧：</p>
 <ol>
@@ -931,7 +945,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

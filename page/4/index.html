@@ -469,7 +469,9 @@
         
           <p><a href="https://time.geekbang.org/column/intro/74" target="_blank" rel="noopener">参考原作：推荐系统三十六式-刑无刀</a></p>
 <h2 id="20-【深度学习】深度学习在推荐系统中的应用有哪些"><a href="#20-【深度学习】深度学习在推荐系统中的应用有哪些" class="headerlink" title="20.【深度学习】深度学习在推荐系统中的应用有哪些"></a>20.【深度学习】深度学习在推荐系统中的应用有哪些</h2><h3 id="深度学习与推荐系统"><a href="#深度学习与推荐系统" class="headerlink" title="深度学习与推荐系统"></a><strong>深度学习与推荐系统</strong></h3><p>在矩阵分解中，原始的矩阵表示每个用户的向量是物品，表示每个物品的向量是用户，两者向量的维度都特别高不说，还特别稀疏，分解后用户向量和物品向量不但维度变得特别小，而且变稠密了。业界还把这个稠密的向量叫做<strong>隐因子，意图直观说明它的物理意义：用户背后的偏好因子，物品背后的主题因子。</strong></p>
-<p>实际上，你完全可以把矩阵分解看成是一种浅层神经网络，只有一层，它的示意图如下。<br><a href="https://postimg.cc/dDQMyM50" target="_blank" rel="noopener"><img src="https://i.postimg.cc/tRW98pPF/image.jpg" alt="矩阵分解隐因子.jpg"></a><br>这个示意图表示了一个用户 Ui，评分过的物品有 I2 和 I4，分解后的矩阵隐因子数量是 2，用户 Ui 的隐因子向量就是 [w1, w2]，物品 I2 的隐因子向量是 [w3, w5]，物品 I4 的隐因子向量是 [w4, w6]。可以把矩阵分解看成是一个拥有一个隐藏层的神经网络，得到的隐因子向量就是神经网络的连接权重参数。</p>
+<p>实际上，你完全可以把矩阵分解看成是一种浅层神经网络，只有一层，它的示意图如下。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E9%9A%90%E5%9B%A0%E5%AD%90.jpg" alt="矩阵分解隐因子.jpg"></p>
+<p>这个示意图表示了一个用户 Ui，评分过的物品有 I2 和 I4，分解后的矩阵隐因子数量是 2，用户 Ui 的隐因子向量就是 [w1, w2]，物品 I2 的隐因子向量是 [w3, w5]，物品 I4 的隐因子向量是 [w4, w6]。可以把矩阵分解看成是一个拥有一个隐藏层的神经网络，得到的隐因子向量就是神经网络的连接权重参数。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/posts/c3af6916.html#more" rel="contents">
@@ -1940,7 +1942,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
