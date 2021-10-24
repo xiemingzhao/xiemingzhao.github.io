@@ -100,14 +100,14 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/qRd59r8J/relate-papers18-1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/zG6MFKvR/relate-papers18-2.jpg">
-<meta property="og:image" content="https://i.postimg.cc/LsPWC5gQ/relate-papers18-3.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.066Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG">
+<meta property="og:updated_time" content="2021-10-24T10:00:33.263Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Factorization Machines (论文解析)">
 <meta name="twitter:description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
-<meta name="twitter:image" content="https://i.postimg.cc/qRd59r8J/relate-papers18-1.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG">
 
 
 
@@ -486,7 +486,7 @@
 <p><strong>例1</strong> 假设我们有个电影评分系统的交互数据。系统记录了用户$u\in U$在特定的时间$t \in R$对电影$i \in I$的评分$r \in {1,2,3,4,5}$.用户U和电影I为：</p>
 <p>$U = \{Alice (A), Bob (B), Charlie (C), . . .\}$<br>$I = \{Titanic (TI),Notting Hill (NH), Star Wars (SW),Star Trek (ST), . . .\}$</p>
 <p>用观察到的数据S表示：<br>$S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$<br>      $(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$<br>      $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$<br>任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。</p>
-<p><img src="https://i.postimg.cc/qRd59r8J/relate-papers18-1.jpg" alt="relate-papers18-1.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG" alt="FM-1.JPG"></p>
 <p>图1展示了一个示例，在这个任务中如何从观测数据S中构建特征向量。在这里，首先$|U|$是一个二值示性变量（蓝色的），它表示一个交互中活跃的用户，总是可以确定的是在一次交互$(u,i,t,r) \in S$中有一个确定的活跃用户。例如，第一行中的Alice($x_A^{(1)} = 1$)。下一个二值示性变量$|I|$（红色的）表示活跃的物品，同样的总是有一个活跃的物品，例如$x_{TI}^{(1)}=1$。图1中的特征向量也包含了用来表示用户曾经评价过的其他物品的表示向量（黄色的）。对于每个用户来说，变量均是被归一化之后的。例如Alice评价过Notting Hill 和 Star Wars。此外，样本还包含一个从2019年一月开始的月份向量（绿色的）来表示时间。最后几列表示用户评价过的最后一个电影，最右边的是当前电影的评分y。在第五部分，我们将展示因式分解机是如何利用输入数据中的特征向量来做到最特殊的顶级的因式分解模型的。</p>
 <p>我们将通过这篇论文用这个示例数据集来证明。然而，请注意FMs是一个像SVMs一样的通用模型，可以应用在任何一个现实中的特征向量，并且对推荐系统没有什么限制。</p>
 <h3 id="3-因式分解机-FM"><a href="#3-因式分解机-FM" class="headerlink" title="3.因式分解机(FM)"></a>3.因式分解机(FM)</h3><p>在这一部分，我们将来介绍因式分解机。我们会详细地讨论模型中的公式推导，并且会展示怎么使用FMs进行多预测任务。</p>
@@ -544,7 +544,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 <p><em>B. 稀疏情况下的参数估计</em><br>我们下面解释一下为什么线性和多项式的SVM在稀疏的情况下表现不好。我们将使用用户和物品的表征向量的数据来证明这个协同过滤的例子。这里，特征向量是稀疏的，并且仅仅两个参数是非0的。</p>
 <p><em>1）线性SVM</em>：对于这种数据x,线性的SVM模型等价于下面的等式：</p>
 <script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i</script><p>因为当且仅当$j = u \ or \ j = i$的时候$x_j = 1$。这个模型对应于一个最基础的协同过滤模型，即只有用户和巫婆的偏置项存在。由于这个模型很简单，因为只有少数的几个参数，所以模型的参数的预测在这种稀疏情况下也会不错。但是预测的质量却不好，见图2。</p>
-<p><img src="https://i.postimg.cc/zG6MFKvR/relate-papers18-2.jpg" alt="relate-papers18-2.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG" alt="FM-2.JPG"></p>
 <p><em>2）多项式SVM</em>：这种情况下，SVM可以获取高阶的相互关系。在我们的系数数据案例中，$m(x)=2$，这时候SVMs模型的等式等价于：</p>
 <script type="math/tex; mode=display">\hat y(x) = w_0 + \sqrt2 (w_u + w_i) + w_{u,u}^{(2)} + w_{i,i}^{(2)} + \sqrt2 w_{u,i}^{(2)}</script><p>首先，$w_u \ and \ w_{u,u}^{(2)}$代表的是同样的，可以期初其中一个例如后者。现在模型的等式就变成了线性的除了有一个额外的用户交叉项$w_{u,i}^{(2)}$。在经典的协同过滤(FM)问题中，对于每个交叉项参数$w_{u,i}^{(2)}$，训练数据中至少有一个观测样本(u,i)，而在测试数据中的案例$(u’,i’)$就一般不会在训练数据及中再次出现了。这意味着对于所有的测试案例(u,i)的交叉项参数来说，最大边际解是0。因此对于预测测试集的时候，多项式SVM对于二阶的交叉项来说没有任何作用；所以多项式核的SVM模型仅仅依赖于用户和物品偏置项，在效果上并没有比线性的SVM好多少。</p>
 <p>对于SVM模型，估计一个高级的交叉项并不是CF模型中的问题，但是当数据是高稀疏性的时候这个问题就存在了。因为对于一个成对的交叉项$(i,j)$想要得到一个可靠的参数估计$w_{i,j}^{(2)}$的话，必须提供足够多的样例$x \in D,where \ x_i \neq 0 \wedge x_i \neq 0$。只要不同时出现$x_i=0,x_j=0$，这个样例就可以用来进行参数估计。<br>总结一下，只要数据比较稀疏的时候，即没有足够的(i,j)的样例的时候，SVMs模型基本上失效的。</p>
@@ -566,7 +566,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 <script type="math/tex; mode=display">n:=|U \cup I \cup L|, x_j := \delta (j = i \vee j = u \vee j = t)\\
 \Longrightarrow \hat y(x)= w_0 + w_u + w_i +  \langle v_u, v_i \rangle  +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle</script><p>由于该模型用于在相同的用户/项目组合（u，i）内的两个标签$t_A,t_B$之间进行排序的，两者都是始终致力于优化和预测案例$（u,i,t_A）和（u,i,t_B）之间的得分差异。因此对于成对排序的优化，FM模型等价于：</p>
 <script type="math/tex; mode=display">\hat y(x) := w_t +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle</script><p>现在二元指标的原始PITF模型和FM模型几乎是相同的。唯一的区别在于（1）FM模型对t具有偏差项$w_t$，（2）$(u,t)-(i,t)$交叉项的标签之间的分解参数$(v_t)$在FM模型中是共享的，但是又不同于原始PITF模型。除了这个理论分析，图3显示了两种模型实现此任务的可比预测质量的经验分布。</p>
-<p><img src="https://i.postimg.cc/LsPWC5gQ/relate-papers18-3.jpg" alt="relate-papers18-3.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG" alt="FM-3.JPG"></p>
 <p><em>D.分解个性化的马尔科夫链</em><br>FPMC模型尝试基于用户u的最后一次购买(时间t-1)在线上商店进行商品排序。</p>
 <p>再一次仅仅用特征生成，一个二维的因式分解机可以来近似：</p>
 <script type="math/tex; mode=display">
@@ -657,8 +657,8 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/d0f1b267.html" rel="next" title="The Learning Behind Gmail Priority Inbox (论文解析)">
-                <i class="fa fa-chevron-left"></i> The Learning Behind Gmail Priority Inbox (论文解析)
+              <a href="/posts/3c1887e0.html" rel="next" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
+                <i class="fa fa-chevron-left"></i> Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)
               </a>
             
           </div>
@@ -667,8 +667,8 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/3c1887e0.html" rel="prev" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
-                Amazon.com Recommendations Item-to-item collaborative filtering (论文解析) <i class="fa fa-chevron-right"></i>
+              <a href="/posts/c800c340.html" rel="prev" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
+                Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

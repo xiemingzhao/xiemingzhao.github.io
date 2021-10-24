@@ -100,14 +100,14 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客使用Github+Hexo+Next免费搭建自己的博客（最细攻略）。 多设备管理博客博客建立好之后，面临的就是维护和更新博客，但是总不能每次都带着自己的电脑吧，如果想在自己的办公电脑上也操作自己的博客呢？于是广大的IT人才们想出了构建github分支来管理自己的博客。 1. github 创建分支不管你有无看过我的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/yxKQvdvC/branch1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/3JKfGkkg/branch2.jpg">
-<meta property="og:image" content="https://i.postimg.cc/NfpJkQXZ/branch3.jpg">
-<meta property="og:updated_time" content="2019-10-13T14:13:29.128Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch1.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch2.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch3.jpg">
+<meta property="og:updated_time" content="2021-10-24T11:21:40.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo博客多设备管理">
 <meta name="twitter:description" content="想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客使用Github+Hexo+Next免费搭建自己的博客（最细攻略）。 多设备管理博客博客建立好之后，面临的就是维护和更新博客，但是总不能每次都带着自己的电脑吧，如果想在自己的办公电脑上也操作自己的博客呢？于是广大的IT人才们想出了构建github分支来管理自己的博客。 1. github 创建分支不管你有无看过我的">
-<meta name="twitter:image" content="https://i.postimg.cc/yxKQvdvC/branch1.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch1.jpg">
 
 
 
@@ -468,9 +468,9 @@
 <h3 id="1-github-创建分支"><a href="#1-github-创建分支" class="headerlink" title="1. github 创建分支"></a>1. github 创建分支</h3><p>不管你有无看过我的另一篇博客<a href="https://www.xiemingzhao.com/posts/GithubHexoNextblog">使用Github+Hexo+Next免费搭建自己的博客（最细攻略）</a>，相信你自己博客的时候都是在yourname.github.io仓库下的master分支上创建的。既然我们是在本地上管理离线文档的，那我们就领创建一个分值，只用来存储每次更新的离线文件，相当于一个本地了。</p>
 <a id="more"></a>
 <p>如下图，在分支的输入框中新建一个分支确认就好了，我这里已经新建好了，一般取名hexo打扰其他的也都OK：</p>
-<p><img src="https://i.postimg.cc/yxKQvdvC/branch1.jpg" alt="branch1"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch1.jpg" alt="branch1"></p>
 <p>然后我们需要进入<code>settings</code>模块，如下图，再点击<code>Branches</code>，接着选择默认分支为你刚才新创建的，我这里就是<code>hexo</code>，毕竟以后体检离线文件是要提交到这里的，所以将它设为默认分支，保存就好了。</p>
-<p><img src="https://i.postimg.cc/3JKfGkkg/branch2.jpg" alt="branch2"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch2.jpg" alt="branch2"></p>
 <h3 id="2-本地clone分支"><a href="#2-本地clone分支" class="headerlink" title="2. 本地clone分支"></a>2. 本地clone分支</h3><p>注意哦，到目前还未使用新电脑，既然要使用新电脑进行备份更新，那我们先在本地也完成备份更新的步骤，后面新电脑操作跟本地差不多。我们在你博客管理目录中新建一个分支管理目录，例如，我的目录下面就有一个创建的目录<code>myname.github.io</code>以及一个分支目录<code>hexo</code>，之后基本上就只使用<code>hexo</code>分支，换电脑时候也类似只会有一个<code>hexo</code>分支来更新管理。</p>
 <p>创建好新的目录后，使用控制台进入博客根目录（也就是能够看到主分支和hexo分支的目录）执行下面的命令，将分之内容clone到本地分支：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b hexo https://github.com/yourname/yourname.github.io</span><br></pre></td></tr></table></figure></p>
 <p>然后本地的hexo分支文件夹中会多了很多文件，进入hexo文件夹中右键掉出<code>git bash</code>执行<code>git branch</code>，会返回你当前所处的是<code>hexo</code>分支。</p>
@@ -478,7 +478,7 @@
 <h3 id="3-备份到分支"><a href="#3-备份到分支" class="headerlink" title="3. 备份到分支"></a>3. 备份到分支</h3><p>进阶上述完成clone分支后，我们需要删除一些文件，因为我们需要的是备份部署资源，其他在发布生成过程中产生的静态文件并不需要保留。首先我们删除除了<strong>.git</strong>文件夹的其它所有文件和文件夹，主要是为了得到版本管理的.git。当然，最新版好像这一部分也不需要保留了，那就先保留着吧，到时候部署的时候不行的话再删也不迟。</p>
 <p>接着把本地主管理目录（也就是<code>yourname.github.io</code>的文件夹）一下7个文件/文件夹复制到本地分支目录<code>hexo</code>中去：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scaffolds/ #文件夹（文章的模板）；</span><br><span class="line">source/ #资源文件夹；</span><br><span class="line">themes/ #文件夹里面的主题；</span><br><span class="line">.git/ #版本管理</span><br><span class="line">.gitignore #限定在提交的时候哪些文件可以忽略</span><br><span class="line">_config.yml #站点配置</span><br><span class="line">package.json #说明使用哪些包；</span><br></pre></td></tr></table></figure></p>
 <p>如下图所示，分支文件夹中应该包含上述的文件，我这里有一些其他的是因为已经使用了很久，添加了其他功能，部署的时候产生的：</p>
-<p><img src="https://i.postimg.cc/NfpJkQXZ/branch3.jpg" alt="branch3"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch3.jpg" alt="branch3"></p>
 <p>不需要更新的文件可利用.gitignore文件来配置需要忽略备份的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/.deploy_git/  </span><br><span class="line">/blogSource/  </span><br><span class="line">/node_modules/  </span><br><span class="line">/public/  </span><br><span class="line">*.db  </span><br><span class="line">*.json</span><br></pre></td></tr></table></figure></p>
 <p><em>不过最新版一版不用配置，文件中应该已经有了</em></p>
 <p>这里可执行一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure></p>

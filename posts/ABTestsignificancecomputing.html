@@ -100,14 +100,14 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="显著性计算—uv based这里以实验目标为提升CR（Conversion Rate）为例说明 名词解释显著性： 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。上升幅度：(新版CR-老版CR)/老版CR功效: 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/7PNNzHpt/2015-12-23-092348.png">
-<meta property="og:image" content="https://i.postimg.cc/g0RV2mVD/2015-12-23-092010.png">
-<meta property="og:image" content="https://i.postimg.cc/jSD6BzCB/abtestoutcome.png">
-<meta property="og:updated_time" content="2019-10-13T14:16:48.963Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-5.png">
+<meta property="og:updated_time" content="2021-10-24T14:17:23.705Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ABTest显著性计算">
 <meta name="twitter:description" content="显著性计算—uv based这里以实验目标为提升CR（Conversion Rate）为例说明 名词解释显著性： 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。上升幅度：(新版CR-老版CR)/老版CR功效: 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。">
-<meta name="twitter:image" content="https://i.postimg.cc/7PNNzHpt/2015-12-23-092348.png">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png">
 
 
 
@@ -484,7 +484,7 @@
 <p><strong>以上均基于AA检验正常为前提。</strong></p>
 <p>如果AA异常，需查询原因，如果是AA中某一版本中有少数用户订单数极高，导致AA异常，剔除这种异常用户后重新计算AA  Test的结果， 如果不再显著，AA正常。</p>
 <p>严谨一点，再检查AB 的检验中(一般B&lt;新版&gt; vs C+D<c、d都为老版>)是否存在同样问题，即某一版本出现一些异常用户(订单数极高的用户), 如果存在，剔除后重新计算显著性。</c、d都为老版></p>
-<h3 id="算法说明"><a href="#算法说明" class="headerlink" title="算法说明"></a>算法说明</h3><h4 id="显著性计算"><a href="#显著性计算" class="headerlink" title="显著性计算"></a><strong>显著性计算</strong></h4><p><img src="https://i.postimg.cc/7PNNzHpt/2015-12-23-092348.png" alt="ABtestsample"></p>
+<h3 id="算法说明"><a href="#算法说明" class="headerlink" title="算法说明"></a>算法说明</h3><h4 id="显著性计算"><a href="#显著性计算" class="headerlink" title="显著性计算"></a><strong>显著性计算</strong></h4><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png" alt="ABtestsample"></p>
 <p>我们将指标提升的百分比定义为lift， <strong>%Lift=（Treatment/Control-1）*100%</strong></p>
 <p>如上图的示例结果图所示，CR 的lift估计值为：-0.79%， 区间（-1.55%,-0%）.  CR lift 的真实值以95%的可能性落在区间（-1.55%,-0%）内。由于区间未包括0，所以CR显著, 并且从数值上看是显著下降。说明新版的CR明显低于老版的CR.</p>
 <p>具体计算方案，以国内酒店频道的CR例,假设:</p>
@@ -518,10 +518,10 @@
 <p>在报表中我们输入的两组数据，一组是一个版本每日的指标数据，另外一组是选择的另外一个版本对应的每日的指标数据。指标可以是任意数值型指标，比如UV数，点击率，订单数等等。</p>
 <p>该方法我们只做两两间的比较。</p>
 <h3 id="实验举例"><a href="#实验举例" class="headerlink" title="实验举例"></a>实验举例</h3><p>我们以一个首页改版为例，如下图所示：</p>
-<p><img src="https://i.postimg.cc/g0RV2mVD/2015-12-23-092010.png" alt="AB home page"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-1.png" alt="AB home page"></p>
 <p>首页改版，通过上面图片发现海外酒店位置发生变化，所以我们想知道位置的改变是否会影响海外酒店的点击数量，分流比：新版：老版=50%：50%</p>
 <p>我们拿到了每天新老版本的点击UV数，通过统计检验，判断是否新版的点击UV数明显低于老版。<br>数据如下：</p>
-<p><img src="https://i.postimg.cc/jSD6BzCB/abtestoutcome.png" alt="home AB outcome"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-5.png" alt="home AB outcome"></p>
 <h3 id="检验方法"><a href="#检验方法" class="headerlink" title="检验方法"></a>检验方法</h3><p>假设x：新版每日UV数，y：老板每日UV数。计算如下统计量：</p>
 <script type="math/tex; mode=display">t = \frac {\bar x - \bar y}{s \sqrt{1 / n_1 + 1 / n_2} }</script><p>这里，</p>
 <blockquote>

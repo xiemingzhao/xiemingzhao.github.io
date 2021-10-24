@@ -100,14 +100,14 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：Deep &amp;amp; Cross Network for Ad Click Predictions 深度和交叉网络的广告点击预测摘要特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/RCJsj7cj/D-C-1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/8Cn4Ycsp/D-C-2.jpg">
-<meta property="og:image" content="https://i.postimg.cc/Hxcz1m7Q/D-C-3.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.039Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-3.JPG">
+<meta property="og:updated_time" content="2021-10-24T10:08:15.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep and Cross Network for Ad Click Predictions (论文解析)">
 <meta name="twitter:description" content="原始论文：Deep &amp;amp; Cross Network for Ad Click Predictions 深度和交叉网络的广告点击预测摘要特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保">
-<meta name="twitter:image" content="https://i.postimg.cc/RCJsj7cj/D-C-1.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG">
 
 
 
@@ -495,7 +495,7 @@
 <li>一个带有交叉网络的DNN，在参数个数少一个量级的情况下，它的对数损失依然比普通的DNN要低。</li>
 </ul>
 <h3 id="2-深度-amp-交叉网络（DCN）"><a href="#2-深度-amp-交叉网络（DCN）" class="headerlink" title="2 深度&amp;交叉网络（DCN）"></a><strong>2 深度&amp;交叉网络（DCN）</strong></h3><p>在这一部分，我们将会介绍深度&amp;交叉网络（DCN）模型的结构。DCN是开始于embedding和stacking层的，紧接着是一个交叉网络和一个深度网络并行。按顺序接着是一个最终的联合层用来合并两个网络的输出。完整的DCN模型如图1中所示。</p>
-<p><img src="https://i.postimg.cc/RCJsj7cj/D-C-1.jpg" alt="D&amp;C-1.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG" alt="D&amp;C-1.jpg"></p>
 <p><strong>2.1 嵌入和堆叠层</strong><br>我们考虑包含稀疏和密集特征的输入数据。在网站级规模的推荐系统如CTR预估中，输入数据大部分都是类别型特征，例如“country=usa”。这样的特征经常会被进行one-hot编码，例如“[0,1,0]”；然而，这就经常导致产生过高维的特征空间来适用大型词典。</p>
 <p>为了降低维度，我们使用了一个embedding过程来将这些二值特征转换成密集的实值向量（通常称为嵌入向量）：</p>
 <script type="math/tex; mode=display">x_{embed,i}=W_{embed,i}x_i</script><p>其中$x_{embed,i}$是嵌入向量，$x_i$是第i个类别的二值输入，$W_{embed,i} \ \in \mathbb R^{n_e \times n_v}$是对应的嵌入矩阵，它可以和网络中其他的参数一起进行优化，$n_e,n_v$分别是嵌入层大小和词典的大小。</p>
@@ -503,7 +503,7 @@
 <script type="math/tex; mode=display">x_0 = [x_{embed,1}^T,...,x_{embed,k}^T,x_{dense}^T]</script><p>然后再将这个向量喂入到网络中去。</p>
 <p><strong>2.2 交叉网络</strong><br>我们创新交叉网络的关键思想就是以一个有效地方式来显示地应用特征交叉。交叉网络由交叉层组成，每一层都有如下的公式：</p>
 <script type="math/tex; mode=display">x_{l+1} = x_0 x_l^T w_l + b_l x_l = f(x_l , w_l, b_L) + x_l</script><p>其中$x_l,x_{l+1} \ \in \ \mathbb R^d$都是列向量，分别表示第l层和第l+1层交叉网络的输出$w_l, b_l \ \in \ \mathbb R^d$是第l层网络的权重和偏置项参数。每一交叉层在特征交叉f之后都反加上它的输入部分，并且映射函数$f:\mathbb R^d \rightarrow \mathbb R^d$拟合$x_{l+1}-x_l$的残差。一个交叉层的可视化展示如图2所示。</p>
-<p><img src="https://i.postimg.cc/8Cn4Ycsp/D-C-2.jpg" alt="D&amp;C-2.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-2.JPG" alt="D&amp;C-2.jpg"></p>
 <p><strong>高阶特征交叉项</strong>。交叉网络特殊的结构造就了交叉特征的阶数随着网络层数增加而增加。第l层交叉网络的多项式最高阶数（相对于输入层来说）是l+1。事实上，交叉网络包含了所有的交叉项$x_1^{\alpha_1} x_2^{\alpha_2}…x_d^{\alpha_d}$，其中d取值从1到l+1。详细的分析在章节3。</p>
 <p><strong>复杂度分析</strong>$L_c$表示交叉层的个数，d表示输入层的维度。然后，交叉网络中的参数个数就是：</p>
 <script type="math/tex; mode=display">d \times L_c \times 2</script><p>交叉网络的时间和空间复杂度是关于输入层维度的线性增长。因此，交叉网络相比与其深度部分仅引入了一个微乎其微的复杂度部分，这使得DCN的整体复杂度与传统的DNN基本一致。这个有效性是得益于$x_0x_l^T$的秩为1的属性，这使得我们可以无需计算和存储整个矩阵的时候生成所有的交叉项。</p>
@@ -697,7 +697,7 @@
 </table>
 </div>
 <p>图3展示了在随机选择的设置中我们增加交叉层数的改进效果。对于图3中的深度网络，当增加了一个交叉层的时候有一个明显的提升。随着更多的交叉层引入的时候，对于某些模型设置会使得对数损失继续下降，这表明引入交叉项对于预测是有效的；鉴于对于其他模型设置对数损失开始波动甚至出现微幅增加，这就表明高阶的特征交叉项的银如意是没有太大作用的</p>
-<p><img src="https://i.postimg.cc/Hxcz1m7Q/D-C-3.jpg" alt="D&amp;C-3.jpg"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-3.JPG" alt="D&amp;C-3.jpg"></p>
 <h3 id="4-5-非CTR数据集"><a href="#4-5-非CTR数据集" class="headerlink" title="4.5 非CTR数据集"></a><strong>4.5 非CTR数据集</strong></h3><p>我们证明了DCN模型在非CTR预测问题中也表现得很好。我们使用来自UCI提供的森林植被类型（forest covertype）（581012样本和54个特征）和 希格斯粒子（Higgs）（11M样本和28个特征）数据集。数据集随机得被分为训练集（90%）和测试集（10%）。对于超参数进行了梯度搜索。深度网络层数从1到10，大小从50到300.交叉网络层数从4到10。残差单元的个数从1到5，他们的出入维度和交叉维度从50到300。对于DCN，输入向量会被直接喂入交叉网络。</p>
 <p>对于森林植被类型数据，DCN在最少的内存消费下获得了最好的测试集准确率0.9740。DNN和DC都是0.9737。DCN最优的超参数设置是8个交叉层且大小为54，6个深度网络层且大小为292，DNN则是有7层大小为292的深度网络层，DC则是有输入维度为271交叉维度为287的4个残差单元。</p>
 <p>对于希格斯粒子数据集，DCN模型获得的最好对数损失测试结果是0.4494，而DNN是0.4506。DCN最优的超参数设定是4层大小为28的交叉网络和4层大小为209深度网络层，DNN则是10层大小为196的深度网络层。DCN在仅用了DNN一半的内存情况下依然表现得比其要好。</p>

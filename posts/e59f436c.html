@@ -100,15 +100,15 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：Wide &amp;amp; Deep Learning for Recommender Systems 推荐系统之Wide &amp;amp; Deep机器学习算法摘要不包含非线性特征变换的一般线性模型被广泛地应用在具有稀疏输入的大规模回归和分类问题中。通过一个宽的交叉积特征变换来实现对特征交叉的记忆是很有效和可解释的，而泛化能力需要更多的特征工程工作。考虑少用特征工程，深度神经网络可以更好地起到品泛">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/Ssdx68zn/relate-papers21-1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/nrLc0zv0/relate-papers21-2.jpg">
-<meta property="og:image" content="https://i.postimg.cc/L5047pDR/relate-papers21-3.jpg">
-<meta property="og:image" content="https://i.postimg.cc/BZ2dVshC/relate-papers21-4.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.100Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_3.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_4.JPG">
+<meta property="og:updated_time" content="2021-10-24T09:36:29.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Wide and Deep Learning for Recommender Systems (论文解析)">
 <meta name="twitter:description" content="原始论文：Wide &amp;amp; Deep Learning for Recommender Systems 推荐系统之Wide &amp;amp; Deep机器学习算法摘要不包含非线性特征变换的一般线性模型被广泛地应用在具有稀疏输入的大规模回归和分类问题中。通过一个宽的交叉积特征变换来实现对特征交叉的记忆是很有效和可解释的，而泛化能力需要更多的特征工程工作。考虑少用特征工程，深度神经网络可以更好地起到品泛">
-<meta name="twitter:image" content="https://i.postimg.cc/Ssdx68zn/relate-papers21-1.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_1.JPG">
 
 
 
@@ -491,8 +491,8 @@
 <li>我们提供了一个开源的实现，它是通过TensorFlow中的一个高级API实现的。</li>
 </ul>
 <p>尽管思想很简单，我们还是证明了Wide &amp; Deep框架极大地提升了移动应用商店的app下载率，并且同时满足训练和高速服务的需求。</p>
-<p><img src="https://i.postimg.cc/Ssdx68zn/relate-papers21-1.jpg" alt="wide&amp;deep-1"></p>
-<p><img src="https://i.postimg.cc/nrLc0zv0/relate-papers21-2.jpg" alt="wide&amp;deep-2"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_1.JPG" alt="wide&amp;deep-1"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_2.JPG" alt="wide&amp;deep-2"></p>
 <h3 id="2-推荐系统概述"><a href="#2-推荐系统概述" class="headerlink" title="2. 推荐系统概述"></a><strong>2. 推荐系统概述</strong></h3><p>图2显示了app推荐系统的概述。一个查询，可以包括各种用户和用户访问应用商店时会生成的上下文特征。推荐系统返回应用列表（也被称为展示），在这上面用户可以执行一些特定的行为例如点击或购买。这些用户操作，随着查询和展示，都记录在日志中，作为模型的训练数据。</p>
 <p>由于数据库中有超过一百万的应用，在查询服务的潜在要求（经常是O(10)毫秒）的条件下，为每个查询都对所有的应用进行打分是难以实现的。因此，在收到一个查询后的第一步是<em>检索</em>。检索系统返回一个较短的物品列表，这个列表是使用各种特征对请求的最好匹配，通常是机器学习模型和人为定义规则的一个联合。在降低了候选池之后，排序系统会通过它们打出的分数对所有物品进行排序。这个得分经常是$P(y|x)$，它是表示给定特征x后的定于行为标签y的概率，其中x包括用户的特征（例如国家、语言、人口统计学指标），上下文特征（例如设备、一天中的第几个小时、周几），还有展示特征（例如应用年龄、应用的历史统计）。在本文中，我们聚焦于使用Wide &amp; Deep学习框架的排序模型。</p>
 <h3 id="3-Wide-amp-Deep学习"><a href="#3-Wide-amp-Deep学习" class="headerlink" title="3. Wide &amp; Deep学习"></a><strong>3. Wide &amp; Deep学习</strong></h3><p><strong>3.1 Wide部分</strong><br>宽模型部分是一个广义线性模型，形式一般为$y = w^T x+b$，如图1左侧所示。y是预测，$x=[x_1,x_2,…,x_d]$是一个d维特征的向量，$w=[w_1,w_2,…w_d]$是模型参数且b是偏置项。特征集合包含原始输入的特征以及经过转换的特征。一个最终演的变换就是<em>交叉积变换</em>，如下定义：</p>
@@ -504,10 +504,10 @@
 <p>图1中间部分展示了联合模型。属于逻辑回归的问题，模型的预测结果为：</p>
 <script type="math/tex; mode=display">P(Y=1|x)=\sigma(w_{wide}^T [x,\phi (x)] + w_{deep}^T a^{(l_f)} +b)</script><p>其中Y是二值类别标签，$\sigma(\cdot)$是sigmoid函数，$\phi(x)$是原始特征x的交叉积变换，b是偏置项。$w_{wide}$是宽模型权重参数向量，$w_{deep}$是应用在最终激活项$a^{(l_f)}$的的权重参数<br>。</p>
 <h3 id="4-系统实现"><a href="#4-系统实现" class="headerlink" title="4. 系统实现"></a><strong>4. 系统实现</strong></h3><p>应用推荐管道的实现包含三个步骤：数据生成，模型训练，以及模型服务，如图3中所示。</p>
-<p><img src="https://i.postimg.cc/L5047pDR/relate-papers21-3.jpg" alt="wide&amp;deep-3"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_3.JPG" alt="wide&amp;deep-3"></p>
 <p><strong>4.1 数据生成</strong><br>在这个步骤，在一个时期的用户和应用展示数据被用来生成训练数据。每个样本对应于一次展示。标签就是应用获取：1代表展示的应用被安装了，否则为0。</p>
 <p>词汇表，是用来将类别特征中的字符串匹配成整数型IDs的，也是在这一步骤中生成的。系统为所有的字符型特征计算IDs的空间，其中特征只计算那些出现次数超过最小次数的。连续型的实值特征会被标准化到[0,1]，方法是将特征值x匹配到该特征的累积分布函数$P(X\leq x)$，分成了$n_q$分位数。第i个分位数标准化后的值是$\frac{i-1}{n_q-1}$。分位数的边界是在数据生成过程中计算的。</p>
-<p><img src="https://i.postimg.cc/BZ2dVshC/relate-papers21-4.jpg" alt="wide&amp;deep-4"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_4.JPG" alt="wide&amp;deep-4"></p>
 <p><strong>4.2 模型训练</strong><br>我们在实验中使用的模型结构如图4所示。在训练中，我们的输入层接手输入数据和词汇表，然后用一个标签一起生成稀疏的和密集的特征。宽模型部分由用户安装应用和展示应用做交叉积变换得到。对于模型的深度部分，一个32维的嵌入向量是从每个类别型特征中学到的。我们将所有的嵌入向量串联在一起形成一个密集的特征，这就构成了一个接近1200维的密集向量。串联的向量接着会被喂入3个ReLU网络层，最优通过逻辑层输出单元。</p>
 <p>Wide &amp; Deep模型是在5000亿个样本上训练得到的。每一次一个新的训练数据集到达时，模型需要被再次训练。然而，每次再训练花费的时间都是特别昂贵的计算成本同时新数据更新模型将会产生一定的延迟。为了战胜这个挑战，我们实现一个热启动的系统，它是用前一个模型的嵌入层和线性模型权重参数来初始化本次新模型。</p>
 <p><strong>4.3 模型服务</strong><br>每一次模型被训练完成和确定之后，我们将其加载到模型服务中。对于每次请求，服务会从应用检索系统中接受到一个应用候选集和用户特征来对背个应用进行打分。然后，应用将会根据得分从高到低进行排序，我们将会按照此顺序将应用展示给用户。分数将会通过运行一个Wide &amp; Deep模型的前向推断得到。</p>
@@ -656,8 +656,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/eafa0d01.html" rel="next" title="An overview of gradient descent optimization algorithms (论文解析)">
-                <i class="fa fa-chevron-left"></i> An overview of gradient descent optimization algorithms (论文解析)
+              <a href="/posts/Hexoblogurloptimize.html" rel="next" title="Hexo博客文章链接优化">
+                <i class="fa fa-chevron-left"></i> Hexo博客文章链接优化
               </a>
             
           </div>

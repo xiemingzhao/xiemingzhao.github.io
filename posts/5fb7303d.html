@@ -100,13 +100,13 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/XX64QYxH/AUC.png">
-<meta property="og:image" content="https://i.postimg.cc/28dVMsvb/PR.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.072Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg">
+<meta property="og:updated_time" content="2021-10-24T09:57:18.430Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LTR信息检索评价指标">
 <meta name="twitter:description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
-<meta name="twitter:image" content="https://i.postimg.cc/XX64QYxH/AUC.png">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
 
 
 
@@ -500,9 +500,10 @@
 <a id="more"></a>
 <p>正确率、召回率（查全率）、精准度、$F_{\beta}$ score、假阳率以及真阳率：</p>
 <script type="math/tex; mode=display">Accuracy = \frac{TP+FN}{TP+TN+FP+FN}</script><script type="math/tex; mode=display">Recall=\frac{TP}{TP+FN}</script><script type="math/tex; mode=display">Precision=\frac{TP}{TP+FP}</script><script type="math/tex; mode=display">F_{\beta}=(1+\beta^2) \cdot \frac{Precision \cdot Recall}{\beta^2 \cdot Precision + Recall}</script><p>其中，F-Score/F-measure 作为综合指标，平衡 recall 和 precision 的影响，较为全面的评价一个模型。F1-Score 表示准确率和召回率一样重要；F2-Score 表示召回率比准确率重要一倍；F0.5-Score 表示准确率比召回率重要一倍。</p>
-<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script><script type="math/tex; mode=display">TPR=\frac{TP}{TP+FN}</script><p><img src="https://i.postimg.cc/XX64QYxH/AUC.png" alt="AUC.png"></p>
+<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script><script type="math/tex; mode=display">TPR=\frac{TP}{TP+FN}</script><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png" alt="LTRindex-AUC"></p>
 <p>其中：<br>假阳率FPR=ROC曲线的X轴指标<br>真阳率TPR=ROC曲线的Y轴指标=召回率<br>AUC值就是曲线右下部分面积。</p>
-<h2 id="2-MAP"><a href="#2-MAP" class="headerlink" title="2 MAP"></a>2 MAP</h2><p><img src="https://i.postimg.cc/28dVMsvb/PR.jpg" alt="PR.jpg"><br>如上图的PR曲线，对其进行积分求曲线下方的面积，就是AP(Average Precision)，即</p>
+<h2 id="2-MAP"><a href="#2-MAP" class="headerlink" title="2 MAP"></a>2 MAP</h2><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg" alt="LTRindex-PR"></p>
+<p>如上图的PR曲线，对其进行积分求曲线下方的面积，就是AP(Average Precision)，即</p>
 <script type="math/tex; mode=display">AP=\int_0^1 p(r) dr</script><p>其中，p 表示 precision，r 表示 recall，p 是一个以 r 为参数的函数，AP 的计算是对排序位置敏感的，相关文档排序的位置越靠前，检索出相关的文档越多，AP 值越大。</p>
 <p>近似计算约等于 AAP（Aproximate Average Precision）：</p>
 <script type="math/tex; mode=display">AAP=\sum_{k=1}^Np(k)\Delta r(k)=\frac{\sum_{k=1}^Np(k) \cdot rel(k)}{number Of Relevant Documents}</script><p>其中，N 代表所有相关文档的总数，p(k) 表示能检索出 k 个相关文档时的 precision 值，而 △r(k) 则表示检索相关文档个数从 k-1 变化到 k 时（通过调整阈值）recall 值的变化情况。<br>rel(k) 表示第 k 个文档是否相关，若相关则为1，否则为0，则可以简化公式为：</p>

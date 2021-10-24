@@ -100,16 +100,16 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：LightGBM-A Highly Efficient Gradient Boosting Decision Tree 摘要Gradient Boosting Decision Tree (GBDT)是一个非常流行的机器学习算法，却只有像XGBoost和pGBRT的一些实现。尽管许多工程上的优化方案已经在这些实现中应用了，但是当特征维度较高和数据量巨大的时候，仍然存在效率和可扩展性的问题">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/xj7q7cL6/lgbm1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/7hp6TWqF/lgbm2.jpg">
-<meta property="og:image" content="https://i.postimg.cc/qM3gd4L4/lgbm3.jpg">
-<meta property="og:image" content="https://i.postimg.cc/VvSvv8P9/lgbm4.jpg">
-<meta property="og:image" content="https://i.postimg.cc/PxVNdq9r/lgbm5.jpg">
-<meta property="og:updated_time" content="2020-03-14T14:15:27.737Z">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm1.JPG">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm2.JPG">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm3.JPG">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm4.JPG">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm5.JPG">
+<meta property="og:updated_time" content="2021-10-24T14:57:56.580Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）">
 <meta name="twitter:description" content="原始论文：LightGBM-A Highly Efficient Gradient Boosting Decision Tree 摘要Gradient Boosting Decision Tree (GBDT)是一个非常流行的机器学习算法，却只有像XGBoost和pGBRT的一些实现。尽管许多工程上的优化方案已经在这些实现中应用了，但是当特征维度较高和数据量巨大的时候，仍然存在效率和可扩展性的问题">
-<meta name="twitter:image" content="https://i.postimg.cc/xj7q7cL6/lgbm1.jpg">
+<meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm1.JPG">
 
 
 
@@ -493,7 +493,7 @@
 <p>同样，可以考虑过滤掉弱特征（什么是弱特征）来减少特征量。通常用主成分分析或者投影法。当然，这些方法依赖于一个假设-特征有高冗余性，但实际中往往不是。（设计特征来自于其独特的贡献，移除任何一维度都可以某种程度上影响精度）。</p>
 <p>实际中大规模的数据集通常都是非常稀疏的，使用预排序算法的GBDT能够通过无视为0的特征来降低训练时间消耗。然而直方图算法没有优化稀疏的方案。因为直方图算法无论特征值是否为0，都需要为每个数据检索特征区间值。如果基于直方图的GBDT能够有效解决稀疏特征中的0值，并且这样将会有很好的性能。</p>
 <p>为了解决前面工作的局限性，我们提出了两个全新的技术分别是 Gradient-based One-Side Sampling (GOSS) 和 Exclusive Feature Bundling (EFB)（基于梯度的one-side采样和互斥的特征捆绑）。跟多的细节会再下一部分介绍。</p>
-<p><img src="https://i.postimg.cc/xj7q7cL6/lgbm1.jpg" alt="Alg.1 &amp; Alg.2"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm1.JPG" alt="Alg.1 &amp; Alg.2"></p>
 <h2 id="3-基于梯度的one-side采样"><a href="#3-基于梯度的one-side采样" class="headerlink" title="3 基于梯度的one-side采样"></a>3 基于梯度的one-side采样</h2><p>在这一部分，我们为 GBDT 提出了一个新的抽样方法， 这能够在减少数据实例个数和保持学习到的决策树的准确度之间达到一个平衡。</p>
 <h3 id="3-1-算法描述"><a href="#3-1-算法描述" class="headerlink" title="3.1 算法描述"></a>3.1 算法描述</h3><p>在AdaBoost中，样本权重是数据实例重要性的指标。然而在GBDT中没有原始样本权重，不能应用权重采样。幸运的事，我们观察到GBDT中每个数据都有不同的梯度值，对采样十分有用，即实例的梯度小，实例训练误差也就较小，已经被学习得很好了，直接想法就是丢掉这部分梯度小的数据。然而这样做会改变数据的分布，将会影响训练的模型的精确度，为了避免此问题，我们提出了GOSS。</p>
 <p>GOSS保留所有的梯度较大的实例，在梯度小的实例上使用随机采样。为了抵消对数据分布的影响，计算信息增益的时候，GOSS对小梯度的数据引入常量乘数。GOSS首先根据数据的梯度绝对值排序，选取top a x 100%个实例。然后在剩余的数据中随机采样bx100%个实例。接着计算信息增益时为采样出的小梯度数据乘以(1-a)/b（即，小梯度样本总数/随机采样出的小梯度样本数量），这样算法就会更关注训练不足的实例，而不会过多改变原数据集的分布。</p>
@@ -509,7 +509,7 @@
 <p>根据定理，我们可以得到以下结论：(1)GOSS的渐进近似比率是$\mathcal O(\frac{1}{n_l^j (d)} + \frac{1}{n_r^j (d)} + \frac{1}{\sqrt{n}} )$。如果分割的不是特别不平衡(即$n_l^h \geq \mathcal O (\sqrt n)$ 且 $n_r^h \geq \mathcal O (\sqrt n)$)，近似误差可以由公式(2)中的第二项来表示，其中当$n \rightarrow \infty$时$\mathcal O (\sqrt n)$将趋向于0。这意味着当数据集个数很大的时候，近似值将是很准确的。(2)随机抽样是一个$a = 0$时GOSS的特例。在许多案例中，GOSS都会表现地比随机抽样要好，在$C_{0,\beta} &gt; C_{a,\beta - a}$条件下，这等价于$\frac{\alpha_a}{\sqrt \beta} &gt; \frac{1-a}{\sqrt{\beta - a} }$且有$\alpha_a = max_{x_i \in A\cup A^c} |g_i|/max_{x_i \in A^c |g_i|}$。</p>
 <p>下一步，我们分析了GOSS的泛化表现。我们考虑了GOSS的泛化误差$\varepsilon_{gen}^{GOSS} (d) = |\tilde V_j (d) - V_<em> (d)|$，这个值是由GOSS中抽样训练得到的方差增益和潜在分布的真实方差增益之间的差值。我们有$\varepsilon_{gen}^{GOSS} (d) \leq |\tilde V_j (d) - V_j (d)| + |V_j (d) - V_</em> (d)| \triangleq \varepsilon_{GOSS} (d) + \varepsilon_{gen} (d)$。因此，如果GOSS近似是准确的，那么带GOSS的泛化误差是接近于使用全量数据集计算得结果。另一方面，抽样会增加基础学习器之间的多样性，这潜在地帮助提升了泛化的表现。</p>
 <h2 id="4-互斥特征捆绑"><a href="#4-互斥特征捆绑" class="headerlink" title="4 互斥特征捆绑"></a>4 互斥特征捆绑</h2><p>这一章，我们提出了一个全新的方法来有效地减少特征数量。</p>
-<p><img src="https://i.postimg.cc/7hp6TWqF/lgbm2.jpg" alt="Alg.3 &amp; Alg.4"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm2.JPG" alt="Alg.3 &amp; Alg.4"></p>
 <p>高维的数据通常是非常稀疏的。这种稀疏性启发我们可以设计一种无损地方法来减少特征的维度。特别地，在稀疏特征空间中，许多特征是完全互斥的，即它们从不同时为非零值。我们可以绑定互斥的特征为单一特征（这就是我们所说的互斥特征捆绑）。通过仔细设计特征扫描算法，我们从特征捆绑中构建了与单个特征相同的特征直方图。这种方式的构建直方图时间复杂度从O(#data <em> #feature)降到O(#data </em> #bundle)，由于#bundle &lt;&lt; # feature，我们能够极大地加速GBDT的训练过程而且不损失精度。(构造直方图的时候，遍历一个“捆绑的大特征”可以得到一组exclusive feature的直方图。这样只需要遍历这些“大特征”就可以获取到所有特征的直方图，降低了需要遍历的特征量。)在下面，我们将会展示如何实现这些方法的细节。</p>
 <p>有两个问题需要被解决。第一个就是需要确定哪些特征后应该绑定在一起。第二个就是如何构造捆绑。</p>
 <p><strong>定理4.1</strong> <em>将特征分割为较小量的互斥特征群是NP难的。</em></p>
@@ -521,11 +521,11 @@
 <p>EFB算法能够将许多互斥的特征变为低维稠密的特征，就能够有效的避免不必要0值特征的计算。实际，对每一个特征，建立一个记录数据中的非零值的表，通过用这个表，来忽略零值特征，达到优化基础的直方图算法的目的。通过扫描表中的数据，建直方图的时间复杂度将从O(#data)降到O(#non_zero_data)。当然，这种方法在构建树过程中需要而额外的内存和计算开销来维持这种表。我们在lightGBM中将此优化作为基本函数.因为当bundles是稀疏的时候，这个优化与EFB不冲突（可以用于EFB）.</p>
 <h2 id="5-实验"><a href="#5-实验" class="headerlink" title="5 实验"></a>5 实验</h2><p>在这一部分，我们汇报了我们提出的LightGBM算法的实验结果。我们使用五个不同的公开数据集。这些数据集的细节列在了表1中。在它们中，微软的排序数据集包含30K网站搜索请求数据。这个数据集中的特征大多是稠密数值特征。Allstate<br>Insurance Claim和Flight Delay数据集都包含许多one-hot编码特征。并且最后两个数据集来自KDD CUP 2010 and KDD CUP 2012。我们直接地使用这些由获胜者NTU提供的特征，其中包含稠密特征和稀疏特征，并且这两个数据集非常大。这些数据集都是很大的，同时包含稀疏特征和稠密特征，并且涵盖了许多真实的任务。因此，我们直接地可以使用它们来测试我们的算法。</p>
 <p>我们的实验环境是一个Linux服务器，包含两个E5-2670 v3 CPUs（总共24核）和256GB的内存。所有试验都是多线程运行并且线程的个数固定在16。</p>
-<h3 id="5-1-全部对比"><a href="#5-1-全部对比" class="headerlink" title="5.1 全部对比"></a>5.1 全部对比</h3><p><img src="https://i.postimg.cc/qM3gd4L4/lgbm3.jpg" alt="table of experiment"></p>
+<h3 id="5-1-全部对比"><a href="#5-1-全部对比" class="headerlink" title="5.1 全部对比"></a>5.1 全部对比</h3><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm3.JPG" alt="table of experiment"></p>
 <p>我们在这一部分展示了所有的实验对比。XGBoost和不包含GOSS以及EFB（称为lgb_baseline）的LightGBM用作基准线。对于XGBoost，我们使用两个版本，xgb_exa(预排序算法)和xgb_his(基于直方图的算法)。对于xgb_his，lgb_baseline，和LightGBM，我们使用leaf-wise树增长方法。对于xgb_exa，因为它仅仅支持layer-wise增长策略，我们将xgb_exa的参数设成使其和其他方法增长相似的树。我们也可以通过调整参数使其在所有的数据集上能在速度和准确率上面达到平衡。我们在Allstate, KDD10 和 KDD12上设定a=0.05,b=0.05，并且在Flight Delay 和 LETOR上设定a = 0.1; b = 0.1。我们对于EFB设定$\gamma = 0$。所有的算法都运行固定的线程数，并且我们从迭代过程中获取最好的分数的准确率结果。</p>
-<p><img src="https://i.postimg.cc/VvSvv8P9/lgbm4.jpg" alt="training curves"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm4.JPG" alt="training curves"></p>
 <p>训练时间和测试准确率分别汇总在表2和表3中。从这些结果中，我们能够看到在于基准线保持几乎相同准确率的时候是最快速的。xgb_exa是基于预排序的算法，这相对于基于直方图的算法是非常慢的。相对于lgb_baseline，LightGBM在Allstate, Flight Delay, LETOR, KDD10 和 KDD12数据集上分别加速了21，6，1.6，14和13倍。因xgb_his非常消耗内存，导致其在KDD10 和 KDD12数据集上内存溢出而不能成功运行。在剩下的数据集上，LightGBM都是最快的，最高是在Allstate数据集上加速了9倍。由于所有的算法都在差不多的迭代次数后收敛了，所以加速是基于平均每次迭代时间计算得到的。为了展示整个训练过程，我们基于Flight Delay 和 LETOR的经过的时间也分别展示了训练曲线在图1和图2中。为了节省空间，我们将其他数据集的训练曲线放在了补充材料中。</p>
-<p><img src="https://i.postimg.cc/PxVNdq9r/lgbm5.jpg" alt="Accuracy comparison"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm5.JPG" alt="Accuracy comparison"></p>
 <p>在所有的数据集上，LightGBM都能够得到几乎和基准线一致的测试准确率。这表明GOSS和EFB都不会降低准确率并且能够带来显著地加速。这也与我们前面的理论分析保持一致。</p>
 <p>LightGBM在不同的数据集上得到了不同的加速率。整体的加速结果是来自GOSS和EFB二者的联合，我们将下一部分分开讨论二者的贡献。</p>
 <h3 id="5-2-GOSS的分析"><a href="#5-2-GOSS的分析" class="headerlink" title="5.2 GOSS的分析"></a>5.2 GOSS的分析</h3><p>首先，我们研究了GOSS的加速性能。从表2中LightGBM和EFB_only的对比来看，我们能够发现GOSS能够通过其自己在使用10%-20%的数据时候带来近2倍的加速。GOSS能够紧紧使用抽样数据进行学习树。然而，它依然保留了一些在全部数据集上的一些计算，例如预测和计算梯度。因此，我们能够发现整体的加速相对于抽样数据的百分比并不是线性的。然而，GOSS带来的加速又是非常显著地，并且这一技术可以普遍的应用在不同的数据集上。</p>

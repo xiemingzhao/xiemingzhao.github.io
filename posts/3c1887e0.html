@@ -100,13 +100,13 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.postimg.cc/g09pWKK0/relate-papers6-1.jpg">
-<meta property="og:image" content="https://i.postimg.cc/BnP3kzHy/relate-papers6-2.jpg">
-<meta property="og:updated_time" content="2019-09-21T06:27:40.034Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG">
+<meta property="og:updated_time" content="2021-10-24T10:17:41.945Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
 <meta name="twitter:description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
-<meta name="twitter:image" content="https://i.postimg.cc/g09pWKK0/relate-papers6-1.jpg">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
 
 
 
@@ -502,7 +502,8 @@
 <h2 id="物到物的协同过滤"><a href="#物到物的协同过滤" class="headerlink" title="物到物的协同过滤"></a>物到物的协同过滤</h2><p>Amazon.com将推荐作为许多电子邮件活动以及它的大部分网站页面中的营销工具，包括高流量的Amazon.com主页。点击“您的推荐”链接将会引导客户访问一个推荐区域，在这里他们可以通过产品线和主题领域来进行筛选，也可以评价推荐的产品，评价他们以前购买的物品，同时可以看到为什么这些物品被推荐了（如图片1所示）。</p>
 <p>如图2所示，是我们的购物车推荐，根据客户购物车中的物品给他们推荐了一些商品。该功能类似于在超市收银台旁的那些易冲动消费的物品，但我们的冲动项目针对每个客户的。</p>
 <p>亚马逊网站基于他们客户的兴趣广泛地使用推荐算法来个性化他们的网站。由于现存的推荐算法无法扩展到亚马逊网站上数以千万的客户和产品，所以我们开发自己的推荐算法。我们的算法是物到物的协同过滤，可以扩展到巨大的数据集并实时产生高质量的推荐。</p>
-<p><img src="https://i.postimg.cc/g09pWKK0/relate-papers6-1.jpg" alt="图1"><br><img src="https://i.postimg.cc/BnP3kzHy/relate-papers6-2.jpg" alt="图2"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG" alt="AmazonCF-1"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG" alt="AmazonCF-2"></p>
 <h2 id="它是怎么工作的"><a href="#它是怎么工作的" class="headerlink" title="它是怎么工作的"></a>它是怎么工作的</h2><p>物到物的协同过滤并不是对目标用户进行匹配到他们相似的客户，而是对他们购买和评论过的物品匹配到相似的物品，然后聚合这些相似的物品生成推荐列表。</p>
 <p>为了确定地匹配出给定物品的最相似取票，算法通过寻找那些用户会一起购买的物品来建立了一个相似物品表。我们可以构建产品到产品的矩阵通过迭代所有项目对和计算每对的相似性度量。然而，许多产品对没有共同的客户，因此，这种方法效率低下在处理时间和内存使用情况上面。下面的迭代算法提供了一个更好地方法来计算一个商品和其他所有商品之间的相似性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">For each item in product catalog, I_1</span><br><span class="line">    For each customer C who purchased I_1</span><br><span class="line">        For each item I_2 purchased by</span><br><span class="line">            customer C</span><br><span class="line">            Record that a customer purchased I_1</span><br><span class="line">            and I_2</span><br><span class="line">    For each item I_2</span><br><span class="line">        Compute the similiarity between I_1 and I_2</span><br></pre></td></tr></table></figure></p>
 <p>有各种各样的方法可以计算两者之间的相似性，但一个常见的方法是使用我们之前描述的余弦量度，其中每个向量对应一个物品而不是一个客户，矢量的M维度对应已购买该商品的客户。</p>
@@ -596,8 +597,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/399ba6ee.html" rel="next" title="Factorization Machines (论文解析)">
-                <i class="fa fa-chevron-left"></i> Factorization Machines (论文解析)
+              <a href="/posts/d0f1b267.html" rel="next" title="The Learning Behind Gmail Priority Inbox (论文解析)">
+                <i class="fa fa-chevron-left"></i> The Learning Behind Gmail Priority Inbox (论文解析)
               </a>
             
           </div>
@@ -606,8 +607,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/c800c340.html" rel="prev" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
-                Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析) <i class="fa fa-chevron-right"></i>
+              <a href="/posts/399ba6ee.html" rel="prev" title="Factorization Machines (论文解析)">
+                Factorization Machines (论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
