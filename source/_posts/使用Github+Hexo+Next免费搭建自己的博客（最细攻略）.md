@@ -25,31 +25,31 @@ date: 2019-05-09
 ### 1. git安装
 这一步比较简单，进入[git的官网下载页面](https://git-scm.com/downloads)，找到对应于自己的系统环境的安装包点击下载。
 
-![gitweb](https://i.postimg.cc/Jzf6DRFZ/hexo1.jpg)
+![gitweb](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo1.jpg)
 
 找到下载后的exe文件，点击就可以进入到安装页面了，如下图所示：
 
-![gitexe](https://i.postimg.cc/DZFx6Bnz/hexo2.jpg)
+![gitexe](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo2.jpg)
 
 剩下基本上是傻瓜式点点点，直到碰到下面这一个图：
 
-![gitinstall](https://i.postimg.cc/SRxDFRXF/hexo3.jpg)
+![gitinstall](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo3.jpg)
 
 这一步是选择Git的操作路径环境，第一个就是只能在Git Bash中才能进行Git的操作，第二个则是将Git加入到系统环境中，这样你就可以在cmd中进行Git操作了。作为一个不断向大牛学习的小白，自然为了方便操作（毕竟cmd已经成了日常）会选择第二项。当然选择第一个也无碍，在需要git的地方右键调出`git bash`即可。
 
-![gitbash](https://i.postimg.cc/rw0ZwDfq/hexo4.jpg)
+![gitbash](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo4.jpg)
 
 ### 2. Node.js安装
 接下来安装`Node.js`一样的，进入[Node.js的官网下载页面](https://nodejs.org/en/download/)，找到对应自己的系统环境安装包点击下载。
 
-![nodeweb](https://i.postimg.cc/503nRL2S/hexo5.jpg)
+![nodeweb](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo5.jpg)
 
 找到下载后的exe文件，点击就可以进入到安装页面了，如下图所示：
 
-![nodeinstall](https://i.postimg.cc/d0GWGzMX/hexo6.jpg)
+![nodeinstall](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo6.jpg)
 
 后面全部点点点，一直到最后完成即可。到这里，两个最重要的工具已经安装完成，我们打开控制台命令行，按Ctrl+R调出运行，输入cmd后回车即可。
-![cmd](https://i.postimg.cc/wTBbnfJy/hexo7.jpg)
+![cmd](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo7.jpg)
 
 分别运行下列两行代码来检测上面两个工具安装是否正确：
 ```
@@ -59,27 +59,27 @@ npm -v
 ```
 如果结果如下图一样显示各个工具的版本号，那么就说明安装完成。否则要回去检查哪一步安装错误。
 
-![test](https://i.postimg.cc/tCmmb3tr/hexo8.jpg)
+![test](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo8.jpg)
 
 
 ## 三、github账户的注册和配置
 打开[github官网:https://github.com/](https://github.com/)，在如下图的注册页面中输入自己的注册信息，注意这里的用户名最好用一个标准化常用的，因为在后面创建代码库的时候需要保持统一。点击注册后，一定要去对应的邮箱中，将github官网发给你的确认邮件打开并确认注册才可以完成注册。
 
-![githubweb](https://i.postimg.cc/DfxxQrD2/hexo9.jpg)
+![githubweb](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo9.jpg)
 
 我们知道`github`是一个全球性的开发者项目开源交流平台，接下来就可以创建自己的代码库了。登录自己的账号后，点击下图中的+号，选择`New repository`进入代码库创建页面。然后你只需要在`Repository name`框中填入你的代码库名称即可。
 
 **（格式为yourname.github.io，yourname是你上述注册的时候的用户名，也即页面上的Owner）**。例如，如果我的注册名是xiaoming，那么此处我就该填写`xiaoming.github.io`。后面的内容我们将以yourname来代替你的用户名，记得随时替换成自己的哦。
 
-![githubcreate](https://i.postimg.cc/Ls0zYD57/hexo10.jpg)
+![githubcreate](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo10.jpg)
 
 在你点击`Create repository`正确创建代码库之后，你将会看到如下的页面：
 
-![giothub.io](https://i.postimg.cc/nc5TgHpg/hexo11.jpg)
+![giothub.io](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo11.jpg)
 
 下面就需要打开`gh-pages`功能，这样才能进行后续的博客创建。我们点击页面功能区右侧的`Settings`选项，进入后下来找到`Github pages`模块，点击`Launch Automatic page generator`按钮，就会完成`gh-pages`页面的创建了。过几分钟后，尝试用浏览器访问一下`yourname.github.io`网址，如果可以正常打开页面，如下图所示（当然你的内容可能跟我不一样，因为这里已经是我添加了很多内容之后的了），那么Github部分的工作就完成了。
 
-![ghpages](https://i.postimg.cc/TwLnrbWP/hexo14.jpg)
+![ghpages](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo14.jpg)
 
 ## 四、Hexo的安装和配置
 本篇博客讲的是用Github+Hexo+Next来搭建博客，那么Hexo必不可少。这里是Hexo的官方文档[https://hexo.io/zh-cn/](https://hexo.io/zh-cn/)，有兴趣的可详细阅读。
@@ -105,7 +105,7 @@ hexo -v
 ```
 如果显示出如下图的一系列工具版本号，那么就说明没什么问题了，Hexo安装到此结束。
 
-![hexotest](https://i.postimg.cc/5NjnsHd8/hexo13.jpg)
+![hexotest](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo13.jpg)
 
 ### 2. Hexo的配置
 接下来需要对Hexo进行初始化，建立一系列文件，在命令行中连续运行下面三行代码：
@@ -142,7 +142,7 @@ hexo s
 
 这就表明你的博客网站已经在本地开启了服务，这时候你可以尝试用浏览器访问网址[http://localhost:4000](http://localhost:4000)，如果能够正常访问你将会看到如下的初始博客页面。怎么样，颈不惊喜，意不意外，到这里你就完成了本地的基本框架的搭建和配置。
 
-![localhost](https://i.postimg.cc/0ywZqLNQ/hexo12.jpg)
+![localhost](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo12.jpg)
 
 ## 五、关联Hexo和Github Pages
 利用Hexo来构建博客，必须要有对应的主机，并不是任何的电脑都能操作的。这时候就需要身份验证了，而这里使用的就是`SSH keys`。

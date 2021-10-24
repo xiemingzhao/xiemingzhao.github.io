@@ -22,7 +22,7 @@ date: 2019-05-25
 >注册阿里云账号，也可以用淘宝或者支付宝账号登录，毕竟是一家子
 然后进行实名认证，毕竟买域名还是需要正式一点，要备案的
 
-![aliyun](https://i.postimg.cc/fyvHFNrt/aliyun1.jpg)
+![aliyun1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun1.jpg)
 
 #### **注意啦！敲黑板啦！大写加粗划重点啦！领券啦！**
 >买东西没优惠怎么行，当然土豪请绕路！一般购买一个`.com`的域名，最便宜也得60左右一年，像我等底层人士还是觉得蛮贵的，那么优惠有木有，当然啦！可直接搜索`阿里云 优惠券`仔细找一找能够找得到。既然看了我的博客，肯定要对得起看官了，这里附上两个常用渠道，一个是[官方大礼包](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=r3yteowb)，这个一般有一定限制，优惠不一定能够满足条件。另一个就是[云优惠大全](https://www.langtto.com/aliyun/54/)，这里长期更新，有各种优惠口令，我的优惠就是从这里领取的，总价300左右的单子省了好几十大洋，还是蛮不错的。
@@ -36,29 +36,29 @@ ping yourname.github.io
 ```
 注意上述代码中的`yourname`要换成你自己的哦。如下图，即使静秋超市也没关系，只需要第一行信息，你就可以找到你自己博客站点对应的ip了，这个在后续的域名绑定中有用。
 
-![ping blogip](https://i.postimg.cc/3xxqsk7K/aliyun2.jpg)
+![ping blogip](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun2.jpg)
 
 ### 3. 域名解析配置
 我们接着第一步购买域名后的步骤，回到首页点击用户信息旁边的`控制台`：
 
-![aliyun home](https://i.postimg.cc/RZpY4vVw/aliyun3.jpg)
+![aliyun home](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun3.jpg)
 
 再点击`域名`选项，当然你通过其他渠道进入到这里也行：
 
-![aliyun cmd](https://i.postimg.cc/5N3GKwh7/aliyun4.jpg)
+![aliyun cmd](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun4.jpg)
 
 接下来，我们找到你购买的域名，点击后面的解析，进入域名解析页面：
 
-![域名解析](https://i.postimg.cc/BQskChVP/aliyun5.jpg)
+![域名解析](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun5.jpg)
 
 然后删除默认的，添加如下两条解析配置，最好按照我这里的配置来，因为亲测在后续的站点收录等地方这么设置最好不会出bug。
 
-![解析配置](https://i.postimg.cc/W4DH4xhC/aliyun6.jpg)
+![解析配置](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun6.jpg)
 
 ### 4. 站点域名绑定
 在解析配置好了之后，登录你自己的`github`，进入到博客站点对应的仓库，进入`settings`，找到如下图的`custom domain`配置区域，填写你购买的域名，这里加不加`www.`都是阔以的，我是加了的，并且勾选上`Enforce HTTPS`选项，勾选这个在以后其他地方有用，有利于收录。
 
-![绑定站点域名](https://i.postimg.cc/d0zSZnC1/aliyun7.jpg)
+![绑定站点域名](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun7.jpg)
 
 ### 5. 解析文件配置
 这是最后一步了，进入你本地博客站点根目录下的`/source/`文件夹中，创建一个名为`CNAME`的文件，没有错，不带任何后缀名，里面只需要协商你刚才购买的域名就可以了。这里面填写的域名加不加`www.`会有不同的效果：
@@ -66,7 +66,7 @@ ping yourname.github.io
 b. 如果你填写的是带www的，比如 www.xiemingzhao.com ，那么无论是访问 http://www.xiemingzhao.com 还是 http://xiemingzhao.com ，都会自动跳转到 http://www.xiemingzhao.com。
 c. 如果你填写的是其它子域名，比如 abc.xiemingzhao.com，那么访问 http://abc.xiemingzhao.com 没问题，但是访问 http://xiemingzhao.com ，不会自动跳转到 http://abc.xiemingzhao.com。
 
-![CNAME](https://i.postimg.cc/2jdX3QSk/aliyun8.jpg)
+![CNAME](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/aliyun8.jpg)
 
 **另外，在绑定了这个新的域名后，原来的`yourname.github.io`并没有失效哦，会自动解析到新域名上，是不是很酷！**
 
@@ -84,6 +84,4 @@ permalink_defaults:
 
 **参考博文**
 [Hexo个人博客域名绑定 简明教程（小白篇）](https://www.jianshu.com/p/e3169b681038)
-
-
 

@@ -67,16 +67,17 @@ $$f(x_k + \delta) \approx f(x_k) +  g^T (x_k) \delta + \frac{1}{2} \delta^T H(x_
 >$H(x_k) \succ 0$， $x_k$为一个严格局部极小点（反之，局部严格最大点）
 如果$H(x)$不定矩阵，是一个鞍点(saddle point)。（如下图所示）
 
-![XGBoostDetailAnalysis1](https://i.postimg.cc/nVykcYVJ/XGBoost-Detail-Analysis1.png)
+![XGBoostDetailAnalysis1](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis1.png)
 
 ### 1.5 怎么求一个函数的极值
+
 答案自然是迭代法。迭代法的基本结构可以表示成如下所示（最小化$f(x)$）：
 >选择一个初始点，设置一个 convergence tolerance $\epsilon$，技术k=0
 决定抖索方向$d_k$， 是的函数下降（核心）
 决定步长$\alpha_k$是的$f(x_k + \alpha_k d_k)$对于$\alpha_k \geq 0$最小化，构建$x_{k+1} = x_k + \alpha_k d_k$
 如果$||d_k|| < \epsilon$，则停止输出解$x_{k+1}$，否则继续迭代。（如下图所示）
 
-![XGBoostDetailAnalysis2](https://i.postimg.cc/vHvVFWcX/XGBoost-Detail-Analysis2.png)
+![XGBoostDetailAnalysis2](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis2.png)
 
 各种各样的优化算法不同点在于：选取的步长不一样，选取的方向不一样。
 
@@ -94,7 +95,7 @@ Xgboost也是GBDT的一中，只不过进行了大量的优化！，其中一点
 
 因为梯度提升树就是在函数空间做优化，如下图所示：
 
-![XGBoostDetailAnalysis3](https://i.postimg.cc/HxKtMbQb/XGBoost-Detail-Analysis3.png)
+![XGBoostDetailAnalysis3](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis3.png)
 
 ### 2.2 Boosting思想
 
@@ -204,7 +205,7 @@ $$Obj(\Theta) = L(\Theta) + \Omega (\Theta)$$
 
 从 Bayes 角度来看，正则相当于对模型参数引入先验分布：
 
-![XGBoostDetailAnalysis4](https://i.postimg.cc/Z5hVjPXc/XGBoost-Detail-Analysis4.png)
+![XGBoostDetailAnalysis4](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis4.PNG)
 
 - L2 正则中，模型参数服从搞死分布 $\theta ~ N(0,\sigma^2)$， 对参数加了分布约束，大部分绝对值很小；
 - L1 正则中， 模型参数服从拉普拉斯分布， 对参数加了分布约束，大部分取值为0。
@@ -297,7 +298,7 @@ Gain 值越大，分裂后 L 减小越多。所以当对一个叶节点分割时
 
 - 近似算法距离：三分位数
 
-![XGBoostDetailAnalysis5](https://i.postimg.cc/L8BvWYpM/XGBoost-Detail-Analysis5.png)
+![XGBoostDetailAnalysis5](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis5.PNG)
 
 如上图所示，
 
@@ -306,7 +307,7 @@ $$Gain = max\{ Gain, \frac{G_1^2}{H_1 + \lambda} + \frac{G_{23}^2}{H_{23} + \lam
 
 - 实际上 XGBoost 不是简单按照样本个数进行分位， 而是以二阶导数值作为权重（Weighted Quantile Sketch）， 比如：
 
-![XGBoost-Detail-Analysis6.png](https://i.postimg.cc/X75sw11q/XGBoost-Detail-Analysis6.png)
+![XGBoost-Detail-Analysis6.png](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis6.PNG)
 
 - 为什么用 $h_i$ 加权，就是把目标函数整理成以下形式，可以看出 $h_i$ 有对 loss 加权的作用。
 
@@ -317,7 +318,7 @@ $$\sum_{i=1}^n \frac{1}{2} h_i (f_t(x_i)) - g_i/h_i)^2 + \Omega (f_t) + constant
 - 稀疏值：缺失导致，诸如类别类 one-hot 编码会导致大量 0 值出现。
 - 当特征出现缺失值的时候 XGBoost 可以学习出默认的节点分裂方向，如下图算法所示：
 
-![XGBoostDetailAnalysis7](https://i.postimg.cc/mDMPd9vY/XGBoost-Detail-Analysis7.png)
+![XGBoostDetailAnalysis7](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis7.png)
 
 **不会对该特征为missing的样本进行遍历统计，只对该列特征值为 non-missing 的样本上对应的特征值进行遍历**
 
@@ -341,7 +342,7 @@ Shrinkage论文提到：关于 n 和迭代次数 T 的取值，可以通过交�
   将学习速率调小，迭代次数增多，有正则化作用
 - 支持自定义损失函数（需二阶可导）
 
-![XGBoostDetailAnalysis8](https://i.postimg.cc/FHWk1NbL/XGBoost-Detail-Analysis8.png)
+![XGBoostDetailAnalysis8](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis8.png)
 
 ### 4.2 XGBoost 的系统设计
 
@@ -358,15 +359,15 @@ Shrinkage论文提到：关于 n 和迭代次数 T 的取值，可以通过交�
   - 预取数据到buffer 中（非连续->连续）， 在统计梯度信息
   - 调节块的大小
 
-![XGBoostDetailAnalysis9](https://i.postimg.cc/P5r8tPDH/XGBoost-Detail-Analysis9.png)
+![XGBoostDetailAnalysis9](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis9.png)
 
 ### 4.3 更高效的工具包 LightGBM
 
 - 速度更快
-![XGBoostDetailAnalysis10](https://i.postimg.cc/5tXYCTpk/XGBoost-Detail-Analysis10.png)
+![XGBoostDetailAnalysis10](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis10.png)
 
 - 内存占用更低
-![XGBoostDetailAnalysis11](https://i.postimg.cc/LsGqBDb4/XGBoost-Detail-Analysis11.png)
+![XGBoostDetailAnalysis11](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/XGBoostDetailAnalysis11.png)
 
 - 准确率更高（优势不明显， 与 XGBoost 相当）
 *在微软的论文中说是改动很大，实际应用中没有那么明显，可能与数据集有关系*

@@ -32,7 +32,7 @@ date: 2019-03-17 00:00:00
 ## 2 模型架构
 句子分类的简单而有效的基线是将句子表示为词袋（BoW）并训练线性分类器，例如逻辑回归或支持向量机。 但是，线性分类器不能在特征和类之间共享参数，可能会限制泛化。 这个问题的常见解决方案是将线性分类器分解成低秩矩阵或使用多层神经网络。在神经网络的情况下，信息通过隐藏层共享。
 
-![Model architecture of fastText.jpg](https://i.postimg.cc/QtxNVkXX/Model-architecture-of-fast-Text.jpg)
+![Model architecture of fastText.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-p1.JPG)
 
 图1显示了一个带有1个隐藏层的简单模型。 第一个权重矩阵可以看作是一个句子单词的查找表。 词表示被平均为文本表示，然后反馈给线性分类器。 这种结构类似于Mikolov等人的cbow模型，其中中间的单词被标签取代。 该模型将一系列单词作为输入，并在预定义的类上生成概率分布。 我们使用softmax函数来计算这些概率。对于N篇文档，我们最小化下面的负的似然值：
 $$-\frac{1}{N}\sum_{n=1}^{N}y_nlog(f(BAx_n))$$
@@ -61,18 +61,18 @@ $$P(n_{l+1}) = \prod_{i=1}^lP(n_i)$$
 
 **结果** 我们在表1中给出了结果。我们使用10个隐藏单元并运行5个纪元的fastText，并在{0.05,0.1,0.25,0.5}的验证集上选择了一个学习率。 在这项任务中，添加bigram信息将使性能提高1 - 4％。 总体而言，我们的准确度略好于char-CNN，稍差于VDCNN。 请注意，我们可以通过使用更多的n-gram来稍微提高精度，例如，搜狗的性能上升到97.1％。 最后，表1表明我们的方法与Tang等人提出的方法相比是有竞争力的。
 
-![Test accuracy% on sentiment datasets.jpg](https://i.postimg.cc/RCYCVH2B/Table-1-Test-accuracy-on-sentiment-datasets.jpg)
+![Test accuracy% on sentiment datasets.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t1.JPG)
 表1：情绪数据集的测试准确度[％]。 所有数据集都使用相同的参数运行FastText。 它有10个隐藏的单位，我们评估它有没有bigrams。 对于VDCNN和char-CNN，我们显示没有数据增加的最佳报告数字。
 
 
-![Table 2 Training time for a single epoch on sentiment analysis.jpg](https://i.postimg.cc/C59wv3b1/Table-2-Training-time-for-a-single-epoch-on-sentiment-analysis-d.jpg)
+![Table 2 Training time for a single epoch on sentiment analysis.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t2.JPG)
 表3：与Tang等人的比较。在验证集上选择超参数。
 
 我们调整验证集上的超参数，并观察使用多达5个导联的n-grams 达到最佳性能。 与Tang等人不同，fastText不使用预先训练的词嵌入，这可以解释1％的差异。
 
 训练时间 char-CNN和VDCNN都使用NVIDIA Tesla K40 GPU进行培训，而我们的模型则使用20个线程在CPU上进行培训。 表2显示使用卷积的方法比fastText慢几个数量级。 
 
-![Table 3 Comparision with Tang et al. (2015).jpg](https://i.postimg.cc/FRWrSdR0/Table-3-Comparision-with-Tang-et-al-2015.jpg)
+![Table 3 Comparision with Tang et al. (2015).jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t3.JPG)
 表2：与char-CNN和VDCNN相比，情绪分析数据集的训练时间。 我们报告整个培训时间，除了char-CNN，我们报告每个时间。
 
 请注意，对于char-CNN，我们报告每个时期的时间，同时报告其他方法的整体训练时间。 虽然使用更新的CUDA实现的卷积可以使char-CNN的速度提高10倍，但fastText只需不到一分钟的时间就可以训练这些数据集。 与基于CNN的方法相比，我们的加速比随着数据集的大小而增加，至少达到15,000倍的加速。
@@ -85,12 +85,12 @@ $$P(n_{l+1}) = \prod_{i=1}^lP(n_i)$$
 
 **结果和训练时间**  
 
-![Table 5 Prec@1 on the test set for tag prediction.jpg](https://i.postimg.cc/90DWYmRK/Table-5-Prec-1-on-the-test-set-for-tag-prediction.jpg)
+![Table 5 Prec@1 on the test set for tag prediction.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t5.JPG)
 表5：YFCC100M上用于标记预测的测试集上的Prec @ 1。 我们还会报告训练时间和测试时间。 测试时间是单线程的报告，而两种模式的训练使用20个线程。
 
 表5给出了fastText和基线的比较。我们运行5个周期的fastText，并将它与Tagspace的两种尺寸的隐藏层（即50和200）进行比较。两种模型都实现了与隐藏层相似的性能，但增加了巨大值使我们在精度上有了显着提升。 在测试时间，Tagspace需要计算所有类别的分数，这使得它相对较慢，而当类别数量很多（此处超过300K）时，我们的快速推理会显着提高速度。 总体而言，获得质量更好的模型的速度要快一个数量级。 测试阶段的加速更加重要（600倍加速）。表4显示了一些定性的例子。 
 
-![Table 4 Examples from the validation set of YFCC100M dataset.jpg](https://i.postimg.cc/xTbfkdSb/Table-4-Examples-from-the-validation-set-of-YFCC100-M-dataset.jpg)
+![Table 4 Examples from the validation set of YFCC100M dataset.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t4.JPG)
 
 表4：使用具有200个隐藏单元和两个bigrams的fastText获取的YFCC100M数据集验证集的示例。 我们展示了一些正确和不正确的标签预测。
 

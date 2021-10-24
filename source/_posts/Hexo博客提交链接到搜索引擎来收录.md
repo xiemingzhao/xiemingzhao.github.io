@@ -82,15 +82,15 @@ Sitemap: https://www.xiemingzhao.com/baidusitemap.xml
 ### 提交站点到 Google
 我们打开[Google 的站点平台](https://www.google.com/webmasters/tools/home?hl=zh-CN)。你会看到如下页面，紧接着就是注册和登录，你有账号的话直接登录都可以。
 
-![se1](https://i.postimg.cc/xjJ40fbg/se1.jpg)
+![se1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/HexoblogSE1.jpg)
 
 紧接着，点击左上角的`添加资源`，开始验证自己的博客网站，你会看到如下页面，这里建议选择第二个，直接诸如博客站点的主链接就行了，例如我的就是`https://www.xiemingzhao.com`。点击继续后，需要你做一个很简单的验证方式，那就是将验证`html`文件下周下来之后放到自己博客站点的根目录上，然后可以部署一下。
 
-![se2](https://i.postimg.cc/26J94Jg4/se2.jpg)
+![se2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/HexoblogSE2.jpg)
 
 之后回到验证的页面，点击验证即可，验证程刚后，就可以对你的博客站点进行站点地图的提交了。我们点击左侧的`站点地图`选项，你会看到如下的页面，在这里输入前面构建好的`sitemap`的地址再提交就可以了。
 
-![se3](https://i.postimg.cc/jjMFjCX3/se3.jpg)
+![se3](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/HexoblogSE3.jpg)
 
 到这里就完成了 Google 的检索收录，是不是超级简单。稍等一段时间，就可以去Google上面进行测试自己的博客站点，我的在一个小时内就已经能够检索到了。
 
@@ -127,7 +127,7 @@ Sitemap: https://www.xiemingzhao.com/baidusitemap.xml
         sitemap
 ```
 
-![se4](https://i.postimg.cc/J0k6KxWS/se4.jpg)
+![se4](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/HexoblogSE4.jpg)
 
 ### sitemap 提交
 在上面，我们已经构建了`baidusitemap`了，在这里当然要使用了。我们选择自动提交中的`sitemap`，输入自己的`baidusitemap.xml`链接即可，一般都是自己的域名加上这个，例如我的就是[https://www.xiemingzhao.com/baidusitemap.xml](https://www.xiemingzhao.com/baidusitemap.xml)。提交完成后可查看是否成功。
@@ -154,7 +154,7 @@ next 主题已经部署了自动推送的代码，我们只需在主题配置文
 #### 主动推送（实时）
 这个方案好处在于成功率大，且具有实时性。可以参考这篇文章[ Hexo 插件之百度主动提交链接](https://hui-wang.info/2016/10/23/Hexo%E6%8F%92%E4%BB%B6%E4%B9%8B%E7%99%BE%E5%BA%A6%E4%B8%BB%E5%8A%A8%E6%8F%90%E4%BA%A4%E9%93%BE%E6%8E%A5/)。
 
-![se5](https://i.postimg.cc/1t4YVP7m/se5.jpg)
+![se5](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/HexoblogSE5.jpg)
 
 首先我们在如上图中找到自己的秘钥，保存留用。紧接着，我们需要安装以下插件：
 ```

@@ -56,7 +56,7 @@ $$\theta = \theta - \eta \cdot \triangledown_{\theta}J(\theta;x^{(i)};y^{(i)})$$
 
 对于大数据集，因为批梯度下降法在每一个参数更新之前，会对相似的样本计算梯度，所以在计算过程中会有冗余。而SGD在每一次更新中只执行一次，从而消除了冗余。因而，通常SGD的运行速度更快，同时，可以用于在线学习。SGD以高方差频繁地更新，导致目标函数出现如图1所示的剧烈波动。
 
-![optimizer-01.jpg](https://i.postimg.cc/0y9Fzn1Z/optimizer-01.jpg)
+![optimizer-01.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/optimizer-01.JPG)
 
 与批梯度下降法的收敛会使得损失函数陷入局部最小相比，由于SGD的波动性，一方面，波动性使得SGD可以跳到新的和潜在更好的局部最优。另一方面，这使得最终收敛到特定最小值的过程变得复杂，因为SGD会一直持续波动。然而，已经证明当我们缓慢减小学习率，SGD与批梯度下降法具有相同的收敛行为，对于非凸优化和凸优化，可以分别收敛到局部最小值和全局最小值。与批梯度下降的代码相比，SGD的代码片段仅仅是在对训练样本的遍历和利用每一条样本计算梯度的过程中增加一层循环。注意，如6.1节中的解释，在每一次循环中，我们打乱训练样本。
 
@@ -99,7 +99,7 @@ for i in range(nb_epochs):
 #### **4.1 动量法**
 SGD很难通过陡谷，即在一个维度上的表面弯曲程度远大于其他维度的区域[19]，这种情况通常出现在局部最优点附近。在这种情况下，SGD摇摆地通过陡谷的斜坡，同时，沿着底部到局部最优点的路径上只是缓慢地前进，这个过程如图2a所示。
 
-![optimizer-02.jpg](https://i.postimg.cc/FKBBnQdn/optimizer-02.jpg)
+![optimizer-02.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/optimizer-02.JPG)
 
 如图2b所示，动量法[16]是一种帮助SGD在相关方向上加速并抑制摇摆的一种方法。动量法将历史步长的更新向量的一个分量$\gamma$增加到当前的更新向量中（部分实现中交换了公式中的符号）
 
@@ -120,7 +120,7 @@ $$v_t = \gamma v_{t-1} + \eta \triangledown_{\theta}J(\theta - \gamma v_{t-1}) \
 
 同时，我们设置动量项$\gamma$大约为0.9。动量法首先计算当前的梯度值（图3中的小的蓝色向量），然后在更新的累积梯度（大的蓝色向量）方向上前进一大步，Nesterov加速梯度下降法NAG首先在先前累积梯度（棕色的向量）方向上前进一大步，计算梯度值，然后做一个修正（绿色的向量）。这个具有预见性的更新防止我们前进得太快，同时增强了算法的响应能力，这一点在很多的任务中对于RNN的性能提升有着重要的意义[2]。
 
-![optimizer-03.jpg](https://i.postimg.cc/8C5YHC56/optimizer-03.jpg)
+![optimizer-03.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/optimizer-03.JPG)
 
 对于NAG的直观理解的另一种解释可以参见[此处资料](http://cs231n.github.io/neural-networks-3/)，同时Ilya Sutskever在其博士论文[18]中给出更详细的综述。
 
@@ -226,7 +226,9 @@ $$\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat v_t} + \epsilon} \hat m_t$$
 
 图4b中展示了不同算法在鞍点出的行为，鞍点即为一个点在一个维度上的斜率为正，而在其他维度上的斜率为负，正如我们前面提及的，鞍点对SGD的训练造成很大困难。这里注意，SGD，动量法和NAG在鞍点处很难打破对称性，尽管后面两个算法最终设法逃离了鞍点。而Adagrad，RMSprop和Adadelta能够快速想着梯度为负的方向移动，其中Adadelta走在最前面。
 
-![optimizers-04.gif](https://i.postimg.cc/dtYSf63v/optimizers-04.gif)![optimizers-05.gif](https://i.postimg.cc/rsSZm0hv/optimizers-05.gif)
+![optimizers-04.gif](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/optimizers-04.gif)
+
+![optimizers-05.gif](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/optimizers-05.gif)
 
 正如我们所看到的，自适应学习速率的方法，即 Adagrad、 Adadelta、 RMSprop 和Adam，最适合这些场景下最合适，并在这些场景下得到最好的收敛性。
 

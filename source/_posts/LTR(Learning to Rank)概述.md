@@ -26,7 +26,7 @@ Learning to Rank是采用机器学习算法，通过训练模型来解决排序�
 Learning to Rank是监督学习方法，所以会分为training阶段和testing阶段，如图 Fig.2  所示。
 
 <center class="half">
-    <img src="https://i.postimg.cc/X7BgtK1q/ltr-1.png" width="400"/><img src="https://i.postimg.cc/T38cxyB9/ltr-2.png" width="400"/>
+    <img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-1.png" width="400"/><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-2.png" width="400"/>
 </center>
 
 ### 1.1.1 Training data的生成
@@ -182,7 +182,7 @@ $$
 
 下面展示了当$S_{ij}$分别取1，0，-1的时候cost function以$s_i-s_j$为变量的示意图：
 
-![cost function.jpg](https://i.postimg.cc/Z5rx5bSh/ltr-3.png)
+![cost function.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-3.png)
 
 可以看到当$S_{ij}$=1时，模型预测的$s_i$比$s_j$越大，其代价越小；$S_{ij}$=−1时，$s_i$比$s_j$j越小，代价越小；$S_{ij}$=0时，代价的最小值在$s_i$与$s_j$相等处取得。
 
@@ -206,7 +206,7 @@ $$\bar P_{ik}=\frac{\bar P_{ij}\bar P_{jk}}{1+2\bar P_{ij}\bar P_{jk}-\bar P_{ij
 
 若$\bar P_{ij}=\bar P_{jk}=P$,则有如下图所示：
 
-![$P_{ik}$变化图.jpg](https://i.postimg.cc/PfR46V40/ltr-4.png)
+![$P_{ik}$变化图.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-4.png)
 
 >1. $P=0$时，有$\bar P_{i,k}=P=0$表示：$D_i$排$D_j$后面,$D_j$排$D_k$的后面，则$D_i$一定排$D_k$的后面；
 2. $0<P<0.5$时，\bar P_{i,k} < P$；
@@ -289,7 +289,7 @@ $$R_i=\frac{2^{l_i}-1}{2^{l_m}}$$
 ## 2.3 LambdaRank
 上面我们介绍了以错误pair最少为优化目标的RankNet算法，然而许多时候仅以错误pair数来评价排序的好坏是不够的，像NDCG或者ERR等评价指标就只关注top k个结果的排序，当我们采用RankNet算法时，往往无法以这些指标为优化目标进行迭代，所以RankNet的优化目标和IR评价指标之间还是存在gap的。以下图为例：
 
-![lambdarank.ipg](https://i.postimg.cc/sxq4v1x3/ltr-5.png)
+![lambdarank.ipg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-5.png)
 
 如上图所示，每个线条表示文档，蓝色表示相关文档，灰色表示不相关文档，RankNet以pairwise error的方式计算cost，左图的cost为13，右图通过把第一个相关文档下调3个位置，第二个文档上条5个位置，将cost降为11，但是像NDCG或者ERR等评价指标只关注top k个结果的排序，在优化过程中下调前面相关文档的位置不是我们想要得到的结果。图 1右图左边黑色的箭头表示RankNet下一轮的调序方向和强度，但我们真正需要的是右边红色箭头代表的方向和强度，即更关注靠前位置的相关文档的排序位置的提升。LambdaRank正是基于这个思想演化而来，其中**Lambda指的就是红色箭头，代表下一次迭代优化的方向和强度，也就是梯度。**
 
@@ -309,7 +309,7 @@ $$\lambda_{ij}=\frac{\partial C(s_i-s_j)}{\partial s_i}=\frac{-\sigma}{1+e^{\sig
 
 MART的原理是直接在函数空间对函数进行求解，模型结果由许多棵树组成，每棵树的拟合目标是损失函数的梯度，在LambdaMART中就是Lambda。LambdaMART的具体算法过程如下：
 
-![lambdamart.jpg](https://i.postimg.cc/28VtBdX7/ltr-6.png)
+![lambdamart.jpg](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/ltr-6.png)
 
 **可以看出LambdaMART的框架其实就是MART，主要的创新在于中间计算的梯度使用的是Lambda，是pairwise的。MART需要设置的参数包括：树的数量M、叶子节点数L和学习率v，这3个参数可以通过验证集调节获取最优参数。**
 

@@ -26,7 +26,7 @@ date: 2019-07-12
 ### 构建一个Ab Testing的流程
 
 >**简要步骤**
-![ab-testing-lifecycle-summary](https://i.postimg.cc/qMbXmmB8/ab-testing-lifecycle-summary.jpg)
+![ab-testing-lifecycle-summary](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-4.jpg)
 
 1. 业务部门负责定义一个ab testing
 2. 管理后台负责录入管理ab testing
@@ -40,10 +40,10 @@ Ab Testing Framework 在其中的作用：
 
 
 ### 流程细化
-![ab-testing-lifecycle](https://i.postimg.cc/0yhGvbwj/ab-testing-lifecycle.png)
+![ab-testing-lifecycle](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/ABtest-3.png)
 
 ### Ab Testing Framework
-![where-is-ab-testing-framework](https://i.postimg.cc/kXXvvrCJ/where-is-ab-testing-framework.png)
+![where-is-ab-testing-framework](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-6.png)
 
 ### AB Test 基础方面
 

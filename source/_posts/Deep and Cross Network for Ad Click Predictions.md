@@ -58,7 +58,7 @@ wide-and-deep就是这种想法创建的模型。它将交叉特征作为线性�
 ### **2 深度&交叉网络（DCN）**
 在这一部分，我们将会介绍深度&交叉网络（DCN）模型的结构。DCN是开始于embedding和stacking层的，紧接着是一个交叉网络和一个深度网络并行。按顺序接着是一个最终的联合层用来合并两个网络的输出。完整的DCN模型如图1中所示。
 
-![D&C-1.jpg](https://i.postimg.cc/RCJsj7cj/D-C-1.jpg)
+![D&C-1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG)
 
 **2.1 嵌入和堆叠层**
 我们考虑包含稀疏和密集特征的输入数据。在网站级规模的推荐系统如CTR预估中，输入数据大部分都是类别型特征，例如“country=usa”。这样的特征经常会被进行one-hot编码，例如“[0,1,0]”；然而，这就经常导致产生过高维的特征空间来适用大型词典。
@@ -82,7 +82,7 @@ $$x_{l+1} = x_0 x_l^T w_l + b_l x_l = f(x_l , w_l, b_L) + x_l$$
 
 其中$x_l,x_{l+1} \ \in \ \mathbb R^d$都是列向量，分别表示第l层和第l+1层交叉网络的输出$w_l, b_l \ \in \ \mathbb R^d$是第l层网络的权重和偏置项参数。每一交叉层在特征交叉f之后都反加上它的输入部分，并且映射函数$f:\mathbb R^d \rightarrow \mathbb R^d$拟合$x_{l+1}-x_l$的残差。一个交叉层的可视化展示如图2所示。
 
-![D&C-2.jpg](https://i.postimg.cc/8Cn4Ycsp/D-C-2.jpg)
+![D&C-2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-2.JPG)
 
 **高阶特征交叉项**。交叉网络特殊的结构造就了交叉特征的阶数随着网络层数增加而增加。第l层交叉网络的多项式最高阶数（相对于输入层来说）是l+1。事实上，交叉网络包含了所有的交叉项$x_1^{\alpha_1} x_2^{\alpha_2}...x_d^{\alpha_d}$，其中d取值从1到l+1。详细的分析在章节3。
 
@@ -252,7 +252,7 @@ $DC:0.4430 \pm 4.3 \times 10^{-4}$。
 
 图3展示了在随机选择的设置中我们增加交叉层数的改进效果。对于图3中的深度网络，当增加了一个交叉层的时候有一个明显的提升。随着更多的交叉层引入的时候，对于某些模型设置会使得对数损失继续下降，这表明引入交叉项对于预测是有效的；鉴于对于其他模型设置对数损失开始波动甚至出现微幅增加，这就表明高阶的特征交叉项的银如意是没有太大作用的
 
-![D&C-3.jpg](https://i.postimg.cc/Hxcz1m7Q/D-C-3.jpg)
+![D&C-3.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-3.JPG)
 
 ### **4.5 非CTR数据集**
 我们证明了DCN模型在非CTR预测问题中也表现得很好。我们使用来自UCI提供的森林植被类型（forest covertype）（581012样本和54个特征）和 希格斯粒子（Higgs）（11M样本和28个特征）数据集。数据集随机得被分为训练集（90%）和测试集（10%）。对于超参数进行了梯度搜索。深度网络层数从1到10，大小从50到300.交叉网络层数从4到10。残差单元的个数从1到5，他们的出入维度和交叉维度从50到300。对于DCN，输入向量会被直接喂入交叉网络。

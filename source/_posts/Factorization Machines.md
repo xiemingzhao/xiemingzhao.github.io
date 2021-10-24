@@ -48,7 +48,7 @@ $S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$
       $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$
 任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。
 
-![relate-papers18-1.jpg](https://i.postimg.cc/qRd59r8J/relate-papers18-1.jpg)
+![FM-1.JPG](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG)
 
 图1展示了一个示例，在这个任务中如何从观测数据S中构建特征向量。在这里，首先$|U|$是一个二值示性变量（蓝色的），它表示一个交互中活跃的用户，总是可以确定的是在一次交互$(u,i,t,r) \in S$中有一个确定的活跃用户。例如，第一行中的Alice($x_A^{(1)} = 1$)。下一个二值示性变量$|I|$（红色的）表示活跃的物品，同样的总是有一个活跃的物品，例如$x_{TI}^{(1)}=1$。图1中的特征向量也包含了用来表示用户曾经评价过的其他物品的表示向量（黄色的）。对于每个用户来说，变量均是被归一化之后的。例如Alice评价过Notting Hill 和 Star Wars。此外，样本还包含一个从2019年一月开始的月份向量（绿色的）来表示时间。最后几列表示用户评价过的最后一个电影，最右边的是当前电影的评分y。在第五部分，我们将展示因式分解机是如何利用输入数据中的特征向量来做到最特殊的顶级的因式分解模型的。
 
@@ -179,7 +179,7 @@ $$\hat y(x) = w_0 + w_u + w_i$$
 
 因为当且仅当$j = u \ or \ j = i$的时候$x_j = 1$。这个模型对应于一个最基础的协同过滤模型，即只有用户和巫婆的偏置项存在。由于这个模型很简单，因为只有少数的几个参数，所以模型的参数的预测在这种稀疏情况下也会不错。但是预测的质量却不好，见图2。
 
-![relate-papers18-2.jpg](https://i.postimg.cc/zG6MFKvR/relate-papers18-2.jpg)
+![FM-2.JPG](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG)
 
 *2）多项式SVM*：这种情况下，SVM可以获取高阶的相互关系。在我们的系数数据案例中，$m(x)=2$，这时候SVMs模型的等式等价于：
 
@@ -243,7 +243,7 @@ $$\hat y(x) := w_t +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle $$
 
 现在二元指标的原始PITF模型和FM模型几乎是相同的。唯一的区别在于（1）FM模型对t具有偏差项$w_t$，（2）$(u,t)-(i,t)$交叉项的标签之间的分解参数$(v_t)$在FM模型中是共享的，但是又不同于原始PITF模型。除了这个理论分析，图3显示了两种模型实现此任务的可比预测质量的经验分布。
 
-![relate-papers18-3.jpg](https://i.postimg.cc/LsPWC5gQ/relate-papers18-3.jpg)
+![FM-3.JPG](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG)
 
 *D.分解个性化的马尔科夫链*
 FPMC模型尝试基于用户u的最后一次购买(时间t-1)在线上商店进行商品排序。

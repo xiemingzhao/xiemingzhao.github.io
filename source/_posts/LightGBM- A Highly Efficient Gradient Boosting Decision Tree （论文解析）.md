@@ -51,7 +51,7 @@ GBDT有许多实现，如XGBoost，PGBRT，Scikit-learn，gbm in R。Scikit-lear
 
 为了解决前面工作的局限性，我们提出了两个全新的技术分别是 Gradient-based One-Side Sampling (GOSS) 和 Exclusive Feature Bundling (EFB)（基于梯度的one-side采样和互斥的特征捆绑）。跟多的细节会再下一部分介绍。
 
-![Alg.1 & Alg.2](https://i.postimg.cc/xj7q7cL6/lgbm1.jpg)
+![Alg.1 & Alg.2](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm1.JPG)
 
 ## 3 基于梯度的one-side采样
 在这一部分，我们为 GBDT 提出了一个新的抽样方法， 这能够在减少数据实例个数和保持学习到的决策树的准确度之间达到一个平衡。
@@ -93,7 +93,7 @@ $$\varepsilon (d) \leq C_{a,b}^2 ln 1/\delta \cdot max\{ \frac{1}{n_l^j(d)}, \fr
 ## 4 互斥特征捆绑
 这一章，我们提出了一个全新的方法来有效地减少特征数量。
 
-![Alg.3 & Alg.4](https://i.postimg.cc/7hp6TWqF/lgbm2.jpg)
+![Alg.3 & Alg.4](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm2.JPG)
 
 高维的数据通常是非常稀疏的。这种稀疏性启发我们可以设计一种无损地方法来减少特征的维度。特别地，在稀疏特征空间中，许多特征是完全互斥的，即它们从不同时为非零值。我们可以绑定互斥的特征为单一特征（这就是我们所说的互斥特征捆绑）。通过仔细设计特征扫描算法，我们从特征捆绑中构建了与单个特征相同的特征直方图。这种方式的构建直方图时间复杂度从O(#data * #feature)降到O(#data * #bundle)，由于#bundle << # feature，我们能够极大地加速GBDT的训练过程而且不损失精度。(构造直方图的时候，遍历一个“捆绑的大特征”可以得到一组exclusive feature的直方图。这样只需要遍历这些“大特征”就可以获取到所有特征的直方图，降低了需要遍历的特征量。)在下面，我们将会展示如何实现这些方法的细节。
 
@@ -120,15 +120,15 @@ Insurance Claim和Flight Delay数据集都包含许多one-hot编码特征。并�
 我们的实验环境是一个Linux服务器，包含两个E5-2670 v3 CPUs（总共24核）和256GB的内存。所有试验都是多线程运行并且线程的个数固定在16。
 
 ### 5.1 全部对比
-![table of experiment](https://i.postimg.cc/qM3gd4L4/lgbm3.jpg)
+![table of experiment](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm3.JPG)
 
 我们在这一部分展示了所有的实验对比。XGBoost和不包含GOSS以及EFB（称为lgb_baseline）的LightGBM用作基准线。对于XGBoost，我们使用两个版本，xgb_exa(预排序算法)和xgb_his(基于直方图的算法)。对于xgb_his，lgb_baseline，和LightGBM，我们使用leaf-wise树增长方法。对于xgb_exa，因为它仅仅支持layer-wise增长策略，我们将xgb_exa的参数设成使其和其他方法增长相似的树。我们也可以通过调整参数使其在所有的数据集上能在速度和准确率上面达到平衡。我们在Allstate, KDD10 和 KDD12上设定a=0.05,b=0.05，并且在Flight Delay 和 LETOR上设定a = 0.1; b = 0.1。我们对于EFB设定$\gamma = 0$。所有的算法都运行固定的线程数，并且我们从迭代过程中获取最好的分数的准确率结果。
 
-![training curves](https://i.postimg.cc/VvSvv8P9/lgbm4.jpg)
+![training curves](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm4.JPG)
 
 训练时间和测试准确率分别汇总在表2和表3中。从这些结果中，我们能够看到在于基准线保持几乎相同准确率的时候是最快速的。xgb_exa是基于预排序的算法，这相对于基于直方图的算法是非常慢的。相对于lgb_baseline，LightGBM在Allstate, Flight Delay, LETOR, KDD10 和 KDD12数据集上分别加速了21，6，1.6，14和13倍。因xgb_his非常消耗内存，导致其在KDD10 和 KDD12数据集上内存溢出而不能成功运行。在剩下的数据集上，LightGBM都是最快的，最高是在Allstate数据集上加速了9倍。由于所有的算法都在差不多的迭代次数后收敛了，所以加速是基于平均每次迭代时间计算得到的。为了展示整个训练过程，我们基于Flight Delay 和 LETOR的经过的时间也分别展示了训练曲线在图1和图2中。为了节省空间，我们将其他数据集的训练曲线放在了补充材料中。
 
-![Accuracy comparison](https://i.postimg.cc/PxVNdq9r/lgbm5.jpg)
+![Accuracy comparison](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/lgbm5.JPG)
 
 在所有的数据集上，LightGBM都能够得到几乎和基准线一致的测试准确率。这表明GOSS和EFB都不会降低准确率并且能够带来显著地加速。这也与我们前面的理论分析保持一致。
 

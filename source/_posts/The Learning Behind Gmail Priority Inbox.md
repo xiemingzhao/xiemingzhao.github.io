@@ -81,11 +81,11 @@ $$w_{i}\leftarrow w_{i}+f_{i}\frac{sgn(e)max(|e|-\epsilon,0)}{||f||^2+\frac{1}2C
 
 最终目标是帮助Gmail用户。我们分析了有和没有优先收件箱的条件下Google员工在电子邮件上花费的时间。对收到类似邮件量的Google员工进行取平均值，优先收件箱用户（约2000名用户）整体阅读邮件的时间减少了6％，阅读不重要的邮件时间减少了13％。他们也更有信心批量存档或删除电子邮件。
 
-![relate_papers2-1](https://i.postimg.cc/j2TPvzDn/relate-papers2-1.jpg)
+![GmailPriBox-1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/GmailPriBox-1.JPG)
 
-![relate_papers2-2](https://i.postimg.cc/2yxvtVWc/relate-papers2-2.jpg)
+![GmailPriBox-2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/GmailPriBox-2.JPG)
 
-![relate_papers2-3](https://i.postimg.cc/CMCj562G/relate-papers2-3.jpg)
+![GmailPriBox-3](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/GmailPriBox-3.JPG)
 
 
 Combination | Error

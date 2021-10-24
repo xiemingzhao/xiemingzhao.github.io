@@ -21,11 +21,11 @@ date: 2019-05-27
 
 如下图，在分支的输入框中新建一个分支确认就好了，我这里已经新建好了，一般取名hexo打扰其他的也都OK：
 
-![branch1](https://i.postimg.cc/yxKQvdvC/branch1.jpg)
+![branch1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch1.jpg)
 
 然后我们需要进入`settings`模块，如下图，再点击`Branches`，接着选择默认分支为你刚才新创建的，我这里就是`hexo`，毕竟以后体检离线文件是要提交到这里的，所以将它设为默认分支，保存就好了。
 
-![branch2](https://i.postimg.cc/3JKfGkkg/branch2.jpg)
+![branch2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch2.jpg)
 
 ### 2. 本地clone分支
 注意哦，到目前还未使用新电脑，既然要使用新电脑进行备份更新，那我们先在本地也完成备份更新的步骤，后面新电脑操作跟本地差不多。我们在你博客管理目录中新建一个分支管理目录，例如，我的目录下面就有一个创建的目录`myname.github.io`以及一个分支目录`hexo`，之后基本上就只使用`hexo`分支，换电脑时候也类似只会有一个`hexo`分支来更新管理。
@@ -61,7 +61,7 @@ package.json #说明使用哪些包；
 
 如下图所示，分支文件夹中应该包含上述的文件，我这里有一些其他的是因为已经使用了很久，添加了其他功能，部署的时候产生的：
 
-![branch3](https://i.postimg.cc/NfpJkQXZ/branch3.jpg)
+![branch3](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch3.jpg)
 
 不需要更新的文件可利用.gitignore文件来配置需要忽略备份的文件：
 ```
@@ -126,7 +126,3 @@ npm install
 **参考博文**
 [GitHub创建Git分支将Hexo博客迁移到其它电脑](https://blog.csdn.net/white_idiot/article/details/80685990)
 [hexo 迁移更换电脑，或多电脑终端更新博客](https://andyvj.coding.me/2019/02/19/190219-03/)
-
-
-
-

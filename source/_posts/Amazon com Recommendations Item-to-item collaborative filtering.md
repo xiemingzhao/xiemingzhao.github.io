@@ -73,8 +73,10 @@ Amazon.com将推荐作为许多电子邮件活动以及它的大部分网站页�
 
 亚马逊网站基于他们客户的兴趣广泛地使用推荐算法来个性化他们的网站。由于现存的推荐算法无法扩展到亚马逊网站上数以千万的客户和产品，所以我们开发自己的推荐算法。我们的算法是物到物的协同过滤，可以扩展到巨大的数据集并实时产生高质量的推荐。
 
-![图1](https://i.postimg.cc/g09pWKK0/relate-papers6-1.jpg)
-![图2](https://i.postimg.cc/BnP3kzHy/relate-papers6-2.jpg)
+
+![AmazonCF-1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG)
+
+![AmazonCF-2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG)
 
 ## 它是怎么工作的
 物到物的协同过滤并不是对目标用户进行匹配到他们相似的客户，而是对他们购买和评论过的物品匹配到相似的物品，然后聚合这些相似的物品生成推荐列表。

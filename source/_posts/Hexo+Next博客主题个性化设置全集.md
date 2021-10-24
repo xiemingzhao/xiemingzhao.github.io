@@ -16,18 +16,18 @@ date: 2019-06-10
 ## 1.实现展示*fork me on github*效果
 先上效果图：
 
-![fork me on github](https://i.postimg.cc/hvQg06CC/next-individual1.jpg)
+![fork me on github](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual1.jpg)
 
 <!--more-->
 
 这类效果图主要有两类样式，分别是显示`fork me on github`还有一个显示github图标的，可分别在[第一种地址](https://github.blog/2008-12-19-github-ribbons/)和[第二种地址](http://tholman.com/github-corners/)里面选择自己喜欢的款式，然后复制对应框中的代码。接着打开`themes/next/layout/_layout.swig`文件，将刚才复制的代码粘贴在`<div class="headband"></div>`代码下面，保持缩进与其对其，同时把`herf`后面对应的github地址换成你自己的。这里需要注意的是，目前复制的代码中新增了width和height参数，却没有了位置的参数。如下图所示，如果你想跟我一样只设置位置，大小默认，那么就可以删除width和height参数，并新增top,right,和border参数。想要测试在线效果的话，可用`hexo s`本地测试，或者`hexo d -g`线上测试。
 
-![fork code](https://i.postimg.cc/ryDtbp3H/next-individual2.jpg)
+![fork code](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual2.jpg)
 
 ## 2.添加动态背景
 先看效果图：
 
-![background](https://i.postimg.cc/wTJRqG6c/next-individual3.gif)
+![background](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual3.gif)
 
 **注意：**如果你是使用`next`主题并且版本在5.1.1以上，例如我自己就是，那么设置起来就极其简单，直接在主题配置文件中找到`canvas_nest`配置字段改成true即可：
 ```
@@ -72,7 +72,7 @@ canvas_nest: true
 ## 3. 点击出现桃心效果
 先看效果图：
 
-![click](https://i.postimg.cc/7PjTykyZ/next-individual4.gif)
+![click](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual4.gif)
 
 首先打开目录：`/themes/next/source/js/src/`，之后在里面新建一个`love.js`的文件，文件里面复制进去以下内容：
 
@@ -92,7 +92,7 @@ canvas_nest: true
 ## 4. 修改文章链接样式
 先看效果图：
 
-![blog link style](https://i.postimg.cc/Sj041d3m/next-individual5.gif)
+![blog link style](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual5.gif)
 
 打开配置文件：`themes/next/source/css/_common/components/post/post.styl`，在最后面添加如下的代码来设置：
 
@@ -120,7 +120,7 @@ canvas_nest: true
 ## 6. 文章末尾添加“结束”标记
 先看效果图：
 
-![blog ending](https://i.postimg.cc/G25dGdj8/next-individual6.jpg)
+![blog ending](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual6.jpg)
 
 首先打开文件夹：`/themes/next/layout/_macro`，然后在其中新建`passage-end-tag.swig`文件，并添加以下内容：
 
@@ -156,7 +156,7 @@ passage_end_tag:
 ## 7. 头像触碰旋转
 先上效果图：
 
-![headpicture](https://i.postimg.cc/mgsztykx/next-individual7.gif)
+![headpicture](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual7.gif)
 
 头像的配置这里不赘述了，可参考本文开头提到的另一篇博客。接下来为了实现触碰旋转，我们需要先打开配置文件：`/themes/next/source/css/_common/components/sidebar/sidebar-author.styl`，然后再最后添加如下一段代码：
 
@@ -226,7 +226,7 @@ img:hover {
 ## 8. 修改``代码块样式
 先看效果图：
 
-![code style](https://i.postimg.cc/rmmqDK52/next-individual8.jpg)
+![code style](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual8.jpg)
 
 首先打开配置文件：`/themes/next/source/css/_custom/custom.styl`，如果对应路径下没有的话就新建一个，然后在里面添加以下代码：
 
@@ -251,7 +251,7 @@ code {
 ## 9. 主页文章添加阴影效果
 先看效果图：
 
-![home paper back](https://i.postimg.cc/g0GzPMJJ/next-individual9.jpg)
+![home paper back](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual9.jpg)
 
 紧接着上面的步骤，继续在配置文件`/themes/next/source/css/_custom/custom.styl`中最后面添加下面的代码即可：
 
@@ -269,7 +269,7 @@ code {
 ## 10. 侧栏社交连接
 效果如下：
 
-![social link](https://i.postimg.cc/jq1SJQ8g/next-individual10.jpg)
+![social link](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual10.jpg)
 
 首先打开主题配置文件`_config.yml`，然后搜索`social`关键词，找到`social`和`social_icons`参数配置区域，可以看到如下的代码配置块：
 
@@ -299,9 +299,9 @@ social_icons:
 ## 11. 站点底部和文章顶部显示访问量
 先看看如下两个效果图：
 
-![uv and pv](https://i.postimg.cc/CxTMcMpb/next-individual11.jpg)
+![uv and pv](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual11.jpg)
 
-![site uv and pv](https://i.postimg.cc/sDZDPQqV/next-individual12.jpg)
+![site uv and pv](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual12.jpg)
 
 使用next主题的好处在这里就体现出来了，配置这个很简单，只需要打开主题配置文件`/theme/next/_config.yml`后，搜索`busuanzi`找到如下配置代码块后进行相关配置即可：
 
@@ -374,7 +374,7 @@ post_wordcount:
 ## 14. 顶部加载进度条
 先看效果图：
 
-![loading](https://i.postimg.cc/YS8p21Gx/next-individual13.gif)
+![loading](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual13.gif)
 
 这个功能在next主题中配置起来又是如此的简单，只需要打开主题配置文件，之后搜搜`pace`找到如下的代码配置模块：
 
@@ -410,7 +410,7 @@ pace_theme: pace-theme-minimal
 ## 16. 修改网站图标
 图标展示如下所示：
 
-![site picture](https://i.postimg.cc/kG2MpB5v/next-individual14.jpg)
+![site picture](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual14.jpg)
 
 Hexo博客默认图标是一个六边形的黑色背景白色前景N的图案。如果你想要修改对应的图案或者从其他渠道也可以，可以去[EasyIcon](http://www.easyicon.net/)找到喜欢的图案下载，下载的时候有好几种大小，该如何选择呢。
 
@@ -433,7 +433,7 @@ favicon:
 ## 16. 增加版权信息
 先看效果图：
 
-![copyright](https://i.postimg.cc/P5WX9Gd9/next-individual15.jpg)
+![copyright](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual15.jpg)
 
 对文章添加版本信息也是对自己发布的内容的一种保护方式，也是为了减少别人引用时候的费力度，于人于己都是好事。我门首先打开目录：`themes/next/layout/_macro/`，然后新建一个文件`my-copyright.swig`，内容添加如下代码：
 
@@ -634,7 +634,7 @@ copyright: true
 ## 20. 添加分享功能
 先看效果图：
 
-![share](https://i.postimg.cc/C59MTSBT/next-individual16.jpg)
+![share](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/next-individual16.jpg)
 
 Hexo可以给博客增加分享功能，这样就可以实现分享页面/图片以及文章了。有的人使用`jiathis`分享功能，直接在主题配置文件中找到这个模块，将其改为`true`即可，但是亲测好像不是特别好用。
 

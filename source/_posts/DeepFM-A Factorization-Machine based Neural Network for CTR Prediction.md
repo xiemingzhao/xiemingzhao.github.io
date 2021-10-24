@@ -52,12 +52,12 @@ $$\hat y = sigmoid(y_{FM}+y_{DNN})$$
 
 其中，$\hat y \in (0,1)$是预测的CTR，$y_{FM}$是FM部分的输出结果，$y_{DNN}$是深度部分的输出结果。
 
-![DeepFM-1.jpg](https://i.postimg.cc/657HJBcP/DeepFM-1.jpg)
+![DeepFM-1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-1.JPG)
 
 **FM部分**
 FM部分是一个因式分解机，它是在[Rendle,2010]中提出来用在推荐中学习特征交叉项的。除了线性的（一阶）特征交叉项，FM还利用特征间的隐向量的内积构建了成对的（二阶）特征交叉项。相比于以前的方法，特别是在数据集很稀疏的时候它可以更有效地捕获到二阶特征交叉项。在以前的算法中，特征i和j组成的交叉项的参数只能在某一数据记录同时出现特征i和j的时候才能得到训练。而在FM模型中，它们会通过它们的隐含向量$V_i和V_j$的内积计算得到。得益于这种灵活的设计，无论i（或j）何时出现在数据记录中FM模型都能够训练隐含向量$V_i(V_j)$。因此，那些从不或者很少出现在训练数据中的特征交叉项可以有FM模型很好的学习到。
 
-![DeepFM-2.jpg](https://i.postimg.cc/ZRKcfm0V/DeepFM-2.jpg)
+![DeepFM-2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-2.JPG)
 
 如图2所示，FM的输出是由一个累加单元加上一系列内几单元组成的：
 
@@ -66,11 +66,11 @@ $$y_{FM} = <w,x> + \sum_{j_1 = 1}^d \sum_{j_2 = j_1 + 1}^d <V_i,V_j> x_{j_1} \cd
 其中$w \in R^d 和 V_i \in R^k$（k是给定的）。累加单元$(<w,x>)$反映了一阶特征的重要性，内积单元代表了二阶特征交叉项的影响。
 
 **Deep部分**
-![DeepFM-3.jpg](https://i.postimg.cc/wxrVkSzQ/DeepFM-3.jpg)
+![DeepFM-3.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-3.JPG)
 
 深度部分是一个前馈神经网络，通常是来学习高阶特征交叉项的。如图3所示，一条数据记录（一个向量）被喂入神经网络。相比于输入数据是图片或者音频的神经网络，即输入数据是连续且密集的，CTR预估模型的输入数据则大不相同，它要求一个新设计的网络结构。特别地，CTR预估的原始特征输入向量一般都是高度稀疏的、超高维度的、类别型和连续型混合的并且聚合到特征域的（例如性别，位置，年龄）。这表明嵌入层是在将数据输入到第一层隐含层之前将输入向量压缩到了一个低维且密集的实值向量，否则网路将无法进行训练。
 
-![DeepFM-4.jpg](https://i.postimg.cc/yNKnZcKq/DeepFM-4.jpg)
+![DeepFM-4.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-4.JPG)
 
 图4提取了输入层到嵌入层的子网络结构。我们能够之处这个网络结构中的两个有趣的特点：1）尽管不同输入特征域向量的长度不同，但是它们 的嵌入向量确实相同大小(k)的；2）FM中的隐含特征向量（V）是作为网络的权重，它们是学习到的用来将输入特征向量压缩成嵌入向量的。在论文[Zhang tw al., 2016]，V是由FM提前训练好的值来作为初始化的。在这里，不是使用FM的隐含特征向量来初始化网络，而是除了DNN模型外，我们是将FM模型作为我们整体学习框架中的一部分。如此，我们就不需要通过FM来提前训练了，相反我们是将整体的网络结构以端到端的方式来进行联合训练。将嵌入层的输出表示成：
 
@@ -87,7 +87,7 @@ $$a^{(l+1)} = \sigma(W^{(l)}a^{(l)} + b^{(l)})$$
 #### **2.2 与其他神经网络之间的关系**
 受到深度学习在多种应用中取得巨大成功的影响，最近很多用来做CTR预估的深度模型被开发出来。这一部分将我们提出的DeepFM与其他现存的CTR预估深度模型进行比较。
 
-![DeepFM-5.jpg](https://i.postimg.cc/28Bx928R/DeepFM-5.jpg)
+![DeepFM-5.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-5.JPG)
 
 **FNN**：如图5左侧所示，FNN是一个FM初始化的前馈神经网络模型[Zhang et al., 2016]。FM预训练的方法导致了两个限制：1）嵌入层的参数会由FM完全决定；2）引入的预训练步骤会使得模型的有效性降低。此外，FNN仅能捕获高阶的特征交叉项。相反，DeepFM不需预训练并且能够学习到高阶和低阶的特征交叉项。
 
@@ -99,7 +99,7 @@ $$a^{(l+1)} = \sigma(W^{(l)}a^{(l)} + b^{(l)})$$
 
 一个简单地扩展就是用FM替换这个模型中的LR部分（本文的第三部分我们也评估了这一扩展）。这个扩展类似于DeepFM，但是DeepFM在FM和deep部分之间共享了嵌入层。这种特征嵌入层共享的方法通过低阶和高阶特征交叉项影响了（以回传的方式）特征的表达，这就使得其可以更精确的构建特征表达。
 
-![Deep-FM-t1.jpg](https://i.postimg.cc/tJ9N1jGh/Deep-FM-t1.jpg)
+![Deep-FM-t1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-t1.JPG)
 
 **总结**：综上所述，DeepFM和其他深度模型之间关系主要是表1中提到的4个方面。如我们所见，DeepFM是一个不需要预训练和特征工程的模型，并且能够抓取低阶和高阶的特征交叉项。
 
@@ -126,12 +126,12 @@ $$a^{(l+1)} = \sigma(W^{(l)}a^{(l)} + b^{(l)})$$
 在这一部分，我们会评估3.1部分列出的模型，并且在两个数据集上对比它们的效果和效率。
 
 **效率对比**
-![DeepFM-6.jpg](https://i.postimg.cc/vmvhLT84/DeepFM-6.jpg)
+![DeepFM-6.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-6.JPG)
 
 深度学习模型的销量在现实世界中是非常重要的。我们通过以下公式对比了各个模型在Criteo数据集上的效率表现：$\frac{|training time of deep CTR model|}{|training time of LR|}$。结果如图6所示，包含了在CPU（左侧）和GPU（右侧）上的测试结果，我们观察到了以下结果：1）FNN的预训练使其变得不是很有效率；2）尽管IPNN 和 PNN*在GPU上的表现要好于其他模型，但由于内积计算的操作使得他们仍然具有很高的计算成本；3）DeepFM几乎在所有的测试中表现地最有效率。
 
 **效果对比**
-![Deep-FM-t2.jpg](https://i.postimg.cc/prkYz6P3/Deep-FM-t2.jpg)
+![Deep-FM-t2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-t2.JPG)
 
 不同CTR预估模型在Criteo和Company*的数据集上的表现如表2所示，我们可以得到如下观察结果：
 
@@ -147,27 +147,27 @@ $$a^{(l+1)} = \sigma(W^{(l)}a^{(l)} + b^{(l)})$$
 **激活函数**
 根据[Qu et al., 2016]所述，在深度模型中*relu*和*tanh*是比*sigmoid*更适合的。再本文中，我们对比了深度模型在使用relu和tanh的效果。如图7所示，除了IPNN外，在所有的深度模型中relu都比tanh更加合适。可能的原因是relu降低了稀疏性。
 
-![DeepFM-7.jpg](https://i.postimg.cc/Xqrgbgf5/DeepFM-7.jpg)
+![DeepFM-7.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-7.JPG)
 
 **Dropout**
 Dropout[Srivastava et al., 2014]是网络中一个神经元保留下来的概率。Dropout 是一种用来折中神经网络的准确度和复杂度的正则技术。我们分别尝试了dropout在1.0,0.9,0.8,0.7,0.6,0.5下的效果。如图8所示，所有的模型当它们的dropout提前设定好的时候（0.6到0.9）都取得了它们最好的表现。结果表明往模型中加入一些合理的随机性能够增强模型的稳健性。
 
-![DeepFM-8.jpg](https://i.postimg.cc/sX6JqLhy/DeepFM-8.jpg)
+![DeepFM-8.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-8.JPG)
 
 **每层的神经网络个数**
 当其他因素保持一致的时候，增加每一层的神经元个数会引入更高的复杂度。正如我们从图9可以观察到的，增加每一层的神经元个数并不总是能够带来收益。例如，当每一层神经元的个数从400增加到800的时候，DeepFM 的表现趋于稳定；更糟的是，当我们把神经元车上从400增加到800的时候OPNN表现反尔变差了。这是因为过度复杂的模型容易造成过拟合。在我们的数据集中，每一层设定200-400神经元是一个不错的选择。
 
-![DeepFM-9.jpg](https://i.postimg.cc/7hjnYT9W/DeepFM-9.jpg)
+![DeepFM-9.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-9.JPG)
 
 **隐含层的个数**
 如图10所呈现的，增加隐含层的个数在一开始能够提高模型的表现，然而，如果层数一直增加他们的表现则会逐渐变差。这种现象一版也是由于过拟合造成的。
 
-![Deep-FM-10.jpg](https://i.postimg.cc/HxxwwtPN/Deep-FM-10.jpg)
+![Deep-FM-10.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-10.JPG)
 
 **网络形状**
 我们测试了4种网络形状：不变、增长、减小和菱形。当我们改变网络的结构，我们会固定隐含层的个数以及总神经元的个数。例如，当隐含层数量是3且总神经元个数是600的时候，四中网络形状是：不变（200-200-200），增长（100-200-300），减小（300-200-100）和菱形（150-300-150）。正如从图11中可以看到，“不变”的网络形状一般要好于其他三种形状，这也与之前的研究保持了一致性[Larochelle et al., 2009]。
 
-![Deep-FM-11.jpg](https://i.postimg.cc/g04yL74R/Deep-FM-11.jpg)
+![Deep-FM-11.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/DeepFM-11.JPG)
 
 ### **4 相关工作**
 在这篇文章，我们提出了一个新的深度学习网络结构用来做CTR预估。最相关的领域就是推荐系统中的CTR预估和深度学习。在这一部分，我们讨论一下这两个领域的相关工作。

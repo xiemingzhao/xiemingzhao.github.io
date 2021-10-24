@@ -37,7 +37,7 @@ $$F_{\beta}=(1+\beta^2) \cdot \frac{Precision \cdot Recall}{\beta^2 \cdot Precis
 $$FPR=\frac{FP}{FP+TN}$$
 $$TPR=\frac{TP}{TP+FN}$$
 
-![AUC.png](https://i.postimg.cc/XX64QYxH/AUC.png)
+![LTRindex-AUC](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png)
 
 其中：
 假阳率FPR=ROC曲线的X轴指标
@@ -45,7 +45,9 @@ $$TPR=\frac{TP}{TP+FN}$$
 AUC值就是曲线右下部分面积。
 
 ## 2 MAP
-![PR.jpg](https://i.postimg.cc/28dVMsvb/PR.jpg)
+
+![LTRindex-PR](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg)
+
 如上图的PR曲线，对其进行积分求曲线下方的面积，就是AP(Average Precision)，即
 
 $$AP=\int_0^1 p(r) dr$$

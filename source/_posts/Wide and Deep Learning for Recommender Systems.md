@@ -43,9 +43,9 @@ date: 2019-06-12 00:00:00
 
 尽管思想很简单，我们还是证明了Wide & Deep框架极大地提升了移动应用商店的app下载率，并且同时满足训练和高速服务的需求。
 
-![wide&deep-1](https://i.postimg.cc/Ssdx68zn/relate-papers21-1.jpg)
+![wide&deep-1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_1.JPG)
 
-![wide&deep-2](https://i.postimg.cc/nrLc0zv0/relate-papers21-2.jpg)
+![wide&deep-2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_2.JPG)
 
 ### **2. 推荐系统概述**
 图2显示了app推荐系统的概述。一个查询，可以包括各种用户和用户访问应用商店时会生成的上下文特征。推荐系统返回应用列表（也被称为展示），在这上面用户可以执行一些特定的行为例如点击或购买。这些用户操作，随着查询和展示，都记录在日志中，作为模型的训练数据。
@@ -83,14 +83,14 @@ $$P(Y=1|x)=\sigma(w_{wide}^T [x,\phi (x)] + w_{deep}^T a^{(l_f)} +b)$$
 ### **4. 系统实现**
 应用推荐管道的实现包含三个步骤：数据生成，模型训练，以及模型服务，如图3中所示。
 
-![wide&deep-3](https://i.postimg.cc/L5047pDR/relate-papers21-3.jpg)
+![wide&deep-3](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_3.JPG)
 
 **4.1 数据生成**
 在这个步骤，在一个时期的用户和应用展示数据被用来生成训练数据。每个样本对应于一次展示。标签就是应用获取：1代表展示的应用被安装了，否则为0。
 
 词汇表，是用来将类别特征中的字符串匹配成整数型IDs的，也是在这一步骤中生成的。系统为所有的字符型特征计算IDs的空间，其中特征只计算那些出现次数超过最小次数的。连续型的实值特征会被标准化到[0,1]，方法是将特征值x匹配到该特征的累积分布函数$P(X\leq x)$，分成了$n_q$分位数。第i个分位数标准化后的值是$\frac{i-1}{n_q-1}$。分位数的边界是在数据生成过程中计算的。
 
-![wide&deep-4](https://i.postimg.cc/BZ2dVshC/relate-papers21-4.jpg)
+![wide&deep-4](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/wide%26deep_4.JPG)
 
 **4.2 模型训练**
 我们在实验中使用的模型结构如图4所示。在训练中，我们的输入层接手输入数据和词汇表，然后用一个标签一起生成稀疏的和密集的特征。宽模型部分由用户安装应用和展示应用做交叉积变换得到。对于模型的深度部分，一个32维的嵌入向量是从每个类别型特征中学到的。我们将所有的嵌入向量串联在一起形成一个密集的特征，这就构成了一个接近1200维的密集向量。串联的向量接着会被喂入3个ReLU网络层，最优通过逻辑层输出单元。

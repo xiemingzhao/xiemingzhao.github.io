@@ -47,7 +47,7 @@ power和样本量功能类似，达到样本量基本等同于power达到80%。p
 
 #### **显著性计算**
 
-![ABtestsample](https://i.postimg.cc/7PNNzHpt/2015-12-23-092348.png)
+![ABtestsample](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png)
 
 我们将指标提升的百分比定义为lift， **%Lift=（Treatment/Control-1）*100%**
 
@@ -523,14 +523,14 @@ public class UDFLiftQuantile extends UDF {
 ### 实验举例
 我们以一个首页改版为例，如下图所示：
 
-![AB home page](https://i.postimg.cc/g0RV2mVD/2015-12-23-092010.png)
+![AB home page](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-1.png)
 
 首页改版，通过上面图片发现海外酒店位置发生变化，所以我们想知道位置的改变是否会影响海外酒店的点击数量，分流比：新版：老版=50%：50%
 
 我们拿到了每天新老版本的点击UV数，通过统计检验，判断是否新版的点击UV数明显低于老版。
 数据如下：
 
-![home AB outcome](https://i.postimg.cc/jSD6BzCB/abtestoutcome.png)
+![home AB outcome](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-5.png)
 
 ### 检验方法
 假设x：新版每日UV数，y：老板每日UV数。计算如下统计量：

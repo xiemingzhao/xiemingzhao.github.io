@@ -46,7 +46,7 @@ XGBoost成功的重要因素是它可以扩展到所有场景中。该系统在�
 ## 2.提升树简介
 我们在这一节中介绍梯度提升树算法。公式推导遵循文献中的梯度提升思想。特别地，其中的二阶方法源自Friedman等人。我们对正则项进行了微小的改进，这在实践中有所帮助。
 
-![xgb-1.jpg](https://i.postimg.cc/2ywczj7k/xgb-1.jpg)
+![xgb-1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-1.JPG)
 
 ### 2.1 正则化学习目标
 对于一个给定的数据集有n个样本和m个特征$\mathcal D={(x_i,y_i)}(|\mathcal D|=n,x_i \in \mathbb R^m,y_i \in \mathbb R)$，树集成算法使用个数为K的加法模型（如图1）来预测输出。
@@ -89,7 +89,7 @@ $$\tilde{\mathcal{L}}^{(t)}(q)=-\frac{1}{2} \sum_{j=1}^{T} \frac{\left(\sum_{i \
 
 公式（6）可以作为一个评估方程去评价一棵树的结构$q$。这个打分就像评估决策树的杂质分数，不同的是它是为了更广泛的目标函数导出的。图2示出了如何计算这个分数。
 
-![xgb-2.jpg](https://i.postimg.cc/bNmCWJvL/xgb-2.jpg)
+![xgb-2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-2.JPG)
 
 通常来说不可能枚举出所有的树结构$q$，而是用贪心算法，从一个叶子开始分裂，反复给树添加分支。假设$I_L$和$I_R$ 是分裂后左右节点中包含的样本集合。使$I＝I_L \cup I_R$，通过下式分裂后会使损失函数降低。
 
@@ -104,12 +104,12 @@ $$\mathcal{L}_{\text {split}}=\frac{1}{2}\left[\frac{\left(\sum_{i \in I_{L}} g_
 ### 3.1 基准贪婪算法
 树模型学习过程中的一个关键问题是找到最佳分裂节点，如公式（7）所示。为了做到这一点，一个分裂查找算法枚举出了所有特征上的所有可能的分裂节点，我们称之为贪婪算法。大多数现有的单机版本的提升树已经实现了，如scikit-learn、R中的GBM以及XGBoost的单机版本。在Alg.1中给出贪婪算法的详细描述。算法要求列举出所有特征的所有可能的分割点。为了提高效率，算法必须先将特征取值排序，并按顺序访问数据，然后根据公式（7）计算出当前分割点的梯度统计量。
 
-![xgb-a1.jpg](https://i.postimg.cc/mZN63Vfv/xgb-a1.jpg)
+![xgb-a1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-a1.JPG)
 
 ### 3.2 近似算法
 贪婪算法是非常有效的，因为它贪婪地枚举除了所有可能的分裂点。然而，当数据不能完全读入内存时，这样做就不会很有效率。同样的问题也出现在分布式环境中。为了有效支持这两种环境中的提升树，我们需要一种近似算法。
 
-![xgb-a2.jpg](https://i.postimg.cc/L5RQKgfQ/xgb-a2.jpg)
+![xgb-a2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-a2.JPG)
 
 我们总结了一个近似框架，类似于在过去的文献中提到的想法「参考文献17、2、22」，如Alg.2描述。总结来说，该算法首先根据特征分布的百分位数提出可能的候选分裂点（具体的准则在3.3中给出）。然后算法将连续特征值映射到候选分割点分割出的箱子中。计算出每个箱子中数据的统计量（这里的统计量指的是公式（7）中的$g$和$h$），然后根据统计量找到最佳的分割点。
 
@@ -119,7 +119,7 @@ $$\mathcal{L}_{\text {split}}=\frac{1}{2}\left[\frac{\left(\sum_{i \in I_{L}} g_
 
 我们的系统有效地支持单机版的贪心算法，同时也支持近似算法的本地变种和全球变种的所有设置。用户可以根据需求自由选择。
 
-![xgb-3.jpg](https://i.postimg.cc/8PpXZWTj/xgb-3.jpg)
+![xgb-3.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-3.JPG)
 
 ### 3.3 加权分位数梗概
 近似算法中很重要的一步是列出候选的分割点。通常特征的百分位数作为候选分割点的分布会比较均匀。具体来说，设$\mathcal{D}_{k}=\left\{\left(x_{1 k}, h_{1}\right),\left(x_{2 k}, h_{2}\right) \cdots\left(x_{n k}, h_{n}\right)\right\}$表示样本的第$k$个特征的取值和其二阶梯度统计量。我们可以定义一个排序方程$r_{k} : \mathbb{R} \rightarrow[0,+\infty)$：
@@ -145,15 +145,15 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 3）特征工程的结果，如one-hot编码。
 算法对数据中稀疏模式的感知能力是非常重要的。为了做到这一点，我们建议在每个树节点中添加一个默认的方向，如图4所示。当稀疏矩阵$x$中的值丢失时，实例被分类为默认的方向。
 
-![xgb-4.jpg](https://i.postimg.cc/VkNTkth3/xgb-4.jpg)
+![xgb-4.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-4.JPG)
 
 在每个分支中有两种默认方向。最优的默认方向是从数据中学习出来的。具体算法在Alg.3显示。关键步骤是只访问非缺失的数据$I_k$。算法将不存在的值视为缺失值并学习默认方向去处理它（这里的不存在的值应该说的是不符合特征意义或者不合理的值）。当非存在的值对应于用户特定说明的值时，可以将枚举结果限制为一致的方案来应用这个算法。
 
-![xgb-a3.jpg](https://i.postimg.cc/mrv6j5rs/xgb-a3.jpg)
+![xgb-a3.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-a3.JPG)
 
 据我们所知，大多数现有的树学习算法要么只对密集数据进行优化，要么需要特定的步骤来处理特殊情况，例如类别编码。XGBoost以统一的方式处理所有稀疏模式。更重要的是，我们的方法利用稀疏性，使得计算的复杂度与输入中的非缺失数据的数量成线性关系。图5显示了稀疏感知算法和一个常规算法在数据集Allstate-10K（此数据集在第6部分描述）上的比较。我们发现稀疏感知算法的运行速度比常规版本快50倍。这证实了稀疏感知算法的重要性。
 
-![xgb-5.jpg](https://i.postimg.cc/MprLMT2X/xgb-5.jpg)
+![xgb-5.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-5.JPG)
 
 ## 4. 系统设计
 ### 4.1 并行学习的列存储
@@ -161,7 +161,7 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 
 在贪婪算法中，我们将整个数据集存储在单个block中，并通过对预排序的数据进行线性扫描来实现分割点搜索。我们集体对所有叶子进行分割查找，这样只需扫描一次block就可以得到所有叶子节点处所有候选分裂节点的统计信息。图6显示了如何将数据集转换成相应格式并使用block结构找到最优分割。
 
-![xgb-6.jpg](https://i.postimg.cc/LsYbzp2D/xgb-6.jpg)
+![xgb-6.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-6.JPG)
 
 当使用近似算法时，block结构也非常有用。在这种情况下，可以使用多个block，每个block对应于数据集中的不同的行子集。不同的block可以分布在机器上，或者在非核心设置中存储在磁盘上。使用排序结构，分位数查找步骤在完成排序的列上就变成了线性扫描。这对于在每个分支中频繁更新候选分割点的本地优先算法非常有价值。直方图聚合中的二分搜索也变成了线性时间合并样式算法。
 
@@ -173,15 +173,15 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 ### 4.2 缓存感知访问
 虽然block结构有助于优化分割点查找的时间复杂度，但是算法需要通过行索引间接提取梯度统计量，因为这些值是按特征的顺序访问的，这是一种非连续的内存访问（意思就是按值排序以后指针就乱了）。分割点枚举的简单实现在累积和非连续内存提取之间引入了即时读/写依赖性（参见图8）。当梯度统计信息不适合CPU缓存进而发生缓存未命中时，这会减慢分割点查找的速度。
 
-![xgb-8.jpg](https://i.postimg.cc/hPs6ns2L/xgb-8.jpg)
+![xgb-8.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-8.JPG)
 
 对于贪心算法，我们可以通过缓存感知预取算法来缓解这个问题。 具体来说，我们在每个线程中分配一个内部缓冲区，获取梯度统计信息并存入，然后以小批量方式执行累积。预取的操作将直接读/写依赖关系更改为更长的依赖关系，有助于数据行数较大时减少运行开销。图7给出了Higgs和Allstate数据集上缓存感知与非缓存感知算法的比较。我们发现，当数据集很大时，实现缓存感知的贪婪算法的运行速度是朴素版本的两倍。
 
-![xgb-7.jpg](https://i.postimg.cc/4dp2SQKh/xgb-7.jpg)
+![xgb-7.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-7.JPG)
 
 对于近似算法，我们通过选择正确的block尺寸来解决问题。 我们将block尺寸定义为block中包含的最大样本数，因为这反映了梯度统计量的高速缓存存储成本。选择过小的block会导致每个线程的工作量很小，并行计算的效率很低。另一方面，过大的block会导致高速缓存未命中现象，因为梯度统计信息不适合CPU高速缓存。良好的block尺寸平衡了这两个因素。 我们在两个数据集上比较了block大小的各种选择，结果如图9所示。该结果验证了我们的讨论，并表明每个块选择$2^{16}$个样本可以平衡缓存资源利用和并行化效率。
 
-![xgb-9.jpg](https://i.postimg.cc/15s2b2rR/xgb-9.jpg)
+![xgb-9.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-9.JPG)
 
 ### 4.3 核外计算的块
 我们系统的一个目标是充分利用机器的资源来实现可扩展的学习。 除处理器和内存外，利用磁盘空间处理不适合主内存的数据也很重要。为了实现核外计算，我们将数据分成多个块并将每个块存储在磁盘上。在计算过程中，使用独立的线程将块预取到主存储器缓冲区是非常重要的，因为计算可以因此在磁盘读取的情况下进行。但是，这并不能完全解决问题，因为磁盘读取会占用了大量计算时间。减少开销并增加磁盘IO的吞吐量非常重要。 我们主要使用两种技术来改进核外计算。
@@ -196,7 +196,7 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 
 现存有很多树模型并行学习的研究。大多数算法都属于本文所述的近似框架。值得注意的是，还可以按列对数据进行分区并应用贪婪算法。我们的框架也支持这一点，并且可以使用诸如缓存感知预防之类的技术来使这类算法受益。虽然大多数现有的工作都集中在并行化的算法方面，但我们的工作在两个未经探索的方面得到了成果：核外计算和缓存感知学习。这让我们对联合优化系统和算法的有了深刻的理解，并构建了一个端到端系统，可以在非常有限的计算资源下处理大规模问题。在表1中，我们还总结了我们的系统与现存开源系统的对比。
 
-![xgb-t1.jpg](https://i.postimg.cc/HnCRYhG2/xgb-t1.jpg)
+![xgb-t1.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-t1.JPG)
 
 分位数摘要（无权重）是数据库社区中的经典问题。然而，近似提升树算法揭示了一个更普遍的问题——在加权数据上找分位数。据我们所知，本文提出的加权分位数草图是第一个解决该问题的方法。 加权分位数摘要也不是专门针对树模型学习的，可以在将来服务于数据科学和机器学习中的其他应用。
 
@@ -207,7 +207,7 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 ### 6.2 数据集和设置
 我们在实验中使用了四个数据集。表2给出了这些数据集的摘要信息。在一些实验中，由于基线较慢，我们使用随机选择的数据子集，或者演示算法在不同大小的数据集下的性能。在这些情况下，我们使用后缀来表示大小。例如，Allstate-10K表示具有10K实例的Allstate数据集的子集。
 
-![xgb-t2.jpg](https://i.postimg.cc/B6FRGGzb/xgb-t2.jpg)
+![xgb-t2.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-t2.JPG)
 
 我们使用的第一个数据集是Allstate保险索赔数据集。任务是根据不同的风险因素预测保险索赔的可能性和成本。在实验中，我们将任务简化为仅预测保险索赔的概率。此数据集用于评估在3.4节中提到的稀疏感知算法。此数据中的大多数稀疏特征都是独热编码。我们随机选择10M样本作为训练集，并将其余部分用作验证集。
 
@@ -222,27 +222,27 @@ $$\sum_{i=1}^{n} \frac{1}{2} h_{i}\left(f_{t}\left(\mathbf{x}_{i}\right)-g_{i} /
 ### 6.3 分类
 在本节中，我们在Higgs-1M数据集上通过对比其他两种常用的基于贪心算法的提升树，评估基于贪心算法的XGBoost的性能。由于scikit-learn只能处理非稀疏输入，我们选择密集Higgs数据集进行比较。我们在1M的数据子集上运行scikit-learn版本的XGBoost，这样可以在合理的时间内跑完。在比较中，R的GBM使用贪心算法，只扩展树的一个分支，这使它更快但可能导致准确性不足，而scikit-learn和XGBoost都生成完整的树。结果在表3中显示，XGBoost和scikit-learn都比R的GBM表现出更好的性能，而XGBoost的运行速度比scikit-learn快10倍。在实验中，我们还发现列子采样后的结果略差于使用所有特征训练的结果。这可能是因为此数据集中的重要特征很少，贪心算法的精确结果会更好。
 
-![xgb-t3.jpg](https://i.postimg.cc/wBZnPB0n/xgb-t3.jpg)
+![xgb-t3.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-t3.JPG)
 
 ### 6.4 排序学习
 我们接下来评估XGBoost在learning to rank问题上的表现。我们与pGBRT进行比较，pGBRT是以前此类任务中表现最好的系统。XGBoost使用贪心算法，而pGBRT仅支持近似算法。结果显示在表4和图10中。我们发现XGBoost运行速度更快。有趣的是，列采样不仅可以缩短运行时间，还能提高准确性。原因可能是由于子采样有助于防止过拟合，这是许多用户观察出来的。
 
-![xgb-10.jpg](https://i.postimg.cc/Z5Kkv2Ws/xgb-10.jpg)
-![xgb-t4.jpg](https://i.postimg.cc/Z5fG8H3b/xgb-t4.jpg)
+![xgb-10.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-10.JPG)
+![xgb-t4.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-t4.JPG)
 
 ### 6.5 核外实验
 我们还在核外环境中使用criteo数据评估了我们的系统。我们在一台AWS c3.8xlarge机器上进行了实验（32个vcores，两个320 GB SSD，60 GB RAM）。 结果显示在图11中。我们可以发现压缩将计算速度提高了三倍，并且分成两个磁盘进一步加速了2倍。对于此类实验，非常重要的一点是使大数据集来排空系统文件缓存以实现真正的核外环境。这也是我们所做的。当系统用完文件缓存时，我们可以观察到转折点。要注意的是，最终方法中的转折点不是那么明显。这得益于更大的磁盘吞吐量和更好的计算资源利用率。我们的最终方法能够在一台机器上处理17亿个样本。
 
-![xgb-11.jpg](https://i.postimg.cc/c1QP90Y5/xgb-11.jpg)
+![xgb-11.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-11.JPG)
 
 ### 6.6 分布实验
 最后，我们在分布式环境中评估系统。我们在EC2上使用m3.2xlarge机器建立了一个YARN集群，这是集群的非常常见。每台机器包含8个虚拟内核，30GB内存和两个80GB SSD本地磁盘。数据集存储在AWS S3而不是HDFS上，以避免购买持久存储。
 
-![xgb-12.jpg](https://i.postimg.cc/8cB3jmNV/xgb-12.jpg)
+![xgb-12.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-12.JPG)
 
 我们首先将我们的系统与两个生产力级别的分布式系统进行比较：Spark MLLib和H2O。我们使用32 m3.2xlarge机器并测试不同输入尺寸的系统的性能。两个基线系统都是内存分析框架，需要将数据存储在RAM中，而XGBoost可以在内存不足时切换到核外设置。结果如图12所示。我们可以发现XGBoost的运行速度比基线系统快。更重要的是，它能够利用核外计算的优势，在给定有限的计算资源的情况下平稳扩展到所有17亿个样本。基线系统仅能够使用给定资源处理数据的子集。该实验显示了将所有系统的改进结合在一起优势。我们还通过改变机器数量来评估XGBoost的缩放属性。结果显示在图13中。随着我们添加更多机器，我们可以发现XGBoost的性能呈线性变化。重要的是，XGBoost只需要四台机器即可处理17亿个数据。这表明系统有可能处理更大的数据。
 
-![xgb-13.jpg](https://i.postimg.cc/XvpTQ5cw/xgb-13.jpg)
+![xgb-13.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-13.JPG)
 
 ## 7. 结论
 在本文中，我们叙述了在构建XGBoost过程中学到的经验（XGBoost是一个可扩展的提升树系统，被数据科学家广泛使用，并在很多问题上有很好的表现）。 我们提出了一种用于处理稀疏数据的新型稀疏感知算法和用于近似学习的理论上合理的加权分位数草图算法。我们的经验表明，缓存访问模式，数据压缩和分片是构建可扩展的端到端系统以实现提升树的基本要素。这些经验也可以应用于其他机器学习系统。通过结合这些经验，XGBoost能够使用最少量的资源解决大规模的实际问题。
