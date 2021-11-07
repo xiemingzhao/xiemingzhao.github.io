@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/bitArithmetic.html</loc>
+    
+    <lastmod>2021-11-07T16:11:53.778Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
+    
+    <lastmod>2021-11-07T16:07:45.857Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
+    
+    <lastmod>2021-11-07T15:50:38.832Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
+    
+    <lastmod>2021-11-07T15:25:33.225Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/eafa0d01.html</loc>
     
     <lastmod>2021-10-24T15:07:09.311Z</lastmod>
