@@ -100,17 +100,17 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="1 背景在企业的深度学习项目中，Sparse稀疏矩阵这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。 2 稀疏矩阵2.1">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/655C24DE-A433-49C1-8EE3-0665CC6A44FE.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/058A86C6-BDE7-451F-B9E6-8A538EBA0495.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/ECCB1707-F74F-4B77-86D9-258652853704.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/BC4BF389-2D60-44A1-A1EC-F6C86100C29E.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/0994D35F-5508-4575-8886-5E5CA1C425E7.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/3ACFE051-6371-4339-B8CE-D9935A588221.png">
-<meta property="og:updated_time" content="2021-11-12T05:12:06.596Z">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix1.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix2.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix3.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix4.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix5.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix6.png">
+<meta property="og:updated_time" content="2021-11-12T15:15:11.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="稀疏矩阵(Sparse Matrix)">
 <meta name="twitter:description" content="1 背景在企业的深度学习项目中，Sparse稀疏矩阵这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。 2 稀疏矩阵2.1">
-<meta name="twitter:image" content="https://www.xiemingzhao.com/posts/Sparse稀疏矩阵.resources/655C24DE-A433-49C1-8EE3-0665CC6A44FE.png">
+<meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix1.png">
 
 
 
@@ -478,7 +478,8 @@
 
       
         <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在企业的深度学习项目中，<code>Sparse稀疏矩阵</code>这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。</p>
-<h2 id="2-稀疏矩阵"><a href="#2-稀疏矩阵" class="headerlink" title="2 稀疏矩阵"></a>2 稀疏矩阵</h2><h3 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h3><p><img src="Sparse稀疏矩阵.resources/655C24DE-A433-49C1-8EE3-0665CC6A44FE.png" alt="e44521186aaaa95c7cced47d16c78930"></p>
+<h2 id="2-稀疏矩阵"><a href="#2-稀疏矩阵" class="headerlink" title="2 稀疏矩阵"></a>2 稀疏矩阵</h2><h3 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h3><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix1.png" alt="sparseMatrix1"></p>
+<a id="more"></a>
 <p>如上所示，一般当矩阵非零项较少的时候，就称为非零矩阵，也即其中只有少量的有用信息-非零项。</p>
 <p>那么可以做一个更为书面的<strong>定义</strong>：<br><code>具有少量非零项的矩阵 - Number of Non-Zero (NNZ) &lt; 0.5</code></p>
 <blockquote>
@@ -504,7 +505,7 @@
 <li>故 coo[row[k]][col[k]] = data[k] ，即矩阵的第 row[k] 行、第 col[k] 列的值为 data[k];</li>
 </ul>
 </blockquote>
-<p><img src="Sparse稀疏矩阵.resources/058A86C6-BDE7-451F-B9E6-8A538EBA0495.png" alt="13141593331b98f99b2cd21f7d1a6b05"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix2.png" alt="sparseMatrix2"></p>
 <p><strong>适用场景</strong></p>
 <ul>
 <li>主要用来创建矩阵，因为coo_matrix无法对矩阵的元素进行增删改等操作</li>
@@ -543,7 +544,7 @@
 </li>
 <li>得到了行索引、列索引，相应的数据存放在： data[indptr[i]:indptr[i+1]]</li>
 </ul>
-<p><img src="Sparse稀疏矩阵.resources/ECCB1707-F74F-4B77-86D9-258652853704.png" alt="d0de310e5ec390cad6b9f0d65c899a64"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix3.png" alt="sparseMatrix3"></p>
 <p><strong>构造方法</strong></p>
 <ul>
 <li>对于矩阵第 0 行，我们需要先得到其非零元素列索引<ol>
@@ -594,7 +595,7 @@
 </li>
 <li>得到了列索引、行索引，相应的数据存放在： data[indptr[i]:indptr[i+1]]</li>
 </ul>
-<p><img src="Sparse稀疏矩阵.resources/BC4BF389-2D60-44A1-A1EC-F6C86100C29E.png" alt="e2f95eda55e906029ca68797748fae20"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix4.png" alt="sparseMatrix4"></p>
 <p><strong>构造方法</strong></p>
 <ul>
 <li>对于矩阵第 0 列，我们需要先得到其非零元素行索引<ol>
@@ -647,7 +648,7 @@
 <li>rows保存非零元素所在的列</li>
 <li>可以使用列表赋值来添加元素，如 lil[(0, 0)] = 8</li>
 </ul>
-<p><img src="Sparse稀疏矩阵.resources/0994D35F-5508-4575-8886-5E5CA1C425E7.png" alt="877583da68f7f4a966a99aaf7b66f1bb"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix5.png" alt="sparseMatrix5"></p>
 <p><strong>构造方法</strong></p>
 <ul>
 <li>lil[(0, -1)] = 4 ：第0行的最后一列元素为4</li>
@@ -684,7 +685,7 @@
 <li>offsets ：第 i 个 offsets 是当前第 i 个对角线和主对角线的距离</li>
 <li>data[k:] 存储了 offsets[k] 对应的对角线的全部元素</li>
 </ul>
-<p><img src="Sparse稀疏矩阵.resources/3ACFE051-6371-4339-B8CE-D9935A588221.png" alt="bb7c6bc4d49d00ae45845ab772db2dc6"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix6.png" alt="sparseMatrix6"></p>
 <p><strong>构造方法</strong></p>
 <ul>
 <li>当 offsets[0] = 0 时，表示该对角线即是主对角线，相应的值为 [1, 2, 3, 4, 5]</li>
@@ -968,8 +969,11 @@
 
           
           
-          
-        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="450" src="//music.163.com/outchain/player?type=0&id=2878202769&auto=1&height=430"></iframe>
+
+          <div id="music163player">
+              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="450" src="//music.163.com/outchain/player?type=0&id=2878202769&auto=1&height=430">
+              </iframe>
+          </div>
 
           
 
