@@ -92,13 +92,13 @@
 
 
 
-<meta name="description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：  每个机器缓存全量数据；  如此虽然能保证请求打到任何一台机器都可以，但是冗余性巨高；   每个机器只缓">
+<meta name="description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：">
 <meta name="keywords" content="算法,Hash">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一致性哈希算法(Consistent Hashing)">
 <meta property="og:url" content="https://www.xiemingzhao.com/posts/consistentHash.html">
 <meta property="og:site_name" content="小火箭的博客">
-<meta property="og:description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：  每个机器缓存全量数据；  如此虽然能保证请求打到任何一台机器都可以，但是冗余性巨高；   每个机器只缓">
+<meta property="og:description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash1.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash2.png">
@@ -113,10 +113,10 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash11.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash12.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash13.png">
-<meta property="og:updated_time" content="2021-11-07T16:07:45.857Z">
+<meta property="og:updated_time" content="2021-11-12T04:57:28.332Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一致性哈希算法(Consistent Hashing)">
-<meta name="twitter:description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：  每个机器缓存全量数据；  如此虽然能保证请求打到任何一台机器都可以，但是冗余性巨高；   每个机器只缓">
+<meta name="twitter:description" content="1 背景一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：  这个时候一般有两种方案：">
 <meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash1.png">
 
 
@@ -487,6 +487,7 @@
         <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：</p>
 <p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash1.png" alt="consistentHash1"></p>
 <p>这个时候一般有两种方案：</p>
+<a id="more"></a>
 <ol>
 <li><p>每个机器缓存全量数据；</p>
 <blockquote>

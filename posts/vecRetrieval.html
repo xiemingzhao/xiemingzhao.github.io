@@ -113,7 +113,7 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/vecRetrieval11.jpg">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/vecRetrieval12.jpg">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/vecRetrieval13.jpg">
-<meta property="og:updated_time" content="2021-11-07T15:50:38.832Z">
+<meta property="og:updated_time" content="2021-11-12T04:57:28.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="向量检索算法">
 <meta name="twitter:description" content="1 基础知识1.1 背景在深度学习大兴的时代，embeding无处不在，不论是在搜索推荐领域还是cv领域亦或nlp领域。俗话说得好，万物皆可embeding，那么对于embeding化后的对象我们在做topk检索/召回的时候怎么提效呢？毕竟候选集往往都是在千万级或者亿级的时候，计算量是相当大的。这时候，向量检索算法就发挥了作用。在我理解的向量检索一般可以分为两个方向，一种是精确化检索，需要遍历每个">
@@ -485,6 +485,7 @@
 
       
         <h2 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1 基础知识"></a>1 基础知识</h2><h3 id="1-1-背景"><a href="#1-1-背景" class="headerlink" title="1.1 背景"></a>1.1 背景</h3><p>在深度学习大兴的时代，embeding无处不在，不论是在搜索推荐领域还是cv领域亦或nlp领域。俗话说得好，万物皆可embeding，那么对于embeding化后的对象我们在做topk检索/召回的时候怎么提效呢？毕竟候选集往往都是在千万级或者亿级的时候，计算量是相当大的。这时候，向量检索算法就发挥了作用。在我理解的向量检索一般可以分为两个方向，一种是精确化检索，需要遍历每个样本，计算量往往很大，基本上被淘汰了。另一种就是近似检索，学术上对应的专有名词叫Approximate Nearest Neighbor Search (ANNS)，即近似最近邻搜索。为什么是近似，而不是我们想要的精确？这就是精度与时间、算力资源的折中，采用了牺牲精度换取时间和空间的方式，从海量的样本中实时获取跟查询最相似的样本。</p>
+<a id="more"></a>
 <h3 id="1-2-向量距离"><a href="#1-2-向量距离" class="headerlink" title="1.2 向量距离"></a>1.2 向量距离</h3><p>深度学习时代用的最多的就是embeding向量，而向量的基础形式往往就是一个数组，我们一般所需要的任务就是找出按照候选集中各个向量与目标向量的相似度倒排后的topK个。既然谈到向量之间的相似度，那么就要引入向量间的距离来进行刻画了。在实际中常用的向量距离主要有以下四种：</p>
 <ol>
 <li>欧式距离(Euclidean Distance)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d_&#123;12&#125; = \sqrt&#123;\sum_&#123;k=1&#125;^n(x_&#123;1k&#125;-x_&#123;2k&#125;)^2&#125;</span><br></pre></td></tr></table></figure>

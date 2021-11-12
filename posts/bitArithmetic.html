@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="1 位运算简介 &amp;amp; 与运算 两个位都是 1 时，结果才为 1，否则为 0，如：10011&amp;amp;11001=10001  | 或运算 两个位都是 0 时，结果才为 0，否则为 1，如 10011 | 11001 = 11011  ^ 异或运算，两个位相同则为 0，不同则为 1，如 10011 ^ 11001 = 01010   ~ 取反运算，0 则变为 1，1 则变为 0，如~ 1001">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-11-07T16:11:53.778Z">
+<meta property="og:updated_time" content="2021-11-12T04:57:28.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="位运算的巧用">
 <meta name="twitter:description" content="1 位运算简介 &amp;amp; 与运算 两个位都是 1 时，结果才为 1，否则为 0，如：10011&amp;amp;11001=10001  | 或运算 两个位都是 0 时，结果才为 0，否则为 1，如 10011 | 11001 = 11011  ^ 异或运算，两个位相同则为 0，不同则为 1，如 10011 ^ 11001 = 01010   ~ 取反运算，0 则变为 1，1 则变为 0，如~ 1001">
@@ -480,10 +480,12 @@
 <li><p><code>~</code> 取反运算，0 则变为 1，1 则变为 0，如<code>~ 10011 = 01100</code></p>
 </li>
 <li><p><code>&lt;&lt;</code> 左移运算，向左进行移位操作，高位丢弃，低位补 0，如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int a = 8;</span><br><span class="line">a &lt;&lt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0100 0000</span><br></pre></td></tr></table></figure>
 </li>
-<li><p><code>&gt;&gt;</code> 右移运算，向右进行移位操作，对无符号数，高位补 0，对于有符号数，高位补符号位，如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unsigned int a = 8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0000 0001</span><br><span class="line"></span><br><span class="line">int a = -8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1000</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1111</span><br></pre></td></tr></table></figure>
+</ul>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int a = 8;</span><br><span class="line">a &lt;&lt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0100 0000</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&gt;&gt;</code> 右移运算，向右进行移位操作，对无符号数，高位补 0，对于有符号数，高位补符号位，如<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unsigned int a = 8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：0000 0000 0000 0000 0000 0000 0000 1000</span><br><span class="line">移位后：0000 0000 0000 0000 0000 0000 0000 0001</span><br><span class="line"></span><br><span class="line">int a = -8;</span><br><span class="line">a &gt;&gt; 3;</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1000</span><br><span class="line">移位前：1111 1111 1111 1111 1111 1111 1111 1111</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h2 id="2-位运算巧解问题"><a href="#2-位运算巧解问题" class="headerlink" title="2 位运算巧解问题"></a>2 位运算巧解问题</h2><h3 id="2-1-位操作实现乘除法数"><a href="#2-1-位操作实现乘除法数" class="headerlink" title="2.1 位操作实现乘除法数"></a>2.1 位操作实现乘除法数</h3><blockquote>

@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw4.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw5.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw6.png">
-<meta property="og:updated_time" content="2021-11-07T15:25:33.225Z">
+<meta property="og:updated_time" content="2021-11-12T04:57:28.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HNSW算法详解">
 <meta name="twitter:description" content="1 引言在向量检索领域，HNSW算法算是有比较重要的一席之地，很多地方都会用到，那么本文主要是对其具体构建的细节逻辑和背后的思想进行一个阐述和介绍。 Hierarchical Navigable Small World Graphs (HNSW) 是Yury A. Malkov提出的一种基于图索引的方法，它是Yury A. Malkov在他本人之前工作NSW上一种改进。通过采用层状结构，将边按特征">
@@ -480,6 +480,7 @@
         <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在向量检索领域，HNSW算法算是有比较重要的一席之地，很多地方都会用到，那么本文主要是对其具体构建的细节逻辑和背后的思想进行一个阐述和介绍。</p>
 <p><a href="https://arxiv.org/abs/1603.09320" target="_blank" rel="noopener">Hierarchical Navigable Small World Graphs (HNSW)</a> 是Yury A. Malkov提出的一种基于图索引的方法，它是Yury A. Malkov在他本人之前工作<code>NSW</code>上一种改进。通过采用层状结构，将边按特征半径进行分层，使每个顶点在所有层中平均度数变为常数，从而将NSW的计算复杂度由多重对数(Polylogarithmic)复杂度降到了对数(logarithmic)复杂度。</p>
 <h2 id="2-朴素思想"><a href="#2-朴素思想" class="headerlink" title="2 朴素思想"></a>2 朴素思想</h2><p>这里我们以一个小的场景为例来开始，假设我们现在有13个2维数据向量，我们把这些向量放在了一个平面直角坐标系内，隐去坐标系刻度，它们的位置关系如下图所示。</p>
+<a id="more"></a>
 <p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw1.png" alt="hnsw1"></p>
 <p><strong>朴素查找法</strong>：</p>
 <ol>
