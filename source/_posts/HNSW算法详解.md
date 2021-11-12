@@ -21,6 +21,8 @@ mathjax: true
 ## 2 朴素思想
 这里我们以一个小的场景为例来开始，假设我们现在有13个2维数据向量，我们把这些向量放在了一个平面直角坐标系内，隐去坐标系刻度，它们的位置关系如下图所示。
 
+<!--more-->
+
 ![hnsw1](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw1.png)
 
 **朴素查找法**：

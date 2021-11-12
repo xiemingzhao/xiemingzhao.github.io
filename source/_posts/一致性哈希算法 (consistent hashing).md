@@ -18,6 +18,9 @@ date: 2020-04-08
 ![consistentHash1](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash1.png)
 
 这个时候一般有两种方案：
+
+<!--more-->
+
 1. 每个机器缓存全量数据；
 >如此虽然能保证请求打到任何一台机器都可以，但是冗余性巨高；
 
