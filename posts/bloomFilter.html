@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="机器学习,排序,LTR,">
+  <meta name="keywords" content="算法,数据结构,">
 
 
 
@@ -92,21 +92,23 @@
 
 
 
-<meta name="description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
-<meta name="keywords" content="机器学习,排序,LTR">
+<meta name="description" content="1 背景在实际工作中，我们经常涉及判断一个对象或者数据是否存在于内存或者数据库。往往大家会想到HashMap，但是这时候有一个问题,存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，而一旦你的值很多例如上亿的时候，可行性就差了。另一方面，如果很多请求是在请求数据库根本不存在的数据,那么数据库就要频繁响应这种不必要的IO查询,如果再多一些,数据库大多数IO都在响应这种毫无意义的请求操作,">
+<meta name="keywords" content="算法,数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LTR信息检索评价指标">
-<meta property="og:url" content="https://www.xiemingzhao.com/posts/5fb7303d.html">
+<meta property="og:title" content="布隆过滤器(Bloom Filter)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/bloomFilter.html">
 <meta property="og:site_name" content="小火箭的博客">
-<meta property="og:description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
+<meta property="og:description" content="1 背景在实际工作中，我们经常涉及判断一个对象或者数据是否存在于内存或者数据库。往往大家会想到HashMap，但是这时候有一个问题,存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，而一旦你的值很多例如上亿的时候，可行性就差了。另一方面，如果很多请求是在请求数据库根本不存在的数据,那么数据库就要频繁响应这种不必要的IO查询,如果再多一些,数据库大多数IO都在响应这种毫无意义的请求操作,">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg">
-<meta property="og:updated_time" content="2021-11-12T15:12:40.738Z">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter1.jpg">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter2.jpg">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter3.jpg">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter4.png">
+<meta property="og:updated_time" content="2021-11-12T15:31:37.289Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LTR信息检索评价指标">
-<meta name="twitter:description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
-<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
+<meta name="twitter:title" content="布隆过滤器(Bloom Filter)">
+<meta name="twitter:description" content="1 背景在实际工作中，我们经常涉及判断一个对象或者数据是否存在于内存或者数据库。往往大家会想到HashMap，但是这时候有一个问题,存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，而一旦你的值很多例如上亿的时候，可行性就差了。另一方面，如果很多请求是在请求数据库根本不存在的数据,那么数据库就要频繁响应这种不必要的IO查询,如果再多一些,数据库大多数IO都在响应这种毫无意义的请求操作,">
+<meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter1.jpg">
 
 
 
@@ -136,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiemingzhao.com/posts/5fb7303d.html">
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/bloomFilter.html">
 
 
 
 
 
-  <title>LTR信息检索评价指标 | 小火箭的博客</title>
+  <title>布隆过滤器(Bloom Filter) | 小火箭的博客</title>
   
 
 
@@ -325,7 +327,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/5fb7303d.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/bloomFilter.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小火箭">
@@ -342,7 +344,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LTR信息检索评价指标</h1>
+          <h1 class="post-title" itemprop="name headline">布隆过滤器(Bloom Filter)</h1>
         
 
         <div class="post-meta">
@@ -354,8 +356,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-27T00:00:00+08:00">
-                2019-06-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-24T00:00:00+08:00">
+                2020-05-24
               </time>
             
 
@@ -406,8 +408,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/5fb7303d.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/5fb7303d.html" itemprop="commentCount"></span>
+                <a href="/posts/bloomFilter.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/bloomFilter.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -436,7 +438,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.7k
+                  2.5k
                 </span>
               
 
@@ -452,7 +454,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  9
                 </span>
               
             </div>
@@ -473,100 +475,60 @@
       
 
       
-        <h2 id="1-RP"><a href="#1-RP" class="headerlink" title="1 RP"></a>1 RP</h2><p>R（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">—-</th>
-<th style="text-align:center">Predict P</th>
-<th style="text-align:center">Predict N</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Target P</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FN</td>
-</tr>
-<tr>
-<td style="text-align:center">Target N</td>
-<td style="text-align:center">FP</td>
-<td style="text-align:center">TN</td>
-</tr>
-</tbody>
-</table>
-</div>
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在实际工作中，我们经常涉及判断一个对象或者数据是否存在于内存或者数据库。往往大家会想到HashMap，但是这时候有一个问题,存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，而一旦你的值很多例如上亿的时候，可行性就差了。<br>另一方面，如果很多请求是在请求数据库根本不存在的数据,那么数据库就要频繁响应这种不必要的IO查询,如果再多一些,数据库大多数IO都在响应这种毫无意义的请求操作,为了解决这一个问题，过滤器由此诞生！</p>
+<h2 id="2-布隆过滤器"><a href="#2-布隆过滤器" class="headerlink" title="2 布隆过滤器"></a>2 布隆过滤器</h2><blockquote>
+<p>过滤原理：布隆过滤器(Bloom Filter)大概的思路就是,当你请求的信息来的时候,先检查一下你查询的数据我这有没有,有的话将请求压给数据库,没有的话直接返回。</p>
+</blockquote>
 <a id="more"></a>
-<p>正确率、召回率（查全率）、精准度、$F_{\beta}$ score、假阳率以及真阳率：</p>
-<script type="math/tex; mode=display">Accuracy = \frac{TP+FN}{TP+TN+FP+FN}</script><script type="math/tex; mode=display">Recall=\frac{TP}{TP+FN}</script><script type="math/tex; mode=display">Precision=\frac{TP}{TP+FP}</script><script type="math/tex; mode=display">F_{\beta}=(1+\beta^2) \cdot \frac{Precision \cdot Recall}{\beta^2 \cdot Precision + Recall}</script><p>其中，F-Score/F-measure 作为综合指标，平衡 recall 和 precision 的影响，较为全面的评价一个模型。F1-Score 表示准确率和召回率一样重要；F2-Score 表示召回率比准确率重要一倍；F0.5-Score 表示准确率比召回率重要一倍。</p>
-<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script><script type="math/tex; mode=display">TPR=\frac{TP}{TP+FN}</script><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png" alt="LTRindex-AUC"></p>
-<p>其中：<br>假阳率FPR=ROC曲线的X轴指标<br>真阳率TPR=ROC曲线的Y轴指标=召回率<br>AUC值就是曲线右下部分面积。</p>
-<h2 id="2-MAP"><a href="#2-MAP" class="headerlink" title="2 MAP"></a>2 MAP</h2><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg" alt="LTRindex-PR"></p>
-<p>如上图的PR曲线，对其进行积分求曲线下方的面积，就是AP(Average Precision)，即</p>
-<script type="math/tex; mode=display">AP=\int_0^1 p(r) dr</script><p>其中，p 表示 precision，r 表示 recall，p 是一个以 r 为参数的函数，AP 的计算是对排序位置敏感的，相关文档排序的位置越靠前，检索出相关的文档越多，AP 值越大。</p>
-<p>近似计算约等于 AAP（Aproximate Average Precision）：</p>
-<script type="math/tex; mode=display">AAP=\sum_{k=1}^Np(k)\Delta r(k)=\frac{\sum_{k=1}^Np(k) \cdot rel(k)}{number Of Relevant Documents}</script><p>其中，N 代表所有相关文档的总数，p(k) 表示能检索出 k 个相关文档时的 precision 值，而 △r(k) 则表示检索相关文档个数从 k-1 变化到 k 时（通过调整阈值）recall 值的变化情况。<br>rel(k) 表示第 k 个文档是否相关，若相关则为1，否则为0，则可以简化公式为：</p>
-<script type="math/tex; mode=display">AP=\frac{1}{N} \cdot \sum_{i=1}^N\frac{i}{position(i)}</script><p>其中，N 表示相关文档总数，position(i) 表示第 i 个相关文档在检索结果列表中的位置。</p>
-<p>MAP（Mean Average Precision）即多个查询的平均正确率（AP）的均值，从整体上反映模型的检索性能。</p>
-<p>下面举一个例子来说明上述公式的计算：<br>查询 query1 对应总共有4个相关文档，查询 query2 对应总共有5个相关文档。当通过模型执行查询1、2时，分别检索出4个相关文档（Rank=1、2、4、7）和3个相关文档（Rank=1、3、5）。<br>则 query1AP=(1/1+2/2+3/4+4/7)/4=0.83，query2AP=(1/1+2/3+3/5+0+0)/5=0.45，最后 MAP=(0.83+0.45)/2=0.64。</p>
-<h2 id="3-NDCG"><a href="#3-NDCG" class="headerlink" title="3 NDCG"></a>3 NDCG</h2><h3 id="3-1-CG-Cumulative-Gain-累计效益"><a href="#3-1-CG-Cumulative-Gain-累计效益" class="headerlink" title="3.1 CG(Cumulative Gain)累计效益"></a>3.1 CG(Cumulative Gain)累计效益</h3><script type="math/tex; mode=display">CG@k=\sum_{i=1}^k rel_i</script><p>其中 k 表示 k 个文档组成的集合，rel 表示第 i 个文档的相关度，例如相关度分为以下几个等级：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Relevance Rating</th>
-<th style="text-align:center">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Perfect</td>
-<td style="text-align:center">5</td>
-</tr>
-<tr>
-<td style="text-align:center">Excellent</td>
-<td style="text-align:center">4</td>
-</tr>
-<tr>
-<td style="text-align:center">Good</td>
-<td style="text-align:center">3</td>
-</tr>
-<tr>
-<td style="text-align:center">Fair</td>
-<td style="text-align:center">2</td>
-</tr>
-<tr>
-<td style="text-align:center">Simple</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">Bad</td>
-<td style="text-align:center">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="3-2-DCG-Discounted-Cumulative-Gain"><a href="#3-2-DCG-Discounted-Cumulative-Gain" class="headerlink" title="3.2 DCG(Discounted Cumulative Gain)"></a>3.2 DCG(Discounted Cumulative Gain)</h3><p>在 CG 的计算中没有考虑到位置信息，例如检索到三个文档的相关度依次为（3，-1，1）和（-1，1，3），根据 CG 的计算公式得出的排名是相同的，但是显然前者的排序好一些。</p>
-<p>所以需要在 CG 计算的基础上加入位置信息的计算，现假设根据位置的递增，对应的价值递减，为 1/log2(i+1)，其中 log2(i+1) 为折扣因子；</p>
-<script type="math/tex; mode=display">DCG@k=\sum_{i=1}^k \frac{rel_i}{log_2 (i+1)}</script><p>另一种增加相关度影响比重的 DCG 计算公式：</p>
-<script type="math/tex; mode=display">DCG@k=\sum_{i=1}^k \frac{2^{rel_i}-1}{log_2 (i+1)}</script><h3 id="3-3-IDCG-idea-DCG"><a href="#3-3-IDCG-idea-DCG" class="headerlink" title="3.3 IDCG(idea DCG)"></a>3.3 IDCG(idea DCG)</h3><p>理想情况下，按照相关度从大到小排序，然后计算 DCG 可以取得最大值情况。</p>
-<script type="math/tex; mode=display">IDCG@k=\sum_{i=1}^{|REL|} \frac{2^{rel_i}-1}{log_2 (i+1)}</script><p>其中 |REL| 表示文档按照相关度从大到小排序，取前 k 个文档组成的集合。就是按理想排序情景的前k个。</p>
-<h3 id="3-4-NDCG-Normalized-DCG"><a href="#3-4-NDCG-Normalized-DCG" class="headerlink" title="3.4 NDCG(Normalized DCG)"></a>3.4 NDCG(Normalized DCG)</h3><p>由于每个查询所能检索到的结果文档集合长度不一致，k 值的不同会影响 DCG 的计算结果。所以不能简单的对不同查询的 DCG 结果进行平均，需要先归一化处理。</p>
-<p>NDCG 就是利用 IDCG 进行归一化处理，表示当前的 DCG 与理想情况下的 IDCG 相差多大：</p>
-<script type="math/tex; mode=display">NDCG@k=\frac{DCG@k}{IDCG@K}</script><p>这样每个查询的 NDCG 均在 0-1 范围内，不同查询之间就可以进行比较，求取多个查询的平均 NDCG。</p>
-<h2 id="4-ERR"><a href="#4-ERR" class="headerlink" title="4 ERR"></a>4 ERR</h2><h3 id="4-1-PR-reciprocal-rank"><a href="#4-1-PR-reciprocal-rank" class="headerlink" title="4.1 PR(reciprocal rank)"></a>4.1 PR(reciprocal rank)</h3><p>倒数排名，指检索结果中第一个相关文档的排名的倒数。</p>
-<script type="math/tex; mode=display">RR=\frac{1}{rank_i}</script><h3 id="4-2-MRR-mean-reciprocal-rank"><a href="#4-2-MRR-mean-reciprocal-rank" class="headerlink" title="4.2 MRR(mean reciprocal rank)"></a>4.2 MRR(mean reciprocal rank)</h3><p>多个查询的倒数排名的均值，公式如下：</p>
-<script type="math/tex; mode=display">MRR=\frac{1}{|N|} \sum_{i=1}^{|N|} \frac{1}{rank_i}</script><p>ranki 表示第 i 个查询的第一个相关文档的排名。</p>
-<h3 id="4-3-Cascade-Model-瀑布模型"><a href="#4-3-Cascade-Model-瀑布模型" class="headerlink" title="4.3 Cascade Model(瀑布模型)"></a>4.3 Cascade Model(瀑布模型)</h3><p>点击模型中的瀑布模型，考虑到在同一个检索结果列表中各文档之间的位置依赖关系，假设用户从上至下查看，如果遇到某一检索结果项满意并进行点击，则操作结束；否则跳过该项继续往后查看。第 i 个位置的文档项被点击的概率为：</p>
-<script type="math/tex; mode=display">P(C_i)=r_i \prod_{j=1}^{i-1} (1-r_j)</script><p>其中 ri 表示第 i 个文档被点击的概率，前 i-1 个文档则没有被点击，概率均为 1-rj；</p>
-<h3 id="4-4-ERR-Expected-reciprocal-rank"><a href="#4-4-ERR-Expected-reciprocal-rank" class="headerlink" title="4.4 ERR(Expected reciprocal rank)"></a>4.4 ERR(Expected reciprocal rank)</h3><p>预期的倒数排名，表示用户的需求被满足时停止的位置的倒数的期望，与 RR 计算第一个相关文档的位置倒数不同。<br>首先用户在位置 r 处停止的概率 PPr 计算公式如下：</p>
-<script type="math/tex; mode=display">PP_r=\prod_{i=1}^{r-1}(1-R_i) R_r</script><p>其中 Ri 是关于文档相关度等级的函数，现假设该函数为：</p>
-<script type="math/tex; mode=display">R_i=R(g_i)=\frac{2^g-1}{2^{g_max}}</script><p>当文档是不相关的（g=0），则用户检索到相关文档的概率为0；而当文档极其相关（g=4，如果相关度划分5个等级）时，用户检索到相关文档的概率接近于1。上面公式中的 g 表示文档的相关度，参考 NDCG 中的 rel。</p>
-<p>更通用一点来讲，ERR 不一定是计算用户需求满足时停止的位置的倒数的期望，它可以是基于位置的函数</p>
-<script type="math/tex; mode=display">ERR=\sum_{r=1}^n \varphi(r)P Pr=\sum_{r=1}^n \frac{1}{r} P Pr=\sum_{r=1}^n \frac{1}{r} \prod_{i=1}^{r-1}(1-R_i)R_r</script><p>可以看出，当 φ(r)=1/r 时就是 ERR，当 φ(r)=1/log2(r+1) 就是DCG。</p>
-<p><a href="https://www.cnblogs.com/memento/p/8673309.html" target="_blank" rel="noopener">参考文章:https://www.cnblogs.com/memento/p/8673309.html</a></p>
-<hr>
+<p>布隆过滤器是一个 bit 向量或者说 bit 数组。</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter1.jpg" alt="bloomFilter1"></p>
+<p>如图,一个bitmap用于记录,bitmap原始数值全都是0,当一个数据存进来的时候,用三个Hash函数分别计算三次Hash值,并且将bitmap对应的位置设置为1,上图中,bitmap 的1,3,6位置被标记为1,这时候如果一个数据请求过来,依然用之前的三个Hash函数计算Hash值,如果是同一个数据的话,势必依旧是映射到1,3,6位,那么就可以判断这个数据之前存储过,如果新的数据映射的三个位置,有一个匹配不上,加入映射到1,3,7位,由于7位是0,也就是这个数据之前并没有加入进数据库,所以直接返回。</p>
+<h2 id="3-存在的问题"><a href="#3-存在的问题" class="headerlink" title="3 存在的问题"></a>3 存在的问题</h2><h3 id="3-1-误判"><a href="#3-1-误判" class="headerlink" title="3.1 误判"></a>3.1 误判</h3><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter2.jpg" alt="bloomFilter2"></p>
+<p>如上图所示，假如有这么一个情景,放入数据包1时,将bitmap的1,3,6位设置为了1,放入数据包2时将bitmap的3,6,7位设置为了1,此时一个并没有存过的数据包请求3,做三次哈希之后,对应的bitmap位点分别是1,6,7,这个数据之前并没有存进去过,但是由于数据包1和2存入时将对应的点设置为了1,所以请求3也会压到数据库上,这种情况,会随着存入的数据增加而增加。</p>
+<p>所以，布隆过滤器只能够得出<strong>两种结论</strong>：</p>
+<ul>
+<li>当hash对应的位置出现0的时候，就表明一定不存在；</li>
+<li>当全是1的时候，由于误判的可能，只能表明可能存在。</li>
+</ul>
+<h3 id="3-2-无法删除"><a href="#3-2-无法删除" class="headerlink" title="3.2 无法删除"></a>3.2 无法删除</h3><blockquote>
+<p>布隆过滤器无法删除的原因有二：</p>
+<ol>
+<li>由于有误判的可能,并不确定数据是否存在数据库里,例如数据包3。</li>
+<li>当你删除某一个数据包对应位图上的标志后,可能影响其他的数据包。<br>（例如上面例子中,如果删除数据包1,也就意味着会将bitmap1,3,6位设置为0,此时数据包2来请求时,会显示不存在,因为3,6两位已经被设置为0。）</li>
+</ol>
+</blockquote>
+<p>为此还出现了一个改进版的布隆过滤器，即 <code>Counting Bloom filter</code>，可以用来测试元素计数个数是否绝对小于某个阈值，如下图所示。这个过滤器的思路是将布隆过滤器的bitmap更换成数组,当数组某位置被映射一次时就+1,当删除时就-1,这样就避免了普通布隆过滤器删除数据后需要重新计算其余数据包Hash的问题,但实际上也无法解决删除的问题。原因是，由于一开始就存在误判的可能，如果在删除的时候，一个本来不存在的由于误判而进行了删除，就会使得其他原本正确的出现错误计数。</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter3.jpg" alt="bloomFilter3"></p>
+<p>这个问题造就了其软肋，布隆过滤器就好比是印迹，来过来就会有痕迹，就算走了也无法清理干净。比如你的系统里本来只留下 1kw 个元素，但是整体上来过了上亿的流水元素，布隆过滤器很无奈，它会将这些流失的元素的印迹也会永远存放在那里。随着时间的流失，这个过滤器会越来越拥挤，直到有一天你发现它的误判率太高了，不得不进行重建。</p>
+<h3 id="3-3-其他问题"><a href="#3-3-其他问题" class="headerlink" title="3.3 其他问题"></a>3.3 其他问题</h3><p><strong>查询性能弱</strong><br>是因为布隆过滤器需要使用多个 hash 函数探测位图中多个不同的位点，这些位点在内存上跨度很大，会导致 CPU 缓存行命中率低。</p>
+<p><strong>空间效率低</strong><br>是因为在相同的误判率下，布谷鸟过滤器的空间利用率要明显高于布隆，空间上大概能节省 40% 多。不过布隆过滤器并没有要求位图的长度必须是 2 的指数，而布谷鸟过滤器必须有这个要求。从这一点出发，似乎布隆过滤器的空间伸缩性更强一些。</p>
+<h3 id="3-4-参数选择"><a href="#3-4-参数选择" class="headerlink" title="3.4 参数选择"></a>3.4 参数选择</h3><p>布隆过滤器在构建时，有两个重要的参数，一个是Hash函数的个数k，另一个是 bit 数组的大小m。</p>
+<p>过小的布隆过滤器很快所有的 bit 位均为 1，那么查询任何值都会返回“可能存在”，起不到过滤的目的了。布隆过滤器的长度会直接影响误报率，布隆过滤器越长其误报率越小。<br>另外，哈希函数的个数也需要权衡，个数越多则布隆过滤器 bit 位置位 1 的速度越快，且布隆过滤器的效率越低；但是如果太少的话，那我们的误报率会变高。</p>
+<p>我们参考如下一个图：<br><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/bloomFilter4.png" alt="bloomFilter4"></p>
+<p>其中：</p>
+<blockquote>
+<p>k是Hash函数的个数；<br>m是布隆过滤器数组的长度；<br>n是需要插入元素的个数；<br>p是误报率。</p>
+</blockquote>
+<h3 id="3-5-误报率"><a href="#3-5-误报率" class="headerlink" title="3.5 误报率"></a>3.5 误报率</h3><p>如果 m 是位数组中的比特数，则在插入元素期间某一特定比特位不被某个哈希函数设置为 1 的概率是：</p>
+<script type="math/tex; mode=display">1 - \frac{1}{m}</script><p>如果哈希函数的数量是 k，则通过 k 个哈希函数都未将该位设置为 1 的概率是：</p>
+<script type="math/tex; mode=display">(1 - \frac{1}{m})^k</script><p>那么，如果我们插入了 n 个元素，某个位为1的概率，我们利用反向概率就可以求得为：</p>
+<script type="math/tex; mode=display">1 - (1 - \frac{1}{m})^{kn}</script><p>现在我们要判断一个元素是否在集合中，假设这个元素本不在集合中，理论上来讲，经过 k 个哈希函数计算后得到的位数组的 k 个位置的值都应该是 0，如果发生了误判，即这 k 个位置的值都为 1，这就对应着误判率如下：</p>
+<script type="math/tex; mode=display">p=(1 - [1 - \frac{1}{m}]^{kn})^k \approx (1 - e^{-\frac{kn}{m}})^k</script><p>参考极限公式：</p>
+<script type="math/tex; mode=display">\lim_{x \to \infty} (1 - \frac{1}{x})^{-x}=e</script><h3 id="3-6-最优的k"><a href="#3-6-最优的k" class="headerlink" title="3.6 最优的k"></a>3.6 最优的k</h3><p>这里存在两个互斥：</p>
+<ul>
+<li>如果哈希函数的个数多，那么在对一个不属于集合的元素进行查询时得到0的概率就大；</li>
+<li>一方面，如果哈希函数的个数少，那么位数组中的0就多。</li>
+</ul>
+<p>为了得到最优的哈希函数个数，我们需要根据上一节中的错误率公式进行计算。<br>我们首先对误判率两边取对数：</p>
+<script type="math/tex; mode=display">ln(p) = k ln(1-e^{-\frac{kn}{m}})</script><p>我们的目的是求最优的k，且最优就表明误判率p要是最小，所以两边对k求导：</p>
+<script type="math/tex; mode=display">\frac{1}{p} \cdot p' = ln(1 - e^{-\frac{nk}{m}}) + \frac{k e^{-\frac{nk}{m}} \frac{n}{m}}{1 - e^{-\frac{nk}{m}}}</script><p>另$p’=0$就有：</p>
+<script type="math/tex; mode=display">ln(1 - e^{-\frac{nk}{m}}) + \frac{k e^{-\frac{nk}{m}} \frac{n}{m}}{1 - e^{-\frac{nk}{m}}} = 0</script><script type="math/tex; mode=display">(1 - e^{-\frac{nk}{m}}) \cdot ln(1 - e^{-\frac{nk}{m}}) = -k e^{-\frac{nk}{m}} \frac{n}{m}</script><script type="math/tex; mode=display">(1 - e^{-\frac{nk}{m}}) \cdot ln(1 - e^{-\frac{nk}{m}}) = e^{-\frac{nk}{m}}(-\frac{nk}{m})</script><p>所以：</p>
+<script type="math/tex; mode=display">1 - e^{-\frac{nk}{m}} = e^{-\frac{nk}{m}}</script><script type="math/tex; mode=display">e^{-\frac{nk}{m}} = 1/2</script><script type="math/tex; mode=display">\frac{kn}{m} = ln2</script><script type="math/tex; mode=display">k = \frac{m}{n}ln2</script><h3 id="3-7-最优的m"><a href="#3-7-最优的m" class="headerlink" title="3.7 最优的m"></a>3.7 最优的m</h3><p>根据上面求出的最优k，我们带入误判率p的公式就有：</p>
+<script type="math/tex; mode=display">p=(1 - e^{-\frac{kn}{m}})^k=(1 - e^{-(\frac{m}{n}ln2)\frac{n}{m}})^k=\frac{1}{2}^k</script><p>将最优的k代入：</p>
+<script type="math/tex; mode=display">p = 2^{-ln2 \cdot\frac{m}{n}}</script><p>两边同时取ln就有：</p>
+<script type="math/tex; mode=display">lnp = ln2 \cdot (-ln2)\frac{m}{n}</script><script type="math/tex; mode=display">m = -\frac{n \cdot lnp}{(ln2)^2}</script><h3 id="3-8-估算-BF-的元素数量n"><a href="#3-8-估算-BF-的元素数量n" class="headerlink" title="3.8 估算 BF 的元素数量n"></a>3.8 估算 BF 的元素数量n</h3><script type="math/tex; mode=display">n = -\frac{m}{k}ln(1 - \frac{t}{m})</script><p>其中 n 是估计 BF 中的元素个数，t 是位数组中被置为 1 的位的个数。</p>
+<h2 id="4-代码参考"><a href="#4-代码参考" class="headerlink" title="4 代码参考"></a>4 代码参考</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mmh3</span><br><span class="line"><span class="keyword">from</span> bitarray <span class="keyword">import</span> bitarray</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># zhihu_crawler.bloom_filter</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Implement a simple bloom filter with murmurhash algorithm.</span></span><br><span class="line"><span class="comment"># Bloom filter is used to check wether an element exists in a collection, and it has a good performance in big data situation.</span></span><br><span class="line"><span class="comment"># It may has positive rate depend on hash functions and elements count.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BIT_SIZE = <span class="number">5000000</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BloomFilter</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># Initialize bloom filter, set size and all bits to 0</span></span><br><span class="line">        bit_array = bitarray(BIT_SIZE)</span><br><span class="line">        bit_array.setall(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        self.bit_array = bit_array</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        <span class="comment"># Add a url, and set points in bitarray to 1 (Points count is equal to hash funcs count.)</span></span><br><span class="line">        <span class="comment"># Here use 7 hash functions.</span></span><br><span class="line">        point_list = self.get_postions(url)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> point_list:</span><br><span class="line">            self.bit_array[b] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">contains</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        <span class="comment"># Check if a url is in a collection</span></span><br><span class="line">        point_list = self.get_postions(url)</span><br><span class="line"></span><br><span class="line">        result = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> point_list:</span><br><span class="line">            result = result <span class="keyword">and</span> self.bit_array[b]</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_postions</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        <span class="comment"># Get points positions in bit vector.</span></span><br><span class="line">        point1 = mmh3.hash(url, <span class="number">41</span>) % BIT_SIZE</span><br><span class="line">        point2 = mmh3.hash(url, <span class="number">42</span>) % BIT_SIZE</span><br><span class="line">        point3 = mmh3.hash(url, <span class="number">43</span>) % BIT_SIZE</span><br><span class="line">        point4 = mmh3.hash(url, <span class="number">44</span>) % BIT_SIZE</span><br><span class="line">        point5 = mmh3.hash(url, <span class="number">45</span>) % BIT_SIZE</span><br><span class="line">        point6 = mmh3.hash(url, <span class="number">46</span>) % BIT_SIZE</span><br><span class="line">        point7 = mmh3.hash(url, <span class="number">47</span>) % BIT_SIZE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [point1, point2, point3, point4, point5, point6, point7]</span><br></pre></td></tr></table></figure>
+<p><strong>参考文章：</strong><br><a href="https://www.cnblogs.com/cpselvis/p/6265825.html" target="_blank" rel="noopener">布隆过滤器(Bloom Filter)的原理和实现</a><br><a href="https://www.163.com/dy/article/G55C599D05372639.html" target="_blank" rel="noopener">聊聊Redis布隆过滤器与布谷鸟过滤器？一文避坑</a><br><a href="https://cloud.tencent.com/developer/article/1136056" target="_blank" rel="noopener">Counting Bloom Filter 的原理和实现</a><br><a href="https://zhuanlan.zhihu.com/p/43263751" target="_blank" rel="noopener">详解布隆过滤器的原理，使用场景和注意事项</a></p>
 
       
     </div>
@@ -593,10 +555,10 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/posts/5fb7303d.html">LTR信息检索评价指标</a></p>
+  <p><span>本文标题:</span><a href="/posts/bloomFilter.html">布隆过滤器(Bloom Filter)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 小火箭 的个人博客">小火箭</a></p>
-  <p><span>原始链接:</span><a href="/posts/5fb7303d.html" title="LTR信息检索评价指标">https://www.xiemingzhao.com/posts/5fb7303d.html</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/5fb7303d.html" aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/posts/bloomFilter.html" title="布隆过滤器(Bloom Filter)">https://www.xiemingzhao.com/posts/bloomFilter.html</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/bloomFilter.html" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -627,11 +589,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
           
-            <a href="/tags/排序/" rel="tag"><i class="fa fa-tag"></i> 排序</a>
-          
-            <a href="/tags/LTR/" rel="tag"><i class="fa fa-tag"></i> LTR</a>
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
           
         </div>
       
@@ -644,8 +604,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/c7ab2b84.html" rel="next" title="LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）">
-                <i class="fa fa-chevron-left"></i> LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）
+              <a href="/posts/consistentHash.html" rel="next" title="一致性哈希算法(Consistent Hashing)">
+                <i class="fa fa-chevron-left"></i> 一致性哈希算法(Consistent Hashing)
               </a>
             
           </div>
@@ -653,10 +613,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/posts/4bbfbe93.html" rel="prev" title="DeepFM A Factorization-Machine based Neural Network for CTR Prediction (论文解析)">
-                DeepFM A Factorization-Machine based Neural Network for CTR Prediction (论文解析) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -854,7 +810,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RP"><span class="nav-number">1.</span> <span class="nav-text">1 RP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-MAP"><span class="nav-number">2.</span> <span class="nav-text">2 MAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-NDCG"><span class="nav-number">3.</span> <span class="nav-text">3 NDCG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-CG-Cumulative-Gain-累计效益"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 CG(Cumulative Gain)累计效益</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-DCG-Discounted-Cumulative-Gain"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 DCG(Discounted Cumulative Gain)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-IDCG-idea-DCG"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 IDCG(idea DCG)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-NDCG-Normalized-DCG"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 NDCG(Normalized DCG)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ERR"><span class="nav-number">4.</span> <span class="nav-text">4 ERR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-PR-reciprocal-rank"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 PR(reciprocal rank)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-MRR-mean-reciprocal-rank"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 MRR(mean reciprocal rank)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Cascade-Model-瀑布模型"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Cascade Model(瀑布模型)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-ERR-Expected-reciprocal-rank"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 ERR(Expected reciprocal rank)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-背景"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-布隆过滤器"><span class="nav-number">2.</span> <span class="nav-text">2 布隆过滤器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-存在的问题"><span class="nav-number">3.</span> <span class="nav-text">3 存在的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-误判"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 误判</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-无法删除"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 无法删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-其他问题"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 其他问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-参数选择"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 参数选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-误报率"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 误报率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-最优的k"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 最优的k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-最优的m"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 最优的m</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-估算-BF-的元素数量n"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 估算 BF 的元素数量n</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-代码参考"><span class="nav-number">4.</span> <span class="nav-text">4 代码参考</span></a></li></ol></div>
             
 
           </div>
