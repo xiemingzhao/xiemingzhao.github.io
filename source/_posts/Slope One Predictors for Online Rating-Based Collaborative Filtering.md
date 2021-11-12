@@ -1,11 +1,11 @@
 ---
 title: Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - CF
+- 机器学习
+- CF
 mathjax: true
 copyright: true
 abbrlink: c800c340

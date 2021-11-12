@@ -1,12 +1,12 @@
 ﻿---
 title: LTR(Learning to Rank)概述
 categories:
-  - 学习笔记
-  - 算法总结
+- 学习笔记
+- 算法总结
 tags:
-  - 机器学习
-  - 排序
-  - LTR
+- 机器学习
+- 排序
+- LTR
 mathjax: true
 copyright: true
 abbrlink: IntroductionofLTR

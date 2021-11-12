@@ -1,12 +1,12 @@
 ---
 title: Understanding LSTM Networks (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - 神经网络
-  - LSTM
+- 机器学习
+- 神经网络
+- LSTM
 mathjax: true
 copyright: true
 abbrlink: eff2088e

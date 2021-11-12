@@ -1,15 +1,15 @@
 ---
 title: DeepFM A Factorization-Machine based Neural Network for CTR Prediction (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - 推荐
-  - 排序
-  - CTR预估
-  - 神经网络
-  - DeepFM
+- 机器学习
+- 推荐
+- 排序
+- CTR预估
+- 神经网络
+- DeepFM
 mathjax: true
 copyright: true
 abbrlink: 4bbfbe93

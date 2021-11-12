@@ -1,11 +1,11 @@
 ---
 title: The Learning Behind Gmail Priority Inbox (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - 排序
+- 机器学习
+- 排序
 mathjax: true
 copyright: true
 abbrlink: d0f1b267

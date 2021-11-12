@@ -1,12 +1,12 @@
 ---
 title: LTR信息检索评价指标
 categories:
-  - 学习笔记
-  - 算法总结
+- 学习笔记
+- 算法总结
 tags:
-  - 机器学习
-  - 排序
-  - LTR
+- 机器学习
+- 排序
+- LTR
 mathjax: true
 copyright: true
 abbrlink: 5fb7303d

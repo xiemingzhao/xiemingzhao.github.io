@@ -1,12 +1,12 @@
 ---
 title: Wide and Deep Learning for Recommender Systems (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - 推荐系统
-  - Wide & Deep
+- 机器学习
+- 推荐系统
+- Wide & Deep
 mathjax: true
 copyright: true
 abbrlink: e59f436c

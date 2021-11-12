@@ -1,12 +1,12 @@
 ---
 title: Bag of Tricks for Efficient Text Classification (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - Classification
-  - Bag of Tricks
+- 机器学习
+- Classification
+- Bag of Tricks
 mathjax: true
 copyright: true
 abbrlink: cc821830

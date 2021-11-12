@@ -1,13 +1,13 @@
 ---
 title: An overview of gradient descent optimization algorithms (论文解析)
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - 算法
-  - Gradient Descent
-  - Optimization
+- 机器学习
+- 算法
+- Gradient Descent
+- Optimization
 mathjax: true
 copyright: true
 abbrlink: eafa0d01

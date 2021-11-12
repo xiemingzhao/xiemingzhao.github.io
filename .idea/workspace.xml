@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="add &lt;more&gt;">
+      <change beforePath="$PROJECT_DIR$/source/_posts/Amazon com Recommendations Item-to-item collaborative filtering.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Amazon com Recommendations Item-to-item collaborative filtering.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/An overview of gradient descent optimization algorithms.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/An overview of gradient descent optimization algorithms.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Bag of Tricks for Efficient Text Classification.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Bag of Tricks for Efficient Text Classification.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Deep and Cross Network for Ad Click Predictions.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Deep and Cross Network for Ad Click Predictions.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/DeepFM-A Factorization-Machine based Neural Network for CTR Prediction.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/DeepFM-A Factorization-Machine based Neural Network for CTR Prediction.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Factorization Machines.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Factorization Machines.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/LTR(Learning to Rank)概述.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/LTR(Learning to Rank)概述.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/LTR信息检索评价指标.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/LTR信息检索评价指标.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/LightGBM- A Highly Efficient Gradient Boosting Decision Tree （论文解析）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/LightGBM- A Highly Efficient Gradient Boosting Decision Tree （论文解析）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Slope One Predictors for Online Rating-Based Collaborative Filtering.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Slope One Predictors for Online Rating-Based Collaborative Filtering.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/The Learning Behind Gmail Priority Inbox.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/The Learning Behind Gmail Priority Inbox.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Understanding LSTM Networks.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Understanding LSTM Networks.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Wide and Deep Learning for Recommender Systems.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Wide and Deep Learning for Recommender Systems.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/XGBoost- A Scalable Tree Boosting System.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/XGBoost- A Scalable Tree Boosting System.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（1-4 概念篇）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（1-4 概念篇）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（11-13 矩阵分解）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（11-13 矩阵分解）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（14-16 模型融合）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（14-16 模型融合）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（17-19 MAB问题）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（17-19 MAB问题）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（20-21 深度学习）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（20-21 深度学习）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（22-24 其他应用算法）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（22-24 其他应用算法）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（25-27 常见架构）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（25-27 常见架构）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（28-31 关键模块）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（28-31 关键模块）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（32-34 效果保证-开源工具）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（32-34 效果保证-开源工具）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（5-7 内容推荐）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（5-7 内容推荐）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（8-10 近邻推荐）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（8-10 近邻推荐）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/next/layout/_macro/sidebar.swig" beforeDir="false" afterPath="$PROJECT_DIR$/themes/next/layout/_macro/sidebar.swig" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/themes/next/layout/_macro/sidebar.swig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="134" column="18" lean-forward="true" selection-start-line="134" selection-start-column="18" selection-end-line="134" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>mus</find>
+      <find>music</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/source/_posts/一致性哈希算法 (consistent hashing).md" />
+        <option value="$PROJECT_DIR$/source/_posts/位运算的巧用.md" />
+        <option value="$PROJECT_DIR$/source/_posts/向量检索算法.md" />
+        <option value="$PROJECT_DIR$/source/_posts/HNSW算法详解.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Amazon com Recommendations Item-to-item collaborative filtering.md" />
+        <option value="$PROJECT_DIR$/source/_posts/An overview of gradient descent optimization algorithms.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Bag of Tricks for Efficient Text Classification.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Deep and Cross Network for Ad Click Predictions.md" />
+        <option value="$PROJECT_DIR$/source/_posts/DeepFM-A Factorization-Machine based Neural Network for CTR Prediction.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Factorization Machines.md" />
+        <option value="$PROJECT_DIR$/source/_posts/LightGBM- A Highly Efficient Gradient Boosting Decision Tree （论文解析）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/LTR(Learning to Rank)概述.md" />
+        <option value="$PROJECT_DIR$/source/_posts/LTR信息检索评价指标.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Slope One Predictors for Online Rating-Based Collaborative Filtering.md" />
+        <option value="$PROJECT_DIR$/source/_posts/The Learning Behind Gmail Priority Inbox.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Understanding LSTM Networks.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Wide and Deep Learning for Recommender Systems.md" />
+        <option value="$PROJECT_DIR$/source/_posts/XGBoost- A Scalable Tree Boosting System.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（1-4 概念篇）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（5-7 内容推荐）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（8-10 近邻推荐）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（11-13 矩阵分解）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（14-16 模型融合）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（17-19 MAB问题）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（20-21 深度学习）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（22-24 其他应用算法）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（25-27 常见架构）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（28-31 关键模块）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（32-34 效果保证-开源工具）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Sparse稀疏矩阵.md" />
+        <option value="$PROJECT_DIR$/themes/next/layout/_macro/sidebar.swig" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="145" />
+    <option name="y" value="-10" />
+    <option name="width" value="1750" />
+    <option name="height" value="980" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="next" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="next" type="462c0819:PsiDirectoryNode" />
+              <item name="layout" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hexo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hexo" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="next" type="462c0819:PsiDirectoryNode" />
+              <item name="layout" type="462c0819:PsiDirectoryNode" />
+              <item name="_macro" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Appdata\github\hexo\source\_posts" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="" />
+      <created>1636688611291</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1636688611291</updated>
+      <workItem from="1636688614042" duration="4013000" />
+    </task>
+    <task id="LOCAL-00001" summary="add &lt;more&gt;">
+      <created>1636693291369</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1636693291369</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="4013000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="UI Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22788204" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" weight="0.3286119" />
+      <window_info anchor="bottom" id="Terminal" weight="0.3526912" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add &lt;more&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="add &lt;more&gt;" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.deploy_git/lib/font-awesome/css/font-awesome.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="185" column="1" selection-start-line="185" selection-start-column="1" selection-end-line="185" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/layout/_custom/sidebar.swig">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/layout/_macro/passage-end-tag.swig">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/layout/_macro/post.swig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-684" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/source/lib/font-awesome/css/font-awesome.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="185" column="1" selection-start-line="185" selection-start-column="1" selection-end-line="185" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/layout/_macro/reward.swig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-267" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="67" column="17" selection-start-line="67" selection-start-column="17" selection-end-line="67" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="414" column="20" selection-start-line="414" selection-start-column="17" selection-end-line="414" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/ABtest显著性计算.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Amazon com Recommendations Item-to-item collaborative filtering.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="114">
+            <caret line="6" selection-start-line="6" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/An overview of gradient descent optimization algorithms.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="114">
+            <caret line="6" selection-start-line="6" selection-end-line="9" selection-end-column="14" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Bag of Tricks for Efficient Text Classification.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="114">
+            <caret line="6" selection-start-line="6" selection-end-line="8" selection-end-column="15" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Deep and Cross Network for Ad Click Predictions.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="11" selection-end-column="14" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/DeepFM-A Factorization-Machine based Neural Network for CTR Prediction.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="11" selection-end-column="8" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Github+Hexo+Next博客的编辑方法小记.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Hexo+Next博客主题个性化设置全集.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Hexo博客多设备管理.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor>
+            <caret selection-end-line="9" selection-end-column="3" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Hexo博客提交链接到搜索引擎来收录.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Hexo博客绑定域名.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/HNSW算法详解.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="437">
+            <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/LightGBM- A Highly Efficient Gradient Boosting Decision Tree （论文解析）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="7" selection-end-column="10" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/LTR(Learning to Rank)概述.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="5" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/LTR信息检索评价指标.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="5" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/RF,GBDT,XGBOOST,LightGBM之间的爱恨情仇.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Slope One Predictors for Online Rating-Based Collaborative Filtering.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="7" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/The Learning Behind Gmail Priority Inbox.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="7" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Understanding LSTM Networks.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="6" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Wide and Deep Learning for Recommender Systems.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="13" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/XGBoost- A Scalable Tree Boosting System.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="5" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/XGBoost原理细节详解.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="152">
+            <caret line="8" column="6" lean-forward="true" selection-start-line="8" selection-start-column="6" selection-end-line="8" selection-end-column="6" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/位运算的巧用.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="494">
+            <caret line="26" selection-start-line="26" selection-end-line="26" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/一致性哈希算法 (consistent hashing).md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="247">
+            <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/使用Github+Hexo+Next免费搭建自己的博客（最细攻略）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/向量检索算法.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="247">
+            <caret line="13" column="3" lean-forward="true" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+            <folding>
+              <element signature="imports" expanded="true" />
+            </folding>
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/如何构建一个ABTest.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="437">
+            <caret line="23" selection-start-line="23" selection-end-line="23" selection-end-column="11" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（1-4 概念篇）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（5-7 内容推荐）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（8-10 近邻推荐）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（11-13 矩阵分解）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（14-16 模型融合）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（17-19 MAB问题）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（20-21 深度学习）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（22-24 其他应用算法）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（25-27 常见架构）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（28-31 关键模块）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="9" selection-end-column="10" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（32-34 效果保证-开源工具）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="57">
+            <caret line="3" selection-start-line="3" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Factorization Machines.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="418">
+            <caret line="22" selection-start-line="22" selection-end-line="22" selection-end-column="11" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Sparse稀疏矩阵.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-152">
+            <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/next/layout/_macro/sidebar.swig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="134" column="18" lean-forward="true" selection-start-line="134" selection-start-column="18" selection-end-line="134" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>scala-sdk-2.12.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

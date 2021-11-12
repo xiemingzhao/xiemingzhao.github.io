@@ -1,11 +1,11 @@
 ---
 title: LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）
 categories:
-  - 学习笔记
-  - 论文解析
+- 学习笔记
+- 论文解析
 tags:
-  - 机器学习
-  - LightGBM
+- 机器学习
+- LightGBM
 mathjax: true
 copyright: true
 abbrlink: c7ab2b84
