@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/activefunc.html</loc>
+    
+    <lastmod>2021-11-13T13:21:23.732Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/cuckooFilter.html</loc>
+    
+    <lastmod>2021-11-13T12:32:12.670Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
+    
+    <lastmod>2021-11-13T12:24:30.102Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
+    
+    <lastmod>2021-11-13T12:23:53.185Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/bloomFilter.html</loc>
     
     <lastmod>2021-11-12T15:31:37.289Z</lastmod>
@@ -19,13 +47,6 @@
     <loc>https://www.xiemingzhao.com/posts/c3af6916.html</loc>
     
     <lastmod>2021-11-12T15:15:11.586Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
-    
-    <lastmod>2021-11-12T15:15:11.544Z</lastmod>
     
   </url>
   
@@ -215,13 +236,6 @@
     <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
     
     <lastmod>2021-11-12T04:57:28.455Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
-    
-    <lastmod>2021-11-12T04:57:28.332Z</lastmod>
     
   </url>
   

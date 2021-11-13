@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.xiemingzhao.com/posts/activefunc.html</loc>
+    <lastmod>2021-11-13</lastmod>
+  </url>  <url>
+    <loc>https://www.xiemingzhao.com/posts/cuckooFilter.html</loc>
+    <lastmod>2021-11-13</lastmod>
+  </url>  <url>
+    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
+    <lastmod>2021-11-13</lastmod>
+  </url>  <url>
+    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
+    <lastmod>2021-11-13</lastmod>
+  </url>  <url>
     <loc>https://www.xiemingzhao.com/posts/bloomFilter.html</loc>
     <lastmod>2021-11-12</lastmod>
   </url>  <url>
@@ -8,9 +20,6 @@
     <lastmod>2021-11-12</lastmod>
   </url>  <url>
     <loc>https://www.xiemingzhao.com/posts/c3af6916.html</loc>
-    <lastmod>2021-11-12</lastmod>
-  </url>  <url>
-    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
     <lastmod>2021-11-12</lastmod>
   </url>  <url>
     <loc>https://www.xiemingzhao.com/posts/50170875.html</loc>
@@ -92,9 +101,6 @@
     <lastmod>2021-11-12</lastmod>
   </url>  <url>
     <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
-    <lastmod>2021-11-12</lastmod>
-  </url>  <url>
-    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
     <lastmod>2021-11-12</lastmod>
   </url>  <url>
     <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
