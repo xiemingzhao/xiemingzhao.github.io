@@ -18,9 +18,10 @@ date: 2020-01-08
 ## 2 稀疏矩阵
 ### 2.1 定义
 
+<!--more-->
+
 ![sparseMatrix1](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix1.png)
 
-<!--more-->
 
 如上所示，一般当矩阵非零项较少的时候，就称为非零矩阵，也即其中只有少量的有用信息-非零项。
 

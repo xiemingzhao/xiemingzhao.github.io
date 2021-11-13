@@ -15,11 +15,11 @@ date: 2020-04-08
 ## 1 背景
 一致性哈希算法(Consistent Hashing)在分布式系统的应用还是十分广泛的。例如随着业务的扩展，流量的剧增，单体项目逐渐划分为分布式系统。对于经常使用的数据，我们可以使用Redis作为缓存机制，减少数据层的压力。因此，重构后的系统架构如下图所示：
 
+<!--more-->
+
 ![consistentHash1](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash1.png)
 
 这个时候一般有两种方案：
-
-<!--more-->
 
 1. 每个机器缓存全量数据；
 >如此虽然能保证请求打到任何一台机器都可以，但是冗余性巨高；
