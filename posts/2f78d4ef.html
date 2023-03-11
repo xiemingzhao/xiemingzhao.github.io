@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="机器学习,算法,推荐,">
+  <meta name="keywords" content="机器学习,推荐,算法,">
 
 
 
@@ -93,7 +93,7 @@
 
 
 <meta name="description" content="参考原作：推荐系统三十六式-刑无刀 17.【MAB问题】简单却有效的Bandit算法推荐就是选择选择的困难在于不知道选择的后果，而且一旦错了就没有机会再来一次。在推荐系统中就对应了少了一次成功展示的机会。选择时不再聚焦到具体每个选项，而是去选择类别，这样压力是不是就小了很多？比如说，把推荐选择具体物品，上升到选择策略。如果后台算法中有三种策略：按照内容相似推荐，按照相似好友推荐，按照热门推荐。每次">
-<meta name="keywords" content="机器学习,算法,推荐">
+<meta name="keywords" content="机器学习,推荐,算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="推荐系统三十六式--学习笔记（17-19 MAB问题）">
 <meta property="og:url" content="https://www.xiemingzhao.com/posts/2f78d4ef.html">
@@ -146,7 +146,7 @@
 
 
 
-  <title>推荐系统三十六式--学习笔记（17-19 MAB问题） | 小火箭的博客</title>
+  <title>推荐系统三十六式--学习笔记（17-19 MAB问题） | 小火箭的博客</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -169,7 +169,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
     
     <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
@@ -855,9 +855,9 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
           
             <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
           
-            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
-          
             <a href="/tags/推荐/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
           
         </div>
       
@@ -1100,7 +1100,7 @@ R_T &= \sum_{i=1}^T(w_{opt}-w_{B(i)})\\
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1411,7 +1411,24 @@ setInterval("createtime()",250);
 
   
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script>
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>
 
