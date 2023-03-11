@@ -1,2 +1,2 @@
-# xiemingzhao.github.io
+# Blog project
 Hello World!
