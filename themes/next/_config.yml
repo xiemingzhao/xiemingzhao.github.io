@@ -388,8 +388,9 @@ valine:
   appkey: NYRTcUPshFEJWpUk54Bfu4nX
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
-  placeholder: 客官记得留下昵称和邮箱哦，博主会尽快回复您的！ # comment box placeholder
+  placeholder: 朋友记得留下昵称和邮箱，我会尽快回复您的！ # comment box placeholder
   avatar: mm # gravatar style
+  language: zh-cn
   guest_info: nick,mail,link # custom comment header
   pageSize: 10 # pagination size
 
