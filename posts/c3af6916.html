@@ -1,37 +1,1201 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,推荐," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="参考原作：推荐系统三十六式-刑无刀 20.【深度学习】深度学习在推荐系统中的应用有哪些深度学习与推荐系统在矩阵分解中，原始的矩阵表示每个用户的向量是物品，表示每个物品的向量是用户，两者向量的维度都特别高不说，还特别稀疏，分解后用户向量和物品向量不但维度变得特别小，而且变稠密了。业界还把这个稠密的向量叫做隐因子，意图直观说明它的物理意义：用户背后的偏好因子，物品背后的主题因子。 实际上，你完全可以把">
+<meta property="og:type" content="article">
+<meta property="og:title" content="推荐系统三十六式--学习笔记（20-21 深度学习）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/c3af6916.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 20.【深度学习】深度学习在推荐系统中的应用有哪些深度学习与推荐系统在矩阵分解中，原始的矩阵表示每个用户的向量是物品，表示每个物品的向量是用户，两者向量的维度都特别高不说，还特别稀疏，分解后用户向量和物品向量不但维度变得特别小，而且变稠密了。业界还把这个稠密的向量叫做隐因子，意图直观说明它的物理意义：用户背后的偏好因子，物品背后的主题因子。 实际上，你完全可以把">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E9%9A%90%E5%9B%A0%E5%AD%90.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/word2vec.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/word2vec%E6%A8%A1%E5%9E%8B%E5%9B%BE.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/DOC2vec.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Autoencode.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/YouTube%E6%8E%A8%E8%8D%90%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/NN.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/RNN.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%BE%AA%E7%8E%AF%E7%BD%91%E7%BB%9C%E9%A2%84%E6%B5%8B%E8%BF%87%E7%A8%8B.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0.jpg">
+<meta property="article:published_time" content="2018-11-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.659Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E9%9A%90%E5%9B%A0%E5%AD%90.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/c3af6916.html"/>
+
+
+
+
+
+  <title>推荐系统三十六式--学习笔记（20-21 深度学习） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/c3af6916.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--学习笔记（20-21 深度学习）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-07T00:00:00+08:00">
+                2018-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%89%E5%8D%81%E5%85%AD%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐系统三十六式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/c3af6916.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/c3af6916.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://time.geekbang.org/column/intro/74">参考原作：推荐系统三十六式-刑无刀</a></p>
+<h2 id="20-【深度学习】深度学习在推荐系统中的应用有哪些"><a href="#20-【深度学习】深度学习在推荐系统中的应用有哪些" class="headerlink" title="20.【深度学习】深度学习在推荐系统中的应用有哪些"></a>20.【深度学习】深度学习在推荐系统中的应用有哪些</h2><h3 id="深度学习与推荐系统"><a href="#深度学习与推荐系统" class="headerlink" title="深度学习与推荐系统"></a><strong>深度学习与推荐系统</strong></h3><p>在矩阵分解中，原始的矩阵表示每个用户的向量是物品，表示每个物品的向量是用户，两者向量的维度都特别高不说，还特别稀疏，分解后用户向量和物品向量不但维度变得特别小，而且变稠密了。业界还把这个稠密的向量叫做<strong>隐因子，意图直观说明它的物理意义：用户背后的偏好因子，物品背后的主题因子。</strong></p>
+<p>实际上，你完全可以把矩阵分解看成是一种浅层神经网络，只有一层，它的示意图如下。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E9%9A%90%E5%9B%A0%E5%AD%90.jpg" alt="矩阵分解隐因子.jpg"></p>
+<p>这个示意图表示了一个用户 Ui，评分过的物品有 I2 和 I4，分解后的矩阵隐因子数量是 2，用户 Ui 的隐因子向量就是 [w1, w2]，物品 I2 的隐因子向量是 [w3, w5]，物品 I4 的隐因子向量是 [w4, w6]。可以把矩阵分解看成是一个拥有一个隐藏层的神经网络，得到的隐因子向量就是神经网络的连接权重参数。</p>
+<span id="more"></span>
+<p>深度学习是对事物的某些本质属性的挖掘，有两个好处：</p>
+<ul>
+<li>可以更加高效且真实地反映出事物本身的样子。对比一下，一张图片用原始的像素点表示，不但占用空间大，而且还不能反应图片更高级的特征，如线条、明暗、色彩，而后者则可以通过一系列的卷积网络学习(CNN)而得。</li>
+<li>可以更加高效真实地反映出用户和物品之间的连接。对比一下，以用户历史点击过的物品作为向量表示用户兴趣；用这些物品背后隐藏的因子表示用户兴趣，显然后者更高效更真实，因为它还考虑了物品本身的相似性，这些信息都压缩到隐因子向量中了，同时再得到物品的隐因子向量，就可以更加直接平滑地算出用户对物品的偏好程度。</li>
+</ul>
+<p>这两个好处，正是深度学习可以帮助推荐系统的地方。<strong>第一个叫做 Embedding，就是嵌入，第二个叫做 Predicting，就是预测。</strong> 其实两者在前面的内容都已经有涉及了，矩阵分解得到的隐因子向量就是一种 Embedding， Word2vec 也是一种 Embedding，Wide&amp;Deep 则是用来预测的。关于第二种，具体来说有几个方向：深度神经网络的 CTR 预估，深度协同过滤，对时间序列的深度模型。</p>
+<h3 id="各种-2vec"><a href="#各种-2vec" class="headerlink" title="各种 2vec"></a><strong>各种 2vec</strong></h3><p>首先还是在文本领域，从 Word2vec 到 Sentence2vec，再到 Doc2vec。简单介绍一下 Word2vec。你知道，Word2Vec 最终是每个词都得到一个稠密向量，十分类似矩阵分解得到的隐因子向量，得到这个向量有两个训练方法。先说第一个方法，想象你拿着一个滑动窗口，在一篇文档中从左往右滑动，每一次都有 N 个词在这个窗口内，每移动一下，产生 N-1 条样本。</p>
+<p>每条样本都是用窗口内一个词去预测窗口正中央那个词，明明窗口内是 N 个词，为什么只有 N- 1 条样本呢？因为正中央那个词不用预测它本身啊。这 N-1 条样本的输入特征是词的嵌入向量，预测标签是窗口那个词。示意图如下所示:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/word2vec.jpg" alt="word2vec.jpg"></p>
+<p>图中把 N-1 个样本放在一起示意的，无法看出隐藏层，实际上，输入时每个词可以用 One-hot 方式表示成一个向量，这个向量长度是整个词表的长度，并且只有当前词位置是 1，其他都是 0。</p>
+<p>隐藏层的神经元个数就是最终得到嵌入向量的维度数，最终得到的嵌入向量元素值，实际上就是输入层和隐藏层的连接权重。示意图如下:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/word2vec%E6%A8%A1%E5%9E%8B%E5%9B%BE.jpg" alt="word2vec模型图.jpg"></p>
+<p>至于 Word2vec 的第二种训练方法，则是把上述的 N-1 条样本颠倒顺序，用窗口中央的词预测周围的词，只是把输入和输出换个位置，一样可以训练得到嵌入向量。这就是两大经典训练方法，<strong>CBOW和Skip-Gram。</strong></p>
+<p>既然词可以表示成一个稠密向量干这干那，那不如来个 Sentence2vec，把一个句子表示成一个嵌入向量，通常是把其包含的词嵌入向量加起来就完事了。</p>
+<p>而 Doc2vec 则略微一点点不同，说明一点，多个句子构成一个段落，所以这里的 Doc 其实就是段落。Doc2vec 在窗口滑动过程中构建 N-1 条样本时，还增加一条样本，就是段落 ID 预测中央那个词，相当于窗口滑动一次得到 N 条样本。一个段落中有多少个滑动窗口，就得到多少条关于段落 ID 的样本，相当于这个段落中，段落 ID 在共享嵌入向量。段落 ID 像个特殊的词一样，也得到属于自己的嵌入向量，也就是 Doc2vec。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/DOC2vec.jpg" alt="DOC2vec.jpg"></p>
+<p>那么对于Product2vec就是照着词嵌入的做法来，把用户按照时间先后顺序加入到购物车的商品，看成一个一个的词，一个购物车中所有的商品就是一个文档；于是照猫画虎学出每个商品的嵌入向量，用于去做相关物品的推荐，或者作为基础特征加入到其他推荐排序模型中使用。类似的，如果是应用商场的 App 推荐，也可以依计行事，把用户的下载序列看成文档，学习每个 App 的嵌入向量。</p>
+<p>各种 2vec 的做法其实还不算深度学习，毕竟隐藏层才一层而已。如果要用更深的模型学习嵌入向量，就是深度学习中的 AutoEncoder，自动编码器。</p>
+<p>从输入数据逐层降维，相当于是一个对原始数据的编码过程，到最低维度那一层后开始逐层增加神经元，相当于是一个解码过程，解码输出要和原始数据越接近越好，相当于在大幅度压缩原始特征空间的前提下，压缩损失越小越好。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Autoencode.jpg" alt="Autoencode.jpg"></p>
+<h3 id="YouTube-视频推荐"><a href="#YouTube-视频推荐" class="headerlink" title="YouTube 视频推荐"></a><strong>YouTube 视频推荐</strong></h3><p>首先，Youtube 把推荐的预测任务看成是一个多分类，这个和之前常规的推荐系统要么预测行为要么预测评分的做法不太一样，而是把候选物品当成多个类别，预测用户下一个会观看哪个视频。</p>
+<script type="math/tex; mode=display">P(w_t = i|U,C) = \frac{e^{v_iu}}{\sum_{j \in V}e^{v_iu}}</script><p>这个公式中 U 是用户 C 是场景，输入时视频的嵌入向量和用户的嵌入向量。这里就涉及了先要使用深度神经网络，从用户历史反馈行为和场景信息中学习物品和用户的嵌入向量。整个推荐排序模型示意图如下:</p>
+<p>原文可以参考:<a href="https://www.researchgate.net/publication/307573656_Deep_Neural_Networks_for_YouTube_Recommendations">Deep Neural Networks for YouTube Recommendations</a></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/YouTube%E6%8E%A8%E8%8D%90%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="YouTube.png"></p>
+<blockquote>
+<ol>
+<li>根据观看历史把视频变成了嵌入向量，然后平均后作为输入特征之一，这个和前面的<br>Product2vec 的思路一致，把观看历史看成文档，观看的视频看成词。</li>
+<li>搜索 Query 也变成了嵌入向量，平均之后作为输入特征之二。</li>
+<li>人口统计学信息统统都嵌入了。</li>
+<li>还加入视频的年龄信息，也就是在预测时，视频上传多久了。</li>
+<li>所有这些不同的嵌入向量拼接成一个大的输入向量，经过深度神经网络，在输出层以<br>Softmax 作为输出函数，预测下一个观看视频。</li>
+</ol>
+</blockquote>
+<p>在模型训练时，以 Softmax 作为输出层，但是在实际线上预测服务时，由于模型关心相对顺序，所以并不需要真的去计算 Softmax，而是拿着用户的特征向量做近似的近邻搜索，只生成最相近的一些推荐结果。整个推荐系统非常好理解，也比较好落地，所有的模型都可以通过 TensorFlow 快速实现。</p>
+<hr>
+<h2 id="【深度学习】用RNN构建个性化音乐播单"><a href="#【深度学习】用RNN构建个性化音乐播单" class="headerlink" title="【深度学习】用RNN构建个性化音乐播单"></a><strong>【深度学习】用RNN构建个性化音乐播单</strong></h2><p>前面讲到的绝大多数推荐算法，也都没有考虑“用户在产品上作出任何行为”都是有时间先后的。有一些矩阵分解算法考虑了时间属性，比如 Time-SVD；但是，这种做法只是把时间作为一个独立特征加入到模型中，仍然没有给时间一个正确的处理方式。</p>
+<h3 id="时间的重要性"><a href="#时间的重要性" class="headerlink" title="时间的重要性"></a><strong>时间的重要性</strong></h3><p>绝大数推荐算法都忽略操作的先后顺序，为什么要采取这样简化的做法呢？因为一方面的确也能取得不错的效果，另一方面是深度学习和推荐系统还迟迟没有相见。在深度学习大火之后，对时间序列建模被提上议事日程，业界有很多尝试，今天以 Spotify 的音乐推荐为例，介绍循环神经网络在推荐系统中的应用。</p>
+<h3 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a><strong>循环神经网络</strong></h3><p>循环神经网络，也常被简称为 RNN，是一种特殊的神经网络。再回顾一下神经网络的结构，示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/NN.jpg" alt="NN.jpg"></p>
+<p>普通神经网络有三个部分，输入层 x，隐藏层 h，输出层 o，深度神经网络的区别就是隐藏层数量有很多，具体多少算深，这个可没有定论，有几层的，也有上百层的。</p>
+<p>把输入层和隐藏层之间的关系表示成公式后就是：</p>
+<script type="math/tex; mode=display">h = F(Wx)</script><p>就是输入层 x 经过连接参数线性加权后，再有激活函数 F 变换成非线性输出给输出层。<br>在输出层就是：</p>
+<script type="math/tex; mode=display">O = \phi (Vh)</script><p>隐藏层输出经过输出层的网络连接参数线性加权后，再由输出函数变换成最终输出，比如分类任务就是 Softmax 函数。</p>
+<p><strong>循环神经网络和普通神经网络的区别就在于：普通神经网络的隐藏层参数只有输入 x 决定，因为当神经网络在面对一条样本时，这条样本是孤立的，不考虑前一个样本是什么，循环神经网络的隐藏层不只是受输入 x 影响，还受上一个时刻的隐藏层参数影响。</strong></p>
+<p>循环神经网络表示成示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/RNN.jpg" alt="RNN.jpg"><br>解释一下这个示意图。在时刻 t，输入是 xt，而隐藏层的输出不再是只有输入层 $x<em>t$，还有时刻 t-1 的隐藏层输出 $h</em>{t-1}$，表示成公式就是：</p>
+<script type="math/tex; mode=display">h_t = F(Wx_t + Uh_{t-1})</script><p>对比这个公式和前面普通神经网络的隐藏层输出，就是在激活函数的输入处多了一个 $Uh_{t-1}$ 。别小看多这一个小东西，它背后的意义非凡。那么上一个时刻得到的隐藏层，就是对时间序列上一个时刻的信息压缩，让它参与到这一个时刻的隐藏层建设上来，物理意义就是认为现在这个时刻的信息不只和现在的输入有关，还和上一个时刻的状态有关。这是时间序列本来的意义，也就是循环神经网络的意义。</p>
+<h3 id="播单生成"><a href="#播单生成" class="headerlink" title="播单生成"></a><strong>播单生成</strong></h3><p>在网络音乐推荐中，尤其是各类 FM 类 App，提倡的是一直听下去,一首歌接着一首歌地播下去，就很适合这些场景。</p>
+<blockquote>
+<p>通常要做到这样的效果，有这么几种做法。</p>
+<ol>
+<li>电台音乐 DJ 手工编排播单，然后一直播放下去，传统广播电台都是这样的。</li>
+<li>用非时序数据离线计算出推荐集合，然后按照分数顺序逐一输出。</li>
+<li>利用循环神经网络，把音乐播单的生成看成是歌曲时间序列的生成，每一首歌的得到不但受用户当前的特征影响，还受上一首歌影响。</li>
+</ol>
+</blockquote>
+<p>Spotify 采用了第三种办法，下面我就详细讲解这个推荐算法。</p>
+<h4 id="1-数据"><a href="#1-数据" class="headerlink" title="1. 数据"></a><strong>1. 数据</strong></h4><p>个性化的播单生成，不再是推荐一个一个独立的音乐，而是推荐一个序列给用户。所用的数据就是已有播单，或者用户的会话信息。其中用户会话信息的意思就是，当一个用户在 App 上所做的一系列操作。把这些数据，看成一个一个的文档，每一个音乐文件就是一个一个的词。听完什么再听什么，就像是语言中的词和词的关系。</p>
+<h4 id="2-建模"><a href="#2-建模" class="headerlink" title="2.建模"></a><strong>2.建模</strong></h4><p>你可以把播单生成看成由若干步骤组成，每一步吐出一个音乐来。这个吐出音乐的动作实际上是一个多分类问题，类别数目就是总共可以选择的音乐数目，如果有 100 万首歌可以选择，那么就是一个 100 万分类任务。这个分类任务计算输入是当前神经网络的隐藏状态，然后每一首歌都得到一个线性加权值，再由 Softmax 函数为每一首歌计算得到一个概率。表示如下：</p>
+<script type="math/tex; mode=display">p(o_{yi}|h_t) = \frac {e^{v_ih}}{\sum_{j \in M}e^{v_jh}}</script><p>假如隐藏层有 k 个神经元，也就是说 h 是一个 k 维向量，输出层有 m 首歌可选，所以是一个 One-hot 编码的向量，也就是说一个 m 维向量，只有真正输出那首歌 i 是 1，其他都是 0，那么输出层就有 k 乘以 m 个未知参数。</p>
+<p>再往前，计算隐藏层神经元输出时，不但用到输入层的信息，在这里，输入层也是一首歌，也有 m 首歌可以选择，所以输入向量仍然是一个 One-hot 编码的向量。除此之外，每一个隐藏层神经元还依赖上一个时刻自己的输出值，隐藏层神经元是 k 个，一个 k 维向量。按照隐藏层计算公式就是下面的样子:</p>
+<script type="math/tex; mode=display">h_t = F(Wx_t + Uh_{t-1})</script><p>W 就是一个 m 乘以 k 的参数矩阵，U 就是一个 k 乘以 k 的参数矩阵。</p>
+<blockquote>
+<p>如此一来，循环神经网络在预测时的计算过程就是：</p>
+<ul>
+<li>当用户听完一首歌，要预测下一首歌该推荐什么时，输入就是一个 One-hot 编码的 m 维度向量，用 m 乘以 k 形状的输入层参数矩阵，乘以这个 m 向量，然后用隐藏层之间的 k 乘 k 参数矩阵，去乘以上一个隐藏状态向量，两者都得到一个 k 维向量，相加后经过非线性激活函数，比如 ReLU，这样就得到当前时刻的隐藏层输出值。</li>
+<li>再用当前时刻的隐藏层输出值，经过 k 乘以 m 形状的输出层参数矩阵，得到一个 m 维向量，<br>再用 Softmax 把这个 m 维向量归一化成概率值，就是对下一首歌的预测，可以挑选最大概率的若干首歌作为输出，或者直接输出概率最高的那首歌直接播放。</li>
+</ul>
+</blockquote>
+<p>这个计算过程示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%BE%AA%E7%8E%AF%E7%BD%91%E7%BB%9C%E9%A2%84%E6%B5%8B%E8%BF%87%E7%A8%8B.jpg" alt="Spotify.jpg"></p>
+<blockquote>
+<p>一个播单生成模型的参数就是这么三大块。</p>
+<ol>
+<li>连接输入和隐藏之间的矩阵 $W_{m \times k}$；</li>
+<li>连接上一个隐藏状态和当前隐藏状态的矩阵： $U_{k \times k}$；</li>
+<li>连接隐藏层和输出层的矩阵 $V_{k \times m}$。</li>
+</ol>
+</blockquote>
+<p>得到了这些参数，就得到了播单推荐模型，怎么得到呢？这里就再简要讲一下神经网络的参数如何训练得到。</p>
+<ol>
+<li>初始化参数；</li>
+<li>用当前的参数预测样本的类别概率；</li>
+<li>用预测的概率计算交叉熵；</li>
+<li>用交叉熵计算参数的梯度；</li>
+<li>用学习步长和梯度更新参数；</li>
+<li>迭代上述过程直到满足设置的条件。</li>
+</ol>
+<p>神经网络中的误差方向传播，实际上就是链式求导法则，因为要更新参数，就需要计算参数在当前取值时的梯度，要计算梯度就要求导，要求导就要从交叉熵函数开始，先对输出层参数求导计算梯度，更新输出层参数，接着链式下去，对输入层参数求导计算梯度，更新输入层参数。交叉熵是模型的目标函数，训练模型的目的就是要最小化它，也就是“误差反向传播”的“误差”。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0.jpg" alt="深度学习.jpg"></h2>
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/c3af6916.html">推荐系统三十六式--学习笔记（20-21 深度学习）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/c3af6916.html" title="推荐系统三十六式--学习笔记（20-21 深度学习）">https://www.xiemingzhao.com/posts/c3af6916.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/c3af6916.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/2f78d4ef.html" rel="next" title="推荐系统三十六式--学习笔记（17-19 MAB问题）">
+                <i class="fa fa-chevron-left"></i> 推荐系统三十六式--学习笔记（17-19 MAB问题）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/fc21f391.html" rel="prev" title="推荐系统三十六式--学习笔记（22-24 其他应用算法）">
+                推荐系统三十六式--学习笔记（22-24 其他应用算法） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#20-%E3%80%90%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9C%A8%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">1.</span> <span class="nav-text">20.【深度学习】深度学习在推荐系统中的应用有哪些</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">深度学习与推荐系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%A7%8D-2vec"><span class="nav-number">1.2.</span> <span class="nav-text">各种 2vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouTube-%E8%A7%86%E9%A2%91%E6%8E%A8%E8%8D%90"><span class="nav-number">1.3.</span> <span class="nav-text">YouTube 视频推荐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E3%80%90%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%91%E7%94%A8RNN%E6%9E%84%E5%BB%BA%E4%B8%AA%E6%80%A7%E5%8C%96%E9%9F%B3%E4%B9%90%E6%92%AD%E5%8D%95"><span class="nav-number">2.</span> <span class="nav-text">【深度学习】用RNN构建个性化音乐播单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">时间的重要性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.</span> <span class="nav-text">循环神经网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%AD%E5%8D%95%E7%94%9F%E6%88%90"><span class="nav-number">2.3.</span> <span class="nav-text">播单生成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.1.</span> <span class="nav-text">1. 数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BB%BA%E6%A8%A1"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.建模</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

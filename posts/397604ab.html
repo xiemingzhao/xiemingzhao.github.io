@@ -1,37 +1,1232 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,推荐," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="参考原作：推荐系统三十六式-刑无刀 1.【开篇】用知识去对抗技术不平等推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="推荐系统三十六式--学习笔记（1-4 概念篇）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/397604ab.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 1.【开篇】用知识去对抗技术不平等推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。 后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/recsystem.jpg">
+<meta property="article:published_time" content="2018-10-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.658Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/recsystem.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/397604ab.html"/>
+
+
+
+
+
+  <title>推荐系统三十六式--学习笔记（1-4 概念篇） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/397604ab.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--学习笔记（1-4 概念篇）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-01T00:00:00+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%89%E5%8D%81%E5%85%AD%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐系统三十六式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/397604ab.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/397604ab.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://time.geekbang.org/column/intro/74">参考原作：推荐系统三十六式-刑无刀</a></p>
+<h2 id="1-【开篇】用知识去对抗技术不平等"><a href="#1-【开篇】用知识去对抗技术不平等" class="headerlink" title="1.【开篇】用知识去对抗技术不平等"></a>1.【开篇】用知识去对抗技术不平等</h2><p>推荐系统从搜索引擎借鉴了不少技术和思想，比如内容有就来自由Amazon发扬光大的，基于用户（User-based)和基于物品（Item-based）的协同过滤将推荐系统技术从内容延伸到协同关系，超越了内容本身。</p>
+<p>后来 Netflix 搞了一个瓜分百万美元的土豪比赛，以矩阵分解为代表的评分预测算法如雨后春笋般出现。至此，机器学习和推荐系统走得越来越近，最近十年，深度学习和强化学习又将推荐系统带向了新的高度。</p>
+<p>推荐系统也是现在热门的 AI 分支之一，但凡AI类的落地，都需要具备这几个基本元素才行：数据、算法、场景、计算力。推荐系统也不例外。有一个趋势我是确信无疑的：世界在向网状发展，万事万物倾向于相互连接构成复杂网络。复杂网络具有无尺度特点，表现是：少数节点集聚了大量连接。这个现象不陌生，叫做马太效应，社交网络粉丝数、网页链接引用量、电商网站商品销量等等，无不如此。推荐系统的使命，就是要用技术来对抗这种不平等。</p>
+<p><strong>一个推荐系统如何才能从 0 到 1 诞生，这需要去了解哪些知识</strong></p>
+<span id="more"></span>
+<ul>
+<li>能解决系统起步阶段 80% 的问题</li>
+<li>已被无数产品验证过有用的东西</li>
+<li>遇到问题能够找到人或者社区交流，而非曲高和寡的前沿技术</li>
+<li>知识之间有层次递进关系，也有分门别类的整理</li>
+</ul>
+<p><strong>共包含 36 篇文章，分成五个模块详细介绍推荐系统的相关知识</strong></p>
+<ul>
+<li>概念篇：介绍一些推荐系统有关的理念、思考、形而上的内容，虽然务虚但是必要</li>
+<li>原理篇：推荐算法的原理介绍，是俗称的干货。知道推荐系统背后技术的基本原理后，你可以更快地开发自己的系统，更好地优化自己的系统，并且更容易去学习专栏中未涉及的内容</li>
+<li>工程篇：推荐算法的实践内容。系统落地时需要一些纯工程上的大小事情，架构、选型、案例等</li>
+<li>产品篇：推荐系统要成功，还要考虑产品理念及其商业价值，因此这部分介绍一些产品知识和一点浅显的商业思考</li>
+<li>团队篇：从个人来说，就是该怎么学习和成长；从团队来说，就是该招多少人，该有哪些人，以及产品经理和工程师该如何合作等问题</li>
+</ul>
+<hr>
+<h2 id="2-【概念篇】你真的需要个性化推荐系统吗"><a href="#2-【概念篇】你真的需要个性化推荐系统吗" class="headerlink" title="2.【概念篇】你真的需要个性化推荐系统吗?"></a>2.【概念篇】你真的需要个性化推荐系统吗?</h2><h4 id="什么是推荐系统？"><a href="#什么是推荐系统？" class="headerlink" title="什么是推荐系统？"></a><strong>什么是推荐系统？</strong></h4><p>按照维基百科的定义：它是一种信息过滤系统，手段是预测用户（User）对物品（Item）的评分和偏好。这个定义不是很好理解，也不恰当。它用“怎么做”来定义了“是什么”，这相当于变相规定了推荐系统的实现路径。</p>
+<h4 id="换一个角度回答三个问题来重新定义"><a href="#换一个角度回答三个问题来重新定义" class="headerlink" title="换一个角度回答三个问题来重新定义"></a><strong>换一个角度回答三个问题来重新定义</strong></h4><ul>
+<li>它能做什么 </li>
+<li>它需要什么</li>
+<li>它怎么做</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>对于第一个问题“它能做什么”，回答是：推荐系统可以把那些最终会在用户（User）和物品（Item）之间产生的连接提前找出来。</strong></p>
+<ol>
+<li>世界的发展趋势是万物倾向于建立越来越多的连接； </li>
+<li>人是这一切趋势的意义所在，为人建立连接是要义； </li>
+<li>根据已有的连接预测和人有关的连接，就是推荐系统。 </li>
+</ol>
+<blockquote>
+<p><em>对应的几个例子</em></p>
+<ol>
+<li>一个社交产品，比如Facebook，如果它的20亿活跃用户之间已经都有社交关系了，那么它的“感兴趣的人”这一推荐系统就该寿终正寝了。从已经建立社交关系的用户身上去推测你还可能对哪些人感兴趣，本质上就是提前把那些可能的用户连接找出来，然后再按照用户分别呈现在每一个人面前。</li>
+<li>一个信息流资讯阅读产品，比如今日头条，只有当用户不断点进源源不断的内容物品中，每一次点击，就是一个连接，每一次阅读也是一个连接，不同层次不同重要性的连接在推荐系统的帮助下不断建立，所主要依据的就是那些已经存在的连接，即：用户过去都点击阅读了哪些内容。</li>
+<li>一个电商平台，用户刚买过什么，常买什么，你正在浏览什么，这些都是用户和物品之间已经存在的连接，用这些连接去预测还会买什么，还会看什么也是推荐系统。</li>
+</ol>
+</blockquote>
+<p><strong>回答第二个问题“它需要什么”：推荐系统需要已经存在的连接，从已有的连接去预测未来的连接。</strong></p>
+<p><strong>对于第三个问题：怎么做？维基百科的定义提供了一个说法：预测用户评分和偏好。这是推荐系统背后相关算法和技术的两大分类，在后面的专栏内容中我会讲到；但比这个定义更抽象的实现方式分类是：机器推荐和人工推荐，也就是通常说的“个性化推荐”和“编辑推荐”。</strong></p>
+<p>&nbsp;</p>
+<h4 id="总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？"><a href="#总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？" class="headerlink" title="总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？"></a><strong>总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？</strong></h4><p>已经根据“能做什么”“需要什么”“怎么做”三个方面，讨论了什么是推荐系统。那么只要前两个条件成熟，你就需要一个推荐系统，至于“怎么做”的问题则简单得多，否则的话就是暂时不需要。那么，如何判断条件是否成熟了呢？我们可以考虑两点。</p>
+<blockquote>
+<p>第一，看看产品的目的。如果一款产品的目的是建立越多连接越好，那么它最终需要一个推荐系统。有哪些产品的目的不是建立连接呢？一种典型的产品就是工具类，如果是单纯提高人类某些工作的效率而存在的产品，比如一个视频编辑器，则不需要。虽然如今很多产品都从工具切入最后做成社区了，至少在工具属性很强时不需要推荐系统。<br>第二，看看产品现有的连接。如果你的产品中物品很少，少到用人工就可以应付过来，那么用户产生的连接肯定不多，因为连接数量的瓶颈在于物品的数量，这时候不适合搭建推荐系统。</p>
+</blockquote>
+<p><strong>长尾理论</strong>可以帮助我们理解，如何把用户和物品各种可能的连接汇总，包括用户属性、物品属性等，应该要有长尾效应才可能让推荐系统发挥效果。这里我介绍一个简单指标，用于判断是不是需要推荐系统：</p>
+<script type="math/tex; mode=display">\frac{\Delta connection}{\Delta user \times \Delta item}</script><blockquote>
+<p>分子是增加的连接数，分母是增加的活跃用户数和增加的有效物品数：<br>如果增加的连接数主要靠增加的活跃用户数和增加的物品数贡献，则该值会较小，不适合加入推荐系统； 如果增加的连接数和新增活跃用户和物品关系不大，那说明连接数已经有自发生长的趋势了，适合加入推荐系统加速这一过程。<strong>不过，具体并没有判断标准，因产品而异。</strong></p>
+</blockquote>
+<hr>
+<h2 id="3-【概念篇】个性化推荐系统那些绕不开的经典问题"><a href="#3-【概念篇】个性化推荐系统那些绕不开的经典问题" class="headerlink" title="3.【概念篇】个性化推荐系统那些绕不开的经典问题"></a>3.【概念篇】个性化推荐系统那些绕不开的经典问题</h2><p>推荐系统的预测问题模式，从达成的连接目标角度区分，有两大类： </p>
+<blockquote>
+<ol>
+<li>评分预测； </li>
+<li>行为预测。</li>
+</ol>
+</blockquote>
+<h4 id="评分预测"><a href="#评分预测" class="headerlink" title="评分预测"></a><strong>评分预测</strong></h4><p>评分预测相关算法模型研究的兴盛，最大的助攻是 Netflix 举办的推荐算法大赛。Netflix 比赛的评判标准就是 RMSE ，即均方根误差：</p>
+<script type="math/tex; mode=display">RMSE=\sqrt{\frac{\sum_{t=1}^n (\hat y_t - y_t)^2}{n}}</script><p>这个公式中的t表示每一个样本，n表示总共的样本数，$\hat y_t$就是模型预测出的分数，是我们交的作业，$y_t$就是用户自己打的分数，是标准答案，然后一个样本一个样本地对答案，模型预测分数和用户自己打分相减，这就是我们预测的误差。</p>
+<p>评分预测问题常见于各种点评类产品（如：书影音的点评），但评分类推荐存在以下问题：</p>
+<blockquote>
+<ol>
+<li>数据不易收集，我刚才说过，用户给出评分意味着他已经完成了前面所有的漏斗环节； </li>
+<li>数据质量不能保证，伪造评分数据门槛低，同时真实的评分数据又处在转化漏斗最后一环，门槛高； </li>
+<li>评分的分布不稳定，整体评分在不同时期会差别很大，个人评分在不同时期标准不同，人和人之间的标准差别很大。</li>
+</ol>
+</blockquote>
+<p>用户们给产品施舍的评分数据，我们又叫做显式反馈，意思是他们非常清晰明白地告诉了我们，他们对这个物品的态度；与之相对的还有隐式反馈，通常就是各类用户行为，也就是另一类推荐系统问题：行为预测。</p>
+<h4 id="行为预测"><a href="#行为预测" class="headerlink" title="行为预测"></a><strong>行为预测</strong></h4><p>推荐系统预测行为方式有很多，常见的有两种：</p>
+<ul>
+<li>直接预测行为本身发生的概率</li>
+<li>预测物品的相对排序。</li>
+</ul>
+<p>直接预测用户行为这一类技术，有一个更烂大街的名字，叫做CTR预估。这里的C原本是点击行为Click，但这个解决问题的模式可以引申到任何其他用户行为，如收藏、购买。CTR 意思就是Click Through Rate，即“点击率”。 把每一个推荐给用户的物品按照“会否点击”二分类，构建分类模型，预估其中一种分类的概率，就是 CTR 预估。</p>
+<p>隐式反馈，归纳起来：</p>
+<blockquote>
+<ol>
+<li>数据比显式反馈更加稠密。诚然，评分数据总体来说是很稀疏的，之前Netflix的百万美元挑战赛给出的数据稀疏度大概是 1.2%，毕竟评分数据是要消耗更多注意力的数据。 </li>
+<li>隐式反馈更代表用户的真实想法，比如你不是很赞成川普的观点，但还是想经常看到他的内容（以便吐槽他），这是显式反馈无法捕捉的。而人们在Quora上投出一些赞成票也许只是为了鼓励一下作者，或者表达一些作者的同情，甚至只是因为政治正确而投，实际上对内容很难说真正感兴趣。 </li>
+<li>隐式反馈常常和模型的目标函数关联更密切，也因此通常更容易在AB测试中和测试指标挂钩。这个好理解，比如 CTR 预估当然关注的是点击这个隐式反馈。 </li>
+</ol>
+</blockquote>
+<p><strong>用户给出较高评分的先决条件是用户要有“评分”的行为，所以行为预测解决的是推荐系统的80%问题，评分预测解决的是最后那 20% 的问题.</strong></p>
+<p>几个常见顽疾:</p>
+<blockquote>
+<ol>
+<li>冷启动问题； </li>
+<li>探索与利用问题； </li>
+<li>安全问题。 </li>
+</ol>
+</blockquote>
+<p><strong>冷启动问题</strong><br>本身有伪命题的嫌疑，通常的解决方式就是给它加热：想办法引入数据，想办法从已有数据中主动学习（一种半监督学习）。</p>
+<p><strong>探索与利用问题</strong><br>行话又叫做 EE (Exploit 和 Explore) 问题，一般有三种对待方式： </p>
+<blockquote>
+<ol>
+<li>全部给他推荐他目前肯定感兴趣的物品； </li>
+<li>无视他的兴趣，按照其他逻辑给他推荐，如编辑推荐、随机推荐、按时间先后推荐等等； </li>
+<li>大部分给他推荐感兴趣的，小部分去试探新的兴趣，如同一边收割长好的韭菜，一边播种新的韭菜。</li>
+</ol>
+</blockquote>
+<p><strong>安全问题</strong><br>推荐系统被攻击的影响大致有以下几个： </p>
+<blockquote>
+<ol>
+<li>给出不靠谱的推荐结果，影响用户体验并最终影响品牌形象； </li>
+<li>收集了不靠谱的脏数据，这个影响会一直持续留存在产品中，很难完全消除； </li>
+<li>损失了产品的商业利益，这个是直接的经济损失。</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="4-【概念篇】这些你必须应该具备的思维模式"><a href="#4-【概念篇】这些你必须应该具备的思维模式" class="headerlink" title="4.【概念篇】这些你必须应该具备的思维模式"></a>4.【概念篇】这些你必须应该具备的思维模式</h2><p>推荐系统的四个关键元素：</p>
+<blockquote>
+<ol>
+<li>UI 和 UE； </li>
+<li>数据； </li>
+<li>领域知识； </li>
+<li>算法。</li>
+</ol>
+</blockquote>
+<p>从上到下的权重大致是 4-3-2-1。其中UI 和 UE ，即人机交互设计和用户体验设计。好的UI 和 UE 才能带来数据的快速积累。UI、UE、数据是一个产品的基石，不论其有没有推荐系统存在都是基石。领域知识，与之对应的是常识和通识，此时业务逻辑显得更为重要。而一种对算法的常见误会就是：短期高估，长期低估。当前面三个要素都达到后，算法的意义就是使得产品的得到一个质的升华。</p>
+<p><strong>目标思维和不确定性思维</strong><br>传统的软件是一个信息流通管道，从信息生产端到信息消费端的通道，比如一款内容App，写内容的可以正常记录，读内容的可以流畅加载，无论多大的并发量都扛得住，这就是一个正常的产品了。但推荐系统这种产品，如果是一个产品的话，它和作为信息流通管道的本质不一样，它是一个信息过滤工具，要解决的问题不是信息流通本身，而是如何让流通更有效率。</p>
+<p>核心词可以表述为：逻辑、因果、分层。通常来说，训练机器学习模型是一个不断小化（或者大化）目标函数的过程。我们把一个推荐系统也看做一个函数，这个函数的输入有很多：UI、UE、数据、领域知识、算法等等，输出则是我们关注的指标：留存率、新闻的阅读时间、电商的 GMV、视频的 VV 等等。目标思维背后是“量化一切”的价值取向。</p>
+<ul>
+<li><strong>确定性思维：它是完全依靠逻辑和因果链条引发而成的，只要初始条件给定，那么结果就是一定的</strong></li>
+<li><strong>不确定性思维：不用因果逻辑严丝合缝地提前推演，而是用概率的眼光去看结果</strong></li>
+</ul>
+<p>例如:“为什么出现这个”和“出现这个的可能性有多大”</p>
+<p>需要不确定性思维的原因：</p>
+<blockquote>
+<ol>
+<li>绝大多数推荐算法都是概率算法，因此本身就无法保证得到确切结果，只是概率上得到好的效果； </li>
+<li>推荐系统追求的是目标的增长，而不是一城一池的得失； </li>
+<li>如果去花时间为了一个 Case 而增加补丁，那么付出的成本和得到的收益将大打折扣； </li>
+<li>本身出现意外的推荐也是有益的，可以探索用户的新兴趣，这属于推荐系统的一个经典问题：EE 问题。</li>
+</ol>
+</blockquote>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/recsystem.jpg" alt="流程图"></h2>
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/397604ab.html">推荐系统三十六式--学习笔记（1-4 概念篇）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/397604ab.html" title="推荐系统三十六式--学习笔记（1-4 概念篇）">https://www.xiemingzhao.com/posts/397604ab.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/397604ab.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/50170875.html" rel="prev" title="推荐系统三十六式--学习笔记（5-7 内容推荐）">
+                推荐系统三十六式--学习笔记（5-7 内容推荐） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E3%80%90%E5%BC%80%E7%AF%87%E3%80%91%E7%94%A8%E7%9F%A5%E8%AF%86%E5%8E%BB%E5%AF%B9%E6%8A%97%E6%8A%80%E6%9C%AF%E4%B8%8D%E5%B9%B3%E7%AD%89"><span class="nav-number">1.</span> <span class="nav-text">1.【开篇】用知识去对抗技术不平等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E3%80%90%E6%A6%82%E5%BF%B5%E7%AF%87%E3%80%91%E4%BD%A0%E7%9C%9F%E7%9A%84%E9%9C%80%E8%A6%81%E4%B8%AA%E6%80%A7%E5%8C%96%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%90%97"><span class="nav-number">2.</span> <span class="nav-text">2.【概念篇】你真的需要个性化推荐系统吗?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%EF%BC%9F"><span class="nav-number">2.0.1.</span> <span class="nav-text">什么是推荐系统？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8D%A2%E4%B8%80%E4%B8%AA%E8%A7%92%E5%BA%A6%E5%9B%9E%E7%AD%94%E4%B8%89%E4%B8%AA%E9%97%AE%E9%A2%98%E6%9D%A5%E9%87%8D%E6%96%B0%E5%AE%9A%E4%B9%89"><span class="nav-number">2.0.2.</span> <span class="nav-text">换一个角度回答三个问题来重新定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%B0%B1%E6%98%AF%EF%BC%9A%E7%94%A8%E5%B7%B2%E6%9C%89%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%8E%BB%E9%A2%84%E6%B5%8B%E6%9C%AA%E6%9D%A5%E7%94%A8%E6%88%B7%E5%92%8C%E7%89%A9%E5%93%81%E4%B9%8B%E9%97%B4%E4%BC%9A%E5%87%BA%E7%8E%B0%E7%9A%84%E8%BF%9E%E6%8E%A5%E3%80%82%E9%82%A3%E4%B9%88%EF%BC%8C%E4%BD%A0%E9%9C%80%E8%A6%81%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%90%97%EF%BC%9F"><span class="nav-number">2.0.3.</span> <span class="nav-text">总结一下推荐系统就是：用已有的连接去预测未来用户和物品之间会出现的连接。那么，你需要推荐系统吗？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E3%80%90%E6%A6%82%E5%BF%B5%E7%AF%87%E3%80%91%E4%B8%AA%E6%80%A7%E5%8C%96%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E9%82%A3%E4%BA%9B%E7%BB%95%E4%B8%8D%E5%BC%80%E7%9A%84%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">3.【概念篇】个性化推荐系统那些绕不开的经典问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E5%88%86%E9%A2%84%E6%B5%8B"><span class="nav-number">3.0.1.</span> <span class="nav-text">评分预测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E4%B8%BA%E9%A2%84%E6%B5%8B"><span class="nav-number">3.0.2.</span> <span class="nav-text">行为预测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E3%80%90%E6%A6%82%E5%BF%B5%E7%AF%87%E3%80%91%E8%BF%99%E4%BA%9B%E4%BD%A0%E5%BF%85%E9%A1%BB%E5%BA%94%E8%AF%A5%E5%85%B7%E5%A4%87%E7%9A%84%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">4.【概念篇】这些你必须应该具备的思维模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text"></span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

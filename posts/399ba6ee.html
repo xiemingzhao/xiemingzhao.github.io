@@ -1,37 +1,1204 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,FM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Factorization Machines (论文解析)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/399ba6ee.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG">
+<meta property="article:published_time" content="2019-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.653Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="FM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/399ba6ee.html"/>
+
+
+
+
+
+  <title>Factorization Machines (论文解析) | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/399ba6ee.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Factorization Machines (论文解析)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/399ba6ee.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/399ba6ee.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  26
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf">原始论文：Factorization Machines</a></p>
+<h2 id="因式分解机"><a href="#因式分解机" class="headerlink" title="因式分解机"></a>因式分解机</h2><p><strong>摘要</strong>：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可以进行直接的优化。所以，不像非线性的SVM，不需要进行对偶变换，模型的参数可以直接的进行估计，不需要用到支持向量。我们展示了和SVM的关系，以及在稀疏的设置下的参数估计的优势。</p>
+<p>另外，有许多因式分解模型如矩阵分解，并行因子分析如SVD++，PITF，FPMC。这些方法的缺点是通用性不好，只对特殊的输入数据有用。优化方法对于不同的任务也各不相同。我们展示了，FMs通过制定不同的输入就可以模拟这些模型。这就使得FMs非常的易用，甚至可以不需要分解模型的专业知识都可以。</p>
+<span id="more"></span>
+<h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>SVM是机器学习和数据挖掘中最流行的算法之一。然而在协同过滤的场景中，SVM并不重要，最好的模型要么直接使用矩阵的因式分解或者使用因式分解参数。本文中，我们会展示，SVM之所以在这些任务中表现不好，是因为SVM在复杂的非线性的稀疏的核空间中很难找到一个好的分割超平面。而张量分解模型的缺点在于（1）不用应用于标准的预测数据（2）不同的任务需要特殊的模型设计和学习算法。</p>
+<p>在本文中，我们介绍了一个新的预测器，Factorization Machine（FM），是一个像SVM一样的通用的预测模型，但是可以在非常稀疏的数据中估计出可靠的参数。FM对所有变量的相互关系的进行建模（对比SVM的多项式核），但是利用了可因式分解的参数，而不是像SVM一样使用了稠密的参数。我们展示了，模型的表达式可以在线性时间内求解，而且只依赖与线性数量大小的参数。这就允许了直接进行优化和存储模型的参数，而不需要存储任何的训练数据。（SVM是需要存储支持向量的）。非线性的SVM通常使用对偶形式进行求解，而且会使用到支持向量。我们也显示了在协同过滤的业务上FMs比许多很成功的模型如带偏置的MF，SVD++，PITF，FPMC等都好。</p>
+<p>总的来说，我们提出的FM的优点有：<br>1）FMs可以在非常稀疏的数据上进行参数估计。<br>2）FMs的复杂度是线性的，方便优化，不像SVM需要依赖支持向量。我们证明FM可以扩展应用在大数据集上，例如有1亿训练样例的Netflix数据集。<br>3）FMs是通用的预测模型，可以适用于任意的实值的特征向量。与此相反，其他先进的分解模型只在特定输入数据的情况下起作用。我们将通过定义输入数据的特征向量来证明这一点，FM可以模仿其他最先进的模型例如带偏置项的MF，SVD++,PITF以及FPMC模型。</p>
+<h3 id="2、在稀疏数据下进行预测"><a href="#2、在稀疏数据下进行预测" class="headerlink" title="2、在稀疏数据下进行预测"></a>2、在稀疏数据下进行预测</h3><p>大部分的常用的预测任务是估计一个预测的函数$y:\mathbb{R}^n \rightarrow T$，从一个实数向量$x \in \mathbb{R}^n$到目标$T$（如果是回归任务$T=R$，如果是分类任务$T={+，-}$）。在监督学习中，假设有个给定y值的样本训练数据集$D = {(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),…}$。我们也研究了排序的任务，拥有目标值$T=\mathbb{R}$的函数y可以适用于对x向量的评分和排序。评分函数可以通过成对的数据进行训练，当一个样本组合$(x<em>{(A)},x</em>{(B)})\in D$表示$x<em>{(A)}$应该排在$x</em>{(B)}$的前面。由于成对数据是反对称的，可以直接使用正的实例。</p>
+<p>在本文中，我们要解决的问题是数据的稀疏问题，也就是说在x向量中，大部分的值都是0，只有少部分不是0。让$m(x)$表示特征向量x中非0元素的个数，$\bar m_D$表示所有特征向量$x \in D$的非零元素个数$m(x)$的平均值。高稀疏性的特征在现实世界中是非常常见的，如文本分析和推荐系统中。高稀疏性的一个原因是在处理超多类别变量域的潜在问题。</p>
+<p><strong>例1</strong> 假设我们有个电影评分系统的交互数据。系统记录了用户$u\in U$在特定的时间$t \in R$对电影$i \in I$的评分$r \in {1,2,3,4,5}$.用户U和电影I为：</p>
+<p>$U = {Alice (A), Bob (B), Charlie (C), . . .}$<br>$I = {Titanic (TI),Notting Hill (NH), Star Wars (SW),Star Trek (ST), . . .}$</p>
+<p>用观察到的数据S表示：<br>$S = {(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$<br>      $(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$<br>      $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)}$<br>任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG" alt="FM-1.JPG"></p>
+<p>图1展示了一个示例，在这个任务中如何从观测数据S中构建特征向量。在这里，首先$|U|$是一个二值示性变量（蓝色的），它表示一个交互中活跃的用户，总是可以确定的是在一次交互$(u,i,t,r) \in S$中有一个确定的活跃用户。例如，第一行中的Alice($x<em>A^{(1)} = 1$)。下一个二值示性变量$|I|$（红色的）表示活跃的物品，同样的总是有一个活跃的物品，例如$x</em>{TI}^{(1)}=1$。图1中的特征向量也包含了用来表示用户曾经评价过的其他物品的表示向量（黄色的）。对于每个用户来说，变量均是被归一化之后的。例如Alice评价过Notting Hill 和 Star Wars。此外，样本还包含一个从2019年一月开始的月份向量（绿色的）来表示时间。最后几列表示用户评价过的最后一个电影，最右边的是当前电影的评分y。在第五部分，我们将展示因式分解机是如何利用输入数据中的特征向量来做到最特殊的顶级的因式分解模型的。</p>
+<p>我们将通过这篇论文用这个示例数据集来证明。然而，请注意FMs是一个像SVMs一样的通用模型，可以应用在任何一个现实中的特征向量，并且对推荐系统没有什么限制。</p>
+<h3 id="3-因式分解机-FM"><a href="#3-因式分解机-FM" class="headerlink" title="3.因式分解机(FM)"></a>3.因式分解机(FM)</h3><p>在这一部分，我们将来介绍因式分解机。我们会详细地讨论模型中的公式推导，并且会展示怎么使用FMs进行多预测任务。</p>
+<p><em>A. 因式分解模型</em><br>1）模型方程：2维的因式分解机模型方程：</p>
+<script type="math/tex; mode=display">\hat y(x):=w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i,v_j \rangle x_i x_j</script><p>公式中的模型参数必须在下面的值域中进行估计：</p>
+<script type="math/tex; mode=display">w_0 \in \mathbb{R}, w \in \mathbb{R}^n, V \in \mathbb{R}^{n \times k}</script><p>其中，$ \langle ·,· \rangle $表示长度为k的点乘，k是一个超参数：</p>
+<script type="math/tex; mode=display">\langle v_i, v_j \rangle  := \sum_{f=1}^kv_{i,f} \cdot v_{j,f}</script><p>V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+$是一个产参数定义了因式分解的维度。</p>
+<p>一个2阶的FM能过获取所有的单个特征和配对特征的相互关系：</p>
+<ul>
+<li>$w_0$是全局偏置项。</li>
+<li>$w_i$是模型中的第i个变量的权重。</li>
+<li>$ \hat w<em>{i,j}:= \langle v_i,v_j \rangle $表示模型中第i个变量和第j个变量之间的交互项。如此就不是用唯一的模型参数$w</em>{i,j} \in \mathbb{R}$来作为FM模型中因式分解交互项的权重了。在后面我们将看到，当遇到高维且稀疏的数据的时候，这是进行高质量参数估计的关键点。</li>
+</ul>
+<p>2）表达能力：我们知道对于正定矩阵W，存在矩阵V，使得$W=V\cdot V^t$，k足够大。这表明了当k足够大的时候FM能够表示矩阵W中的任何交互项。然而对于稀疏的情况，应该选择一个比较小的k，因为没有足够的数据去预测一个复杂的W。限制k，也就是FM的表达能力，能够提高稀疏情况下的相互关系矩阵的泛化性能。</p>
+<p>3）稀疏情况下的参数估计：在稀疏情况下，通常没有足够的数据进行直接的参数估计。因式分解机可以进行稀疏的估计，甚至在稀疏的情况下可以估计的很好，这是因为它打破了交互项参数和因式分解之间的独立性。总的来说是因为进行了因式分解之后，用来估计一个参数的数据也可以用来估计相关的另一个参数。我们将利用图1中的数据举个例子来更清晰地描述我们的想法。假设我们想估计Alice(A)和Star Trek(ST)交互项的参数来预测目标值y（这里是评分）。很显然，在一个样本中，两个用户$x<em>A,x</em>{ST}$的参数不会都是非0数，如果直接进行估计的话，那么A和ST的相互关系参数会估计成0。但是如果使用因式分解将参数分解长$ \langle v<em>A,v</em>{ST} \rangle $的话，在这个案例中我们就可以直接进行估计了。</p>
+<p>4）计算量：接下来，我们展示如何让FMs变得实际可用。前面提到的方程（1）的计算复杂度是O(kn2)，因为所有的称为交互项必须倍计算。但是改变一下之后将会使其复杂度降低到线性的。</p>
+<p>引理3.1：因式分解机的计算复杂度可以变成线性的时间复杂度O(kn)。</p>
+<p>证明：由于所有的成对交互项都会做因式分解，于是模型中就没有需要直接利用两个变量进行直接估计的参数。所有成对的交互项可以进行如下的变化：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+&\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
+=&\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
+=&\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
+=&\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
+=&\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
+\end{align}</script><p>以上的公式的结果仅仅有线性的计算复杂度，当k和n固定的时候，计算复杂度就为O(kn)。</p>
+<p>进一步，在稀疏性的条件下，x中的大部分元素值都是0，因此求和就可以只在非0的元素中进行。因此在稀疏数据中因式分解机的计算复杂度就在$O(k\bar m_D)$，例如当$\bar m_D=2$时就是一个经典的推荐系统例如MF算法。</p>
+<p><em>B. 使用因式分解机进行预测</em><br>因式分解机可以用在各种预测任务中：</p>
+<ul>
+<li>回归：直接进行预测，使用最小均方误差进行优化。</li>
+<li>二分类：使用合页损失或者对数几率损失进行优化。</li>
+<li>排序：对预测的分数进行排序，可以通过成对实例的分类损失进行优化。</li>
+</ul>
+<p>在上面所有的情况下，都可以使用L2的正则化来防止过拟合。</p>
+<p><em>C. 因式分解机的学习</em><br>我们已经证明，FMs有一个确定的模型公式使其计算复杂度达到线性的。因此，FMs的参数$（w_0,w , V）$可以通过梯度下降的方式来求解，例如随机梯度下降法(SGD).FM模型的梯度是：</p>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial \theta} \hat y(x)  = \begin{cases}
+1,& if \ \theta \ is \ w_0 \\
+x_i,& if \ \theta \ is \ w_i \\
+x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
+\end{cases}</script><p>其中，求和项$\sum<em>{j=1}^n v</em>{j,f}x_j$是和i无关的，可以事先求出来。总的来说，每个梯度都可以在O(1)时间内求得。对于给个案例(x,y)整体的参数更新的时间为O(kn)，稀疏数据的时候则为O(km(x))。</p>
+<p>我们提供了一个通用的实现，<a href="http://www.libfm.org">LIBFM</a>，使用SGD，支持元素和配对的loss。</p>
+<p><em>D. d阶的因式分解机</em><br>2阶的因式分解机可以很容易的推广到d阶：</p>
+<script type="math/tex; mode=display">\hat y(x) := w_0 + \sum_{i=1}^n w_i x_i + \sum_{l=2}^d \sum_{i_1=1}^n \cdots \sum_{i_l = i_{l-1} + 1}^n (\prod_{j=1}^l x_{i_j}) (\sum_{f=1}^{k_l} \prod_{j=1}^l v_{i_j, f}^{(l)})</script><p>其中，第l个相互关系参数可以通过PARAFAC模型进行因式分解:</p>
+<script type="math/tex; mode=display">V^{(l)} \in \mathbb{R}^{n \times k_l}, k_l \in \mathbb{N}_0^+</script><p>通过变换，同样可以在线性的时间复杂度上求解，复杂度降为$O(k_d n^d)$。</p>
+<p><em>E. 总结</em><br>FMs的优点：<br>1）可以在稀疏的情况下进行很好的参数估计，特别是可以估计没有观测到的相互关系。<br>2）参数的大小和运算时间都是线性的，可以通过SGD进行参数的更新，可以使用多种loss。</p>
+<h3 id="4、FMs-vs-SVMs"><a href="#4、FMs-vs-SVMs" class="headerlink" title="4、FMs vs. SVMs"></a>4、FMs vs. SVMs</h3><p><em>A. SVM模型</em><br>我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) =  \langle \phi (x),w \rangle $，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：</p>
+<script type="math/tex; mode=display">K:\mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}, K(x,z) =  \langle \phi (x),\phi(z) \rangle</script><p>下面我们通过分析SVMs主要形式来讨论FM和SVM之间的关系。</p>
+<p><em>1）线性核</em>：最简单的核函数就是线性核：$ K_l(x,z):=1 +  \langle x,z \rangle  $，这对应的映射就是$\phi (x) := (1,x_1, \cdots , x_n)$。因此线性核的SVM模型等式可以重写为：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i, w_0 \in \mathbb{R}, w \in \mathbb{R}^n</script><p>很明显可以发现线性的SVM模型和FM为1阶的情况完全等效</p>
+<p><em>2）多项式核</em>：多项式的核函数可以让SVM模型去拟合更高维的变量交互项。可以定义：$K(x,z) := ( \langle x,z \rangle  + 1)^d$。例如当多项式为2阶的时候，对应如下的映射：</p>
+<script type="math/tex; mode=display">\phi (x) := (1, \sqrt2 x_1, \cdots , \sqrt2 x_n, x_1^2, \cdots ,x_n^2, \sqrt2 x_1 x_2, \cdots , \sqrt2 x_1 x_n, \sqrt2 x_2 x_3, \cdots, \sqrt2 x_{n-1} x_n)</script><p>因此，多项式核函数的SVM模型等式可以重写为：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + \sqrt2 \sum_{i=1}^n w_i x_i + \sum_{i=1}^n w_{i,i}^{(2)} x_i^2 + \sqrt2 \sum_{i=1}^n \sum_{j = i + 1}^n w_{i,j}^{(2)} x_i x_j</script><p>其中模型的参数是：</p>
+<script type="math/tex; mode=display">w_0 \in \mathbb{R}^n, w \in \mathbb{R}^n, W^{(2)} \in \mathbb{R}^{n \times n} (symmetric matix)</script><p>对比多项式核函数的SVM模型和FM模型，可以发现的一点是两个模型交互项全部上升到了2维。而这主要的差别是参数：SVMs的所有交互项参数之间是相互独立的。相反，对于FMs模型来说所有的交互项参数都是经过因式分解的，因此$ \langle v_i, v_j \rangle  and  \langle v_i, v_l \rangle $依赖于各自交叉共享的参数($v_i$)。</p>
+<p><em>B. 稀疏情况下的参数估计</em><br>我们下面解释一下为什么线性和多项式的SVM在稀疏的情况下表现不好。我们将使用用户和物品的表征向量的数据来证明这个协同过滤的例子。这里，特征向量是稀疏的，并且仅仅两个参数是非0的。</p>
+<p><em>1）线性SVM</em>：对于这种数据x,线性的SVM模型等价于下面的等式：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i</script><p>因为当且仅当$j = u \ or \ j = i$的时候$x_j = 1$。这个模型对应于一个最基础的协同过滤模型，即只有用户和巫婆的偏置项存在。由于这个模型很简单，因为只有少数的几个参数，所以模型的参数的预测在这种稀疏情况下也会不错。但是预测的质量却不好，见图2。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG" alt="FM-2.JPG"></p>
+<p><em>2）多项式SVM</em>：这种情况下，SVM可以获取高阶的相互关系。在我们的系数数据案例中，$m(x)=2$，这时候SVMs模型的等式等价于：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + \sqrt2 (w_u + w_i) + w_{u,u}^{(2)} + w_{i,i}^{(2)} + \sqrt2 w_{u,i}^{(2)}</script><p>首先，$w<em>u \ and \ w</em>{u,u}^{(2)}$代表的是同样的，可以期初其中一个例如后者。现在模型的等式就变成了线性的除了有一个额外的用户交叉项$w<em>{u,i}^{(2)}$。在经典的协同过滤(FM)问题中，对于每个交叉项参数$w</em>{u,i}^{(2)}$，训练数据中至少有一个观测样本(u,i)，而在测试数据中的案例$(u’,i’)$就一般不会在训练数据及中再次出现了。这意味着对于所有的测试案例(u,i)的交叉项参数来说，最大边际解是0。因此对于预测测试集的时候，多项式SVM对于二阶的交叉项来说没有任何作用；所以多项式核的SVM模型仅仅依赖于用户和物品偏置项，在效果上并没有比线性的SVM好多少。</p>
+<p>对于SVM模型，估计一个高级的交叉项并不是CF模型中的问题，但是当数据是高稀疏性的时候这个问题就存在了。因为对于一个成对的交叉项$(i,j)$想要得到一个可靠的参数估计$w_{i,j}^{(2)}$的话，必须提供足够多的样例$x \in D,where \ x_i \neq 0 \wedge x_i \neq 0$。只要不同时出现$x_i=0,x_j=0$，这个样例就可以用来进行参数估计。<br>总结一下，只要数据比较稀疏的时候，即没有足够的(i,j)的样例的时候，SVMs模型基本上失效的。</p>
+<p><em>C. 总结</em><br>1）SVM的稠密的参数需要相互关系的直接的观测值，而在稀疏的输入的情况下，这种直接的观测值很少。但是FMs模型就可以在稀疏的情况将进行很好的参数估计。<br>2）FMs可以直接进行学习，非线性的SVM通常在对偶形式进行求解。<br>3）FMs的函数不依赖与训练数据SVM的预测依赖部分训练数据（支持向量）。</p>
+<h3 id="5、FMs-vs-其他的因式分解模型"><a href="#5、FMs-vs-其他的因式分解模型" class="headerlink" title="5、FMs vs. 其他的因式分解模型"></a>5、FMs vs. 其他的因式分解模型</h3><p>有各种各样的分解模型，从m-ary类别变量关系的标准模型（例如MF，PARAFAC）到用于特定数据和任务的专用模型（例如SVD ++，PITF，FPMC）。接下来，我们展示一下FM可以仅仅通过使用正确的输入数据就可以模仿很多其他的因式分解模型（例如特征向量x）。</p>
+<p><em>A.矩阵和张量分解</em><br>矩阵分解（MF）是研究最多的因子分解模型之一。它是分解了在两个分类变量之间的关系（例如U和I）。标准处理分类变量的方法是为每个U和I级别定义二值的指标变量（例如见图1，<br>第一个（蓝色）和第二个（红色）组）：</p>
+<script type="math/tex; mode=display">n:=|U \cup I|, x_j := \delta(j=i \vee j=u)</script><p>使用这个特征向量x的FM模型与矩阵分解模型相同，因为$x_j$仅仅在当前u和i是非0的，所以其他的偏置项和交互项都可以舍去：</p>
+<script type="math/tex; mode=display">\hat y(x)=w_0 + w_u + w_i +  \langle v_u, v_i \rangle</script><p>同样的考虑，当有两个以上的分类变量的时候可以发现存在一样的问题，FM包括了一个嵌套并行因子分析模型（PARAFAC）。</p>
+<p><em>B.SVD++</em><br>对于评分预测任务（即回归）来说，Koren将矩阵分解模型改进成了SVD++模型。FM模型就可以使用下列的输入数据来模拟这个模型（就像图一中的前三组）：</p>
+<script type="math/tex; mode=display">
+\ n:=|U \cup I \cup L|, \ x_j  = \begin{cases}
+1,& if \ j=i \vee j=u \\
+\frac{1}{\sqrt{|N_u|}},& if \ j \in N_u \\
+0,& else
+\end{cases}</script><p>其中$N_u$是当前用户曾经评论过的所有电影的集合。一个二维的FM模型将以如下方式处理这个数据集：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  + \\
+\frac{1}{\sqrt{|N_u|}}\sum_{l \in N_U}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{\sqrt{|N_u|}}\sum_{l' \in N_u, l'  \rangle  l} \langle v_l, v_l' \rangle )</script><p>其中第一部分（即第一行）就等价于一个SVD++模型。但FM还包含一些额外的用户和电影$N_u$之间的交互项，以及$N_u$中电影对之间的电影$N_u$本身和交互项的基础效应。</p>
+<p><em>C.PITF的标签推荐</em><br>标签预测的问题被定义为对于给定的用户和项目组合来排名标签。这意味着有涉及三个分类域：用户U，项目I和标签T.在关于标签推荐的ECML / PKDD发现挑战中，基于分解成对的交互项的模型（PITF）取得了最好成绩[3]。我们将展示FM如何<br>可以模仿这个模型。一个对于活动用户u，项目i和标签t有二值表示变量的分解机的可以写成以下模型：</p>
+<script type="math/tex; mode=display">n:=|U \cup I \cup L|, x_j := \delta (j = i \vee j = u \vee j = t)\\
+\Longrightarrow \hat y(x)= w_0 + w_u + w_i +  \langle v_u, v_i \rangle  +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle</script><p>由于该模型用于在相同的用户/项目组合（u，i）内的两个标签$t_A,t_B$之间进行排序的，两者都是始终致力于优化和预测案例$（u,i,t_A）和（u,i,t_B）之间的得分差异。因此对于成对排序的优化，FM模型等价于：</p>
+<script type="math/tex; mode=display">\hat y(x) := w_t +  \langle v_u, v_t \rangle  +  \langle v_i, v_t \rangle</script><p>现在二元指标的原始PITF模型和FM模型几乎是相同的。唯一的区别在于（1）FM模型对t具有偏差项$w_t$，（2）$(u,t)-(i,t)$交叉项的标签之间的分解参数$(v_t)$在FM模型中是共享的，但是又不同于原始PITF模型。除了这个理论分析，图3显示了两种模型实现此任务的可比预测质量的经验分布。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG" alt="FM-3.JPG"></p>
+<p><em>D.分解个性化的马尔科夫链</em><br>FPMC模型尝试基于用户u的最后一次购买(时间t-1)在线上商店进行商品排序。</p>
+<p>再一次仅仅用特征生成，一个二维的因式分解机可以来近似：</p>
+<script type="math/tex; mode=display">
+\ n:=|U \cup I \cup L|, \ x_j  = \begin{cases}
+1,& if \ j=i \vee j=u \\
+\frac{1}{|B_{t-1}^u|},& if \ j \in B_{t-1}^u \\
+0,& else
+\end{cases}</script><p>其中$B_{t}^u \subseteq L$是一个用户u在时间t可购买的所有物品的集合，然后：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
+\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )</script><p>就像标签推荐一样，这个模型被用来优化排名（这里是排序物品i），因此只有$(u,i_A,t)$和$(u,i_B,t)$之间的评分存在差异的时候会被用于预测和优化的评断标准中。因此，所有额外的不依赖于i都可以消失，FM模型的等式就相当于：</p>
+<script type="math/tex; mode=display">\hat y(x) = w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u} \langle v_i, v_l \rangle</script><p>现在人们可以看到原始的FPMC模型和FM模型几乎是相同的，仅在附加的偏置项$w_i$中有所不同，以及FM模型中的(u,i)和(i,l)交互项物品的分解参数的共享。</p>
+<p><em>E.总结</em><br>1）标准分解模型，如PARAFAC或MF不是像因式分解机这样的一般预测模型。相反，他们需要特征向量被分成m个部分，每个部分都是精确的一个元素是1，其余元素是0。<br>2）有许多关于专业化因子分解的建议为单个任务设计的模型。我们已经证明了这一点，因式分解机可以模仿许多最成功的分解模型（包括MF，PARAFAC，SVD++，PITF，FPMC）只需通过特征提取即可，这使得FM在实践中很容易应用。</p>
+<h3 id="6、结论"><a href="#6、结论" class="headerlink" title="6、结论"></a>6、结论</h3><p>在这片论文中，我们介绍了因式分解机。FMs融合了SVM模型的泛化能力以及因式分解模型的优势。不同于SVM模型，1)FMs可以在高稀疏的情况下进行参数估计，2)模型等式是线性的并且仅依赖于模型的参数，因此3)它们可以在原始等式中进行优化。FMs模型的解释力相当于多项式SVMs模型。不同于像PARAFAC这种张量因子分解模型，FMs是一个泛化的模型，它可以处理任何实值向量。再者，可以通过在输入特征向量中使用正确的表征来进行简化，FMs相对于其他特别高级的模型来说是更单一且非常简单的，不像那些模型仅仅只能应用在特定的任务重，例如MF, SVD++, PITF和FPMC。</p>
+<p><a href="https://www.jianshu.com/p/a194e05aeb53">参考博文:点击率预测《Factorization Machines》论文精读-ronghuaiyang</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/399ba6ee.html">Factorization Machines (论文解析)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/399ba6ee.html" title="Factorization Machines (论文解析)">https://www.xiemingzhao.com/posts/399ba6ee.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/399ba6ee.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/FM/" rel="tag"><i class="fa fa-tag"></i> FM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/d0f1b267.html" rel="next" title="The Learning Behind Gmail Priority Inbox (论文解析)">
+                <i class="fa fa-chevron-left"></i> The Learning Behind Gmail Priority Inbox (论文解析)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/3c1887e0.html" rel="prev" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
+                Amazon.com Recommendations Item-to-item collaborative filtering (论文解析) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">因式分解机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">1、介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%9C%A8%E7%A8%80%E7%96%8F%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BF%9B%E8%A1%8C%E9%A2%84%E6%B5%8B"><span class="nav-number">1.2.</span> <span class="nav-text">2、在稀疏数据下进行预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA-FM"><span class="nav-number">1.3.</span> <span class="nav-text">3.因式分解机(FM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81FMs-vs-SVMs"><span class="nav-number">1.4.</span> <span class="nav-text">4、FMs vs. SVMs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81FMs-vs-%E5%85%B6%E4%BB%96%E7%9A%84%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">5、FMs vs. 其他的因式分解模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E7%BB%93%E8%AE%BA"><span class="nav-number">1.6.</span> <span class="nav-text">6、结论</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

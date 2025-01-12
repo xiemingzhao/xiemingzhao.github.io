@@ -1,37 +1,1596 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,推荐," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="参考原作：推荐系统三十六式-刑无刀 28.【关键模块】巧妇难为无米之炊：数据采集关键要素日志和数据数据驱动这个概念也是最近几年才开始流行起来的，在古典互联网时代，设计和开发产品完全侧重于功能易用和设计精巧上，并且整体驱动力受限于产品负责人的个人眼光，这属于是一种感性的把握，也因此对积累数据这件事就不是很重视。 关于数据采集，按照用途分类又有三种：  报表统计 数据分析 机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="推荐系统三十六式--学习笔记（28-31 关键模块）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/6ea3699c.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 28.【关键模块】巧妇难为无米之炊：数据采集关键要素日志和数据数据驱动这个概念也是最近几年才开始流行起来的，在古典互联网时代，设计和开发产品完全侧重于功能易用和设计精巧上，并且整体驱动力受限于产品负责人的个人眼光，这属于是一种感性的把握，也因此对积累数据这件事就不是很重视。 关于数据采集，按照用途分类又有三种：  报表统计 数据分析 机器学习">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%AE%9E%E6%96%BD%E6%8E%A8%E8%8D%90%E6%A1%86%E6%9E%B6.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka%E5%81%8F%E7%A7%BB%E9%87%8F.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka%E6%95%B0%E6%8D%AE%E6%BA%90.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/storm%E6%A8%A1%E5%9E%8B.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%AE%9E%E9%AA%8C%E5%9F%9F%E5%88%92%E5%88%86.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B5%81%E9%87%8F%E5%81%8F%E7%BD%AE.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%90%AB%E5%8F%91%E5%B8%83%E5%B1%82%E7%9A%84%E9%87%8D%E5%8F%A0%E5%AE%9E%E9%AA%8C%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/google%E5%AE%9E%E9%AA%8C%E5%B9%B3%E5%8F%B0.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Cassandra.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97.jpg">
+<meta property="article:published_time" content="2018-11-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.661Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%9E%B6%E6%9E%84.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/6ea3699c.html"/>
+
+
+
+
+
+  <title>推荐系统三十六式--学习笔记（28-31 关键模块） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/6ea3699c.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--学习笔记（28-31 关键模块）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T00:00:00+08:00">
+                2018-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%89%E5%8D%81%E5%85%AD%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐系统三十六式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/6ea3699c.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/6ea3699c.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  12.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  41
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://time.geekbang.org/column/intro/74">参考原作：推荐系统三十六式-刑无刀</a></p>
+<h2 id="28-【关键模块】巧妇难为无米之炊：数据采集关键要素"><a href="#28-【关键模块】巧妇难为无米之炊：数据采集关键要素" class="headerlink" title="28.【关键模块】巧妇难为无米之炊：数据采集关键要素"></a>28.【关键模块】巧妇难为无米之炊：数据采集关键要素</h2><h3 id="日志和数据"><a href="#日志和数据" class="headerlink" title="日志和数据"></a><strong>日志和数据</strong></h3><p>数据驱动这个概念也是最近几年才开始流行起来的，在古典互联网时代，设计和开发产品完全侧重于功能易用和设计精巧上，并且整体驱动力受限于产品负责人的个人眼光，这属于是一种感性的把握，也因此对积累数据这件事就不是很重视。</p>
+<p>关于数据采集，按照用途分类又有三种：</p>
+<ul>
+<li>报表统计</li>
+<li>数据分析</li>
+<li>机器学习</li>
+</ul>
+<span id="more"></span>
+<p>最基本的数据收集，是为了统计一些核心的产品指标，例如次日留存，七日留存等，一方面是为了监控产品的健康状况，另一方面是为了对外秀肌肉，这一类数据使用非常浅层，对数据的采集要求也不高。</p>
+<p>第二种就是比较常见的数据采集需求所在了。在前面第一种用途基础上，不但需要知道产品是否健康，还需要知道为什么健康、为什么不健康，做对了什么事、做错了什么事，要从数据中去找到根本的原因。最后要产出的是比较简明清晰直观的结论，这是数据分析师综合自己的智慧加工出来的，是有人产出的。它主要用于指导产品设计、指导商业推广、指导开发方式。走到这一步的数据采集，已经是实打实的数据驱动产品了。</p>
+<p>第三种，就是收集数据为了机器学习应用，或者更广泛地说人工智能应用。那么机器学习应用，主要在消化数据的角色是算法、是计算机，而不是人。</p>
+<h3 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a><strong>数据采集</strong></h3><p>推荐系统收集日志需要考虑：日志的数据模型，收集哪些日志，用什么工具收集，收集的日志怎么存储。</p>
+<h4 id="1-数据模型"><a href="#1-数据模型" class="headerlink" title="1. 数据模型"></a><strong>1. 数据模型</strong></h4><p>所谓数据模型，其实就是把数据归类。产品越负责，业务线越多，产生的日志就越复杂。数据模型帮助梳理日志、归类存储，以方便在使用时获取。你可以回顾一下在前面讲过的推荐算法，这些推荐算法形形色色，但是他们所需要的数据可以概括为两个字：矩阵。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">矩阵</th>
+<th style="text-align:center">行</th>
+<th style="text-align:center">列</th>
+<th style="text-align:center">数据类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">人，属性矩阵</td>
+<td style="text-align:center">用户ID</td>
+<td style="text-align:center">属性</td>
+<td style="text-align:center">User Profile</td>
+</tr>
+<tr>
+<td style="text-align:center">物，属性矩阵</td>
+<td style="text-align:center">物品ID</td>
+<td style="text-align:center">属性</td>
+<td style="text-align:center">Item Profile</td>
+</tr>
+<tr>
+<td style="text-align:center">人，人 矩阵</td>
+<td style="text-align:center">用户ID</td>
+<td style="text-align:center">用户ID</td>
+<td style="text-align:center">Relation</td>
+</tr>
+<tr>
+<td style="text-align:center">人，物矩阵</td>
+<td style="text-align:center">用户ID</td>
+<td style="text-align:center">物品ID</td>
+<td style="text-align:center">Event</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>基于这个分析，可以给要收集的数据归纳成下面几种。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">模型</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">User Profile</td>
+<td style="text-align:left">用户属性数据</td>
+</tr>
+<tr>
+<td style="text-align:center">Item Profile</td>
+<td style="text-align:left">物品属性数据</td>
+</tr>
+<tr>
+<td style="text-align:center">Event</td>
+<td style="text-align:left">时间数据，即用户发生的所有行为和动作，比如曝光，浏览，点击，收藏，购买</td>
+</tr>
+<tr>
+<td style="text-align:center">Relation</td>
+<td style="text-align:left">关系数据，这类数据不是每个产品都有的，社交网站会有社交关系，就属于用户之间的关系数据</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>有了数据模型，就可以很好地去梳理现有的日志，看看每一种日志属于哪一种。并且，在一个新产品上线之初，该如何为将来的推荐系统记录日志也比较清楚了。这个数据模型当然不能概括全部数据，但是用来构建一个推荐系统就绰绰有余了。接下来就是去收集数据了。</p>
+<h4 id="2-数据在哪？"><a href="#2-数据在哪？" class="headerlink" title="2. 数据在哪？"></a><strong>2. 数据在哪？</strong></h4><p>收集的数据主要来自两种，一种是业务运转必须要存储的记录，例如用户注册资料，如果不在数据库中记录，产品就无法正常运转。另一种就是在用户使用产品时顺便记录下来的，这叫做埋点。第一种数据源来自业务数据库，通常都是结构化存储，MySQL。</p>
+<p>第二种数据需要埋点，埋点又有几种不同方法(按照技术手段分):</p>
+<ul>
+<li><p>第一种，SDK 埋点。</p>
+<blockquote>
+<p>这个是最经典古老的埋点方法，就是在开发自己的 App 或者网站时，嵌入第三方统计的 SDK，App 如友盟等，网站如 Google Analytics 等。<br>SDK 在要收集的数据发生点被调用，将数据发送到第三方统计，第三方统计得到数据后再进一步分析展示。<br>这种数据收集方式对推荐系统的意义不大，因为得不到原始的数据而只是得到统计结果，我们可以将其做一些改动，或者自己仿造做一些开发内部数据采集 SDK，从而能够收集到鲜活的数据。</p>
+</blockquote>
+</li>
+<li><p>第二种，可视化埋点。</p>
+<blockquote>
+<p>可视化埋点在 SDK 埋点基础上做了进一步工作，埋点工作通过可视化配置的方式完成，一般是在 App 端或者网站端嵌入可视化埋点套件的 SDK，然后再管理端接收前端传回的应用控件树，通过点选和配置，指令前端收集那些事件数据。业界有开源方案实现可参考，如 Mixpanel。</p>
+</blockquote>
+</li>
+<li><p>第三种，无埋点。</p>
+<blockquote>
+<p>所谓无埋点不是不埋点收集数据，而是尽可能多自动收集所有数据，但是使用方按照自己的需求去使用部分数据。SDK 埋点就是复杂度高，一旦埋点有错，需要更新客户端版本，可视化埋点的不足就是：收集数据不能收集到非界面数据，例如收集了点击事件，也仅仅能收集一个点击事件，却不能把更详细的数据一并返回。</p>
+</blockquote>
+</li>
+</ul>
+<p>按照收集数据的位置分，又分为<strong>前端埋点和后端埋点</strong>:<br>举个例子，要收集用户的点击事件，前端埋点就是在用户点击时，除了响应他的点击请求，还同时发送一条数据给数据采集方。后端埋点就不一样了，由于用户的点击需要和后端交互，后端收到这个点击请求时就会在服务端打印一条业务日志，所以数据采集就采集这条业务日志即可。<br><strong>国内如神测数据等公司，将这些工作已经做得很傻瓜化了，大大减轻了埋点数据采集的困扰。</strong></p>
+<p>对于推荐系统来说，所需要的数据基本上都可以从后端收集，采集成本较低，但是有两个要求：要求所有的事件都需要和后端交互，要求所有业务响应都要有日志记录。这样才能做到在后端收集日志。</p>
+<blockquote>
+<p>后端收集业务日志好处很多，比如下面几种。</p>
+<ol>
+<li>实时性。由于业务响应是实时的，所以日志打印也是实时的，因此可以做到实时收集。</li>
+<li>可及时更新。由于日志记录都发生在后端，所以需要更新时可以及时更新，而不用重新发布客户端版本。</li>
+<li>开发简单。不需要单独维护一套 SDK。</li>
+</ol>
+</blockquote>
+<p>归纳一下，Event 类别的数据从后端各个业务服务器产生的日志来，Item 和 User 类型数据，从业务数据库来，还有一类特殊的数据就是 Relation 类别，也从业务数据库来。</p>
+<h4 id="3-元素有哪些？"><a href="#3-元素有哪些？" class="headerlink" title="3. 元素有哪些？"></a><strong>3. 元素有哪些？</strong></h4><p>后端收集事件数据需要业务服务器打印日志,大致需要包含下面的几类元素:</p>
+<ol>
+<li>用户 ID，唯一标识用户身份。</li>
+<li>物品 ID，唯一标识物品。这个粒度在某些场景中需要注意，例如电商，物品的 ID 就不是真正要去区别物和物之间的不同，而是指同一类试题，例如一本书《岛上书店》，库存有很多本，并不需要区别库存很多本之间的不同，而是区别《岛上书店》和《白夜行》之间的不同。</li>
+<li>事件名称，每一个行为一个名字。</li>
+<li>事件发生时间，时间非常重要。</li>
+</ol>
+<blockquote>
+<p>以上是基本的内容，下面再来说说加分项。（这些有时候很重要，特别是某些时变的属性，例如机票价格）</p>
+<ol>
+<li>事件发生时的设备信息和地理位置信息等等；</li>
+<li>从什么事件而来；</li>
+<li>从什么页面而来；</li>
+<li>事件发生时用户的相关属性；</li>
+<li>事件发生时物品的相关属性。</li>
+</ol>
+</blockquote>
+<p>把日志记录想象成一个 Live 快照，内容越丰富就越能还原当时的场景。</p>
+<h4 id="4-怎么收集？"><a href="#4-怎么收集？" class="headerlink" title="4. 怎么收集？"></a><strong>4. 怎么收集？</strong></h4><p>一个典型的数据采集架构如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%9E%B6%E6%9E%84.jpg" alt="数据采集架构.jpg"></p>
+<p>下面描述一下这个图。最左边就是数据源，有两部分，一个是来自非常稳定的网络服务器日志， NGINX 或者 Apache 产生的日志。</p>
+<p>因为有一类埋点，在 PC 互联网时代，有一种事件数据收集方式是，放一个一像素的图片在某个要采集数据的位置。这个图片被点击时，向服务端发送一个不做什么事情的请求，只是为了在服务端的网络服务器那里产生一条系统日志。 这类日志用 Logstash 收集。</p>
+<p>左边另外的数据源就是业务服务器，这类服务器会处理具体场景的具体业务，甚至推荐系统本身也是一个业务服务器。这类服务器有各自不同的日志记录方式，例如 Java 是 Log4j，Python 是 Logging 等等，还有<br>RPC 服务。这些业务服务器通常会分布在多台机器上，产生的日志需要用 Flume 汇总。</p>
+<p>Kafka 是一个分布式消息队列，按照 Topic 组织队列，订阅消费模式，可以横向水平扩展，非常适合作为日志清洗计算层和日志收集之间的缓冲区。所以一般日志收集后，不论是 Logstash 还是 Flume，都会发送到 Kafka 中指定的 Topic 中。在 Kafka 后端一般是一个流计算框架，上面有不同的计算任务去消费 Kafka 的数据 Topic，流计算框架实时地处理完采集到的数据，会送往分布式的文件系统中永久存储，一般是 HDFS。</p>
+<p>日志的时间属性非常重要。因为在 HDFS 中存储日志时，为了后续抽取方便快速，一般要把日志按照日期分区。当然，在存储时，按照前面介绍的数据模型分不同的库表存储也能够方便在后续构建推荐模型时准备数据。</p>
+<h4 id="5-质量检验"><a href="#5-质量检验" class="headerlink" title="5. 质量检验"></a><strong>5. 质量检验</strong></h4><p>数据采集，日志收集还需要对采集到的数据质量做监控。关注数据质量，大致需要关注下面几个内容。</p>
+<ol>
+<li>是否完整？事件数据至少要有用户 ID、物品 ID、事件名称三元素才算完整，才有意义。</li>
+<li>是否一致？一致是一个广泛的概念。数据就是事实，同一个事实的不同方面会表现成不同数据，这些数据需要互相佐证，逻辑自洽。</li>
+<li>是否正确？该记录的数据一定是取自对应的数据源，这个标准不能满足则应该属于 Bug 级别，记录了错误的数据。</li>
+<li>是否及时？虽然一些客户端埋点数据，为了降低网络消耗，会积攒一定时间打包上传数据，但是数据的及时性直接关系到数据质量。由于推荐系统所需的数据通常会都来自后端埋点，所以及时性还可以保证。</li>
+</ol>
+<hr>
+<h2 id="29-【关键模块】让你的推荐系统反应更快：实时推荐"><a href="#29-【关键模块】让你的推荐系统反应更快：实时推荐" class="headerlink" title="29.【关键模块】让你的推荐系统反应更快：实时推荐"></a>29.【关键模块】让你的推荐系统反应更快：实时推荐</h2><p>推荐系统从业者所追求的三个要素：捕捉兴趣要更快，指标要更高，系统要更健壮。</p>
+<h3 id="为什么要实时"><a href="#为什么要实时" class="headerlink" title="为什么要实时"></a><strong>为什么要实时</strong></h3><p>一个连接从建立开始，其连接的强度就开始衰减，直到最后。用户和物品之间产生的连接，不论轻如点击，还是重如购买，都有推荐的黄金时间。在这个黄金时间，捕捉到用户的兴趣并且给与响应，可能就更容易留住用户。在业界，大家为了高大上，不会说“更快”的推荐系统，而是会说“实时”推荐系统。</p>
+<p>实时推荐，实际上有三个层次：</p>
+<ul>
+<li>第一层，“给得及时”，也就是服务的实时响应。<br>这个是基本的要求，一旦一个推荐系统上线后，在互联网的场景下，没有让用户等个一天一夜的情况，基本上慢的服务接口整个下来响应时间也超过秒级。达到第一层不能成为实时推荐，但是没达到就是不合格。</li>
+<li>第二层，“用得及时”，就是特征的实时更新。<br>例如用户刚刚购买了一个新的商品，这个行为事件，立即更新到用户历史行为中，参与到下一次协同过滤推荐结果的召回中。做到这个层次，已经有实时推荐的意思了，常见的效果就是在经过几轮交互之后，用户的首页推荐会有所变化。这一层次的操作影响范围只是当前用户。</li>
+<li>第三层，“改得及时”，就是模型的实时更新。<br>还是刚才这个例子，用户刚刚购买了一个新的商品，那需要实时地去更新这个商品和所有该用户购买的其他商品之间的相似度，因为这些商品对应的共同购买用户数增加了，商品相似度就是一种推荐模型，所以它的改变影响的是全局推荐。</li>
+</ul>
+<h3 id="实时推荐"><a href="#实时推荐" class="headerlink" title="实时推荐"></a><strong>实时推荐</strong></h3><h4 id="1-架构概览"><a href="#1-架构概览" class="headerlink" title="1. 架构概览"></a><strong>1. 架构概览</strong></h4><p>按照前面的分析，一个处在第三层次的实时推荐，需要满足三个条件：</p>
+<blockquote>
+<ol>
+<li>数据实时进来</li>
+<li>数据实时计算</li>
+<li>结果实时更新</li>
+</ol>
+</blockquote>
+<p>一个基本的实时推荐框图:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%AE%9E%E6%96%BD%E6%8E%A8%E8%8D%90%E6%A1%86%E6%9E%B6.jpg" alt="实时推荐框架.jpg"></p>
+<p>前端服务负责和用户之间直接交互，不论是采集用户行为数据，还是给出推荐服务返回结果。用户行为数据经过实时的消息队列发布，然后由一个流计算平台消费这些实时数据，一方面清洗后直接入库，另一方面就是参与到实时推荐中，并将实时计算的结果更新到推荐数据库，供推荐服务实时使用。</p>
+<h3 id="2-实时数据"><a href="#2-实时数据" class="headerlink" title="2. 实时数据"></a><strong>2. 实时数据</strong></h3><p>实时流数据的接入，在上一篇专栏中已经讲到过，需要一个实时的消息队列，开源解决方案Kafka 已经是非常成熟的选项。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka.jpg" alt="kafka.jpg"></p>
+<p>Kafka 以生产者消费者的模式吞吐数据，这些数据以主题的方式组织在一起，每一个主题的数据会被分为多块，消费者各自去消费，互不影响，Kafka 也不会因为某个消费者消费了而删除数据。</p>
+<p>每一个消费者各自保存状态信息：所消费数据在 Kafka 某个主题某个分块下的偏移位置。也因此任意时刻、任意消费者，只要自己愿意，可以从 Kafka 任意位置开始消费数据，一遍消费，对应的偏移量顺序往前移动。示意图如下:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka%E5%81%8F%E7%A7%BB%E9%87%8F.jpg" alt="kafka偏移量.jpg"></p>
+<p>一个生产者可以看做一个数据源，生产者决定数据源放进哪个主题中，甚至通过一些算法决定数据如何落进哪个分块里。示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/kafka%E6%95%B0%E6%8D%AE%E6%BA%90.jpg" alt="kafka数据源.jpg"></p>
+<p>因此，Kafka 的生产者和消费者在自己的项目中实现时都非常简单，就是往某个主题写数据，以及从某个主题读数据。</p>
+<h4 id="3-流计算"><a href="#3-流计算" class="headerlink" title="3. 流计算"></a><strong>3. 流计算</strong></h4><p>整个实时推荐建立在流计算平台上。常见的流计算平台有 Twitter 开源的 Storm，“Yahoo！”开源的 S4，还有 Spark 中的 Streaming。<br>Storm 使用者越来越多，社区越来越繁荣，并且相比 Streaming 的 MiniBatch 模式，Storm 才是真正的流计算。另新的流计算框架 FLink 表现强劲，高吞吐低延迟，也很不错。</p>
+<p>Storm 是一个流计算框架，它有以下几个元素。</p>
+<blockquote>
+<ol>
+<li>Spout，意思是喷嘴，水龙头，接入一个数据流，然后以喷嘴的形式把数据喷洒出去。</li>
+<li>Bolt，意思是螺栓，像是两段水管的连接处，两端可以接入喷嘴，也可以接入另一个螺栓，数据流就进入了下一个处理环节。</li>
+<li>Tuple，意思是元组，就是流在水管中的水。</li>
+<li>Topology，意思是拓扑结构，螺栓和喷嘴，以及之间的数据水管，一起组成了一个有向无环图，这就是一个拓扑结构。</li>
+</ol>
+</blockquote>
+<p><strong>注意，Storm 规定了这些基本的元素，也是你在 Storm 平台上编程时需要实现的，但不用关心水管在哪，水管由 Storm 提供，你只用实现自己需要的水龙头和水管连接的螺栓即可。</strong></p>
+<p>因此，其编程模型也非常简单。举一个简单的例子，看看如何用 Storm 实现流计算？假如有一个字符串构成的数据流，这个数据流恰好也是 Kafka 中的一个主题，正在源源不断地在接入。要用 Storm 实现一个流计算统计每一个字符的频率。你首先需要实现一个 Spout，也就是给数据流加装一个水龙头，这个水龙头那一端就是一个 Kafka 的消费者，从 Kafka 中不断取出字符串数据，这头就喷出来，然后再实现 Bolt，也就是螺栓。当有字符串数据流进来时，把他们拆成不同的字符，并以（字符，1）这样的方式变成新的数据流发射出去，    后就是去把相同字符的数据流聚合起来，相加就得到了字符的频率。</p>
+<p>实际上，如果你知道 MapReduce 过程的话，你会发现虽然 Storm 重新取了名字，仍然可以按照 MapReduce 来理解。 Storm 的模型示意如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/storm%E6%A8%A1%E5%9E%8B.jpg" alt="storm.jpg"></p>
+<p>Storm 中要运行实时推荐系统的所有计算和统计任务，比如有下面几种：</p>
+<blockquote>
+<ol>
+<li>清洗数据；</li>
+<li>合并用户的历史行为；</li>
+<li>重新更新物品相似度；</li>
+<li>在线更新机器学习模型；</li>
+<li>更新推荐结果。</li>
+</ol>
+</blockquote>
+<h4 id="4-算法实时化"><a href="#4-算法实时化" class="headerlink" title="4. 算法实时化"></a><strong>4. 算法实时化</strong></h4><p>我在前面的文章里面，已经介绍过基于物品的协同过滤原理。下面我以基于物品的协同过滤算法为主线，来讲解一下如何实现实时推荐，其他算法你可以举一反三改造。主要是两个计算，第一个是计算物品之间的相似度。</p>
+<script type="math/tex; mode=display">sim(i,j) = \frac{co_users(item_i,item_j)}{\sqrt{count_users(item_i)}\sqrt{count_users(item_j)}}</script><p>计算了物品和物品之间的相似度之后，用另一个公式来计算推荐分数：</p>
+<script type="math/tex; mode=display">rec(u,i)=\frac{\sum_{j \in N_i}sim(i,j)r_{uj}}{\sum_{j \in N_i} sim(i,j)}</script><p>要做到前面说的第三层次实时推荐，首先就是要做到增量更新物品之间的相似度。相似度计算分成三部分：</p>
+<blockquote>
+<ol>
+<li>分子上的“物品对”，共同评分用户数；</li>
+<li>分母上左边是物品 i 的评价用户数；</li>
+<li>分母上右边是物品 j 的评价用户数。</li>
+</ol>
+</blockquote>
+<p>所以更新计算相似度就要更新三部分，实际上一种相似度增量更新策略是在收到一条用户评分事件数据时，然后取出这个用户的历史评分物品列表，因为所有的历史评分物品现在和这个新评分物品之间，就要增加一个共同评分了。</p>
+<p>并且，这个新物品本身，也要给自己一个评分用户数。更新完三个后，就实时更新所有这些“物品对”的相似度了。转换成 Storm 的编程模型，你需要实现：</p>
+<blockquote>
+<ol>
+<li>Spout：消费实时消息队列中的用户评分事件数据，并发射成（UserID , ItemID_i）这样的Tuple;</li>
+<li>Bolt1：接的是源头 Spout，输入了 UserID 和 ItemID_i，读出用户历史评分 Item 列表， 遍历这些 ItemID_j，逐一发射成 ((Item_i, Item_j), 1) 和 ((Item_j, Item_i), 1)，并将 Item_i 加进历史评分列表中；</li>
+<li>Bolt2：接的是源头 Spout，输入了 UserID 和 ItemID_i，发射成 (ItemID_i, 1)；</li>
+<li>Bolt3：接 Bolt1，更新相似度所需的分子</li>
+<li>Bolt4：接 Bolt2，更新物品自己的评分用户数把这个过程表示成公式就是：<script type="math/tex; mode=display">sim(i,j) = \frac{co_users(item_i,item_j)+\Delta co_users}{\sqrt{count_users(item_i) +\Delta count_users(i)}\sqrt{count_users(item_j) + \Delta count_users(j)}}</script></li>
+</ol>
+</blockquote>
+<p>另外，还有实时更新推荐结果，也是作为 Storm 的一个 Bolt 存在，接到用户行为数据，重新更新推荐结果，写回推荐结果数据中。</p>
+<h4 id="5-效率提升"><a href="#5-效率提升" class="headerlink" title="5. 效率提升"></a><strong>5. 效率提升</strong></h4><p>上面展示了一个基于物品的协同过滤算法在实时推荐中的计算过程，那么随之而来的一些问题也需要解决。比如当用户历史行为数据有很多时，或者物品对是热门物品时，相似度实时更新就有些挑战了。对此可以有如下应对办法：剪枝，加窗，采样，缓存。</p>
+<p>所谓剪枝就是，并不是需要对每一个“物品对”都做增量计算。两个物品之间的相似度，每更新一次得到的新相似度，可以看成一个随机变量，那么这个随机变量就有一个期望值，一旦物品之间的相似度可以以较高的置信度确认，它已经在期望值附近小幅度波动了，也就没必要再去更新了。</p>
+<p>甚至如果进一步确定是一个比较小的相似度，或者可以直接干掉这个物品对，不被更新，也不参与计算。那么问题就来了，怎么确定什么时候可以不再更新这个物品对的相似度了呢？这时候要用到一个不等式：Hoeffding 不等式。</p>
+<p>Hoeffding 不等式适用于有界的随机变量。相似度明显是有界的，最大值是 1，最小值是 0。所以可以用这个不等式，Hoeffding 不等式是这样一个统计法则：<strong>随机变量的真实期望值不会超过$\hat x + \epsilon$ 的概率是概率$1-\delta$</strong>，其中 的值是这样算的：</p>
+<script type="math/tex; mode=display">\epsilon = \sqrt{\frac{ln(\frac{1}{\delta})}{2n}}</script><p>公式中： 是历次更新得到的相似度平均值，n 是更新过的次数。这样一来，你选定$\delta$和$\epsilon$之后就知道更新多少次之后就可以放心大胆地使用了。</p>
+<p>举例：这里设置$\delta = 0.05$</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">与真实相似度误差</th>
+<th style="text-align:center">最少更新次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.1</td>
+<td style="text-align:center">150</td>
+</tr>
+<tr>
+<td style="text-align:center">0.05</td>
+<td style="text-align:center">600</td>
+</tr>
+<tr>
+<td style="text-align:center">0.01</td>
+<td style="text-align:center">14979</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>也就是在前面讲到的更新相似度的 Bolt 中，如果发现一个物品对的更新次数已经达到最少更新次数，则可以不再更新，并且，如果此时相似度小于设定阈值，就可以斩钉截铁地说：这两个物品不相似，以后不用再参与推荐计算了。</p>
+<p>这就是一项基于统计的剪枝方法，除此之外还有<strong>加窗、采样、合并三种常规办法。</strong></p>
+<ul>
+<li>首先，关于加窗。用户的兴趣会衰减，请你不要怀疑这一点，因为这是这篇文章的基本假设和出发点。用户兴趣衰减，那么一个直接的推论就是，比较久远的用户历史行为数据所起的作用应该小一些。所以，另一个剪枝技术就是：滑窗。设定一个时间窗口，时间窗口内的历史行为数据参与实时计算，窗口外的不再参与实时计算。<blockquote>
+<p>这个窗口有两种办法：</p>
+</blockquote>
+</li>
+</ul>
+<ol>
+<li>近 K 次会话。用户如果反复来访问产品，每次访问是一次会话，那么实时计算时只保留近 K 次会话信息。</li>
+<li>近 K 条行为记录。不管访问多少次，只保留最近 K 条历史行为事件，参与到实时推荐中。<br><strong>两种滑窗方法都可以有效保证实时计算的效率，同时不会明显降低推荐效果。</strong></li>
+</ol>
+<ul>
+<li><p>关于采样。当你的推荐系统遇到热门的物品或者异常活跃的用户，或者有时候就只是突然一个热点爆发了。</p>
+<blockquote>
+<p>它们会在短时间产生大量的数据，除了前面的剪枝方法，还可以对这种短时间大量出现的数据采样，采样手段有很多，可以均匀采样，也可以加权采样，这在前面的专栏里已经详细介绍过方法。</p>
+</blockquote>
+</li>
+<li><p>关于合并计算。在前面介绍的增量计算中，是假设收到每一个用户行为事件时都要去更新相似度和推荐结果，如果在突然大量涌入行为数据时，可以不必每一条来了都去更新，而是可以在数据流的上游做一定的合并。</p>
+<blockquote>
+<p>相似度计算公式的分子分母两部分都可以这样做，等合并若干事件数据之后，再送入下游去更新<br>相似度和推荐结果。</p>
+</blockquote>
+</li>
+</ul>
+<p>最后，提高实时推荐的效率，甚至不只是推荐系统，在任何互联网应用的后端，缓存都是提高效<br>率必不可少的部分。可以根据实际情况，对于高频访问的物品或者用户增加缓存，</p>
+<blockquote>
+<p>这可能包括：</p>
+<ol>
+<li>活跃用户的历史行为数据；</li>
+<li>热门物品的特征数据；</li>
+<li>热门物品的相似物品列表。</li>
+</ol>
+</blockquote>
+<p>缓存系统一般采用 Memcached 或者 Redis 集群。缓存有个问题就是，数据的一致性可能比较<br>难保证，毕竟它和真正的业务数据库之间要保持时时刻刻同步也是一项挑战。</p>
+<hr>
+<h2 id="30-【关键模块】让数据驱动落地，你需要一个实验平台"><a href="#30-【关键模块】让数据驱动落地，你需要一个实验平台" class="headerlink" title="30.【关键模块】让数据驱动落地，你需要一个实验平台"></a>30.【关键模块】让数据驱动落地，你需要一个实验平台</h2><h3 id="数据驱动和实验平台"><a href="#数据驱动和实验平台" class="headerlink" title="数据驱动和实验平台"></a><strong>数据驱动和实验平台</strong></h3><p>要做到数据驱动，就要做到两点：第一点是数据，第二点是驱动。要做到驱动，需要一个 AB 实验平台。数据驱动的重点是做对比实验，通过对比，让模型、策略、设计等不同创意和智慧结晶新陈代谢，不断迭代更新。对比实验也常常被大家叫做 ABTest。</p>
+<blockquote>
+<p>要讨论实验平台，先要认识实验本身。互联网实验，需要三个要素。</p>
+<ol>
+<li>流量：流量就是用户的访问，也是实验的样本来源。</li>
+<li>参数：参数就是各种组合，也是用户访问后，从触发互联网产品这个大函数，到最后返回结果给用户，中间所走的路径。</li>
+<li>结果：实验的全过程都有日志记录，通过这些日志才能分析出实验结果，是否成功，是否显著。</li>
+</ol>
+</blockquote>
+<p>实验要观察的结果就是一个随机变量，这个变量有一个期望值，要积累很多样本才能说观察到的实验结果比较接近期望值了，或者要观察一定时期才能说对照实验之间有区别或者没区别。因为只有明显有区别并且区别项好，才能被进一步推上全线。</p>
+<p>在设计一个实验之初，实验设计人员总是需要考虑下面这些问题。</p>
+<blockquote>
+<ol>
+<li>实验的起止时间。这涉及到样本的数量，关系到统计效果的显著性，也涉及能否取出时间因素的影响。</li>
+<li>实验的流量大小。这也涉及了样本的数量，关系到统计效果的显著性。</li>
+<li>流量的分配方式。每一个流量在为其选择参数分支时，希望是不带任何偏见的，也就是均匀采样，通常按照 UUID 或者 Cookie 随机取样。</li>
+<li>流量的分配条件。还有一些实验需要针对某个流量的子集，例如只对重庆地区的用户测试，推荐时要不要把火锅做额外的提升加权。</li>
+<li>流量如何无偏置。这是流量分配最大的问题，也是最难的问题。<br>同时只做一个实验时，这个问题不明显，但是要同时做多个实验，那么如何避免前面的实验给后面的实验带来影响，这个影响就是流量偏置，意思是在前面实验的流量分配中，有一种潜在的因素在影响流量分配，这个潜在的因素不易被人察觉，潜在的因素如果会影响实验结果，那么处在这个实验后面获得流量的实验，就很难得到客观的结论。</li>
+</ol>
+</blockquote>
+<p>Google 公司的实验平台已经成为行业争相学习的对象，所以今天我会以 Google 的实验平台为主要对象，深入浅出地介绍一个重叠实验平台的方方面面。</p>
+<h3 id="重叠实验架构"><a href="#重叠实验架构" class="headerlink" title="重叠实验架构"></a><strong>重叠实验架构</strong></h3><p>所谓重叠实验，就是一个流量从进入产品服务，到最后返回结果呈现给用户，中间设置了好几个检查站，每个检查站都在测试某些东西，这样同时做多组实验就是重叠实验。</p>
+<p>面说了，重叠实验最大的问题是怎么避免流量偏置。为此，需要引入三个概念。</p>
+<blockquote>
+<ol>
+<li>域：是流量的一个大的划分，最上层的流量进来时首先是划分域。</li>
+<li>层：是系统参数的一个子集，一层实验是对一个参数子集的测试。</li>
+<li>桶：实验组和对照组就在这些桶中。</li>
+</ol>
+</blockquote>
+<p>层和域可以互相嵌套。意思是对流量划分，例如划分出 50%，这 50% 的流量是一个域，这个域里面有多个实验层，每一个实验层里面还可以继续嵌套域，也就是可以进步划分这 50% 的流量。下面这两个图示意了有域划分和没有域划分的两种情况：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%AE%9E%E9%AA%8C%E5%9F%9F%E5%88%92%E5%88%86.jpg" alt="实验域的划分.jpg"></p>
+<p>图中左边是一个三层实验，但是并没有没有划分域。第一层实验要测试 UI 相关，第二层要测试推荐结果，第三层要测试在推荐结果插入广告的结果。</p>
+<p>三层互不影响。图中的右边则添加了域划分，也就是不再是全部流量都参与实验中，而是被分走了一部分到左边域中。剩下的流量和左边的实验一样。</p>
+<p>这里要理解一点，为什么多层实验能做到重叠而不带来流量偏置呢？<br>这就需要说桶的概念。还是上面示意图中的左图，假如这个实验平台每一层都是均匀随机分成 5 个桶，在实际的实验平台上，可能是上千个桶，这里只是为了举例。示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B5%81%E9%87%8F%E5%81%8F%E7%BD%AE.jpg" alt="流量偏置.jpg"></p>
+<p>这是一个划分域的三层实验。每一层分成 5 个桶，一个流量来了，在第一层，有统一的随机分流算法，将 Cookie 或者 UUID 加上第一层 ID，均匀散列成一个整数，再把这个整数对 5 取模，于是一个流量就随机地进入了 5 个桶之一。</p>
+<p>每一个桶均匀得到 20% 的流量。每一个桶里面已经决定好了为你展示什么样的 UI，流量继续往下走。每一个桶的流量接着依然面对随机进入下一层实验的 5 个桶之一，原来每个桶的 20% 流量都被均分成 5 份，每个桶都有 4% 的流量进入到第二层的每个桶。</p>
+<p>这样一来，第二层每个桶实际上得到的依然是总流量的 20%，而且上一层实验带来的影响被均匀地分散在了这一层的每一个桶中，也就是可以认为上一层实验对这一层没有影响。同样的，第三层实验也是这样。</p>
+<p>关于分层实验，有几点需要注意：</p>
+<blockquote>
+<ol>
+<li>每一层分桶时，不是只对 Cookie 或者 UUID 散列取模，而是加上了层 ID，是为了让层和层之间分桶相互独立；</li>
+<li>Cookie 或者 UUID 散列成整数时，考虑用均匀的散列算法，如 MD5。</li>
+<li>取模要一致，为了用户体验，虽然是分桶实验，但是同一个用户在同一个位置每次感受不一致，会有损用户体验。</li>
+</ol>
+</blockquote>
+<p>Google 的重叠实验架构还有一个特殊的实验层，叫做发布层，优先于所有其他的实验层，它拥有全部流量。这个层中的实验，通常是已经通过了 ABtest 准备全量发布了。示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%90%AB%E5%8F%91%E5%B8%83%E5%B1%82%E7%9A%84%E9%87%8D%E5%8F%A0%E5%AE%9E%E9%AA%8C%E6%9E%B6%E6%9E%84.jpg" alt="含发布层的重叠实验架构.jpg"></p>
+<p>前面举例所说的对用户身份 ID 做散列的流量分配方式，只是其中一种，还有三种流量分配方式，一共四种：</p>
+<blockquote>
+<ol>
+<li>Cookie+ 层 ID 取模；</li>
+<li>完全随机；</li>
+<li>用户 ID+ 层 ID 取模；</li>
+<li>Cookie+ 日期取模。</li>
+</ol>
+</blockquote>
+<p>在实验中，得到流量后还可以增加流量条件，比如按照流量地域，决定要不要对其实验，如果不符合条件，则这个流量不会再参与后面的实验，这样避免引入偏置，那么这个流量会被回收，也就是使用默认参数返回结果。</p>
+<p>在 Google 的架构中，由于层和域还可以嵌套，所以在进入某个层时，可能会遇到一个嵌套域，这时候需要按照域划分方式继续下沉，直到遇到实验或者被作为回收流量返回。整个实验平台，工作的示意图如下所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/google%E5%AE%9E%E9%AA%8C%E5%B9%B3%E5%8F%B0.jpg" alt="google实验平台.jpg"></p>
+<p>说明如下：</p>
+<blockquote>
+<ol>
+<li>图中涉及了判断的地方，虚线表示判断为假，实线表示判断为真。</li>
+<li>从最顶端开始，不断遍历域、层、桶，最终输出一个队列 Re，其中记录对每一个系统参数子集如何处理，取实验配置的参数还是使用默认参数，其中无偏流量表示使用默认参数，也就是在那一层不参与实验，流量被回收。</li>
+<li>拿到 Re 就得到了全部的实验，在去调用对应的服务。</li>
+</ol>
+</blockquote>
+<h3 id="统计效果"><a href="#统计效果" class="headerlink" title="统计效果"></a><strong>统计效果</strong></h3><p>除了分层实验平台之外，还存在另一个问题，每一个实验需要累计获得多少流量才能得到实验结论呢？这涉及了一点统计学知识。实验得到的流量不够，可以说实验的结论没有统计意义，也就浪费了这些流量，而实验在已经具有统计意义之后，如果还占用流量做测试，则也是在浪费流量。<br>如何确定实验规模呢？Google 给出了如下公式：</p>
+<script type="math/tex; mode=display">N>=10.5(\frac{s}{\theta})^2</script><p>公式中：</p>
+<ol>
+<li>$s$是实验指标的标准差。</li>
+<li>$\theta$是希望检测的敏感度，比如想检测到 2% 的 CTR 变化。<br>上面这个公式计算出来的实验规模，表示以 90% 的概率相信结果的显著性，也就是有 90% 的统计功效。如想改变此值，则可以查找对应的显著性水平对应的参数，修改10.5。</li>
+</ol>
+<h3 id="对比实验的弊端"><a href="#对比实验的弊端" class="headerlink" title="对比实验的弊端"></a><strong>对比实验的弊端</strong></h3><p>AB 测试实验平台，是产品要做到数据驱动必不可少的东西，但是这种流量划分的实验方式也有自己的弊端，列举如下：</p>
+<blockquote>
+<ol>
+<li>落入实验组的流量，在实验期间，可能要冒着一定的风险得到不好的用户体验，在实验结束之前，这部分流量以 100% 的概率面对这不确定性；</li>
+<li>要得得到较高统计功效的话，就需要较长时间的测试，如果急于看到结果全面上线来说有点不能接收；</li>
+<li>下线的实验组如果不被人想起，就不再有机会得到测试。</li>
+</ol>
+</blockquote>
+<p>诸如此类弊端，也可以考虑在实验平台中用 Bandit 算法替代流量划分的方式，通过 Bandit 算法选择不同的参数组合、策略，动态实时地根据用户表现给出选择策略，一定程度上可以避免上面列举的弊端。</p>
+<hr>
+<h2 id="31-【关键模块】-推荐系统服务化、存储选型及API设计"><a href="#31-【关键模块】-推荐系统服务化、存储选型及API设计" class="headerlink" title="31.【关键模块】 推荐系统服务化、存储选型及API设计"></a>31.【关键模块】 推荐系统服务化、存储选型及API设计</h2><h3 id="服务化是最后一步"><a href="#服务化是最后一步" class="headerlink" title="服务化是最后一步"></a><strong>服务化是最后一步</strong></h3><p>提供一个在线服务，需要两个关键元素：数据库和 API。</p>
+<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a><strong>存储</strong></h3><p>这里讲到的存储，专指近线或者在线部分所用的数据库，并不包括离线分析时所涉及的业务数据库或者日志数据库。推荐系统在离线阶段会得到一些关键结果，这些关键结果需要存进数据库，供近线阶段做实时和准实时的更新，最终会在在线阶段直接使用。</p>
+<p>首先来看一下，离线阶段会产生哪些数据。按照用途来分，归纳起来一共就有三类:</p>
+<blockquote>
+<ol>
+<li>特征。特征数据会是最多的，所谓用户画像，物品画像，这些都是特征数据，更新并不频繁。</li>
+<li>模型。尤其是机器学习模型，这类数据的特点是它们大都是键值对，更新比较频繁。</li>
+<li>结果。就是一些推荐方法在离线阶段批量计算出推荐结果后，供最后融合时召回使用。任何一个数据都可以直接做推荐结果，如协同过滤结果。</li>
+</ol>
+</blockquote>
+<p>如果把整个推荐系统笼统地看成一个大模型的话，它依赖的特征是由各种特征工程得到的，这些线下的特征工程和样本数据共同得到模型数据，这些模型在线上使用时，需要让线上的特征和线下的特征一致，因此需要把线下挖掘的特征放到线上去。</p>
+<p>特征数据有两种，一种是稀疏的，一种是稠密的，稀疏的特征常见就是文本类特征，用户标签之类的，稠密的特征则是各种隐因子模型的产出参数。</p>
+<p><strong>特征数据又常常要以两种形态存在：一种是正排，一种是倒排</strong>。正排就是以用户 ID 或者物品 ID 作为主键查询，倒排则是以特征作为主键查询。</p>
+<p>在需要拼凑出样本的特征向量时，如线下从日志中得到曝光和点击样本后，还需要把对应的用户 ID 和物品 ID 展开成各自的特征向量，再送入学习算法中得到最终模型，这个时候就需要正排了。另一种是在需要召回候选集时，如已知用户的个人标签，要用个人标签召回新闻，那么久就需要提前准备好标签对新闻的倒排索引。</p>
+<p>这两种形态的特征数据，需要用不同的数据库存储。正排需要用列式数据库存储，倒排索引需要用 KV 数据库存储。前者最典型的就是 HBase 和 Cassandra，后者就是 Redis 或 Memcached。</p>
+<p>另外，对于稠密特征向量，例如各种隐因子向量，Embedding 向量，可以考虑文件存储，采用内存映射的方式，会更加高效地读取和使用。</p>
+<p>模型数据也是一类重要的数据，模型数据又分为机器学习模型和非机器学习模型。机器学习模型与预测函数紧密相关。模型训练阶段，如果是超大规模的参数数量，业界一般采用分布式参数服务器，对于达到超大规模参数的场景在中小公司不常见，可以不用牛刀。而是采用更加灵活的 PMML 文件作为模型的存储方式，PMML 是一种模型文件协议，其中定义模型的参数和预测函数。</p>
+<p>非机器学习模型，则不太好定义，有一个非常典型的是相似度矩阵，物品相似度，用户相似度，在离线阶段通过用户行为协同矩阵计算得到的。相似度矩阵之所以算作模型，因为，它是用来对用户或者物品历史评分加权的，这些历史评分就是特征，所以相似度应该看做模型数据。</p>
+<p>最后，是预先计算出来的推荐结果，或者叫候选集，这类数据通常是 ID 类，召回方式是用户 ID 和策略算法名称。这种列表类的数据一般也是采用高效的 KV(Key-Value) 数据库存储，如 Redis。</p>
+<p>另外，还要介绍一个特殊的数据存储工具：ElasticSearch。这原本是一个构建在开源搜索引擎 Lucene 基础上的分布式搜索引擎，也常用于日志存储和分析，但由于它良好的接口设计，扩展性和尚可的性能，也常常被采用来做推荐系统的简单第一版，直接承担了存储和计算的任务。</p>
+<h4 id="1-列式数据库"><a href="#1-列式数据库" class="headerlink" title="1. 列式数据库"></a><strong>1. 列式数据库</strong></h4><p>所谓列式数据库，是和行式数据库相对应的，这里不讨论数据库的原理，但是可以有一个简单的比喻来理解这两种数据库。你把数据都想象成为矩阵，行是一条一条的记录，例如一个物品是一行，列是记录的各个字段，例如 ID 是一列，名称是一列，类似等等。</p>
+<p>当我们在说行和列的时候，其实是在大脑中有一个抽象的想象，把数据想象成了二维矩阵，但是实际上，数据在计算机中，管你是行式还是列式，都要以一个一维序列的方式存在内存里或者磁盘上。那么有意思的就来了，是按照列的方式把数据变成一维呢，还是按照行的方式把数据变成一维呢，这就是列式数据库和行式数据库的区别。当然实际上数据库比这复杂多了，这只是一个简单形象的说明，有助于你去理解数据的存储方式。</p>
+<p>列式数据库有个列族的概念，可以对应于关系型数据库中的表，还有一个键空间的概念，对应于关系型数据库中的数据库。<br>众所周知，列式数据库适合批量写入和批量查询，因此常常在推荐系统中有广泛应用。列式数据库当推 Cassandra 和 HBase，两者都受 Google 的 BigTable 影响，但区别是：Cassandra 是一个去中心化的分布式数据库，而 HBase 则是一个有 Master 节点的分布式存储。</p>
+<p>Cassandra 在数据库的 CAP 理论中可以平滑权衡，而 HBase 则是强一致性，并且 Cassandra 读写性能优于 HBase，因此 Cassandra 更适合推荐系统，毕竟推荐系统不是业务逻辑导向的，对强一致性要求不那么强烈。</p>
+<p>Cassandra 的数据模型组织形式如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/Cassandra.jpg" alt="Cassandra.jpg"></p>
+<h4 id="2-键值数据库"><a href="#2-键值数据库" class="headerlink" title="2. 键值数据库"></a><strong>2. 键值数据库</strong></h4><p>除了列式数据库外，还有一种存储模式，就是键值对内存数据库，这当然首推 Redis。Redis 你可以简单理解成是一个网络版的 HashMap，但是它存储的值类型比较丰富，有字符串、列表、有序列表、集合、二进制位。并且，Redis 的数据放在了内存中，所以都是闪电般的速度来读取。</p>
+<p>在推荐系统的以下场景中常常见到 Redis 的身影：</p>
+<blockquote>
+<ol>
+<li>消息队列，List 类型的存储可以满足这一需求；</li>
+<li>优先队列，比如兴趣排序后的信息流，或者相关物品，对此 sorted set 类型的存储可以满足这一需求；</li>
+<li>模型参数，这是典型的键值对来满足。</li>
+</ol>
+</blockquote>
+<p>另外，Redis 被人诟病的就是不太高可用，对此已经有一些集群方案，有官方的和非官方的，可以试着加强下 Redis 的高可用。</p>
+<h4 id="3-非数据库"><a href="#3-非数据库" class="headerlink" title="3. 非数据库"></a><strong>3. 非数据库</strong></h4><p>除了数据库外，在推荐系统中还会用到一些非主流但常用的存储方式。第一个就是虚拟内存映射，称为 MMAP，这可以看成是一个简陋版的数据库，其原理就是把磁盘上的文件映射到内存中，以解决数据太大不能读入内存，但又想随机读取的矛盾需求。比如你训练的词嵌入向量，或者隐因子模型，当特别大时，可以二进制存在文件中，然后采用虚拟内存映射方式读取。</p>
+<p>另外一个就是 PMML 文件，专门用于保存数据挖掘和部分机器学习模型参数及决策函数的。当模型参数还不足以称之为海量时，PMML 是一个很好的部署方法，可以让线上服务在做预测时并不依赖离线时的编程语言，以 PMML 协议保存离线训练结果就好。</p>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a><strong>API</strong></h3><p>除了存储，推荐系统作为一个服务，应该以良好的接口和上有服务之间交互，因此要设计良好的 API。<br><strong>API 有两大类，一类数据录入，另一类是推荐服务</strong>。数据录入 API，可以用于数据采集的埋点，或者其他数据录入。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">接口</th>
+<th style="text-align:center">用途</th>
+<th style="text-align:center">基本输入参数</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">/Users</td>
+<td style="text-align:center">录入用户信息</td>
+<td style="text-align:center">userid,attribute,value</td>
+<td style="text-align:center">可以接受任意多的属性和值</td>
+</tr>
+<tr>
+<td style="text-align:center">/Item</td>
+<td style="text-align:center">录入物品信息</td>
+<td style="text-align:center">itemid,attribute,value</td>
+<td style="text-align:center">和用户接口类似</td>
+</tr>
+<tr>
+<td style="text-align:center">/Relation</td>
+<td style="text-align:center">录入一个关系数据</td>
+<td style="text-align:center">from,to,weight</td>
+<td style="text-align:center">参考关系数据的存储模型</td>
+</tr>
+<tr>
+<td style="text-align:center">/Event</td>
+<td style="text-align:center">录入事件</td>
+<td style="text-align:center">userid,itemid,eventname,timestamp</td>
+<td style="text-align:center">参考时间数据的存储模型</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>推荐服务的 API 按照推荐场景来设计，则是一种比较常见的方式。</p>
+<h4 id="1-猜你喜欢接口："><a href="#1-猜你喜欢接口：" class="headerlink" title="1. 猜你喜欢接口："></a><strong>1. 猜你喜欢接口：</strong></h4><p>/Recommend 输入：</p>
+<ul>
+<li>UserID – 个性化推荐的前提 </li>
+<li>PageID – 推荐的页面 ID，关系到一些业务策略 </li>
+<li>FromPage – 从什么页面来 </li>
+<li>PositionID – 页面中的推荐位 ID </li>
+<li>Size – 请求的推荐数量 </li>
+<li>Offset – 偏移量，这是用于翻页的<br>输出：</li>
+<li>Items – 推荐列表，通常是数组形式，每一个物品除了有 ID，还有展示所需的各类元素 </li>
+<li>Recommend_id – 唯一 ID 标识每一次调用，也叫做曝光 ID，标识每一次曝光，用于推荐后追踪推荐效果的，很重要 </li>
+<li>Size – 本次推荐数量 </li>
+<li>Page —— 用于翻页的</li>
+</ul>
+<h4 id="2-相关推荐接口："><a href="#2-相关推荐接口：" class="headerlink" title="2. 相关推荐接口："></a><strong>2. 相关推荐接口：</strong></h4><p>/Relative 输入：</p>
+<ul>
+<li>UserID – 个性化推荐的前提 </li>
+<li>PageID – 推荐的页面 ID，关系到一些业务策略 </li>
+<li>FromPage – 从什么页面来 </li>
+<li>PositionID – 页面中的推荐位 ID </li>
+<li>ItemID – 需要知道正在浏览哪个物品导致推荐相关物品 </li>
+<li>Size – 请求的推荐数量 </li>
+<li>Offset – 偏移量，这是用于翻页的输出：</li>
+<li>Items – 推荐列表，通常是数组形式，每一个物品除了有 ID，还有展示所需的各类元素 </li>
+<li>Recommend_ID – 唯一 ID 标识每一次调用，也叫做曝光 ID，标识每一次曝光，用于推荐后追踪推荐效果的，很重要 </li>
+<li>Size – 本次推荐数量 </li>
+<li>Page —— 用于翻页的</li>
+</ul>
+<h4 id="3-热门排行榜接口："><a href="#3-热门排行榜接口：" class="headerlink" title="3. 热门排行榜接口："></a><strong>3. 热门排行榜接口：</strong></h4><p>/Relative 输入：</p>
+<ul>
+<li>UserID – 个性化推荐的前提 </li>
+<li>PageID – 推荐的页面 ID，关系到一些业务策略 </li>
+<li>FromPage – 从什么页面来 </li>
+<li>PositionID – 页面中的推荐位 ID </li>
+<li>Size – 请求的推荐数量 </li>
+<li>Offset – 偏移量，这是用于翻页的输出：</li>
+<li>Items – 推荐列表，通常是数组形式，每一个物品除了有 ID，还有展示所需的各类元素 </li>
+<li>Recommend_id – 唯一 ID 标识每一次调用，也叫做曝光 ID，标识每一次曝光，用于推荐后追踪推荐效果的，很重要 </li>
+<li>Size – 本次推荐的数量  * Page —— 用于翻页的</li>
+</ul>
+<p>相信你看到了吧，实际上这些接口都很类似。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97.jpg" alt="关键模块.jpg"></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/6ea3699c.html">推荐系统三十六式--学习笔记（28-31 关键模块）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/6ea3699c.html" title="推荐系统三十六式--学习笔记（28-31 关键模块）">https://www.xiemingzhao.com/posts/6ea3699c.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/6ea3699c.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/9d49d40e.html" rel="next" title="推荐系统三十六式--学习笔记（25-27 常见架构）">
+                <i class="fa fa-chevron-left"></i> 推荐系统三十六式--学习笔记（25-27 常见架构）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/57e6146c.html" rel="prev" title="推荐系统三十六式--学习笔记（32-34 效果保证-开源工具）">
+                推荐系统三十六式--学习笔记（32-34 效果保证-开源工具） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#28-%E3%80%90%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97%E3%80%91%E5%B7%A7%E5%A6%87%E9%9A%BE%E4%B8%BA%E6%97%A0%E7%B1%B3%E4%B9%8B%E7%82%8A%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E5%85%B3%E9%94%AE%E8%A6%81%E7%B4%A0"><span class="nav-number">1.</span> <span class="nav-text">28.【关键模块】巧妇难为无米之炊：数据采集关键要素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%92%8C%E6%95%B0%E6%8D%AE"><span class="nav-number">1.1.</span> <span class="nav-text">日志和数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="nav-number">1.2.</span> <span class="nav-text">数据采集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 数据模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%95%B0%E6%8D%AE%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 数据在哪？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%85%83%E7%B4%A0%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 元素有哪些？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%80%8E%E4%B9%88%E6%94%B6%E9%9B%86%EF%BC%9F"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. 怎么收集？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E8%B4%A8%E9%87%8F%E6%A3%80%E9%AA%8C"><span class="nav-number">1.2.5.</span> <span class="nav-text">5. 质量检验</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#29-%E3%80%90%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97%E3%80%91%E8%AE%A9%E4%BD%A0%E7%9A%84%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%8F%8D%E5%BA%94%E6%9B%B4%E5%BF%AB%EF%BC%9A%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90"><span class="nav-number">2.</span> <span class="nav-text">29.【关键模块】让你的推荐系统反应更快：实时推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AE%9E%E6%97%B6"><span class="nav-number">2.1.</span> <span class="nav-text">为什么要实时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%97%B6%E6%8E%A8%E8%8D%90"><span class="nav-number">2.2.</span> <span class="nav-text">实时推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 架构概览</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.</span> <span class="nav-text">2. 实时数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%B5%81%E8%AE%A1%E7%AE%97"><span class="nav-number">2.3.1.</span> <span class="nav-text">3. 流计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%AE%97%E6%B3%95%E5%AE%9E%E6%97%B6%E5%8C%96"><span class="nav-number">2.3.2.</span> <span class="nav-text">4. 算法实时化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%95%88%E7%8E%87%E6%8F%90%E5%8D%87"><span class="nav-number">2.3.3.</span> <span class="nav-text">5. 效率提升</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#30-%E3%80%90%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97%E3%80%91%E8%AE%A9%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E8%90%BD%E5%9C%B0%EF%BC%8C%E4%BD%A0%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E5%AE%9E%E9%AA%8C%E5%B9%B3%E5%8F%B0"><span class="nav-number">3.</span> <span class="nav-text">30.【关键模块】让数据驱动落地，你需要一个实验平台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E5%92%8C%E5%AE%9E%E9%AA%8C%E5%B9%B3%E5%8F%B0"><span class="nav-number">3.1.</span> <span class="nav-text">数据驱动和实验平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%8F%A0%E5%AE%9E%E9%AA%8C%E6%9E%B6%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">重叠实验架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E6%95%88%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">统计效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C%E7%9A%84%E5%BC%8A%E7%AB%AF"><span class="nav-number">3.4.</span> <span class="nav-text">对比实验的弊端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#31-%E3%80%90%E5%85%B3%E9%94%AE%E6%A8%A1%E5%9D%97%E3%80%91-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%8C%96%E3%80%81%E5%AD%98%E5%82%A8%E9%80%89%E5%9E%8B%E5%8F%8AAPI%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.</span> <span class="nav-text">31.【关键模块】 推荐系统服务化、存储选型及API设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8C%96%E6%98%AF%E6%9C%80%E5%90%8E%E4%B8%80%E6%AD%A5"><span class="nav-number">4.1.</span> <span class="nav-text">服务化是最后一步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8"><span class="nav-number">4.2.</span> <span class="nav-text">存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%88%97%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.2.1.</span> <span class="nav-text">1. 列式数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%94%AE%E5%80%BC%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.2.2.</span> <span class="nav-text">2. 键值数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%9D%9E%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.2.3.</span> <span class="nav-text">3. 非数据库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API"><span class="nav-number">4.3.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%8C%9C%E4%BD%A0%E5%96%9C%E6%AC%A2%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="nav-number">4.3.1.</span> <span class="nav-text">1. 猜你喜欢接口：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="nav-number">4.3.2.</span> <span class="nav-text">2. 相关推荐接口：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%83%AD%E9%97%A8%E6%8E%92%E8%A1%8C%E6%A6%9C%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="nav-number">4.3.3.</span> <span class="nav-text">3. 热门排行榜接口：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

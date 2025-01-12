@@ -1,37 +1,1145 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,推荐系统,CF," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/3c1887e0.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG">
+<meta property="article:published_time" content="2019-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.650Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="推荐系统">
+<meta property="article:tag" content="CF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/3c1887e0.html"/>
+
+
+
+
+
+  <title>Amazon.com Recommendations Item-to-item collaborative filtering (论文解析) | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/3c1887e0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/3c1887e0.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/3c1887e0.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf">原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering</a></p>
+<h2 id="亚马逊推荐：物到物的协同过滤"><a href="#亚马逊推荐：物到物的协同过滤" class="headerlink" title="亚马逊推荐：物到物的协同过滤"></a>亚马逊推荐：物到物的协同过滤</h2><p>推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术。</p>
+<p>在Amazon.com，我们使用推荐算法为每个客户个性化在线商店。商店根据客户的兴趣从根本上改变，达到给软件工程师显示编程主题和给一位新妈妈展示婴儿玩具。点击率和转化率这两个基于Web和电子邮件的重要测算结果显示了其二者上的广告效果要远远超过横幅广告等非目标内容和畅销书清单。</p>
+<p>电子商务推荐算法经常在不断变化的环境中运行。例如：</p>
+<span id="more"></span>
+<ul>
+<li>一个大的零售商一般会有大量的数据。数以千万计的客户和百万级的不同品类的商品。</li>
+<li>许多应用就需要推荐的结果可以实时返回，不能超过半秒，同时还要保证一定的高质量推荐。</li>
+<li>新用户是基于其仅有的一些购买和产品评分导致拥有极其有限信息的典型案例。</li>
+<li>老用户由于有大量的购买和评分数据使得其拥有大量的信息。</li>
+<li>用户数据是不稳定的：每一次交互都会产生有价值的用户数据，算法必须及时的根据新信息做出反馈。</li>
+</ul>
+<p>一般有三种方法来解决推荐问题：传统的协同过滤，聚类模型，基于搜索的方法。这里，我们用这些方法和我们的算法进行比较，我们的算法称为物到物的协同过滤。不像传统的协同过滤，我们算法的在线大规模计算能力不收用户量和产品量以及产品类别的影响。我们的算法可以实时的生成推荐，并且可以大规模地处理数据集，同时能够生成高质量的推荐。</p>
+<h2 id="推荐算法"><a href="#推荐算法" class="headerlink" title="推荐算法"></a>推荐算法</h2><p>大多数的推荐算法开始都是找一群购买以及评论的产品和推荐目标用户购买过以及评论过的产品有交集的用户。然后从这些相似的用户中聚合出来这些物品，再去除他们已经购买和评论过的物品。这些算法里两个比较流行的版本是协同过滤和聚类模型。其他的算法-包括基于搜索的方法以及我们的物到物的协同过滤，都是集中于找到相似的物品而不是相似的用户。对于每个用户购买和评论过的商品来说，算法尝试去找到相似的物品。然后它聚合出这些相似的物品并推荐它们。</p>
+<h2 id="传统的协同过滤"><a href="#传统的协同过滤" class="headerlink" title="传统的协同过滤"></a>传统的协同过滤</h2><p>一个传统的协同过滤算法将一个用户表示成一个N维的物品向量，N是不用品类的物品数。向量中的元素正的代表用户购买过或者正向评分过的物品，负的代表负向评分的物品。为了补偿那些畅销的产品，该算法通常将用户向量乘以逆频率（对物品有购买或者评分行为的用户数量），使得较不为人知的物品更具有相关性。对于大多数用户来说，这个向量极度稀疏。</p>
+<p>算法基于和目标用户极为相似的一小部分用户产生推荐。有各种各样的方法计算A和B两个用户之间的相似度，普遍采取的方法是两个用户向量之间的cosine角度：</p>
+<script type="math/tex; mode=display">similarity(\vec{A},\vec{B})=\cos(\vec{A},\vec{B})=\frac{\vec{A} \bullet \vec{B}}{||\vec{A}|| \ast ||\vec{B}||}</script><p>从相似用户的物品中选择推荐物品的算法也有很多，一种通用的方法是按照物品被相似用户购买的数量排序。</p>
+<p>使用协同过滤产生推荐计算花费大。最坏的复杂度是O(MN)，其中M是用户数N是产品数，因为对于每个目标用户测试了M个用户以及产品数的上限N。然而，由于用户购买行为的稀疏性，算法最终的花费接近于o(M+N)，因为大部分用户的向量只包含很小数量的物品，不论产品类目有多少。但是有一小部分用户购买和评论了大量的物品质的计算花费时间接近o(N)。因此，算法最终的花费大约为o(M+N)。甚至因此，对于非常大的数据集-例如1000万或更多客户和100万或更多类目产品-算法遇到严重的性能和扩展问题。</p>
+<p>可以通过减小数据规模部分解决计算花费问题。我们可以通过随机抽样客户或丢弃购买少的客户减少M，通过丢弃非常受欢迎或不受欢迎的项目减少N。也可以基于产品类别或主题分类的空间通过分割项目的一个小的、恒定的因素来减少检查的项目数量。降维等技术作为聚类和主成分分析可以大幅减少M或N。</p>
+<p>不幸的是，所有减小数据规模的方法都会降低推荐质量。首先，如果算法近检测一小部分用户样本，那么这些被选中的用户就不会与目标用户那么的相似。第二，品类空间的划分限制了特定产品和主题领域的推荐。第三，如果算法丢弃了最受欢迎或者最不受欢迎的物品，那么它们经永远不会出现在推荐之中，并且仅购买这些物品的客户也得不到这些推荐。将为技术应用于物品空间往往会起到消除低频品类物品的类似效应。降维技术类似于用户分组有效地应用于用户空间，就如我们现在所描述的，这样的聚类也可以降维推荐质量。</p>
+<h2 id="聚类模型"><a href="#聚类模型" class="headerlink" title="聚类模型"></a>聚类模型</h2><p>为了找到那些与目标用户相似的客户，聚类模型将用户分为很多segments，将寻找目标用户相似用户的任务视为一个分类任务。算法目标是将目标用户分配到包含最相似用户的segment中，然后使用segment中用户购买的商品和评分产生推荐。</p>
+<p>通常segments是用聚类模型或者其他无监督的学习算法构建的，虽然有些应用程序使用手动确定segments。使用相似性矩阵，聚类算法将最相似的客户分组一起形成集群或segments。因为对大数据集进行最优聚类是不切实际的，大多数应用程序使用各种形式贪婪的聚类生成算法。通常这些算法从一组初始段开始，且经常会包含一个随机选择的客户。然后他们反复匹配客户到现有的segments中，通常碎玉创建新的或合并现有的segments有一些规定。对于非常大的数据集-特别是那些高数据集维度 - 抽样或降维也是必要的。</p>
+<p>一旦算法生成了segments，就会计算每个用户与每个segments总结向量之间的相似性，然后选择具有最强的相似性segments并根据此对用户进行分类。一些算法将用户分类为多个部分并描述其每个关系的强弱。</p>
+<p>聚类模型相比CF有更好的在线可扩展性和表现，因为聚类算法只将用户和可控制的segments数量进行比较而不是所有用户。复杂花费高的聚类计算是在离线进行的。然而，推荐质量却很低。聚类模型将许多用户分组在一起形成一个segment，将一个用户匹配到一个segment中，然后考虑在这个细分市场中说所有客户的相似客户来产生推荐。由于聚类模型找到的相似客户并不一定是最相似的客户，所以他们产生的推荐并没有太大的相关性。为了提高推荐质量，可以增加类别数量，但这会加大用户在线计算类别的花费。</p>
+<h2 id="基于搜索的模型"><a href="#基于搜索的模型" class="headerlink" title="基于搜索的模型"></a>基于搜索的模型</h2><p>基于搜索或者内容的模型将推荐看作是一个搜索相关物品的问题。给定一些用户的购买和评级的物品，算法会构造搜索查询找到同一作者的其他热门产品，艺术家，导演，以及类似的关键词或<br>主题。如果客户购买了教父DVD收藏，例如，系统可能会推荐其他犯罪剧集，其他马龙白兰度主演的，或其他弗朗西斯福特科波拉导演的电影。</p>
+<p>如果用户只有很少的购买和评分记录，基于搜索的推荐算法可规模化并表现地很好。然而，对于那些有成千上万的购买记录的用户来说，基于一个所有物品的请求来进行推荐是不实际的。算法必须只是用数据集中的一个子集或者汇总数据，这会降低推荐质量。以上例子中，推荐的质量相对较差。推荐结果经常会太宽泛（例如最好卖的电视剧DVD主题）或者太狭隘（例如相同作者的所有书籍）。推荐应该是帮助客户去寻找和发现新的，相关的并且有趣的物品。同一作者的流行作品以及相似主题的类别物品都是不能满足这一目标的。</p>
+<h2 id="物到物的协同过滤"><a href="#物到物的协同过滤" class="headerlink" title="物到物的协同过滤"></a>物到物的协同过滤</h2><p>Amazon.com将推荐作为许多电子邮件活动以及它的大部分网站页面中的营销工具，包括高流量的Amazon.com主页。点击“您的推荐”链接将会引导客户访问一个推荐区域，在这里他们可以通过产品线和主题领域来进行筛选，也可以评价推荐的产品，评价他们以前购买的物品，同时可以看到为什么这些物品被推荐了（如图片1所示）。</p>
+<p>如图2所示，是我们的购物车推荐，根据客户购物车中的物品给他们推荐了一些商品。该功能类似于在超市收银台旁的那些易冲动消费的物品，但我们的冲动项目针对每个客户的。</p>
+<p>亚马逊网站基于他们客户的兴趣广泛地使用推荐算法来个性化他们的网站。由于现存的推荐算法无法扩展到亚马逊网站上数以千万的客户和产品，所以我们开发自己的推荐算法。我们的算法是物到物的协同过滤，可以扩展到巨大的数据集并实时产生高质量的推荐。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG" alt="AmazonCF-1"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG" alt="AmazonCF-2"></p>
+<h2 id="它是怎么工作的"><a href="#它是怎么工作的" class="headerlink" title="它是怎么工作的"></a>它是怎么工作的</h2><p>物到物的协同过滤并不是对目标用户进行匹配到他们相似的客户，而是对他们购买和评论过的物品匹配到相似的物品，然后聚合这些相似的物品生成推荐列表。</p>
+<p>为了确定地匹配出给定物品的最相似取票，算法通过寻找那些用户会一起购买的物品来建立了一个相似物品表。我们可以构建产品到产品的矩阵通过迭代所有项目对和计算每对的相似性度量。然而，许多产品对没有共同的客户，因此，这种方法效率低下在处理时间和内存使用情况上面。下面的迭代算法提供了一个更好地方法来计算一个商品和其他所有商品之间的相似性。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">For each item in product catalog, I_1</span><br><span class="line">    For each customer C who purchased I_1</span><br><span class="line">        For each item I_2 purchased by</span><br><span class="line">            customer C</span><br><span class="line">            Record that a customer purchased I_1</span><br><span class="line">            and I_2</span><br><span class="line">    For each item I_2</span><br><span class="line">        Compute the similiarity between I_1 and I_2</span><br></pre></td></tr></table></figure></p>
+<p>有各种各样的方法可以计算两者之间的相似性，但一个常见的方法是使用我们之前描述的余弦量度，其中每个向量对应一个物品而不是一个客户，矢量的M维度对应已购买该商品的客户。</p>
+<p>这种相似物品表的离线计算是非常耗时的，O（N2M）为最糟糕的情况。然而，在实践中，它更接近于O（NM），因为大多数客户购买的很少。对购买最畅销主题的客户进行抽样可以进一步减少运行时间，同时会伴随一点质量降低。</p>
+<p>给定一个相似物品表，算法会找到与用户购买的每个项目类似的项目评分，汇总这些项目，然后推荐最受欢迎或相关的项目。这个计算非常快，仅取决于用户购买或评级的商品数量。</p>
+<h2 id="扩展性：比较"><a href="#扩展性：比较" class="headerlink" title="扩展性：比较"></a>扩展性：比较</h2><p>Amazon.com拥有超过2900万客户和数百万品类物品。其他专业零售商拥有相对较大的数据来源。这些数据是一个机会也是一个诅咒，打破了设计算法的背后对于数据集小三个数量级。几乎所有现有的算法都经过了小数据集评估。例如，MovieLens数据set4包含35,000个客户和3,000个项目，并且EveryMovie数据集3包含4,000个客户和1,600项。</p>
+<p>对于非常大的数据集，可扩展的推荐算法必须执行最昂贵的离线计算。如下简要比较显示，现有方法不足：</p>
+<ul>
+<li>传统的协调过滤做很少的甚至没有离线计算，并且它的在线计算的扩展性受到客户和物品数量的限制。算法在大数据集上运行是不现实的，除非它用降维，抽样或者分区等方法，这些都会降低推荐质量。</li>
+<li>聚类模型可以在离线计算中有很大的表现，但是推荐质量相对很差。为了提升它，可以增加聚类中的segments，但是这会使得在线用户的segment分类变得很复杂。</li>
+<li>基于搜索的模型离线建立了关键词，品类和作者指标，但是没能够提供一个又去的目标推荐。他们都很难扩展到那些有大量购买和评论的记录的用户。</li>
+</ul>
+<p>物到物协同过滤扩展性和表现的关键创建一个花费很高的离线计算得到的相似物品表。这个算法的在线部分就是与寻找用户购买和评论过物品的相似物品，其可扩展性与品类大小和总客户数量不相关；仅仅与用户有多少的购买和评论记录有关。因此，即使在很大的数据集上算法也可以运行的很快。由于算法推荐高度相关的相似物品，因此推荐质量是极高的。不像传统的协同过滤，算法也可以在有限的用户数据的条件下表现得很好，可以基于两到三个物品的数据产生高质量的推荐。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>推荐算法通过为每位客户创建个性化的购物体验提供了有效的目标营销形式。对于亚马逊等大型零售商，一个很好的推荐算法可扩展到非常大客户群和产品目录，要求仅仅亚秒处理时间以生成在线推荐，能够对改变用户的数据立即做出反应，并为所有用户提供吸引人的推荐，无论他们的购买和评级物品的数量多少。不像其他的算法，物到物的协同过滤能够迎接这一挑战。</p>
+<p>在未来，我们期待零售业更广泛地应用推荐算法来达到有针对性的营销，在线和离线均是如此。而电子商务企业拥有最简单的个性化工具，技术的转换率提高与传统的大规模方法相比这些方法对于离线的零售商来说也会使其脱颖而出，在用户的邮件邮寄，优惠券和其他形式的客户沟通。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/3c1887e0.html">Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/3c1887e0.html" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">https://www.xiemingzhao.com/posts/3c1887e0.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/3c1887e0.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 推荐系统</a>
+          
+            <a href="/tags/CF/" rel="tag"><i class="fa fa-tag"></i> CF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/399ba6ee.html" rel="next" title="Factorization Machines (论文解析)">
+                <i class="fa fa-chevron-left"></i> Factorization Machines (论文解析)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/c800c340.html" rel="prev" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
+                Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%9A%E9%A9%AC%E9%80%8A%E6%8E%A8%E8%8D%90%EF%BC%9A%E7%89%A9%E5%88%B0%E7%89%A9%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">亚马逊推荐：物到物的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">推荐算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">传统的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">聚类模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%90%9C%E7%B4%A2%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">基于搜索的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%A9%E5%88%B0%E7%89%A9%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">物到物的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">7.</span> <span class="nav-text">它是怎么工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%80%A7%EF%BC%9A%E6%AF%94%E8%BE%83"><span class="nav-number">8.</span> <span class="nav-text">扩展性：比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">9.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

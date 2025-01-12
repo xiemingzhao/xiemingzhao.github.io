@@ -1,37 +1,1222 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,向量检索," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言在向量检索领域，HNSW算法算是有比较重要的一席之地，很多地方都会用到，那么本文主要是对其具体构建的细节逻辑和背后的思想进行一个阐述和介绍。 Hierarchical Navigable Small World Graphs (HNSW) 是Yury A. Malkov提出的一种基于图索引的方法，它是Yury A. Malkov在他本人之前工作NSW上一种改进。通过采用层状结构，将边按特征">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HNSW算法详解">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/hnswAlgo.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言在向量检索领域，HNSW算法算是有比较重要的一席之地，很多地方都会用到，那么本文主要是对其具体构建的细节逻辑和背后的思想进行一个阐述和介绍。 Hierarchical Navigable Small World Graphs (HNSW) 是Yury A. Malkov提出的一种基于图索引的方法，它是Yury A. Malkov在他本人之前工作NSW上一种改进。通过采用层状结构，将边按特征">
+<meta property="og:locale">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw1.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw2.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw3.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw4.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw5.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw6.png">
+<meta property="article:published_time" content="2020-03-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.653Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="向量检索">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/hnswAlgo.html"/>
+
+
+
+
+
+  <title>HNSW算法详解 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/hnswAlgo.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HNSW算法详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-12T00:00:00+08:00">
+                2020-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/hnswAlgo.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/hnswAlgo.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在向量检索领域，HNSW算法算是有比较重要的一席之地，很多地方都会用到，那么本文主要是对其具体构建的细节逻辑和背后的思想进行一个阐述和介绍。</p>
+<p><a href="https://arxiv.org/abs/1603.09320">Hierarchical Navigable Small World Graphs (HNSW)</a> 是Yury A. Malkov提出的一种基于图索引的方法，它是Yury A. Malkov在他本人之前工作<code>NSW</code>上一种改进。通过采用层状结构，将边按特征半径进行分层，使每个顶点在所有层中平均度数变为常数，从而将NSW的计算复杂度由多重对数(Polylogarithmic)复杂度降到了对数(logarithmic)复杂度。</p>
+<h2 id="2-朴素思想"><a href="#2-朴素思想" class="headerlink" title="2 朴素思想"></a>2 朴素思想</h2><p>这里我们以一个小的场景为例来开始，假设我们现在有13个2维数据向量，我们把这些向量放在了一个平面直角坐标系内，隐去坐标系刻度，它们的位置关系如下图所示。</p>
+<span id="more"></span>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw1.png" alt="hnsw1"></p>
+<p><strong>朴素查找法</strong>：</p>
+<ol>
+<li>有一个很容易的的朴素想法，把某些点和点之间连上线，构成一个查找图，存下来备用；</li>
+<li>当我想查找与粉色点最近的一点时，我从任意一个黑色点出发，计算它和粉色点的距离，与这个任意黑色点有连接关系的点我们称之为“友点”（直译）；</li>
+<li>然后我要计算这个黑色点的所有“友点”与粉色点的距离，从所有“友点”中选出与粉色点最近的一个点，把这个点作为下一个进入点；</li>
+<li>继续按照上面的步骤查找下去。如果当前黑色点对粉色点的距离比所有“友点”都近，终止查找，这个黑色点就是我们要找的离粉色点最近的点。</li>
+</ol>
+<p>整个思想就是找出当前点及其邻近点雨目标点之间的最近的那个，然后把它当作当前点，再次循环。举个例子。</p>
+<blockquote>
+<p>目标：我们要查找与粉色点最近的点。<br>步骤：</p>
+<ol>
+<li>从任意一个黑色点出发，这里我们随便选个C点吧，计算一下C点和粉色点的距离，存下来备用;</li>
+<li>再计算C点的所有友点（A，I，B）与粉色点的距离（计算距离和度量的方式有多种，这里我们采用欧氏距离，就是二维物理空间上的“近和远”），我们计算得出B与粉色点的距离最近，而且B点距离粉色点的距离比C点距离粉色点的距离（前面算过）更近l;</li>
+<li>所以我们下面用B点继续查找。B点距离粉色点的距离保存下来，B点的友点是E，A，C，I，H，分别计算它们与粉色点的距离，得到E点与粉色点距离最近，且E点比B点距离粉色点还要近，所以我们选择E点作为下一个查找点。</li>
+<li>E点的友点是J，B，D，G，这时我们发现J点的与粉色点的距离最近，但是，but，however，J点的距离粉色点的距离比E点还要远，所以满足了终止查找的条件，因此我们返回E点。</li>
+</ol>
+</blockquote>
+<p><strong>之所以叫朴素想法就是因为它的缺点非常多:</strong></p>
+<ol>
+<li>首先，我们发现图中的K点是无法被查询到的，因为K点没有友点</li>
+<li>其次，如果我们要查找距离粉色点最近的两个点，而这两个近点之间如果没有连线，那么将大大影响效率（比如L和E点，如果L和E有连线，那么我们可以轻易用上述方法查出距离粉色点最近的两个点）;</li>
+<li>最后D点真的需要这么多“友点”吗？谁是谁的友点应该怎么确定呢？</li>
+</ol>
+<p><strong>相关解决办法：</strong></p>
+<ol>
+<li>关于K点的问题，我们规定在构图时所有数据向量节点都必须有友点。</li>
+<li>关于L和E的问题，我们规定在构图时所有距离相近（相似）到一定程度的向量必须互为友点。</li>
+<li>关于D点问题，权衡构造这张图的时间复杂度，我们规定尽量减少每个节点的“友点”数量。</li>
+</ol>
+<h2 id="3-NSW算法"><a href="#3-NSW算法" class="headerlink" title="3 NSW算法"></a>3 NSW算法</h2><p>上述最后部分针对各个问题的解决办法促成了NSW算法的诞生。在图论中有一个很好的剖分法则专门解决上一节中提到的朴素想法的缺陷问题—-<strong>德劳内（Delaunay）三角剖分算法</strong>，这个算法可以达成如下要求：</p>
+<ol>
+<li>图中每个点都有“友点”。</li>
+<li>相近的点都互为“友点”。</li>
+<li>图中所有连接（线段）的数量最少。效果如下图。</li>
+</ol>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw2.png" alt="hnsw2"></p>
+<p>如上图所示就是一个经典的满足上述三个条件的德劳内三角网图。但NSW算法并没有采用德劳内三角剖分法来构成德劳内三角网图，原因是：</p>
+<ul>
+<li>德劳内三角剖分构图算法时间复杂度太高，换句话说，构图太耗时。</li>
+<li>德劳内三角形的查找效率并不一定最高，如果初始点和查找点距离很远的话我们需要进行多次跳转才能查到其临近点，需要“<strong>高速公路</strong>”机制（Expressway mechanism, 这里指部分远点之间拥有线段连接，以便于快速查找）。</li>
+</ul>
+<p><strong>在理想状态下，我们的算法不仅要满足上面三条需求，还要算法复杂度低，同时配有高速公路机制的构图法。</strong></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw3.png" alt="hnsw3"></p>
+<p>如上图所示，这是NSW论文中给出的一张满足条件的网络图，可以发现黑色是近邻点的连线，红色线就是“高速公路机制”了。我们从enter point点进入查找，查找绿色点临近节点的时候，就可以用过红色连线“高速公路机制”快速查找到结果。</p>
+<p><strong>NSW朴素构图算法</strong>：</p>
+<ol>
+<li>向图中逐个插入点，点的选取上随机的；</li>
+<li>插入一个全新点时，通过朴素想法中的朴素查找法查找到与这个全新点最近的m个点（通过计算“友点”和待插入点的距离来判断下一个进入点是哪个点，m由用户设置）；</li>
+<li>连接全新点到m个点的连线。</li>
+</ol>
+<p>仔细分析这个简单的构图方法，其中有一个精妙之处就是构图算法是逐点随机插入的，这就意味着<strong>在图构建的早期，很有可能构建出“高速公路”。</strong>一个点，越早插入就越容易形成与之相关的“高速公路”连接，越晚插入就越难形成与之相关的“高速公路”连接。这种方法<strong>不仅降低了构图算法时间复杂度的同时还带来了数量有限的“高速公路”，加速了查找。</strong></p>
+<h3 id="NSW构图示例"><a href="#NSW构图示例" class="headerlink" title="NSW构图示例"></a>NSW构图示例</h3><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw4.png" alt="hnsw4"></p>
+<p>如上图所示就是一个构建好的NSW网络图，我们说明一下过程：</p>
+<ol>
+<li>我们对7个二维点进行构图，用户设置m=3（每个点在插入时找3个紧邻友点）。</li>
+<li>首先初始点是A点（随机出来的），A点插入图中只有它自己，所以无法挑选“友点”。</li>
+<li>然后是B点，B点只有A点可选，所以连接BA，此为第1次构造。</li>
+<li>然后插入F点，F只有A和B可以选，所以连接FA，FB，此为第2此构造。</li>
+<li>然后插入了C点，同样地，C点只有A，B，F可选，连接CA，CB，CF，此为第3次构造。</li>
+<li>重点来了，然后插入了E点，E点在A，B，F，C中只能选择3个点（m=3）作为“友点”，根据我们前面讲规则，要选最近的三个，怎么确定最近呢？朴素查找！从A，B，C，F任意一点出发，计算出发点与E的距离和出发点的所有“友点”和E的距离，选出最近的一点作为新的出发点，如果选出的点就是出发点本身，那么看我们的m等于几，如果不够数，就继续找第二近的点或者第三近的点，本着不找重复点的原则，直到找到3个近点为止。由此，我们找到了E的三个近点，连接EA，EC，EF，此为第四次构造。</li>
+<li>第5次构造和第6次与E点的插入一模一样，都是在“现成”的图中查找到3个最近的节点作为“友点”，并做连接。</li>
+</ol>
+<p>当图构建完了，请关注E点和A点的连线，如果我再这个图的基础上再插入6个点，这6个点有3个和E很近，有3个和A很近，那么距离E最近的3个点中没有A，距离A最近的3个点中也没有E，但因为A和E是构图早期添加的点，A和E有了连线，我们管这种连线叫“高速公路”，在查找时可以提高查找效率</p>
+<blockquote>
+<p><strong>NSW算法的优化</strong></p>
+<ul>
+<li>在查找的过程中，为了<strong>提高效率</strong>，我们可以建立一个废弃列表，在一次查找任务中遍历过的点不再遍历。在一次查找中，已经计算过这个点的所有友点距离查找点的距离，并且已经知道正确的跳转方向了，这些结果是唯一的，没有必要再去做走这个路径，因为这个路径会带给我们同样的重复结果，没有意义。</li>
+<li>在查找过程中，为了<strong>提高准确度</strong>，我们可以建立一个动态列表，把距离查找点最近的n个点存储在表中，并行地对这n个点进行同时计算“友点”和待查找点的距离，在这些“友点”中选择n个点与动态列中的n个点进行并集操作，在并集中选出n个最近的友点，更新动态列表。</li>
+</ul>
+</blockquote>
+<p>由于插入过程之前会先进行查找，所以优化查找过程就是在优化插入过程。所以我们先来看<strong>NSW查找步骤</strong>。设待查找q点的m个近邻点：</p>
+<ol>
+<li>随机选一个点作为初始进入点，建立空废弃表g和动态列表c，g是变长的列表，c是定长为s的列表（s&gt;m）,将初始点放入动态列表c（附上初始点和待查找q的距离信息），制作动态列表的影子列表c’。</li>
+<li>对动态列表c中的所有点并行找出其“友点”，查看这些“友点”是否存储在废弃表g中，如果存在，则丢弃，如不存在，将这些   剩余“友点”记录在废弃列表g中（以免后续重复查找，走冤枉路）。</li>
+<li>并行计算这些剩余“友点”距离待查找点q的距离，将这些点及其各自的距离信息放入c。</li>
+<li>对动态列表c去重，然后按距离排序（升序），储存前s个点及其距离信息。</li>
+<li>查看动态列表c和c’是否一样，如果一样，结束本次查找，返回动态列表中前m个结果。如果不一样，将c’的内容更新为c的    内容，执行第2步。</li>
+</ol>
+<p>插入算法就是先用查找算法查找到m个（用户设置）与待插入点最近的点并连接。</p>
+<h2 id="4-跳表结构"><a href="#4-跳表结构" class="headerlink" title="4 跳表结构"></a>4 跳表结构</h2><p>设有有序链表，名叫sorted_link，里面有n个节点，每个节点是一个整数。</p>
+<ul>
+<li>我们从表头开始查找，查找第t（0&lt;t&lt;n）个节点需要跳转几次？答：t-1次（没错，我是从1开始数的）。</li>
+<li>把n个节点分成n次查找的需求，都查找一遍，需要跳转几次？答：（0+1+2+3+…..+（n-1））次。</li>
+</ul>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw5.png" alt="hnsw5"></p>
+<p>但上图所示的已经不是一个有序链表了，这是三个有序链表+分层连接指针构成的跳表了。看这张示意图就能明白它的查找过程，先查第一层，然后查第二层，然后查第三层，然后找到结果。如果把上段所描述的名字叫sorted_link的链表建立成这样的跳表，那么把sorted_link中的所有元素都查一遍还需要花费（0+1+2+3+…..+（n-1））次吗？当然不需要。</p>
+<blockquote>
+<p><strong>跳表怎么构建呢？</strong><br>抛硬币随机生成。</p>
+<ol>
+<li>对于sorted_link链表中的每个节点进行抛硬币，如抛正，则该节点进入上一层有序链表，每个sorted_link中的节点有50%的概率进入上一层有序链表。</li>
+<li>将上一层有序链表中和sorted_link链表中相同的元素做一一对应的指针链接。</li>
+<li>再从sorted_link上一层链表中再抛硬币，sorted_link上一层链表中的节点有50%的可能进入最表层，相当于sorted_link中的每个节点有25%的概率进入最表层。以此类推。</li>
+</ol>
+</blockquote>
+<p>这种四件简单来看就是每层保留一定比例的节点，越往上层越少，相邻两层对应点相连。就保证了表层是“高速通道”，底层是精细查找，这个思想被应用到了NSW算法中，变成了HNSW。</p>
+<h2 id="5-HNSW算法"><a href="#5-HNSW算法" class="headerlink" title="5 HNSW算法"></a>5 HNSW算法</h2><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/hnsw6.png" alt="hnsw6"></p>
+<p>直接上图，现在看到这张图应该不陌生了。其中第0层中，是数据集中的所有点，你需要设置一个常数ml，通过公式floor(-ln(uniform(0,1)) x ml)来计算这个点可以深入到第几层。公式中x是乘号，floor（）的含义是向下取整，uniform（0,1）的含义是在均匀分布中随机取出一个值，ln（）表示取对数。</p>
+<blockquote>
+<p><strong>梳理一下它的查找过程</strong>:</p>
+<ol>
+<li>从表层（上图中编号为Layer=2）任意点开始查找，选择进入点最邻近的一些友点，把它们存储在定长的动态列表中，别忘了把它们也同样在废弃表中存一份，以防后面走冤枉路。</li>
+<li>一般地，在第x次查找时，先计算动态列表中所有点的友点距离待查找点（上图绿色点）的距离，在废弃列表中记录过的友点不要计算，计算完后更新废弃列表，不走冤枉路;</li>
+<li>再把这些计算完的友点存入动态列表，去重排序，保留前k个点，看看这k个点和更新前的k个点是不是一样的，如果不是一样的，继续查找，如果是一样的，返回前m个结果。</li>
+</ol>
+<p><strong>插入构图的时候</strong>:<br>先计算这个点可以深入到第几层，在每层的NSW图中查找t个最紧邻点，分别连接它们，对每层图都进行如此操作。</p>
+</blockquote>
+<p><strong>算法参数</strong></p>
+<ol>
+<li>首先，插入时的动态列表c的大小，它的大小直接影响了插入效率，和构图的质量，size越大，图的质量越高，构图和查找效率就越低。</li>
+<li>其次，一个节点至少有几个“友点”，“友点”越多，图的质量越高，查找效率越低。</li>
+<li>作者在论文中还提到了“max友点连接数”这个参数，设置一个节点至多有多少友点，来提高查找效率，但是设的太小又会影响图的质量，权衡着来。</li>
+<li>上一段中的ml也是你来控制的，设置的大了，层数就少，内存消耗少，但严重影响效率，太大了会严重消耗内存和构图时间。</li>
+</ol>
+<p>在论文中，作者将查找状态下的<strong>动态列表长度和插入状态下的动态列表长度</strong>做了区分，你可以通过调整他们来实现“<strong>精构粗找</strong>”或者“<strong>精找粗构</strong>”。</p>
+<p><strong>参考文章</strong><br><a href="http://yongyuan.name/blog/vector-ann-search.html">图像检索：向量索引</a><br><a href="https://blog.csdn.net/u011233351/article/details/85116719">一文看懂HNSW算法理论的来龙去脉</a></p>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/hnswAlgo.html">HNSW算法详解</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/hnswAlgo.html" title="HNSW算法详解">https://www.xiemingzhao.com/posts/hnswAlgo.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/hnswAlgo.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/" rel="tag"><i class="fa fa-tag"></i> 向量检索</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/vecRetrieval.html" rel="next" title="向量检索算法">
+                <i class="fa fa-chevron-left"></i> 向量检索算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/consistentHash.html" rel="prev" title="一致性哈希算法(Consistent Hashing)">
+                一致性哈希算法(Consistent Hashing) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%B4%E7%B4%A0%E6%80%9D%E6%83%B3"><span class="nav-number">2.</span> <span class="nav-text">2 朴素思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-NSW%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">3 NSW算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSW%E6%9E%84%E5%9B%BE%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">NSW构图示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%B7%B3%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">4 跳表结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-HNSW%E7%AE%97%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">5 HNSW算法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

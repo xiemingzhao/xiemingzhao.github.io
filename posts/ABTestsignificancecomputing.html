@@ -1,37 +1,1166 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="ABTest," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="显著性计算—uv based这里以实验目标为提升CR（Conversion Rate）为例说明 名词解释显著性： 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。上升幅度：(新版CR-老版CR)&#x2F;老版CR功效: 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ABTest显著性计算">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="显著性计算—uv based这里以实验目标为提升CR（Conversion Rate）为例说明 名词解释显著性： 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。上升幅度：(新版CR-老版CR)&#x2F;老版CR功效: 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-5.png">
+<meta property="article:published_time" content="2019-07-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.650Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="ABTest">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html"/>
+
+
+
+
+
+  <title>ABTest显著性计算 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ABTest显著性计算</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-16T00:00:00+08:00">
+                2019-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ABTest/" itemprop="url" rel="index">
+                    <span itemprop="name">ABTest</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/ABTestsignificancecomputing.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/ABTestsignificancecomputing.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  26
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="显著性计算—uv-based"><a href="#显著性计算—uv-based" class="headerlink" title="显著性计算—uv based"></a>显著性计算—uv based</h2><p><strong>这里以实验目标为提升CR（Conversion Rate）为例说明</strong></p>
+<h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><p><strong>显著性：</strong> 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。<br><strong>上升幅度：</strong>(新版CR-老版CR)/老版CR<br><strong>功效:</strong> 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。</p>
+<span id="more"></span>
+<blockquote>
+<p>假设观察实验进行3天后，power=0.5&lt;0.8，并且结果不显著，这时需要累计更多样本。 如果当power已达到0.8时，仍未显著，一般我们认为新版和老版的CR的确无明显差异。</p>
+</blockquote>
+<p><strong>AA校验：</strong>验证主测频道分流是否随机；若两个Control版本之间的指标没有显著差异，则表明分流随机；反之，则需排查Control版本中是否存在异常数据；</p>
+<blockquote>
+<p>AA异常也可能由于两个control版本，其中之一包含一些异常用户（订单数极高），而另外一个版本没有异常用户。</p>
+</blockquote>
+<h4 id="如何结合显著性、power和样本量对实验结果下结论"><a href="#如何结合显著性、power和样本量对实验结果下结论" class="headerlink" title="如何结合显著性、power和样本量对实验结果下结论"></a>如何结合显著性、power和样本量对实验结果下结论</h4><p>power和样本量功能类似，达到样本量基本等同于power达到80%。power与样本量计算相比，power可以更多的利用实验本身的信息，而样本量主要使用频道的数据，计算时与实验设置分流等无关，仅实验剩余天数与实验相关。</p>
+<p>所以这里我们结合power和显著性对实验的结果进行判断。这里以转化率CR为例。</p>
+<blockquote>
+<ol>
+<li>如果power达到80%时，CR仍不显著， 说明此时实验新版与老版无显著差异，停止实验。</li>
+<li>如果power未到达80%，CR不显著，说明此时样本量不充足，需继续实验，累计更多的用户。</li>
+</ol>
+</blockquote>
+<p><strong>以上均基于AA检验正常为前提。</strong></p>
+<p>如果AA异常，需查询原因，如果是AA中某一版本中有少数用户订单数极高，导致AA异常，剔除这种异常用户后重新计算AA  Test的结果， 如果不再显著，AA正常。</p>
+<p>严谨一点，再检查AB 的检验中(一般B&lt;新版&gt; vs C+D<C、D都为老版>)是否存在同样问题，即某一版本出现一些异常用户(订单数极高的用户), 如果存在，剔除后重新计算显著性。</p>
+<h3 id="算法说明"><a href="#算法说明" class="headerlink" title="算法说明"></a>算法说明</h3><h4 id="显著性计算"><a href="#显著性计算" class="headerlink" title="显著性计算"></a><strong>显著性计算</strong></h4><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-2.png" alt="ABtestsample"></p>
+<p>我们将指标提升的百分比定义为lift， <strong>%Lift=（Treatment/Control-1）*100%</strong></p>
+<p>如上图的示例结果图所示，CR 的lift估计值为：-0.79%， 区间（-1.55%,-0%）.  CR lift 的真实值以95%的可能性落在区间（-1.55%,-0%）内。由于区间未包括0，所以CR显著, 并且从数值上看是显著下降。说明新版的CR明显低于老版的CR.</p>
+<p>具体计算方案，以国内酒店频道的CR例,假设:</p>
+<blockquote>
+<ul>
+<li>老版本每个用户的订单数X为：$x<em>1,x_2,…,x</em>{n_1}$，其中$n_1$为老版本的用户数，且有：$E[X] = u_1, Var(X) = \sigma_1^2$</li>
+<li>新版本每个用户的订单数Y为：$y<em>1,y_2,…,y</em>{n_2}$，其中$n_2$为新版本的用户数，且有：$E[Y] = u_2, Var(Y) = \sigma_2^2$</li>
+<li>尽管 X 和 Y 的分布不满足正态的假设，由大数定律得到，老版人均订单数$(CR_1)$和新版的人均订单数$(CR_2)$分别满足$CR_1 ~ N(u_1，\sigma_1^2 / n_1)$ 和 $CR_2 ~ N(u_2，\sigma_2^2 / n_2)$ 的正态分布。人均订单数即CR。</li>
+</ul>
+</blockquote>
+<p>那么 lift 值的计算方案就如下：<br><strong>Step1： 估计$u_1, u_2, \sigma_1^2, \sigma_2^2$</strong><br>根据上述四个公式即可得到这四个统计量的估计值。</p>
+<p><strong>Step2：抽样产生 lift 的n（一般取10000）个随机数，$lift^i, i = 1, …, n$</strong><br>由于$CR_1 ~ N(u_1，\sigma_1^2 / n_1), CR_2 ~ N(u_2，\sigma_2^2 / n_2)$，那么结合 Step1 中的参数估计，就可以，</p>
+<blockquote>
+<p>产生满足$N(\hat u_1, \hat \sigma_1^2 / n_1)$分布的n个随机数，$CR_1^i, i = 1,2,…,n$<br>产生满足$N(\hat u_2, \hat \sigma_2^2 / n_2)$分布的n个随机数，$CR_2^i, i = 1,2,…,n$</p>
+</blockquote>
+<p>然后我们就可以计算：$lift^i = (CR_2^i - CR_1^i) / CR_1^i, i = 1,2,…,n$</p>
+<p><strong>Step3：计算 lift 的均值和区间（置信度90%）</strong><br>lift 均值： $\sum_{i=1}^n lift^i / n$；<br>区间上界： $lift^i$ 的95%分位数；<br>区间下界： $lift^i$ 的5%分位数。</p>
+<h4 id="功效（power值）计算"><a href="#功效（power值）计算" class="headerlink" title="功效（power值）计算"></a><strong>功效（power值）计算</strong></h4><script type="math/tex; mode=display">Power = \Phi (-Z_{1 - \alpha / 2} + \frac {\Delta}{\sqrt {\sigma_1^2 / n_1 + \sigma_2^2 / n_2} })</script><p>其中：</p>
+<blockquote>
+<p>$\alpha$ 是 Type I Error， 一般为0.05 或者0.1<br>$\sigma_1^2$是老版订单数（或其他指标）的方差，$n_1$是老版的uv数<br>$\sigma_2^2$是新版订单数（或其他指标）的方差，$n_2$是新版的uv数<br>$\Delta = lift * u$中的 lift 是实际实验新版相对老板提升的百分比，一般取值为0.02或者0.04，这里设此目标值是为了固定，使用实际的会出现波动太乱的情况<br>u 是老版的 CR （或者其他检验指标）。</p>
+</blockquote>
+<p>示例：一下以某一次酒店排序实验为例，其 type I error = 0.05, lift = 0.02, 计算 CR 对应的 power。<br>$n_1$ = 老版用户数 = 22917； $n_2$ = 新版用户数 = 34389<br>$\hat u$ = 老版 CR 估计值 = 0.37474<br>$\hat \sigma_1^2$ = 老版订单数方差估计值 = 0.7188733<br>$\hat \sigma_2^2$ = 新版订单数方差估计值 = 0.721059</p>
+<script type="math/tex; mode=display">Power = \Phi (-Z_{1 - \alpha / 2} + \frac {\Delta}{\sqrt {\sigma_1^2 / n_1 + \sigma_2^2 / n_2} }) \\
+ =  \Phi (-1.959964 + \frac {0.02 \times 0.37474}{\sqrt {0.7188733/22917 + 0.721059/34389} }) \\
+ = \Phi (-0.923327) = 17.79 \%</script><p>附属代码：<br><strong>AbSampleSize.hql</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> hive.auto.convert.join<span class="operator">=</span><span class="literal">true</span>;</span><br><span class="line"><span class="keyword">set</span> hive.auto.convert.join.noconditionaltask.size <span class="operator">=</span><span class="number">2048</span>;</span><br><span class="line"><span class="keyword">set</span> hive.exec.parallel<span class="operator">=</span><span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSampleSize <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  exp.experiment,</span><br><span class="line">        exp.channelid,</span><br><span class="line">        cumstart,</span><br><span class="line">        cumend,</span><br><span class="line">        abversion,</span><br><span class="line"></span><br><span class="line">        channel.SmallestSize<span class="operator">*</span>(splitPct<span class="operator">/</span><span class="number">100</span>) <span class="keyword">as</span> SmallestSize,</span><br><span class="line">        exp.uv <span class="keyword">as</span> cumulativeUv,</span><br><span class="line">        datediff(if(datediff(<span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,exp.cumend)<span class="operator">&lt;</span><span class="number">0</span>,<span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,exp.cumend),exp.cumstart)<span class="operator">+</span><span class="number">1</span> <span class="keyword">as</span> days,</span><br><span class="line">        <span class="comment">--(channel.SmallestSize/exp.uv*(splitPct/100)-1)*(days)</span></span><br><span class="line">        (channel.SmallestSize<span class="operator">/</span>exp.uv<span class="operator">*</span>(splitPct<span class="operator">/</span><span class="number">100</span>)<span class="number">-1</span>)<span class="operator">*</span>(datediff(if(datediff(<span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,exp.cumend)<span class="operator">&lt;</span><span class="number">0</span>,<span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,exp.cumend),exp.cumstart)<span class="operator">+</span><span class="number">1</span>) <span class="keyword">as</span> remainingDays</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> report_abtestdb.AbChannelDailyAbsolute channel</span><br><span class="line"><span class="keyword">JOIN</span> `report_abtestdb`.`AbUserCumulativeAbsolute` exp</span><br><span class="line"><span class="keyword">ON</span> channel.channelid<span class="operator">=</span>exp.channelid</span><br><span class="line"><span class="keyword">AND</span> channel.d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> channel.clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> exp.d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> exp.clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">JOIN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> experiment,</span><br><span class="line">                    version,</span><br><span class="line">                    splitPct</span><br><span class="line">    <span class="keyword">FROM</span> dim_abtestdb.DimAbtestConfig</span><br><span class="line">    <span class="keyword">WHERE</span> d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> defaultversion<span class="operator">=</span><span class="literal">FALSE</span> </span><br><span class="line">    <span class="keyword">AND</span> <span class="built_in">lower</span>(versionproperty)<span class="operator">=</span><span class="string">&#x27;treatment&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> splitPct<span class="operator">&gt;</span><span class="number">0</span></span><br><span class="line">) config</span><br><span class="line"><span class="keyword">ON</span> exp.experiment<span class="operator">=</span>config.experiment</span><br><span class="line"><span class="keyword">AND</span> exp.abversion<span class="operator">=</span>config.version;</span><br></pre></td></tr></table></figure></p>
+<p><strong>AbSignificance.hql</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> hive.auto.convert.join<span class="operator">=</span><span class="literal">true</span>;</span><br><span class="line"><span class="keyword">set</span> hive.auto.convert.join.noconditionaltask.size <span class="operator">=</span><span class="number">2048</span>;</span><br><span class="line"><span class="keyword">set</span> hive.exec.parallel<span class="operator">=</span><span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">add</span> jar abtest_udf<span class="number">-1.0</span>.jar;</span><br><span class="line"><span class="keyword">add</span> jar commons<span class="operator">-</span>math3<span class="number">-3.5</span>.jar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> TEMPORARY <span class="keyword">FUNCTION</span> lift_quantile <span class="keyword">AS</span> <span class="string">&#x27;com.ctrip.basebiz.abtest3.hive.function.UDFLiftQuantile&#x27;</span>;</span><br><span class="line"><span class="keyword">CREATE</span> TEMPORARY <span class="keyword">FUNCTION</span> pnorm <span class="keyword">AS</span> <span class="string">&#x27;com.ctrip.basebiz.abtest3.hive.function.statistics.UDFCumulativeProbabilityNormalDistribution&#x27;</span>;</span><br><span class="line"><span class="keyword">CREATE</span> TEMPORARY <span class="keyword">FUNCTION</span> makeJson <span class="keyword">AS</span> <span class="string">&#x27;com.ctrip.basebiz.abtest3.hive.function.UDFMakeJSONObj&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> </span><br><span class="line"><span class="comment">-- For Confidence Interval</span></span><br><span class="line">(</span><br><span class="line">    <span class="keyword">SELECT</span>  treatment.experiment,</span><br><span class="line">            treatment.channelid,</span><br><span class="line">            treatment.abversion,</span><br><span class="line">            treatment.cumstart,</span><br><span class="line">            treatment.cumend,</span><br><span class="line"></span><br><span class="line">            (treatment.mean_pv<span class="operator">-</span>control.mean_pv)<span class="operator">/</span>control.mean_pv <span class="keyword">as</span> lift_pv,</span><br><span class="line">            lift_quantile(treatment.mean_pv,treatment.std_pv,control.mean_pv,control.std_pv,<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_pv,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.mean_pv<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.stddev_pv,<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.stddev_pv,<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_pv,</span><br><span class="line"></span><br><span class="line">            (treatment.mean_orders<span class="operator">-</span>control.mean_orders)<span class="operator">/</span>control.mean_orders <span class="keyword">as</span> lift_orders,</span><br><span class="line">            lift_quantile(treatment.mean_orders,treatment.std_orders,control.mean_orders,control.std_orders,<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_orders,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.mean_orders<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.stddev_orders,<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.stddev_orders,<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_orders,</span><br><span class="line"></span><br><span class="line">            (treatment.mean_quantity<span class="operator">-</span>control.mean_quantity)<span class="operator">/</span>control.mean_quantity <span class="keyword">as</span> lift_quantity,</span><br><span class="line">            lift_quantile(treatment.mean_orders,treatment.std_orders,control.mean_orders,control.std_orders,<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_quantity,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.mean_quantity<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.stddev_quantity,<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.stddev_quantity,<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_quantity,</span><br><span class="line"></span><br><span class="line">            (treatment.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>]<span class="operator">-</span>control.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>])<span class="operator">/</span>control.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>] <span class="keyword">as</span> lift_amount,</span><br><span class="line">            lift_quantile(treatment.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>],treatment.dynamicMap[<span class="string">&#x27;std_amount&#x27;</span>],control.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>],control.dynamicMap[<span class="string">&#x27;std_amount&#x27;</span>],<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_amount,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>]<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.dynamicMap[<span class="string">&#x27;stddev_amount&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.dynamicMap[<span class="string">&#x27;stddev_amount&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_amount,</span><br><span class="line"></span><br><span class="line">            (treatment.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>]<span class="operator">-</span>control.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>])<span class="operator">/</span>control.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>] <span class="keyword">as</span> lift_cost,</span><br><span class="line">            lift_quantile(treatment.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>],treatment.dynamicMap[<span class="string">&#x27;std_cost&#x27;</span>],control.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>],control.dynamicMap[<span class="string">&#x27;std_cost&#x27;</span>],<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_cost,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>]<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.dynamicMap[<span class="string">&#x27;stddev_cost&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.dynamicMap[<span class="string">&#x27;stddev_cost&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_cost,</span><br><span class="line"></span><br><span class="line">            (treatment.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>]<span class="operator">-</span>control.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>])<span class="operator">/</span>control.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>] <span class="keyword">as</span> lift_gross_profit,</span><br><span class="line">            lift_quantile(treatment.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>],treatment.dynamicMap[<span class="string">&#x27;std_gross_profit&#x27;</span>],control.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>],control.dynamicMap[<span class="string">&#x27;std_gross_profit&#x27;</span>],<span class="number">0.9</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_gross_profit,</span><br><span class="line">            pnorm(<span class="number">-1.644854</span><span class="operator">+</span><span class="number">0.02</span><span class="operator">*</span>control.dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>]<span class="operator">/</span><span class="built_in">sqrt</span>(<span class="built_in">power</span>(treatment.dynamicMap[<span class="string">&#x27;stddev_gross_profit&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>treatment.uv<span class="operator">+</span><span class="built_in">power</span>(control.dynamicMap[<span class="string">&#x27;stddev_gross_profit&#x27;</span>],<span class="number">2</span>)<span class="operator">/</span>control.uv)) <span class="keyword">as</span> power_gross_profit</span><br><span class="line"></span><br><span class="line">    <span class="keyword">FROM</span> `report_abtestdb`.`AbUserCumulativeAbsolute` treatment</span><br><span class="line">    <span class="keyword">JOIN</span> `report_abtestdb`.`AbUserCumulativeAbsolute` control</span><br><span class="line">     <span class="keyword">ON</span> treatment.experiment<span class="operator">=</span>control.experiment</span><br><span class="line">    <span class="keyword">AND</span> treatment.channelid<span class="operator">=</span>control.channelid</span><br><span class="line">    <span class="keyword">AND</span> <span class="built_in">lower</span>(treatment.versionproperty)<span class="operator">=</span><span class="string">&#x27;treatment&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> control.abversion<span class="operator">=</span><span class="string">&#x27;control&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> treatment.DefaultVersion<span class="operator">=</span><span class="literal">FALSE</span> </span><br><span class="line">    <span class="keyword">AND</span> control.DefaultVersion<span class="operator">=</span><span class="literal">FALSE</span> </span><br><span class="line">    <span class="keyword">AND</span> treatment.clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> control.clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span></span><br><span class="line">    <span class="keyword">WHERE</span> treatment.d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> control.d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line">) ciResult</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> </span><br><span class="line"><span class="comment">-- For AA Test</span></span><br><span class="line">(</span><br><span class="line">    <span class="keyword">SELECT</span>  experiment,</span><br><span class="line">            channelid,</span><br><span class="line">            (mean_pv1<span class="operator">-</span>mean_pv2)<span class="operator">/</span>mean_pv2 <span class="keyword">as</span> lift_pv,</span><br><span class="line">            lift_quantile(mean_pv1,std_pv1,mean_pv2,std_pv2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_pv,</span><br><span class="line"></span><br><span class="line">            (mean_orders1<span class="operator">-</span>mean_orders2)<span class="operator">/</span>mean_orders2 <span class="keyword">as</span> lift_orders,</span><br><span class="line">            lift_quantile(mean_orders1,std_orders1,mean_orders2,std_orders2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_orders,</span><br><span class="line"></span><br><span class="line">            (mean_quantity1<span class="operator">-</span>mean_quantity2)<span class="operator">/</span>mean_quantity2 <span class="keyword">as</span> lift_quantity,</span><br><span class="line">            lift_quantile(mean_quantity1,std_quantity1,mean_quantity2,std_quantity2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_quantity,</span><br><span class="line"></span><br><span class="line">            (mean_amount1<span class="operator">-</span>mean_amount2)<span class="operator">/</span>mean_amount2 <span class="keyword">as</span> lift_amount,</span><br><span class="line">            lift_quantile(mean_amount1,std_amount1,mean_amount2,std_amount2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_amount,</span><br><span class="line"></span><br><span class="line">            (mean_cost1<span class="operator">-</span>mean_cost2)<span class="operator">/</span>mean_cost2 <span class="keyword">as</span> lift_cost,</span><br><span class="line">            lift_quantile(mean_cost1,std_cost1,mean_cost2,std_cost2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_cost,</span><br><span class="line"></span><br><span class="line">            (mean_gross_profit1<span class="operator">-</span>mean_gross_profit2)<span class="operator">/</span>mean_gross_profit2 <span class="keyword">as</span> lift_gross_profit,</span><br><span class="line">            lift_quantile(mean_gross_profit1,std_gross_profit1,mean_gross_profit2,std_gross_profit2,<span class="number">0.95</span>,<span class="number">100000</span>) <span class="keyword">as</span> lift_quantile_gross_profit</span><br><span class="line">    <span class="keyword">FROM</span> (</span><br><span class="line">        <span class="keyword">SELECT</span>  experiment,</span><br><span class="line">                channelid,</span><br><span class="line">                abversion <span class="keyword">as</span> i_version,</span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(abversion)      <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> abversion1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(abversion)       <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> abversion2,</span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(mean_pv)        <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_pv1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(mean_pv)         <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_pv2,</span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(std_pv)         <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_pv1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(std_pv)          <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_pv2, </span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(mean_orders)    <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_orders1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(mean_orders)     <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_orders2, </span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(std_orders)     <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_orders1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(std_orders)      <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_orders2, </span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(mean_quantity)  <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_quantity1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(mean_quantity)   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_quantity2, </span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(std_quantity)   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_quantity1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(std_quantity)    <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_quantity2,</span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>])  <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_amount1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_amount&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_amount2, </span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_amount&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_amount1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_amount&#x27;</span>])    <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_amount2,</span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>])  <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_cost1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_cost&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_cost2, </span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_cost&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_cost1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_cost&#x27;</span>])    <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_cost2,</span><br><span class="line"></span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>])  <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_gross_profit1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;mean_gross_profit&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> mean_gross_profit2, </span><br><span class="line">                <span class="built_in">FIRST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_gross_profit&#x27;</span>])   <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_gross_profit1,</span><br><span class="line">                <span class="built_in">LAST_VALUE</span>(dynamicMap[<span class="string">&#x27;std_gross_profit&#x27;</span>])    <span class="keyword">over</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> experiment,channelid) <span class="keyword">as</span> std_gross_profit2</span><br><span class="line">        <span class="keyword">FROM</span> `report_abtestdb`.`AbUserCumulativeAbsolute`</span><br><span class="line">        <span class="keyword">WHERE</span> d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span></span><br><span class="line">        <span class="keyword">AND</span> clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span></span><br><span class="line">        <span class="keyword">AND</span> <span class="built_in">lower</span>(versionproperty)<span class="operator">=</span><span class="string">&#x27;control&#x27;</span></span><br><span class="line">        <span class="keyword">AND</span> abversion<span class="operator">&lt;&gt;</span><span class="string">&#x27;control&#x27;</span></span><br><span class="line">        <span class="keyword">AND</span> DefaultVersion<span class="operator">=</span><span class="literal">FALSE</span></span><br><span class="line">    ) control</span><br><span class="line">    <span class="keyword">WHERE</span> i_version<span class="operator">=</span>abversion1</span><br><span class="line">    <span class="keyword">AND</span> abversion1<span class="operator">&lt;&gt;</span>abversion2</span><br><span class="line">) aaResult</span><br><span class="line"><span class="keyword">ON</span>  ciResult.experiment<span class="operator">=</span>aaResult.experiment</span><br><span class="line"><span class="keyword">AND</span> ciResult.channelid<span class="operator">=</span>aaResult.channelid</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_pv&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_pv.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_pv.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_pv <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_pv.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_pv.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_pv.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_pv.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_pv.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_pv.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_pv <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_orders&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_orders.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_orders.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_orders <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_orders.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_orders.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_orders.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_orders.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_orders.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_orders.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_orders <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_quantity&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_quantity.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_quantity.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_quantity <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_quantity.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_quantity.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_quantity.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_quantity.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_quantity.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_quantity.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_quantity <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_amount&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_amount.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_amount.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_amount <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_amount.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_amount.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_amount.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_amount.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_amount.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_amount.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_amount <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_cost&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_cost.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_cost.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_cost <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_cost.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_cost.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_cost.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_cost.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_cost.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_cost.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_cost <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> report_abtestdb.AbSignificance <span class="keyword">PARTITION</span>(d<span class="operator">=</span><span class="string">&#x27;$&#123;operate_date&#125;&#x27;</span>,clienttype<span class="operator">=</span><span class="string">&#x27;$&#123;client_type&#125;&#x27;</span>,index<span class="operator">=</span><span class="string">&#x27;cr_gross_profit&#x27;</span>)</span><br><span class="line"><span class="keyword">SELECT</span>  ciResult.experiment,</span><br><span class="line">        ciResult.channelid,</span><br><span class="line">        ciResult.cumstart,</span><br><span class="line">        ciResult.cumend,</span><br><span class="line">        ciResult.abversion,</span><br><span class="line">        (ciResult.lift_quantile_gross_profit.lci<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">or</span> ciResult.lift_quantile_gross_profit.uci<span class="operator">&lt;</span><span class="number">0</span>) <span class="keyword">as</span> isSignificant,</span><br><span class="line">        ciResult.lift_gross_profit <span class="keyword">as</span> lift,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_gross_profit.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(ciResult.lift_quantile_gross_profit.lci <span class="keyword">AS</span> STRING))</span><br><span class="line">        ) <span class="keyword">as</span> ciExt,</span><br><span class="line">        (aaResult.lift_quantile_gross_profit.lci<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">AND</span> aaResult.lift_quantile_gross_profit.uci<span class="operator">&gt;=</span><span class="number">0</span>) <span class="keyword">as</span> isAANormal,</span><br><span class="line">        makeJson(map(</span><br><span class="line">            <span class="string">&#x27;uci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_gross_profit.uci <span class="keyword">AS</span> STRING),</span><br><span class="line">            <span class="string">&#x27;lci&#x27;</span>,<span class="built_in">CAST</span>(aaResult.lift_quantile_gross_profit.lci <span class="keyword">AS</span> STRING))) <span class="keyword">as</span> aaExt,</span><br><span class="line">        ciResult.power_gross_profit <span class="keyword">as</span> `power`,</span><br><span class="line">        makeJson(map()) <span class="keyword">as</span> powerExt</span><br><span class="line">;</span><br></pre></td></tr></table></figure></p>
+<p><strong>UDFCumulativeProbabilityNormalDistribution.java</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctrip.basebiz.abtest3.hive.function.statistics;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math3.distribution.NormalDistribution;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.Description;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.UDF;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Description(name = &quot;pnorm&quot;,</span></span><br><span class="line"><span class="meta">        value = &quot;_FUNC_(quantile,mean,sd) - Density, distribution function, quantile &quot; +</span></span><br><span class="line"><span class="meta">                &quot;function and random generation for the normal distribution with mean&quot; +</span></span><br><span class="line"><span class="meta">                &quot; equal to mean and standard deviation equal to sd&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UDFCumulativeProbabilityNormalDistribution</span> <span class="keyword">extends</span> <span class="title class_">UDF</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">evaluate</span><span class="params">(Double quantile)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> evaluate(quantile, <span class="number">0.0D</span>, <span class="number">1.0D</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">evaluate</span><span class="params">(Double quantile, Double mean, Double sd)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (quantile == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">        <span class="type">NormalDistribution</span> <span class="variable">normalDistribution</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NormalDistribution</span>(mean, sd);</span><br><span class="line">        <span class="keyword">return</span> normalDistribution.cumulativeProbability(quantile);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span>  <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        UDFCumulativeProbabilityNormalDistribution d=<span class="keyword">new</span> <span class="title class_">UDFCumulativeProbabilityNormalDistribution</span>();</span><br><span class="line">        System.out.println(d.evaluate(<span class="number">0.9</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>UDFLiftQuantile.java</strong><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">package com.ctrip.basebiz.abtest3.hive.function;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.hive.ql.exec.Description;</span><br><span class="line">import org.apache.hadoop.hive.ql.exec.UDF;</span><br><span class="line">import org.apache.hadoop.hive.serde2.io.DoubleWritable;</span><br><span class="line"></span><br><span class="line">import java.math.BigDecimal;</span><br><span class="line">import java.math.RoundingMode;</span><br><span class="line">import java.util.Collections;</span><br><span class="line">import java.util.PriorityQueue;</span><br><span class="line">import java.util.Random;</span><br><span class="line"></span><br><span class="line">@Description(name = &quot;lift_quantile&quot;,</span><br><span class="line">        value = &quot;_FUNC_(meanTreatment,stdTreatment,meanControl,stdControl,confidenceLevel,samplingNum).&quot;,</span><br><span class="line">        extended = &quot;Construct sets of random number obey Gaussian distribution whose mean and standard deviation &quot; +</span><br><span class="line">                &quot;is the same as treatment version and control version. &quot; +</span><br><span class="line">                &quot;Return lift&#x27;s upper and lower quantile whose Confidence Level is confidenceLevel.\n&quot; +</span><br><span class="line">                &quot; Lift = (Treatment - Control) / Control &quot;)</span><br><span class="line">public class UDFLiftQuantile extends UDF &#123;</span><br><span class="line">    public static class UDFLiftQuantileResult &#123;</span><br><span class="line">        public DoubleWritable mean;</span><br><span class="line">        public DoubleWritable lci;</span><br><span class="line">        public DoubleWritable uci;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public UDFLiftQuantileResult evaluate(Double mTreatment, Double stdTreatment,</span><br><span class="line">                                          Double mControl, Double stdControl,</span><br><span class="line">                                          Double confidenceLevel, Integer samplingNum) &#123;</span><br><span class="line">        boolean isArgInvalid = (mTreatment == .0 &amp;&amp; stdTreatment == .0) || (mControl == .0 &amp;&amp; stdControl == .0);</span><br><span class="line">        if (isArgInvalid) &#123;</span><br><span class="line">            UDFLiftQuantileResult result = new UDFLiftQuantileResult();</span><br><span class="line">            result.mean = new DoubleWritable(0);</span><br><span class="line">            result.lci = new DoubleWritable(0);</span><br><span class="line">            result.uci = new DoubleWritable(0);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        Random randomTreatment = new Random();</span><br><span class="line">        Random randomControl = new Random();</span><br><span class="line">        int queueMaxSize = (int) (Math.floor((1.0 - confidenceLevel) / 2 * samplingNum) + 1);</span><br><span class="line">        PriorityQueue&lt;Double&gt; lciQueue = new PriorityQueue&lt;Double&gt;(queueMaxSize, Collections.reverseOrder());</span><br><span class="line">        PriorityQueue&lt;Double&gt; uciQueue = new PriorityQueue&lt;Double&gt;(queueMaxSize);</span><br><span class="line">        BigDecimal sum = BigDecimal.ZERO;</span><br><span class="line">        for (int i = 0; i &lt; samplingNum; i++) &#123;</span><br><span class="line">            double vTreatment = mTreatment + randomTreatment.nextGaussian() * stdTreatment;</span><br><span class="line">            double vControl = mControl + randomControl.nextGaussian() * stdControl;</span><br><span class="line">            if (vControl == 0.0) &#123;</span><br><span class="line">                i--;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            double lift = (vTreatment - vControl) / vControl;</span><br><span class="line">            sum = sum.add(BigDecimal.valueOf(lift));</span><br><span class="line">            if (lciQueue.size() &lt; queueMaxSize || lciQueue.peek() &gt;= lift) &#123;</span><br><span class="line">                lciQueue.add(lift);</span><br><span class="line">                if (lciQueue.size() &gt; queueMaxSize) &#123;</span><br><span class="line">                    lciQueue.poll();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (uciQueue.size() &lt; queueMaxSize || uciQueue.peek() &lt;= lift) &#123;</span><br><span class="line">                uciQueue.add(lift);</span><br><span class="line">                if (uciQueue.size() &gt; queueMaxSize) &#123;</span><br><span class="line">                    uciQueue.poll();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        UDFLiftQuantileResult result = new UDFLiftQuantileResult();</span><br><span class="line">        result.lci = new DoubleWritable(lciQueue.poll());</span><br><span class="line">        result.uci = new DoubleWritable(uciQueue.poll());</span><br><span class="line">        result.mean = new DoubleWritable(sum.divide(BigDecimal.valueOf(samplingNum), RoundingMode.HALF_EVEN).doubleValue());</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">            System.out.println(&quot;Nyan~&quot;);</span><br><span class="line">            run();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void run() &#123;</span><br><span class="line">        UDFLiftQuantile o = new UDFLiftQuantile();</span><br><span class="line">        UDFLiftQuantileResult result = o.evaluate(0.666141754, 0.257336891, 0.373081111, 0.079436106, 0.8, 100000);</span><br><span class="line">        //UDFLiftQuantileResult result = o.evaluate(.0, .0, .0, .0, 0.8, 1000);</span><br><span class="line">        //UDFLiftQuantileResult result = o.evaluate(.0, .0, 1.0, 2.0, 0.8, 1000);</span><br><span class="line">        //UDFLiftQuantileResult result = o.evaluate(2.0, 54.0, .0, .0, 0.8, 1000);</span><br><span class="line">        System.out.println(result.mean);</span><br><span class="line">        System.out.println(result.lci);</span><br><span class="line">        System.out.println(result.uci);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="显著性计算—date-based"><a href="#显著性计算—date-based" class="headerlink" title="显著性计算—date based"></a>显著性计算—date based</h2><h3 id="方法简述"><a href="#方法简述" class="headerlink" title="方法简述"></a>方法简述</h3><p>当总体呈现正态分布且总体标准差未知，而且容量小于30，那么这时一切可能的样本平均数与总体平均数的离差统计量呈T分布。</p>
+<p>该方法采用统计中的two sample t test， 检验两组数据的均值是否相等。例如100个男生身高数据和100个女生身高数据，通过该方法可以检验男生的平均身高是否显著不等于女生的平均身高。</p>
+<p>在报表中我们输入的两组数据，一组是一个版本每日的指标数据，另外一组是选择的另外一个版本对应的每日的指标数据。指标可以是任意数值型指标，比如UV数，点击率，订单数等等。</p>
+<p>该方法我们只做两两间的比较。</p>
+<h3 id="实验举例"><a href="#实验举例" class="headerlink" title="实验举例"></a>实验举例</h3><p>我们以一个首页改版为例，如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-1.png" alt="AB home page"></p>
+<p>首页改版，通过上面图片发现海外酒店位置发生变化，所以我们想知道位置的改变是否会影响海外酒店的点击数量，分流比：新版：老版=50%：50%</p>
+<p>我们拿到了每天新老版本的点击UV数，通过统计检验，判断是否新版的点击UV数明显低于老版。<br>数据如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/Abtest/Abtest-5.png" alt="home AB outcome"></p>
+<h3 id="检验方法"><a href="#检验方法" class="headerlink" title="检验方法"></a>检验方法</h3><p>假设x：新版每日UV数，y：老板每日UV数。计算如下统计量：</p>
+<script type="math/tex; mode=display">t = \frac {\bar x - \bar y}{s \sqrt{1 / n_1 + 1 / n_2} }</script><p>这里，</p>
+<blockquote>
+<p>$\bar x$ 是新版均值，$\bar x = \sum<em>{i=1}^{n_1} x_i / n_1, n_1 是天数$<br>$\bar y$ 是老板均值，$\bar y = \sum</em>{i=1}^{n<em>1} y_i / n_2, n_2 是天数$<br>$s = \sqrt{[(n_1 - 1) s_1^2 + (n_2 - 1) s_2^2] / (n_1 + n_2 -2)}$，其中<br>$s_1^2 = \sum</em>{i=1}^{n<em>1} (x_i - \bar x)^2 / (n_1 - 1), s_2^2 = \sum</em>{i=1}^{n_2} (y_i - \bar y) / (n_2 - 1)$</p>
+</blockquote>
+<p>若 $| t | &gt; t<em>{n_1 + n_2 - 2, 1 - \alpha / 2}$，则显著，否则不显著。$t</em>{n_1 + n_2 - 2, 1 - \alpha / 2}$数值可通过查表或者计算器获取。</p>
+<h3 id="示例剖析"><a href="#示例剖析" class="headerlink" title="示例剖析"></a>示例剖析</h3><p>基于上述方案，我们对前面的例子进行计算有：<br>$\bar x = 7555.111, \bar y = 14935$<br>共有9天数据，所以$n_1 = n_2 = 9$</p>
+<p>$s_1^2 = 1556811, s_2^2 = 335096.8, s = 972.6015$<br>t = (7555.111-14935) / 3890.406/$\sqrt{2/9}$ = -16.09612</p>
+<p>查表或者计算机可得：$t<em>{n_1 + n_2 - 2, 1 - \alpha / 2} = t</em>{16,1 - \alpha / 2} = 1.745884（自由度=9+9-2=16）$<br>由于$| t | &gt; t_{16,1 - \alpha / 2}$，所以新版还外加酒店宫格点击用户数相对老版是显著下降的。</p>
+<p>最小样本量：<br>在方法简述中提到：当总体呈现正态分布且总体标准差未知，而且容量小于30，那么这时一切可能的样本平均数与总体平均数的离差统计量呈T分布。</p>
+<p>在ABtest中实验天数小于30天即可用T检验来进行判定。那么是不是实验天数越小越好呢？答案显然是否定的，实验天数越多得到的结论可靠性越好，</p>
+<p>但是业务人员希望实验天数越少越好，两者之间形成了悖论。在此，一般建议实验最少进行两周（14天）：一周数据（7天）太少，且旅游数据大部分都是以一周为一个周期上下浮动，选择两周可以有效地平滑掉周期对结果的影响。</p>
+<h3 id="实验最小-uv-量"><a href="#实验最小-uv-量" class="headerlink" title="实验最小 uv 量"></a>实验最小 uv 量</h3><p>假设实验组分流比例 (B) = 对照组分流比例 (C+D), 指标(CR等)满足正态分布(Central Limit Theorem)且方差相等。</p>
+<p>选择参与实验的主指标数量为m (选项有CR, Quantity, GP-C)。对于每个选中的主指标, 计算该指标需要的最小样本量$S_i$:</p>
+<script type="math/tex; mode=display">n = \frac {((k+1) + (k+1)/k) \sigma^2 (z_{a - \alpha / 2m} + z_{1 - \beta})^2}{\Delta^2}
+= treatment_uv + control_uv</script><blockquote>
+<ul>
+<li>$\Delta = lift * u_x$，大流量 lift 可取值0.02，小流量可取0.03<br>  （$u_x$可取该指标在试验频道前2周的均值；$lift = (u_y - u_x)/u_x$，其中$(u_y - u_x)$是实验组和对照组的均值差）</li>
+<li>Type I Error 一般取$\alpha = 10 \%$；Type II Error 一般取$\beta = 0.2(Power = 10 \%)$</li>
+<li>$z_x$是正态分布累计概率为 x 时对应的分位数</li>
+<li>$\sigma^2$是该指标子啊试验频道前2周的方差。k = 实验组UV/对照组UV</li>
+</ul>
+</blockquote>
+<p><strong>最后选取实验的所需最小样本量的最大值$max{S_i: i = 1, …, m}$</strong></p>
+<h4 id="知识小科普："><a href="#知识小科普：" class="headerlink" title="知识小科普："></a>知识小科普：</h4><p>T检验和成对T检验的区别：<br>通常T检验或成对T检验是用来判断两组数据的平均值是否在统计上有差别,换一个理解,对两组数据而言,每组数据本身内部有一个波动范围(组内变异),而两组数据之间平均值的波动相称为组间变异,如果组间变异相对于组内变异小的话,就可以认为两组数据之间的平均值是没有差异的,这是T检验的做法. 而对于成对T检验,在一组中的数据与另一组的数据有对应关系,也就是两组数据是以成队的形式出现的,这个时候,运用这两个成队数据之间的差值,可以得到一个数据列,如果这个数据列的平均值在统计上是非零的,即可认为两组数据均值是有差异的,在这个地方,没有单独的去考虑两组数据之内的差异,而是通过将两组数据中对应的数据相减,得到一组数据,通过类似偏倚的算法,来看它在统计是是否非零.换一句话说,是当组内差异比较大(或者说是噪音较大),但是可以通过其它一个因子作区隔时,可以用成对T检验。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/ABTestsignificancecomputing.html">ABTest显著性计算</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/ABTestsignificancecomputing.html" title="ABTest显著性计算">https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ABTest/" rel="tag"><i class="fa fa-tag"></i> ABTest</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ABTestbuilding.html" rel="next" title="如何构建一个ABTest">
+                <i class="fa fa-chevron-left"></i> 如何构建一个ABTest
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/96501d7f.html" rel="prev" title="Deep and Cross Network for Ad Click Predictions (论文解析)">
+                Deep and Cross Network for Ad Click Predictions (论文解析) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E8%91%97%E6%80%A7%E8%AE%A1%E7%AE%97%E2%80%94uv-based"><span class="nav-number">1.</span> <span class="nav-text">显著性计算—uv based</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="nav-number">1.1.</span> <span class="nav-text">名词解释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%BB%93%E5%90%88%E6%98%BE%E8%91%97%E6%80%A7%E3%80%81power%E5%92%8C%E6%A0%B7%E6%9C%AC%E9%87%8F%E5%AF%B9%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E4%B8%8B%E7%BB%93%E8%AE%BA"><span class="nav-number">1.1.1.</span> <span class="nav-text">如何结合显著性、power和样本量对实验结果下结论</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.</span> <span class="nav-text">算法说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E8%91%97%E6%80%A7%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.1.</span> <span class="nav-text">显著性计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%9F%E6%95%88%EF%BC%88power%E5%80%BC%EF%BC%89%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.2.</span> <span class="nav-text">功效（power值）计算</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E8%91%97%E6%80%A7%E8%AE%A1%E7%AE%97%E2%80%94date-based"><span class="nav-number">2.</span> <span class="nav-text">显著性计算—date based</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">方法简述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">实验举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E9%AA%8C%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">检验方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E5%89%96%E6%9E%90"><span class="nav-number">2.4.</span> <span class="nav-text">示例剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%9C%80%E5%B0%8F-uv-%E9%87%8F"><span class="nav-number">2.5.</span> <span class="nav-text">实验最小 uv 量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%A7%91%E6%99%AE%EF%BC%9A"><span class="nav-number">2.5.1.</span> <span class="nav-text">知识小科普：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

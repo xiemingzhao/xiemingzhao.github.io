@@ -1,37 +1,1301 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,推荐," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="参考原作：推荐系统三十六式-刑无刀 11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法 评分预测问题只是很典型，其实并不大众,数据难收集，属于精英问题。行为预测，才是平民级推荐问题，处处可见。  缘起评分预测问题之所以“虽然小众却十分重要”，这一点得益于十多年前 Netflix Prize 的那一百万美元的悬赏效应。  公元 2006 年 10 月 2 号，对于很多人来说，这只">
+<meta property="og:type" content="article">
+<meta property="og:title" content="推荐系统三十六式--学习笔记（11-13 矩阵分解）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/99410703.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法 评分预测问题只是很典型，其实并不大众,数据难收集，属于精英问题。行为预测，才是平民级推荐问题，处处可见。  缘起评分预测问题之所以“虽然小众却十分重要”，这一点得益于十多年前 Netflix Prize 的那一百万美元的悬赏效应。  公元 2006 年 10 月 2 号，对于很多人来说，这只">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3.jpg">
+<meta property="article:published_time" content="2018-11-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.658Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/99410703.html"/>
+
+
+
+
+
+  <title>推荐系统三十六式--学习笔记（11-13 矩阵分解） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/99410703.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--学习笔记（11-13 矩阵分解）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-04T00:00:00+08:00">
+                2018-11-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%89%E5%8D%81%E5%85%AD%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐系统三十六式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/99410703.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/99410703.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  20
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://time.geekbang.org/column/intro/74">参考原作：推荐系统三十六式-刑无刀</a></p>
+<h2 id="11-【矩阵分解】那些在Netflix-Prize中大放异彩的推荐算法"><a href="#11-【矩阵分解】那些在Netflix-Prize中大放异彩的推荐算法" class="headerlink" title="11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法"></a>11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法</h2><blockquote>
+<p>评分预测问题只是很典型，其实并不大众,数据难收集，属于精英问题。<br>行为预测，才是平民级推荐问题，处处可见。</p>
+</blockquote>
+<h3 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a><strong>缘起</strong></h3><p>评分预测问题之所以“虽然小众却十分重要”，这一点得益于十多年前 Netflix Prize 的那一百万美元的悬赏效应。</p>
+<blockquote>
+<p>公元 2006 年 10 月 2 号，对于很多人来说，这只是平凡了无新意的一天，但对于推荐系统从业者来说，这是不得了的一天，美国著名的光盘租赁商 Netflix 突然广发英雄帖，放下“豪”言，这个就是土豪的“豪”，凡是能在他们现有推荐系统基础上，把均方根误差降低 10% 的大侠，可以瓜分 100 万美元。消息一出，群贤毕至。</p>
+</blockquote>
+<p><strong>最为著名的就是一系列矩阵分解模型，而最最著名的模型就是 SVD 以及其各种变体。</strong></p>
+<span id="more"></span>
+<h3 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a><strong>矩阵分解</strong></h3><h4 id="为什么要矩阵分解"><a href="#为什么要矩阵分解" class="headerlink" title="为什么要矩阵分解"></a><strong>为什么要矩阵分解</strong></h4><p>几点近邻模型的问题：</p>
+<ol>
+<li>物品之间存在相关性，信息量并不随着向量维度增加而线性增加；</li>
+<li>矩阵元素稀疏，计算结果不稳定，增减一个向量维度，导致近邻结果差异很大的情况存在。</li>
+</ol>
+<p>矩阵分解，直观上说来简单，就是把原来的大矩阵，近似分解成两个小矩阵的乘积，在实际推荐计算时不再使用大矩阵，而是使用分解得到的两个小矩阵。</p>
+<script type="math/tex; mode=display">U_{m \times k}V_{n \times k}^T \approx A_{m \times n}</script><p><strong>评分矩阵 A 是 m 乘以 n 维，即一共有 m 个用户，n 个物品。k 比 m 和 n 都小很多。</strong>这就是SVD，但是SVD 和矩阵分解不能划等号。</p>
+<h4 id="基础的-SVD-算法"><a href="#基础的-SVD-算法" class="headerlink" title="基础的 SVD 算法"></a><strong>基础的 SVD 算法</strong></h4><p>SVD 全称奇异值分解，然而在推荐算法中实际上使用的并不是正统的奇异值分解，而是一个伪奇异值分解。</p>
+<p><strong>首先介绍基础的 SVD 算法，然后是考虑偏置信息，接着是超越评分矩阵增加多种输入，最后是增加时间因素。</strong></p>
+<p>矩阵分解，就是把用户和物品都映射到一个 k 维空间中，不一定具有非常好的可解释性，每一个维度也没有名字，所以常常叫做隐因子。举个例子，用户 u 的向量是 $p_u$，物品 i 的向量是 $q_i$，那么，要计算物品 i 推荐给用户 u 的推荐分数，直接计算点积即可：</p>
+<script type="math/tex; mode=display">\hat r_{ui}=p_uq_i^T</script><p>难在如何得到每一个用户，每一个物品的 k 维向量。需要考虑两个核心要素：</p>
+<ul>
+<li>损失函数；</li>
+<li>优化算法。</li>
+</ul>
+<p>SVD 的损失函数是这样定义的：</p>
+<script type="math/tex; mode=display">\min_{q^*,p^*}\sum_{(u,i)\in \mathcal K}(r_{ui}-p_uq_i^T)^2+\lambda (||q_i||^2+||p_u||^2)</script><p><strong>这个损失函数由两部分构成，加号前一部分控制着模型的偏差，加号后一部分控制着模型的方差。</strong></p>
+<p>前一部分就是：用分解后的矩阵预测分数，要和实际的用户评分之间误差越小越好。</p>
+<blockquote>
+<p>整个 SVD 的学习过程就是（梯度下降（GD），另一个是交替最小二乘（ALS），这里以梯度下降为例）：</p>
+<ol>
+<li>准备好用户物品的评分矩阵，每一条评分数据看做一条训练样本；</li>
+<li>给分解后的 P 矩阵和 Q 矩阵随机初始化元素值；</li>
+<li>用 P 和 Q 计算预测后的分数；</li>
+<li>计算预测的分数和实际的分数误差；</li>
+<li>按照梯度下降的方向更新 P 和 Q 中的元素值；</li>
+<li>重复步骤 3 到 5，直到达到停止条件。</li>
+</ol>
+</blockquote>
+<p>梯度下降算法的一个关键点在于计算损失函数对于每个参数的梯度。</p>
+<script type="math/tex; mode=display">\frac{\partial}{\partial p_{uk}}e_{ui}^2=-2(r_{ui}-\sum_{k=1}^Kp_{uk}q_{ik})q_{ik}=-2e_{ui}q_{ik}</script><script type="math/tex; mode=display">\frac{\partial}{\partial q_{ik}}e_{ui}^2=-2(r_{ui}-\sum_{k=1}^Kp_{uk}q_{ik})p_{uk}=-2e_{ui}p_{uk}</script><p>求出了梯度之后，接下来是沿着负梯度的方向来更新每个参数。</p>
+<script type="math/tex; mode=display">p_{uk} ：= p_{uk} - \alpha \frac{\partial }{\partial p_{uk}}e_{ui}^2 = p_{uk} + 2\alpha e_{ui}q_{ik}</script><script type="math/tex; mode=display">q_{ik} ：= q_{ik} - \alpha \frac{\partial }{\partial q_{ik}}e_{ui}^2 = q_{ik} + 2\alpha e_{ui}p_{uk}</script><p>其中, α 表示随机梯度的学习率。<br>在实际应用中，为了保证模型拥有更好的泛化效果，会在损失函数中加入 L2 正则化。</p>
+<script type="math/tex; mode=display">e_{ui}^{2} = (r_{u,i} - \sum_{k=1}^{K}p_{uk}q_{ik})^{2} + \lambda \sum_{k=1}^{K}(p_{uk}^2 + q_{ik}^2)</script><p>加入正则化之后，对损失函数求梯度，得到：</p>
+<script type="math/tex; mode=display">\frac{\partial }{\partial p_{uk}}e_{ui}^2=-2\left ( r_{ui}-\sum_{k=1}^{K}p_{uk}q_{ik}  \right )q_{ik} + 2 \lambda p_{uk} =-2e_{ui}q_{ik}  + 2 \lambda p_{uk}</script><script type="math/tex; mode=display">\frac{\partial }{\partial q_{ik}}e_{ui}^2=-2\left ( r_{ui}-\sum_{k=1}^{K}p_{uk}q_{ik}  \right )p_{uk} + 2 \lambda q_{ik}  = -2e_{ui}p_{uk} + 2 \lambda q_{ik}</script><p>沿着负梯度的方向来更新每个参数：</p>
+<script type="math/tex; mode=display">p_{uk} := p_{uk} - \alpha \frac{\partial }{\partial p_{uk}}e_{ui}^2 = p_{uk} + 2\alpha (e_{ui}q_{ik} - \lambda p_{uk} )</script><script type="math/tex; mode=display">q_{ik} := q_{ik} - \alpha \frac{\partial }{\partial q_{ik}}e_{ui}^2 = q_{ik} + 2\alpha (e_{ui}p_{uk} - \lambda q_{ik})</script><h4 id="2-增加偏置信息"><a href="#2-增加偏置信息" class="headerlink" title="2 增加偏置信息"></a><strong>2 增加偏置信息</strong></h4><p>有一些用户会给出偏高的评分，比如标准宽松的用户；有一些物品也会收到偏高的评分，比如一些目标观众为铁粉的电影，甚至有可能整个平台的全局评分就偏高,评分 = 兴趣 + 偏见。所以，原装的 SVD 就有了第一个变种：<strong>把偏置信息抽出来的 SVD。</strong></p>
+<script type="math/tex; mode=display">\hat{r_{ui}} = \mu + b_{i} + b_{u} + p_{u}q_{i}^{T}</script><p>从左往右，全局平均分、物品的评分偏置、用户评分的偏置、用户和物品之间的兴趣偏好。增加了偏置信息的 SVD 模型目标函数稍有改变：</p>
+<script type="math/tex; mode=display">e_{ui}^{2} = (r_{u,i} - (\mu + b_{i} + b_{u} + \sum_{k=1}^{K}p_{uk}q_{ik}))^{2} + \lambda \left (\sum_{k=1}^{K}(p_{uk}^2 + q_{ik}^2) + b_{i}^{2} + b_{u}^{2}\right)</script><p><strong>和基本的 SVD 相比，要想学习两个参数：用户偏置和物品偏置。学习的算法还是一样的。</strong></p>
+<h4 id="3-增加历史行为"><a href="#3-增加历史行为" class="headerlink" title="3 增加历史行为"></a><strong>3 增加历史行为</strong></h4><p>有的用户评分比较少。事实上这很常见，相比沉默的大多数，主动点评电影或者美食的用户是少数。显式反馈比隐式反馈少，那么能不能利用隐式反馈来弥补这一点呢？另外，再考虑多一点，对于用户的个人属性，比如性别等。<br><strong>在 SVD 中结合用户的隐式反馈行为和属性，这套模型叫做 SVD++。</strong></p>
+<p>隐式反馈加入的方法是：除了假设评分矩阵中的物品有一个隐因子向量外，用户有过行为的物品集合也都有一个隐因子向量，维度是一样的。把用户操作过的物品隐因子向量加起来，用来表达用户的兴趣偏好。</p>
+<p>类似的，用户属性，全都转换成 0-1 型的特征后，对每一个特征也假设都存在一个同样维度的隐因子向量，一个用户的所有属性对应的隐因子向量相加，也代表了他的一些偏好。</p>
+<p><strong>评分=显式兴趣 + 隐式兴趣 + 偏见</strong>，此时的评分估计为：</p>
+<script type="math/tex; mode=display">\hat{r_{ui}} = \mu + b_{i} + b_{u} + (p_{u} + |N(u)|^{-0.5} \sum_{i\in{N(u)}}{x_{i}}+\sum_{a\in A_u}y_{a})q_{i}^{T}</script><p>学习的参数多了两个向量：x 和 y。一个是隐式反馈的物品向量，另一个用户属性的向量。</p>
+<h4 id="4-考虑时间因素"><a href="#4-考虑时间因素" class="headerlink" title="4 考虑时间因素"></a><strong>4 考虑时间因素</strong></h4><p>需要考虑的是：人是善变的。</p>
+<blockquote>
+<p>在 SVD 中考虑时间因素，有几种做法：</p>
+<ol>
+<li>对评分按照时间加权，让久远的评分更趋近平均值；</li>
+<li>对评分时间划分区间，不同的时间区间内分别学习出隐因子向量，使用时按照区间使用对应的隐因子向量来计算；</li>
+<li>对特殊的期间，如节日、周末等训练对应的隐因子向量。</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="12-【矩阵分解】Facebook是怎么为十亿人互相推荐好友的"><a href="#12-【矩阵分解】Facebook是怎么为十亿人互相推荐好友的" class="headerlink" title="12.【矩阵分解】Facebook是怎么为十亿人互相推荐好友的"></a>12.【矩阵分解】Facebook是怎么为十亿人互相推荐好友的</h2><h3 id="回顾矩阵分解"><a href="#回顾矩阵分解" class="headerlink" title="回顾矩阵分解"></a><strong>回顾矩阵分解</strong></h3><p>矩阵分解两个矩阵有这么几个特点：</p>
+<ol>
+<li><p>每个用户对应一个 k 维向量，每个物品也对应一个 k 维向量，就是所谓的隐因子向量，因为是无中生有变出来的，所以叫做“隐因子”；</p>
+</li>
+<li><p>两个矩阵相乘后，就得到了任何一个用户对任何一个物品的预测评分，具体这个评分靠不靠谱，那就是看功夫了。</p>
+</li>
+</ol>
+<p>在优化目标函数的时候，优化方法常用的选择有两个，一个是随机梯度下降（SGD），另一个是交替最小二乘（ALS）。在实际应用中，交替最小二乘更常用一些，这也是社交巨头 Facebook 在他们的推荐系统中选择的主要矩阵分解方法。</p>
+<h3 id="交替最小二乘原理-ALS"><a href="#交替最小二乘原理-ALS" class="headerlink" title="交替最小二乘原理 (ALS)"></a><strong>交替最小二乘原理 (ALS)</strong></h3><p>任务是找到两个矩阵 P 和 Q，让它们相乘后约等于原矩阵 R：</p>
+<script type="math/tex; mode=display">R_{m \times n}=P_{m \times k} \times Q_{n \times k}^T</script><p>难点在于P和Q均是位置的，如果知其一就可以接触另一个，例如，若一直Q：</p>
+<script type="math/tex; mode=display">P_{m \times k} = R_{m \times n} \times Q_{n \times k}^{-1}</script><p>于是我们可以通过交替最小二乘通过迭代的方式解决这个难题：</p>
+<ol>
+<li>初始化随机矩阵 Q 里面的元素值；</li>
+<li>把 Q 矩阵当做已知的，直接用线性代数的方法求得矩阵 P；</li>
+<li>得到了矩阵 P 后，把 P 当做已知的，故技重施，回去求解矩阵 Q；</li>
+</ol>
+<p>交替最小二乘有这么几个好处：</p>
+<ol>
+<li>在交替的其中一步，也就是假设已知其中一个矩阵求解另一个时，要优化的参数是很容易并<br>行化的；</li>
+<li>在不那么稀疏的数据集合上，交替最小二乘通常比随机梯度下降要更快地得到结果，事实上<br>这一点就是我马上要说的，也就是关于隐式反馈的内容。</li>
+</ol>
+<h3 id="隐式反馈"><a href="#隐式反馈" class="headerlink" title="隐式反馈"></a><strong>隐式反馈</strong></h3><p>矩阵分解算法，是为解决评分预测问题而生的,相比“预测用户会打多少分”，“预测用户会不会去浏览”更加有意义。收集到的数据只有明确的一类：用户干了某件事，而用户明确“不干”某件事的数据却没有明确表达。所以这就是 One-Class 的由来，<strong>One-Class 数据也是隐式反馈的通常特点。</strong></p>
+<p>对隐式反馈的矩阵分解，需要将交替最小二乘做一些改进，改进后的算法叫做加权交替最小二乘：<strong>Weighted-ALS。</strong>也就是说，行为的次数是对行为的置信度反应，也就是所谓的加权。</p>
+<blockquote>
+<p>加权交替最小二乘这样对待隐式反馈：</p>
+<ol>
+<li>如果用户对物品无隐式反馈则认为评分是 0；</li>
+<li>如果用户对物品有至少一次隐式反馈则认为评分是 1，次数作为该评分的置信度。</li>
+</ol>
+</blockquote>
+<p>现在的目标函数在原来的基础上变成这样：</p>
+<script type="math/tex; mode=display">\min_{q^*,p^*}\sum_{(u,i)\in \mathcal K}c_{ui}(r_{ui}-p_uq_i^T)^2+\lambda (||q_i||^2+||p_u||^2)</script><p>多出来的  $c<em>{ui}$  就是置信度，在计算误差时考虑反馈次数，次数越多，就越可信。置信度一般也不是直接等于反馈次数，根据一些经验，置信度 $c</em>{ui}$ 这样计算：</p>
+<script type="math/tex; mode=display">c_{ui}=1 + \alpha C</script><p><strong>阿尔法是一个超参数，需要调，默认值取 40 可以得到差不多的效果，C 就是次数了。</strong></p>
+<blockquote>
+<p>注：那些没有反馈的缺失值，就是在我们的设定下，取值为 0 的评分就非常多，有两个原因导致在实际使用时要注意这个问题：</p>
+<ol>
+<li>本身隐式反馈就只有正类别是确定的，负类别是我们假设的，你要知道，One-Class 并不是随便起的名字；</li>
+<li>这会导致正负类别样本非常不平衡，严重倾斜到 0 评分这边。</li>
+</ol>
+</blockquote>
+<p>不能使所有的缺失值作为负类别，矩阵分解的初心就是要填充这些值，如果都假设他们为 0 了，那就忘记初心了。应对这个问题的做法就是<strong>负样本采样：挑一部分缺失值作为负类别样本即可。</strong>怎么挑？有两个方法：</p>
+<ol>
+<li>随机均匀采样和正类别一样多；</li>
+<li>按照物品的热门程度采样。</li>
+</ol>
+<p><strong>第一种不是很靠谱，第二种在实践中经过了检验。</strong></p>
+<p>按照物品热门程度采样的思想就是：一个越热门的物品，用户越可能知道它的存在。那这种情况下，用户还没对它有反馈就表明：这很可能就是真正的负样本。</p>
+<h3 id="推荐计算"><a href="#推荐计算" class="headerlink" title="推荐计算"></a><strong>推荐计算</strong></h3><p>在得到了分解后的矩阵后，相当于每个用户得到了隐因子向量，这是一个稠密向量，用于代表他的兴趣。同时每个物品也得到了一个稠密向量，代表它的语义或主题。让用户和物品的隐因子向量两两相乘，计算点积就可以得到所有的推荐结果了。但是实际上复杂度还是很高，尤其对于用户数量和物品数量都巨大的应用</p>
+<p>两个办法得到真正的推荐结果：</p>
+<ul>
+<li>第一种，利用一些专门设计的数据结构存储所有物品的隐因子向量，从而实现通过一个用户向量可以返回    相似的 K 个物品。</li>
+</ul>
+<blockquote>
+<p>Facebook 给出了自己的开源实现 Faiss，类似的开源实现还有 Annoy，KGraph，NMSLIB。其中 Facebook 开源的 Faiss 和 NMSLIB（Non-Metric Space Library）都用到了 ball tree 来存储物品向量。如果需要动态增加新的物品向量到索引中，推荐使用 Faiss，如果不是，推荐使用 NMSLIB 或者KGraph。用户向量则可以存在内存数据中，这样可以在用户访问时，实时产生推荐结果</p>
+</blockquote>
+<ul>
+<li>第二种，就是拿着物品的隐因子向量先做聚类，海量的物品会减少为少量的聚类。然后再逐一计算用户和每个聚类中心的推荐分数，给用户推荐物品就变成了给用户推荐物品聚类。</li>
+</ul>
+<hr>
+<h2 id="13-【矩阵分解】如果关注排序效果，那么这个模型可以帮到你"><a href="#13-【矩阵分解】如果关注排序效果，那么这个模型可以帮到你" class="headerlink" title="13.【矩阵分解】如果关注排序效果，那么这个模型可以帮到你"></a>13.【矩阵分解】如果关注排序效果，那么这个模型可以帮到你</h2><p>矩阵分解在推荐系统中的地位非常崇高，恐怕本专栏介绍的其他算法模型都不能轻易地撼动它。</p>
+<h3 id="矩阵分解的不足"><a href="#矩阵分解的不足" class="headerlink" title="矩阵分解的不足"></a><strong>矩阵分解的不足</strong></h3><p>得到这样的矩阵分解结果后，常常在实际使用时，又是用这个预测结果来排序。在排序学习中的行话叫做 point-wise，其中 point 意思就是：只单独考虑每个物品，每个物品像是空间中孤立的点一样。与之相对的，还有直接预测物品两两之间相对顺序的问题，就叫做 pair-wise，pair，顾名思义就是成对比较。</p>
+<p>前面讲的矩阵分解都属于 point-wise 模型。这类模型的尴尬是：只能收集到正样本，没有负样本，于是认为缺失值就是负样本，再以预测误差为评判标准去使劲逼近这些样本。虽然进行了负样本采样来优化，但还是出现不好的负样本。</p>
+<p><strong>更直接的推荐模型应该是：能够较好地为用户排列出更好的物品相对顺序，而非更精确的评分。贝叶斯个性化排序，简称 BPR 模型。</strong></p>
+<h3 id="贝叶斯个性化排序"><a href="#贝叶斯个性化排序" class="headerlink" title="贝叶斯个性化排序"></a><strong>贝叶斯个性化排序</strong></h3><p>均方根误差，用于评价模型预测精准程度的。那么现在要关注的是相对排序，用什么指标比较好呢？答案是 AUC，AUC 全称是 Area Under Curve，意思是曲线下的面积，这里的曲线就是 ROC 曲线。</p>
+<h4 id="ROC曲线"><a href="#ROC曲线" class="headerlink" title="ROC曲线"></a><strong>ROC曲线</strong></h4><p>二分类预测的混淆矩阵：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">—</th>
+<th style="text-align:center">Truth Positive</th>
+<th style="text-align:center">Truth Negative</th>
+<th style="text-align:center">Sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Estimate Positive</td>
+<td style="text-align:center">TP</td>
+<td style="text-align:center">FP</td>
+<td style="text-align:center">$N_+$=TP+FP</td>
+</tr>
+<tr>
+<td style="text-align:center">Estimate Negative</td>
+<td style="text-align:center">FN</td>
+<td style="text-align:center">TN</td>
+<td style="text-align:center">$N_-$=FN+TN</td>
+</tr>
+<tr>
+<td style="text-align:center">Sum</td>
+<td style="text-align:center">$N_+$=TP+FN</td>
+<td style="text-align:center">$N_-$=FP+TN</td>
+<td style="text-align:center">N=TP+FP+FN+TN</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>真正例率（True Positive Rate , TPR）：</p>
+<script type="math/tex; mode=display">TPR=\frac{TP}{N_+} \approx p(\hat y=1|y=1)</script><p>假正例率(False Positive Rate  , FPR):</p>
+<script type="math/tex; mode=display">FPR=\frac{FP}{N_-} \approx p(\hat y=1|y=0)</script><p>TPR-FPR的相关图就是ROC曲线：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/ROC%E6%9B%B2%E7%BA%BF.png" alt="ROC.png"></p>
+<h4 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a><strong>AUC</strong></h4><p>AUC 这个值在数学上等价于：模型把关心的那一类样本排在其他样本前面的概率。最大是 1，完美结果，而 0.5 就是随机排列，0 就是完美地全部排错。</p>
+<blockquote>
+<p><strong>AUC的计算步骤：</strong></p>
+<ol>
+<li>用模型给样本计算推荐分数，比如样本都是用户和物品这样一对一对的，同时还包含了有无反馈的标识；</li>
+<li>得到打过分的样本，每条样本保留两个信息，第一个是分数，第二个是 0 或者 1，1 表示用户消费过，是正样本，0 表示没有，是负样本；</li>
+<li>按照分数对样本重新排序，降序排列；</li>
+<li>给每一个样本赋一个排序值，第一位 $r_1 = n$，第二位 $r_2 = n-1$，以此类推；其中要注意，如果几个样本分数一样，需要将其排序值调整为他们的平均值；</li>
+<li>终按照下面这个公式计算就可以得到 AUC 值。<script type="math/tex; mode=display">AUC=\frac {\sum_{i\in (sample)r_i-\frac{M \times (M+1)}{2}}}{M \times N}</script>公式两部分构成：<br>第一部分： 分母是所有我们关心的那类样本，也就是正样本，有 M 个，以及其他样本有 N 个，这两类样本相对排序总共的组合可能性，是 M x N；<br>第二部分： 分子也不复杂，原本是这样算的：第一名的排序值是 $r_1$，它在排序上不但比过了所有的负样本，而且比过了自己以外的正样本。但后者是自己人，所以组合数要排除，于是就有 n - M 种组合，以此类推，排序值为 $r_M$ 的就贡献了 $r_M$ - 1，把这些加起来就是分子。</li>
+</ol>
+</blockquote>
+<p>BPR 模型，它提出了一个优化准则和学习框架,主要有三点：</p>
+<ol>
+<li>一个样本构造方法；</li>
+<li>一个模型目标函数；</li>
+<li>一个模型学习框架。<br>通过这三步可以脱离评分预测，来做专门优化排序的矩阵分解。</li>
+</ol>
+<h4 id="构造样本"><a href="#构造样本" class="headerlink" title="构造样本"></a><strong>构造样本</strong></h4><p>前面介绍的矩阵分解，在训练时候处理的样本是：用户、物品、反馈，这样的三元组形式。其中反馈又包含真实反馈和缺失值，缺失值充当的是负样本职责。BPR 则不同，提出要关心的是物品之间对于用户的相对顺序，于是构造的样本是：用户、物品 1、物品 2、两个物品相对顺序，这样的四元组形式。</p>
+<blockquote>
+<p>其中，“两个物品的相对顺序”，取值是：</p>
+<ol>
+<li>如果物品 1 是消费过的，而物品 2 不是，那么相对顺序取值为 1，是正样本；</li>
+<li>如果物品 1 和物品 2 刚好相反，则是负样本；</li>
+<li>样本中不包含其他情况：物品 1 和物品 2 都是消费过的，或者都是没消费过的。</li>
+</ol>
+</blockquote>
+<h4 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a><strong>目标函数</strong></h4><p>BPR 怎么完成矩阵分解，依然需要像交替最小二乘那样的思想。先假装矩阵分解结果已经有了，于是就计算出用户对于每个物品的推荐分数，只不过这个推荐分数可能并不满足均方根误差最小，而是满足物品相对排序最佳。<br>那么对于四元组中两个产品的预测分数的差定为：$X_{u12}$。表示的是对用户 u，物品 1 和物品 2 的矩阵分解预测分数差。然后再用 sigmoid 函数把这个分数差压缩到 0 到 1 之间。</p>
+<script type="math/tex; mode=display">\Theta = \frac {1}{1+e^{-(X_{u12})}}</script><p><strong>其实就是用这种方式预测了物品 1 排在物品 2 前面的似然概率，所以最大化交叉熵就是目标函数了。</strong></p>
+<p>目标函数通常还要防止过拟合，加上正则项，正则项其实认为模型参数还有个先验概率，这是贝叶斯学派的观点，也是 BPR 这个名字中“贝叶斯”的来历。BPR 认为模型的先验概率符合正态分布，对应到正则化方法就是 L2 正则:</p>
+<script type="math/tex; mode=display">\prod_{u,i,j}p(i>_u j|\theta)p(\theta)</script><p>所有样本都计算：模型参数先验概率$p(\theta)$，和似然概率的乘积，最大化这个目标函数就能够得到分解后的矩阵参数，其中 $\theta$ 就是分解后的矩阵参数。把这个目标函数化简和变形后，和把 AUC 当成目标函数是非常相似的，也正因为如此，<strong>BPR 模型的作者敢于宣称该模型是为 AUC 而生的。</strong></p>
+<h4 id="训练方法"><a href="#训练方法" class="headerlink" title="训练方法"></a><strong>训练方法</strong></h4><p>首选梯度下降，但又有批量梯度和随机梯度下降两个选择，前者收敛慢，后者训练快却不稳定。因此 BPR 的作<br>者使用了一个介于两者之间的训练方法，结合重复抽样的梯度下降。具体来说是这样做的：</p>
+<blockquote>
+<ol>
+<li>从全量样本中有放回地随机抽取一部分样本；</li>
+<li>用这部分样本，采用随机梯度下降优化目标函数，更新模型参数；</li>
+<li>重复步骤 1，直到满足停止条件。</li>
+</ol>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3.jpg" alt="矩阵分解"></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/99410703.html">推荐系统三十六式--学习笔记（11-13 矩阵分解）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/99410703.html" title="推荐系统三十六式--学习笔记（11-13 矩阵分解）">https://www.xiemingzhao.com/posts/99410703.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/99410703.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/cd33fbd0.html" rel="next" title="推荐系统三十六式--学习笔记（8-10 近邻推荐）">
+                <i class="fa fa-chevron-left"></i> 推荐系统三十六式--学习笔记（8-10 近邻推荐）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/61333c5e.html" rel="prev" title="推荐系统三十六式--学习笔记（14-16 模型融合）">
+                推荐系统三十六式--学习笔记（14-16 模型融合） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E3%80%90%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E3%80%91%E9%82%A3%E4%BA%9B%E5%9C%A8Netflix-Prize%E4%B8%AD%E5%A4%A7%E6%94%BE%E5%BC%82%E5%BD%A9%E7%9A%84%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">11.【矩阵分解】那些在Netflix Prize中大放异彩的推荐算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%98%E8%B5%B7"><span class="nav-number">1.1.</span> <span class="nav-text">缘起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3"><span class="nav-number">1.2.</span> <span class="nav-text">矩阵分解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3"><span class="nav-number">1.2.1.</span> <span class="nav-text">为什么要矩阵分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9A%84-SVD-%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">基础的 SVD 算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%A2%9E%E5%8A%A0%E5%81%8F%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">2 增加偏置信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%A2%9E%E5%8A%A0%E5%8E%86%E5%8F%B2%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.2.4.</span> <span class="nav-text">3 增加历史行为</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E8%80%83%E8%99%91%E6%97%B6%E9%97%B4%E5%9B%A0%E7%B4%A0"><span class="nav-number">1.2.5.</span> <span class="nav-text">4 考虑时间因素</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E3%80%90%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E3%80%91Facebook%E6%98%AF%E6%80%8E%E4%B9%88%E4%B8%BA%E5%8D%81%E4%BA%BF%E4%BA%BA%E4%BA%92%E7%9B%B8%E6%8E%A8%E8%8D%90%E5%A5%BD%E5%8F%8B%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">12.【矩阵分解】Facebook是怎么为十亿人互相推荐好友的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E9%A1%BE%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3"><span class="nav-number">2.1.</span> <span class="nav-text">回顾矩阵分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%9B%BF%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E5%8E%9F%E7%90%86-ALS"><span class="nav-number">2.2.</span> <span class="nav-text">交替最小二乘原理 (ALS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E5%8F%8D%E9%A6%88"><span class="nav-number">2.3.</span> <span class="nav-text">隐式反馈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E8%AE%A1%E7%AE%97"><span class="nav-number">2.4.</span> <span class="nav-text">推荐计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-%E3%80%90%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E3%80%91%E5%A6%82%E6%9E%9C%E5%85%B3%E6%B3%A8%E6%8E%92%E5%BA%8F%E6%95%88%E6%9E%9C%EF%BC%8C%E9%82%A3%E4%B9%88%E8%BF%99%E4%B8%AA%E6%A8%A1%E5%9E%8B%E5%8F%AF%E4%BB%A5%E5%B8%AE%E5%88%B0%E4%BD%A0"><span class="nav-number">3.</span> <span class="nav-text">13.【矩阵分解】如果关注排序效果，那么这个模型可以帮到你</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="nav-number">3.1.</span> <span class="nav-text">矩阵分解的不足</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%AA%E6%80%A7%E5%8C%96%E6%8E%92%E5%BA%8F"><span class="nav-number">3.2.</span> <span class="nav-text">贝叶斯个性化排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ROC%E6%9B%B2%E7%BA%BF"><span class="nav-number">3.2.1.</span> <span class="nav-text">ROC曲线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AUC"><span class="nav-number">3.2.2.</span> <span class="nav-text">AUC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%A0%B7%E6%9C%AC"><span class="nav-number">3.2.3.</span> <span class="nav-text">构造样本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.4.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.5.</span> <span class="nav-text">训练方法</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

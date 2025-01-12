@@ -1,37 +1,1261 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,算法,推荐," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="参考原作：推荐系统三十六式-刑无刀 14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳推荐系统在技术实现上一般划分为三个阶段：挖掘、召回、排序。  挖掘就是对用户和物品做非常深入的结构化分析，各个角度各个层面的特征都被呈现出来，并且建好索引，供召回阶段使用，大部分挖掘工作都是离线进行的。 召回，因为物品太多了，每次给一个用户计算推荐结果时，如果对全部物品挨个计算，那将是一场灾难，取而代之">
+<meta property="og:type" content="article">
+<meta property="og:title" content="推荐系统三十六式--学习笔记（14-16 模型融合）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/61333c5e.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="参考原作：推荐系统三十六式-刑无刀 14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳推荐系统在技术实现上一般划分为三个阶段：挖掘、召回、排序。  挖掘就是对用户和物品做非常深入的结构化分析，各个角度各个层面的特征都被呈现出来，并且建好索引，供召回阶段使用，大部分挖掘工作都是离线进行的。 召回，因为物品太多了，每次给一个用户计算推荐结果时，如果对全部物品挨个计算，那将是一场灾难，取而代之">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/sigmoid.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/gbdtlr.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/FM%E7%A4%BA%E4%BE%8B%E6%A0%B7%E6%9C%AC.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%AC%E5%9B%9E%E5%92%8C%E6%8E%92%E5%BA%8F.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%9B%9B%E7%A7%8D%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E5%9C%A8tensorflow%E4%B8%AD%E7%9A%84%E5%B1%95%E7%A4%BA.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%9B%BE.jpg">
+<meta property="article:published_time" content="2018-11-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.658Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/61333c5e.html"/>
+
+
+
+
+
+  <title>推荐系统三十六式--学习笔记（14-16 模型融合） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/61333c5e.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">推荐系统三十六式--学习笔记（14-16 模型融合）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T00:00:00+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%89%E5%8D%81%E5%85%AD%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐系统三十六式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/61333c5e.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/61333c5e.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  20
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://time.geekbang.org/column/intro/74">参考原作：推荐系统三十六式-刑无刀</a></p>
+<h2 id="14-【模型融合】经典模型融合办法：线性模型和树模型的组合拳"><a href="#14-【模型融合】经典模型融合办法：线性模型和树模型的组合拳" class="headerlink" title="14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳"></a>14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳</h2><p>推荐系统在技术实现上一般划分为三个阶段：挖掘、召回、排序。</p>
+<ul>
+<li>挖掘就是对用户和物品做非常深入的结构化分析，各个角度各个层面的特征都被呈现出来，并且建好索引，供召回阶段使用，大部分挖掘工作都是离线进行的。</li>
+<li>召回，因为物品太多了，每次给一个用户计算推荐结果时，如果对全部物品挨个计算，那将是一场灾难，取而代之的是用一些手段从全量的物品中筛选出一部分比较靠谱的。</li>
+<li>排序，针对筛选出的一部分靠谱的做一个统一的论资排辈，最后这个统一的排序就是下面的主题：融合。</li>
+</ul>
+<span id="more"></span>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88.jpg" alt="模型融合.jpg"></p>
+<p><strong>可以注重学习一下图中的SVD,FM以及ALS算法</strong>。</p>
+<p>多种算法推出推荐结果后，需要模型融合的原因：</p>
+<blockquote>
+<ol>
+<li>有的算法可能只给出结果，不给分数，比如用决策树产生一些推荐结果；</li>
+<li>每种算法给出结果时如果有分数，分数的范围不一定一样，所以不能互相比较，大家各自家庭背景不一样；</li>
+<li>即使强行把所有分数都归一化，仍然不能互相比较，因为产生的机制不同，有的可能普遍偏高，有的可能普遍偏低。</li>
+</ol>
+</blockquote>
+<p>融合促使集成学习的诞生，下面的典型的模型融合方案是：逻辑回归和梯度提升决策树组合，又名“辑度组合”。</p>
+<h3 id="“辑度组合”原理"><a href="#“辑度组合”原理" class="headerlink" title="“辑度组合”原理"></a><strong>“辑度组合”原理</strong></h3><p>在推荐系统的模型融合阶段，就要以产品目标为导向。例如，信息流推荐需要以CTR为导向。</p>
+<h4 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a><strong>逻辑回归</strong></h4><p>逻辑回归常常被选来执行这个任务，它的输出值范围就是 0 到 1 之间，刚好满足点击率预估的输出，这是一个基础。因为逻辑回归是广义线性模型，相比于传统线性模型，在线性模型基础上增加了 sigmoid 函数。</p>
+<blockquote>
+<p>在对召回阶段不同算法给出的候选物品计算 CTR 预估时，需要两个东西：</p>
+<ol>
+<li>特征；</li>
+<li>权重。</li>
+</ol>
+</blockquote>
+<ul>
+<li>第一个是特征，就是用量化、向量的方式把一个用户和一个物品的成对组合表示出来。这里说的量化方式包括两种：实数和布尔。假设为x。</li>
+<li>第二个是权重，每个特征都有一个权重，权重就是特征的话事权。假设为w。</li>
+</ul>
+<p>sigmoid函数为：</p>
+<script type="math/tex; mode=display">\sigma (w \times x)=\frac {1}{1+e^{-w \times x}}</script><p>函数的图像如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/sigmoid.png" alt="sigmoid函数.png"></p>
+<p>逻辑回归特征的取值都要求要在 0 到 1 之间。</p>
+<blockquote>
+<p>CTR预估，发现CTR预估一般都是用LR，而且特征都是离散的。<br>0、 离散特征的增加和减少都很容易，易于模型的快速迭代;<br>1、稀疏向量内积乘法运算速度快，计算结果方便存储，容易扩展；<br>2、离散化后的特征对异常数据有很强的鲁棒性;<br>3、逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，每个变量有单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合；<br>4、 离散化后可以进行特征交叉，加入特征 A 离散化为M个值，特征B离散为N个值，那么交叉之后会有M*N个变量，进一步引入非线性，提升表达能力；<br>5、特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。<br>6、特征离散化以后，起到了简化了逻辑回归模型的作用，降低了模型过拟合的风险。</p>
+</blockquote>
+<p><strong>特征组合的难点在于：组合数目非常庞大，而且并不是所有组合都有效，只有少数组合有效。</strong><br><strong>特征工程 + 线性模型，是模型融合、CTR 预估等居家旅行必备。</strong></p>
+<ul>
+<li>权重的学习主要看两个方面：损失函数的最小化，就是模型的偏差是否足够小；另一个就是模型的正则化，就是看模型的方差是否足够小；</li>
+<li>除了要学习出偏差和方差都较小的模型，还需要能够给工程上留出很多余地，具体来说就是两点，一个是希望越多权重为 0 越好，权重为 0 称之为稀疏，可以减小很多计算复杂度，并且模型更简单，方差那部分会可控。</li>
+<li>另一个是希望能够在线学习这些权重，用户源源不断贡献他们的行为，后台就会源源不断地更新权重，这样才能实现生命的大和谐。</li>
+</ul>
+<p><strong>随机梯度下降常被人诟病的是，它什么也表现不好，很难得到稀疏的模型，效果收敛得也很慢。</strong></p>
+<p><strong>Google 在 2013 年 KDD 上发表了新的学习算法：FTRL，一种结合了 L1 正则和 L2 正则的在线优化算法，现在各家公司都采用了这个算法。</strong></p>
+<p>&nbsp;</p>
+<h4 id="梯度提升决策树-GBDT"><a href="#梯度提升决策树-GBDT" class="headerlink" title="梯度提升决策树 GBDT"></a><strong>梯度提升决策树 GBDT</strong></h4><p>树模型天然就可以肩负起特征组合的任务，从第一个问题开始，也就是树的根节点，到最后得到答案，也就是叶子节点，这一条路径下来就是若干个特征的组合。树模型最原始的是决策树，简称 DT，先驱们常常发现，把“多个表现”略好于“随机乱猜”的模型以某种方式集成在一起往往出奇效，所以就有树模型的集成模型。最常见的就是随机森林，简称 RF，和梯度提升决策树，简称 GBDT。把它分成两部分：一个是 GB，一个是 DT。GB 是得到集成模型的方案，沿着残差梯度下降的方向构建新的子模型，而 DT 就是指构建的子模型要用的决策树。</p>
+<p><strong>GBDT 和其他提升算法的不同之处，比如和 Ada boost 算法不同之处，GBDT 用上一棵树去预测所有样本，得到每一个样本的残差，下一棵树不是去拟合样本的目标值，而是去拟合上一棵树的残差。在得到所有这些树后，真正使用时，是将它们的预测结果相加作为最终输出结果。</strong></p>
+<p>此处有几个问题：</p>
+<ol>
+<li>既然是用来做回归的，如何把它用来做分类呢？可以把损失函数从上面的误差平方和换成适合分类的损失函数，例如对数损失函数。CTR预估的损失函数可以定义为：<script type="math/tex; mode=display">-ylog(p)-(1-y)log(1-p)</script></li>
+<li>通常还需要考虑防止过拟合，也就是损失函数汇总需要增加正则项，正则化的方法一般是：限定总的树个数、树的深度、以及叶子节点的权重大小。</li>
+<li>构建每一棵树时如果遇到实数值的特征，还需要将其分裂成若干区间，分裂指标有很多，可以参考 xgboost 中的计算分裂点收益，也可以参考决策树所用的信息增益。</li>
+</ol>
+<h4 id="二者结合"><a href="#二者结合" class="headerlink" title="二者结合"></a><strong>二者结合</strong></h4><p>将两者(LR+GBDT)结合在一起，用于做模型融合阶段的 CTR 预估。这是 Facebook 在其广告系统中使用的方法，其中 GBDT 的任务就是产生高阶特征组合。</p>
+<p>具体的做法是：GBDT 产生了 N 棵树，一条样本来了后，在每一棵树上都会从根节点走到叶子节点，到了叶子节点后，就是 1 或者 0，或者不变。把每一棵树的输出看成是一个组合特征，取值为 0 或者 1，一共 N 棵树就会产生 N 个新的特征，这 N 个新的特征作为输入进入 LR 模型，输出最终的结果。如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/gbdtlr.jpg" alt="gbdt+lr.jpg"></p>
+<p><strong>虽然简单，但在实际应用中非常的有效。</strong></p>
+<hr>
+<h2 id="15-【模型融合】一网打尽协同过滤、矩阵分解和线性模型"><a href="#15-【模型融合】一网打尽协同过滤、矩阵分解和线性模型" class="headerlink" title="15.【模型融合】一网打尽协同过滤、矩阵分解和线性模型"></a>15.【模型融合】一网打尽协同过滤、矩阵分解和线性模型</h2><h3 id="从特征组合说起"><a href="#从特征组合说起" class="headerlink" title="从特征组合说起"></a><strong>从特征组合说起</strong></h3><p>对逻辑回归    朴素的特征组合就是二阶笛卡尔乘积，但是你有没有想过这样暴力组合的问题所在。</p>
+<ol>
+<li>两两组合导致特征维度灾难；</li>
+<li>组合后的特征不见得都有效，事实上大部分可能无效；</li>
+<li>组合后的特征样本非常稀疏，意思就是组合容易，但是并不能在样本中找到对应的组合出现，也就没办法在训练时更新参数。</li>
+</ol>
+<p>如果把包含了特征两两组合的逻辑回归线性部分写出来，就是：</p>
+<script type="math/tex; mode=display">\hat y=w_0 + \sum_{i=1}^nw_ix_i + \sum_{i=1}^n \sum_{j=i+1}^n w_{ij}x_ix_j</script><p>问题就是两两组合后非常有可能没有样本能够学习到 $w_{ij}$，不但没有样本可以用来学习到参数，而且在应用时，如果遇到了这样的组合，也就只能放弃，因为没有学到权重。针对这个问题，就有了一个新的算法模型：<strong>因子分解机模型，也叫做 FM，即 Factorization Machine。</strong>因子分解机也常常用来做模型融合</p>
+<h3 id="FM模型"><a href="#FM模型" class="headerlink" title="FM模型"></a><strong>FM模型</strong></h3><h4 id="1-原理"><a href="#1-原理" class="headerlink" title="1 原理"></a><strong>1 原理</strong></h4><p>作者在2010提出此模型，思想是对上面那个公式中的 $w_{ij}$ 做解耦，让每一个特征学习一个隐因子向量出来。任何两个特征不小心在实际使用时相遇了，需要组合，那么各自掏出自己随身携带的隐因子变量做一个向量点积，就是两者组合特征的权重了。</p>
+<p>针对logistic回归的线性部分：</p>
+<script type="math/tex; mode=display">\hat y = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n <V_i,V_j>x_ix_j</script><p>不同之处就是原来有个$w_{ij}$，变成了这里的两个隐因子向量的点积。它其实认为两个特征之间，即使没有共同出现在一条样本中，也是有间接联系的。例如A和B有关系，B和C有关系，通过点积可以体现出A和C有关系。</p>
+<h4 id="2-模型训练"><a href="#2-模型训练" class="headerlink" title="2    模型训练"></a><strong>2    模型训练</strong></h4><p>因子分解机的参数学习并无特别之处，看目标函数，在这里是把它当作融合模型来看的，用来做 CTR 预估，因此预测目标是一个二分类，因子分解机的输出还需要经过 sigmoid 函数变换：</p>
+<script type="math/tex; mode=display">\sigma(\hat y)=\frac{1}{1+e^{-\hat y}}</script><p>因此，损失目标函数也就是常用的 logistic loss：</p>
+<script type="math/tex; mode=display">loss(\theta) = -\frac{1}{m} \sum_{i=1}^m [y^{(i)}log(\sigma(\hat y)) + (1-y^{(i)})log(1-\sigma(\hat y))]</script><p>公式中 $\sigma(\hat y)$ 是因子分解机的预测输出后，经过 sigmoid 函数变换得到的预估 CTR，$y_(i)$ 是真实样本的类别标记，正样本是 1，负样本是 0，m 是样本总数。<br><strong>注意损失函数实际上还需要加上正则项。</strong></p>
+<h4 id="3-预测阶段"><a href="#3-预测阶段" class="headerlink" title="3    预测阶段"></a><strong>3    预测阶段</strong></h4><p>因子分解机中二阶特征组合那一坨，在实际计算时，复杂度有点高，如果隐因子向量的维度是 k，特征维度是 n，那这个复杂度就是 $O(kn^2)$。<br>其中 n 方是特征要两两组合，k 是每次组合都要对 k 维向量计算点积。可以如下改造：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+&\sum_{i=1}^n\sum_{j=i+1}^n<v_i,v_j>x_ix_j\\
+=&\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n<v_i,v_j>x_ix_j-\frac{1}{2}\sum_{i=1}^n<v_i,v_i>x_ix_i\\
+=&\frac{1}{2}\sum_{f=1}^k((\sum_{i=1}^n\sum_{j=1}^n\sum_{f=1}^kv_{i,f}v_{j,f}x_ix_j-\sum_{i=1}^n\sum_{f=1}^kv_{i,f}v_{i,f}x_ix_j\\
+=&\frac{1}{2}\sum_{f=1}^k((\sum_{i=1}^nv_{i,f}x_i)(\sum_{j=1}^nv_{j,f}x_j)-\sum_{i=1}^nv_{i,f}^2x_i^2)\\
+=&\frac{1}{2}\sum_{f=1}^k((\sum_{i=1}^nv_{i,f}x_i)^2-\sum_{i=1}^nv_{i,f}^2x_i^2)
+\end{align}</script><blockquote>
+<p>伪代码：<br>loop1 begin:循环k次，k就是隐因子向量的维度，其中，循环到第f次时做一下事情；<br>loop2 begin:循环n个特征，第i次循环时做这样的事情：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 1. 从第i个特征的隐因子向量中拿出第f维的值；<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 2. 计算两个值：A是特征值和f维的值相乘，B是A的平方；<br>loop2 end<br>把n个A累加起来，并平方得到C，把n个B也累加起来，得到D，用C减D得到E；<br>loop1 end<br>把k次循环得到的k个E累加起来，除以2。</p>
+</blockquote>
+<p><strong>二阶组合部分的实际计算方法，现在这样做的复杂度只是 O(kn)</strong></p>
+<h4 id="4-一网打尽其他模型"><a href="#4-一网打尽其他模型" class="headerlink" title="4. 一网打尽其他模型"></a><strong>4. 一网打尽其他模型</strong></h4><p>如下图示例的样本：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/FM%E7%A4%BA%E4%BE%8B%E6%A0%B7%E6%9C%AC.jpg" alt="FM示例样本.jpg"></p>
+<p>这张图中每一条样本都记录了用户对电影的评分，最右边的 y 是评分，也就是预测目标；左边的特征有五种，用户 ID、当前评分的电影 ID、曾经评过的其他分、评分时间、上一次评分的电影。</p>
+<p>因子分解机可以实现带有特征组合的逻辑回归。假设图中的样本特征只留下用户 ID 和电影 ID，因子分解机模型就变成：</p>
+<script type="math/tex; mode=display">\hat y=w_0+w_u+w_i+<V_u,V_i></script><blockquote>
+<p>因为用户 ID 和电影 ID，在一条样本中，各自都只有一个维度是 1，其他都是 0，所以在一阶部分就没有了求和符合，直接是 wu 和 wi，二阶部分特征乘积也只剩下了一个 1，其他都为 0 了。这不就是带有偏置信息的 SVD 吗？在 SVD 基础上把样本中的特征加上用户历史评过分的电影 ID，再求隐因子向量，就是 SVD++！再加上时间信息，就变成了 time-SVD。</p>
+</blockquote>
+<h4 id="5-FFM"><a href="#5-FFM" class="headerlink" title="5.FFM"></a><strong>5.FFM</strong></h4><p>改进的思路是：不但认为特征和特征之间潜藏着一些不可告人的关系，还认为特征和特征类型有着千丝万缕的关系。这个特征类型，就是某些特征实际上是来自数据的同一个字段，比如用户 ID，占据了很多维度，变成了很多特征，但他们都属于同一个类型，都叫“用户 ID”。这个特征类型就是字段，即 Field。这种改进叫做 Field-aware Factorization Machines，简称 FFM。</p>
+<p>因子分解机是：</p>
+<script type="math/tex; mode=display">\hat y = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n <V_i,V_j>x_ix_j</script><p>FFM 改进的是二阶组合那部分，改进的模型认为每个特征有 f 个隐因子向量，这里的 f 就是特征一共来自多少个字段（Field），二阶组合部分改进后如下：</p>
+<script type="math/tex; mode=display">\sum_{i=1}^n \sum_{j=i+1}^n <V_{i,fj},V_{j,fi}>x_ix_j</script><p>FFM 模型也常用来做 CTR 预估。<strong>在 FM 和 FFM 事件过程中，记得要对样本和特征都做归一化。</strong></p>
+<hr>
+<h2 id="16-【模型融合】深度和宽度兼具的融合模型-Wide-and-Deep"><a href="#16-【模型融合】深度和宽度兼具的融合模型-Wide-and-Deep" class="headerlink" title="16.【模型融合】深度和宽度兼具的融合模型 Wide and Deep"></a>16.【模型融合】深度和宽度兼具的融合模型 Wide and Deep</h2><h3 id="要深还是要宽"><a href="#要深还是要宽" class="headerlink" title="要深还是要宽"></a><strong>要深还是要宽</strong></h3><p>融合排序，最常见的就是 CTR 预估。这里的C可以是点击，收藏，分享以及购买等等。CTR 预估的常见做法就是广义线性模型，如 Logistic Regression，然后再采用特征海洋战术，就是把几乎所有的精力都放在搞特征上：挖掘新特征、挖掘特征组合、寻找新的特征离散方法等等。</p>
+<blockquote>
+<p>这种简单模型加特征工程的做法好处多多：</p>
+<ol>
+<li>线性模型简单，其训练和预测计算复杂度都相对低；</li>
+<li>工程师的精力可以集中在发掘新的有效特征上，俗称特征工程；</li>
+<li>工程师们可以并行化工作，各自挖掘特征；</li>
+<li>线性模型的可解释性相对非线性模型要好。</li>
+</ol>
+</blockquote>
+<p>深度学习在推荐领域的应用，其最大好处就是“洞悉本质般的精深”，优秀的泛化性能，可以给推荐很多惊喜。Google 在 2016 年就发表了他们在 Google Play 应用商店上实践检验过的 CTR 预估方法：Wide &amp; Deep 模型，让两者一起为用户们服务，这样就取得了良好效果。具体的可以参考这篇论文:<a href="https://arxiv.org/pdf/1606.07792.pdf">Cheng H T, Koc L, Harmsen J, et al. Wide &amp; Deep Learning for Recommender Systems[J]. 2016:7-10.</a></p>
+<h3 id="Wide-amp-Deep-模型"><a href="#Wide-amp-Deep-模型" class="headerlink" title="Wide &amp; Deep 模型"></a><strong>Wide &amp; Deep 模型</strong></h3><p>推荐系统有召回和排序两部构成，不过，推荐系统的检索过程并不一定有显式的检索语句，通常是拿着用户特征和场景特征去检索召回，其中用户特征也就是在前面的专栏中提到的用户画像。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%AC%E5%9B%9E%E5%92%8C%E6%8E%92%E5%BA%8F.jpg" alt="推荐系统的召回和排序.jpg"></p>
+<p>深宽模型就是专门用于融合排序的，分成两部分来看。一部分是线性模型，一部分是深度非线性模型。整个示意图如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B.jpg" alt="深宽模型.jpg"></p>
+<p>首先，线性模型部分，也就是“宽模型”，形式如下：</p>
+<script type="math/tex; mode=display">y=W^TX+b</script><p>这是线性模型的标准形式，逻辑回归只是在这基础上用 sigmoid 函数变换了一下。深度模型其实就是一个前馈神经网络。深度模型对原始的高维稀疏类别型特征，先进行嵌入学习，转换为稠密、低维的实值型向量，转换后的向量维度通常在 10-100 这个范围。这里的嵌入学习，就是先随机初始化嵌入向量，再直接扔到整个前馈网络中，用目标函数来优化学习。</p>
+<p>深度模型中增加隐藏层的含义就是提供了非线性转换。所谓深度学习，就是深度神经网络，就是有不止一层的隐藏层存在。层数越多，非线性越强，模型越复杂。还有两点需要说明：</p>
+<ul>
+<li>隐藏层的激活函数不一定是 sigmoid 函数，甚至往往不用 sigmoid 函数；</li>
+<li>输出层的函数也不一定是 sigmoid 函数，这个根据预测目标而定，回归任务就是 i 直接输出求和部分，二分类是 sigmoid 函数，多分类则是 softmax。</li>
+</ul>
+<p>深模型中，每一个隐藏层激活方式表示如下:</p>
+<script type="math/tex; mode=display">a^{l+1}=f(W^la^l+b^l)</script><p>其中 l 表示第 l 个隐藏层，f 是激活函数，通常选用 ReLU，也叫整流线性单元，为什么选用ReLU 而不是 sigmoid 函数，原因主要是 sigmoid 函数在误差反向传播时梯度容易饱和。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E5%9B%9B%E7%A7%8D%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg" alt="四种激活函数.jpg"></p>
+<blockquote>
+<ol>
+<li>紫色是 sigmoid 函数，就是逻辑回归用的那个，输入值是任意范围，输出是 0 到 1 之间；</li>
+<li>草绿色是反正切函数，和 sigmoid 函数样子很像，输入值是任意范围，输出是 -1 到 1 之间；</li>
+<li>红色就是 ReLU 函数，当输入小于 0 时，输出为 0，当输入大于 0 时，输出等于输入；</li>
+<li>蓝色是 softplus 函数，是一条渐近线，输入趋向于负无穷时，输出趋于 0，输入趋于正无穷时，输出趋向于等于输入。</li>
+</ol>
+</blockquote>
+<p>最后，看看两者的融合，即深宽模型。深模型和宽模型，由逻辑回归作为最终输出单元，深模型最后一个隐藏层作为特征接入逻辑回归，宽模型的原始特征与之一起接入逻辑回归，然后训练参数。参数学习就是通常说的端到端，把深模型和宽模型以及最终融合的权重放在一个训练流程中，直接对目标函数负责，不存在分阶段训练。它与机器学习中的集成学习方法有所区别，集成学习的子模型是独立训练的，只在融合阶段才会学习权重，这里是整体。</p>
+<script type="math/tex; mode=display">P(Y=1|X)=\sigma(W_{wide}^T[X,\Phi(X)]+W_{deep}^Ta^{(lf)}+b)</script><p>上述输出公式中，Y 是我们要预估的行为，二值变量，如购买，或点击，Google 的应用场景为“是否安装APP”。$\sigma$是 sigmoid 函数，$W<em>{wide}^T$ 宽模型的权重，$\Phi(X)$ 是宽模型的组合特征，$W</em>{deep}^T$ 应用在深模型输出上的权重，$a^{(lf)}$ 是深模型的最后一层输出，b 是线性模型的偏置。</p>
+<h3 id="几点技巧"><a href="#几点技巧" class="headerlink" title="几点技巧"></a><strong>几点技巧</strong></h3><p>这个深宽模型已经在 TensorFlow 中有开源实现，具体落地时整个数据流如下图所示:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E5%9C%A8tensorflow%E4%B8%AD%E7%9A%84%E5%B1%95%E7%A4%BA.jpg" alt="深宽模型在tensorflow中的展示.jpg"></p>
+<p><strong>整个流程分为三大块：数据生成，模型训练，模型应用。</strong></p>
+<h4 id="1-数据生成"><a href="#1-数据生成" class="headerlink" title="1 数据生成"></a><strong>1 数据生成</strong></h4><p>几个要点：</p>
+<ul>
+<li>每一条曝光日志就生成一条样本，标签就是 1/0，安装了 App 就是 1，否则就是 0。</li>
+<li>将字符串形式的特征映射为 ID，需要用一个阈值过滤掉那些出现样本较少的特征。</li>
+<li>对连续值做归一化，归一化的方法是：对累积分布函数 P(X&lt;=x) 划分 nq 个分位，落入第 i 个分位的特征都归一化为下列所示：$\frac {i-1}{n_q-1}$</li>
+</ul>
+<h4 id="2-模型训练-1"><a href="#2-模型训练-1" class="headerlink" title="2    模型训练"></a><strong>2    模型训练</strong></h4><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/recSystem36L/%E6%B7%B1%E5%AE%BD%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%9B%BE.jpg" alt="深宽模型训练图.jpg"></p>
+<blockquote>
+<p>其要点，在深度模型侧：</p>
+<ol>
+<li>每个类别特征 embedding 成一个 32 维向量；</li>
+<li>将所有类别特征的 embedding 变量连成一个 1200 维度左右的大向量；</li>
+<li>1200 维度向量就送进三层以 ReLU 作为激活函数的隐藏层；</li>
+<li>最终从 Logistic Regreesion 输出。</li>
+</ol>
+</blockquote>
+<p>宽模型侧就是传统的做法：特征交叉组合。</p>
+<h4 id="3-模型应用"><a href="#3-模型应用" class="headerlink" title="3 模型应用"></a><strong>3 模型应用</strong></h4><p>模型验证后，就发布到模型服务器。模型服务，每次网络请求输入的是来自召回模块的 App 候选列表以及用户特征，再对输入的每个 App 进行评分。评分就是用我们的“深宽模型”计算，再按照计算的 CTR 从高到低排序。为了让每次请求响应时间在 10ms 量级，每次并不是串行地对每个候选 App 计算，而是多线程并行，将候选 App 分成若干并行批量计算。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/61333c5e.html">推荐系统三十六式--学习笔记（14-16 模型融合）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/61333c5e.html" title="推荐系统三十六式--学习笔记（14-16 模型融合）">https://www.xiemingzhao.com/posts/61333c5e.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/61333c5e.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/99410703.html" rel="next" title="推荐系统三十六式--学习笔记（11-13 矩阵分解）">
+                <i class="fa fa-chevron-left"></i> 推荐系统三十六式--学习笔记（11-13 矩阵分解）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/2f78d4ef.html" rel="prev" title="推荐系统三十六式--学习笔记（17-19 MAB问题）">
+                推荐系统三十六式--学习笔记（17-19 MAB问题） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#14-%E3%80%90%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E3%80%91%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E5%8A%9E%E6%B3%95%EF%BC%9A%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%A0%91%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%BB%84%E5%90%88%E6%8B%B3"><span class="nav-number">1.</span> <span class="nav-text">14.【模型融合】经典模型融合办法：线性模型和树模型的组合拳</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E8%BE%91%E5%BA%A6%E7%BB%84%E5%90%88%E2%80%9D%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">“辑度组合”原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="nav-number">1.1.1.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E5%86%B3%E7%AD%96%E6%A0%91-GBDT"><span class="nav-number">1.1.2.</span> <span class="nav-text">梯度提升决策树 GBDT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E7%BB%93%E5%90%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">二者结合</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-%E3%80%90%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E3%80%91%E4%B8%80%E7%BD%91%E6%89%93%E5%B0%BD%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E3%80%81%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3%E5%92%8C%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">15.【模型融合】一网打尽协同过滤、矩阵分解和线性模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%89%B9%E5%BE%81%E7%BB%84%E5%90%88%E8%AF%B4%E8%B5%B7"><span class="nav-number">2.1.</span> <span class="nav-text">从特征组合说起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FM%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">FM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.1.</span> <span class="nav-text">1 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.2.</span> <span class="nav-text">2    模型训练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%A2%84%E6%B5%8B%E9%98%B6%E6%AE%B5"><span class="nav-number">2.2.3.</span> <span class="nav-text">3    预测阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%B8%80%E7%BD%91%E6%89%93%E5%B0%BD%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.4.</span> <span class="nav-text">4. 一网打尽其他模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-FFM"><span class="nav-number">2.2.5.</span> <span class="nav-text">5.FFM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-%E3%80%90%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E3%80%91%E6%B7%B1%E5%BA%A6%E5%92%8C%E5%AE%BD%E5%BA%A6%E5%85%BC%E5%85%B7%E7%9A%84%E8%9E%8D%E5%90%88%E6%A8%A1%E5%9E%8B-Wide-and-Deep"><span class="nav-number">3.</span> <span class="nav-text">16.【模型融合】深度和宽度兼具的融合模型 Wide and Deep</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E6%B7%B1%E8%BF%98%E6%98%AF%E8%A6%81%E5%AE%BD"><span class="nav-number">3.1.</span> <span class="nav-text">要深还是要宽</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wide-amp-Deep-%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">Wide &amp; Deep 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E7%82%B9%E6%8A%80%E5%B7%A7"><span class="nav-number">3.3.</span> <span class="nav-text">几点技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90"><span class="nav-number">3.3.1.</span> <span class="nav-text">1 数据生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">2    模型训练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="nav-number">3.3.3.</span> <span class="nav-text">3 模型应用</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

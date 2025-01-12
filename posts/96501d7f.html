@@ -1,37 +1,1338 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="机器学习,推荐,排序,CTR预估,神经网络,Deep & Cross," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="原始论文：Deep &amp; Cross Network for Ad Click Predictions 深度和交叉网络的广告点击预测摘要特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep and Cross Network for Ad Click Predictions (论文解析)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/96501d7f.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="原始论文：Deep &amp; Cross Network for Ad Click Predictions 深度和交叉网络的广告点击预测摘要特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-3.JPG">
+<meta property="article:published_time" content="2019-07-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-12T12:48:46.652Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="推荐">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="CTR预估">
+<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="Deep &amp; Cross">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/96501d7f.html"/>
+
+
+
+
+
+  <title>Deep and Cross Network for Ad Click Predictions (论文解析) | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/96501d7f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Deep and Cross Network for Ad Click Predictions (论文解析)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-29T00:00:00+08:00">
+                2019-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/96501d7f.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/96501d7f.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  7.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  27
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://arxiv.org/pdf/1708.05123.pdf">原始论文：Deep &amp; Cross Network for Ad Click Predictions</a></p>
+<h2 id="深度和交叉网络的广告点击预测"><a href="#深度和交叉网络的广告点击预测" class="headerlink" title="深度和交叉网络的广告点击预测"></a>深度和交叉网络的广告点击预测</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a><strong>摘要</strong></h3><p>特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保持了深度模型的优势，并且又超越了这，它是一种在学习某种边界程度特征交叉项中更为有效的新奇网络。此外，DCN显示地在每一层应用特征交叉，不要求做人工程特征工程，同时也只是给DNN模型增加了一些可以忽略不计的复杂度。我们的实验结果已经证明它在CTR预测数据集和密集的分类数据集上，相对于其他高级模型在模型准确性和记忆方法上都具有优越性。</p>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a><strong>1 介绍</strong></h3><p>点击率（CTR）预测是一个大规模的问题，它对数十亿美元的在线广告业来说至关重要。在广告业中，广告商会想发布商付费以在发布商的网站上展示他们的广告。一个普遍的付费模式是平均点击成本（CPC）模型，即广告商仅在点击发生的时候才会付费。因此，出版商的收入很大程度上依赖于能够准确预测CTR。</p>
+<span id="more"></span>
+<p>识别出常用的预测特征且同时探索出那些看不见的或者稀少的交叉特征是做出好预测的关键。然而，网站级别的推荐系统的数据主要都是离散的和类别型的，这就导致了一个大的和稀疏的特征空间，而这对于特征探索来说是一个挑战。这就限制了大多数的大规模系统都是线性模型例如逻辑回归。</p>
+<p>线性模型是简单的，可解释的并且容易扩展的；然而，它们受限于自己的表达能力。另一方面，交叉特征已经被证明能够有效地提高模型的表达力。不幸的是，它一般要求人工特征工程或者穷举来找到这些特征；再者，泛化出这些看不见的特征交叉项是很困难的。</p>
+<p>在本文中，我们致力于通过引入一个新的神经网络结构来避免特征工程任务——一个<em>交叉网络</em>——它是以自动的方式显示地应用在特征交叉中。交叉网络由多层网络组成，其中特征的最高交叉维度完全由网络层的深度决定。每一层网络都以及已经存在的特征生成一个更高度的交叉项，同时又保留了前一层网络的交叉项。我们将交叉忘了和一个深度神经网络（DNN）进行联合训练。DNN能够捕获特征中的非常复杂的交叉项；然而，相比于我们的交叉忘了它需要同一数量级的参数，也无法形成显示的交叉特征，并且可能无法有效地学习某些特征交叉项。然而，交叉和深度部分的联合训练能够有效地捕获预测性的特征交叉项，并且在Criteo CTR数据集上提供了一个最先进的效果表现。</p>
+<p><strong>1.1 相关工作</strong><br>由于数据集的规模和维度急剧性的增加，于是提出了很多的方法用来避免特定任务中的大规模特征工程，大部分都是基于嵌入技术和神经网络的。</p>
+<p>因式分解机（FMs）将稀疏特征映射到低维的稠密向量上，并且从这些特征的内积中学习特征交叉项。场感知因式分解机（FFMs）让每个特征都可以学习到多个向量，其中每个响亮都是与一个场相关的。遗憾的是，FM和FFM浅显的结构限制了它们的模型表达力。有许多的工作都是为了将FM扩展到一个更高的级别，但是一个缺点就是产生了大量的参数从而大大增加了原本他们不期望产生的计算成本。深度神经网络（DNN）就可以学习到一些重要的高维的特征交叉项，这得益于它们的嵌入向量和非线性的激活函数。最近残差网络的成功使得训练一个非常深的网络有了可能。深度交叉扩展了残差网络，同时通过对所有输入类型的堆叠达到了自动特征学习的效果。</p>
+<p>深度学习的非凡成功引出了它的表达力的理论分析。有研究表明，在给定足够多的的隐含单元或者隐含层的时候，DNN能够再某种平滑线的假设条件下取近似一个有任意准确性的函数。再者，实际上已经发现了DNN在有合适参数的时候就已经能够表现地很好了。一个关键的原因就是实际使用的大多数函数都不是任意选择的。</p>
+<p>一个依然存在的问题就是DNN是否真的在那些实际中使用的表征函数中是最有效的一个。在Kaggle竞赛中，许多胜利者的解决方法中人工精心设计的特征都是低阶的、确切形式且有效地。另一方面，从DNN中学习到的特征都是隐含的且高度非线性的。这就表明了设计一个模型要能够学习到相比于普通的DNN更加有效且确切的有界阶特征交叉项。</p>
+<p>wide-and-deep就是这种想法创建的模型。它将交叉特征作为线性模型的输入，然后将线性模型和DNN模型进行联合训练。然而，wide-and-deep是否成功很大程度上依赖于交叉特征的事前选择，一个指数级的问题就是是否存在还没发现的更有效的方法。</p>
+<p><strong>1.2 主要贡献</strong><br>在本文中，我们提出了Deep &amp; Cross Network（DCN）模型，它能够在同时有稀疏输入和密集输入的时候进行网站规模的自动化特征学习。DCN能够有效地抓取有界阶的有用特征交叉项，学习高度非线性的交叉项，并且不要求人工特征工程或者穷举，同时又只有较低的计算成本。</p>
+<p>本文主要的贡献包括：</p>
+<ul>
+<li>我们提出了一个将特征交叉应用在每一层的新交叉网络，它能够有效地学习到具有预测价值的有限阶交叉特征，并且不要求进行人工特征工程或者穷举。</li>
+<li>交叉忘了是简单且有效的。通过设计，每一层多项式的最高阶都在增加并且由层数的深度决定。整个网络是由从低阶到高阶的交叉项以及所有不同的系数组成的。</li>
+<li>交叉网络是能够有效记忆的，并且能够很简单地实现。</li>
+<li>一个带有交叉网络的DNN，在参数个数少一个量级的情况下，它的对数损失依然比普通的DNN要低。</li>
+</ul>
+<h3 id="2-深度-amp-交叉网络（DCN）"><a href="#2-深度-amp-交叉网络（DCN）" class="headerlink" title="2 深度&amp;交叉网络（DCN）"></a><strong>2 深度&amp;交叉网络（DCN）</strong></h3><p>在这一部分，我们将会介绍深度&amp;交叉网络（DCN）模型的结构。DCN是开始于embedding和stacking层的，紧接着是一个交叉网络和一个深度网络并行。按顺序接着是一个最终的联合层用来合并两个网络的输出。完整的DCN模型如图1中所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-1.JPG" alt="D&amp;C-1.jpg"></p>
+<p><strong>2.1 嵌入和堆叠层</strong><br>我们考虑包含稀疏和密集特征的输入数据。在网站级规模的推荐系统如CTR预估中，输入数据大部分都是类别型特征，例如“country=usa”。这样的特征经常会被进行one-hot编码，例如“[0,1,0]”；然而，这就经常导致产生过高维的特征空间来适用大型词典。</p>
+<p>为了降低维度，我们使用了一个embedding过程来将这些二值特征转换成密集的实值向量（通常称为嵌入向量）：</p>
+<script type="math/tex; mode=display">x_{embed,i}=W_{embed,i}x_i</script><p>其中$x<em>{embed,i}$是嵌入向量，$x_i$是第i个类别的二值输入，$W</em>{embed,i} \ \in \mathbb R^{n_e \times n_v}$是对应的嵌入矩阵，它可以和网络中其他的参数一起进行优化，$n_e,n_v$分别是嵌入层大小和词典的大小。</p>
+<p>最后，我们将嵌入向量和标准化后的密集特征进行堆叠，形成一个最终的向量：</p>
+<script type="math/tex; mode=display">x_0 = [x_{embed,1}^T,...,x_{embed,k}^T,x_{dense}^T]</script><p>然后再将这个向量喂入到网络中去。</p>
+<p><strong>2.2 交叉网络</strong><br>我们创新交叉网络的关键思想就是以一个有效地方式来显示地应用特征交叉。交叉网络由交叉层组成，每一层都有如下的公式：</p>
+<script type="math/tex; mode=display">x_{l+1} = x_0 x_l^T w_l + b_l x_l = f(x_l , w_l, b_L) + x_l</script><p>其中$x<em>l,x</em>{l+1} \ \in \ \mathbb R^d$都是列向量，分别表示第l层和第l+1层交叉网络的输出$w<em>l, b_l \ \in \ \mathbb R^d$是第l层网络的权重和偏置项参数。每一交叉层在特征交叉f之后都反加上它的输入部分，并且映射函数$f:\mathbb R^d \rightarrow \mathbb R^d$拟合$x</em>{l+1}-x_l$的残差。一个交叉层的可视化展示如图2所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-2.JPG" alt="D&amp;C-2.jpg"></p>
+<p><strong>高阶特征交叉项</strong>。交叉网络特殊的结构造就了交叉特征的阶数随着网络层数增加而增加。第l层交叉网络的多项式最高阶数（相对于输入层来说）是l+1。事实上，交叉网络包含了所有的交叉项$x_1^{\alpha_1} x_2^{\alpha_2}…x_d^{\alpha_d}$，其中d取值从1到l+1。详细的分析在章节3。</p>
+<p><strong>复杂度分析</strong>$L_c$表示交叉层的个数，d表示输入层的维度。然后，交叉网络中的参数个数就是：</p>
+<script type="math/tex; mode=display">d \times L_c \times 2</script><p>交叉网络的时间和空间复杂度是关于输入层维度的线性增长。因此，交叉网络相比与其深度部分仅引入了一个微乎其微的复杂度部分，这使得DCN的整体复杂度与传统的DNN基本一致。这个有效性是得益于$x_0x_l^T$的秩为1的属性，这使得我们可以无需计算和存储整个矩阵的时候生成所有的交叉项。</p>
+<p>交叉网络很少的参数限制了模型的能力。为了获得更高阶的非线性交叉项，我们并行引入了深度网络。</p>
+<p><strong>2.3 深度网络</strong><br>深度网络部分是一个全连接的前向神经网络，其每一层的公式可以表示成如下：</p>
+<script type="math/tex; mode=display">h_{l+1} = f(W_lh_l+b_l)</script><p>其中$h<em>l \in \mathbb R^{n_l},h</em>{l+1}\in \mathbb R^{n<em>{l+1}}$分别是第l和第l+1隐含层；$W_l \in \mathbb R^{n</em>{l+1} \times n<em>l}, b_l \in \mathbb R^{n</em>{l+1}}$是第l深度层的参数；$f(\cdot)$是ReLU激活函数。</p>
+<p><strong>复杂度分析</strong>。为了简化，我们假设所有的深度网络层都是等维度的。$L_d$表示深度网络的层数，m表示深度网络层的大小。那么深度网络的参数个数就是：</p>
+<script type="math/tex; mode=display">d \times m + m + (m^2 + m) \times (L_d -1)</script><p><strong>2.4 联合层</strong><br>联合层是合并了了两个网络的输出部分，然后将合并后的向量喂入到标准的逻辑层中。</p>
+<p>下面就是二分类问题的公式：</p>
+<script type="math/tex; mode=display">p = \sigma([x_{l_1}^L,h_{L_2}^T w_{logits})</script><p>其中$x<em>{L_1} \in \mathbb R^d, h</em>{L<em>2} \in \mathbb R^m$分别是交叉网络和深度网络的输出，$w</em>{logits} \in \mathbb R^{(d+m)}$是合并层的参数向量，并且$\sigma(x) = 1/(1+exp(-x))$。</p>
+<p>损失函数是带有正则项的对数损失函数，</p>
+<script type="math/tex; mode=display">loss = -\frac{1}{N} \sum_{i=1}^N y_i log(p_i) + (1-y_i) log(1-p_i) + \lambda \sum_l ||w_l||^2</script><p>其中$p_i$是根据前一个公式计算的概率值，$y_i$是真实的标签，N是输入层的总数，$\lambda$是L2正则项参数。</p>
+<p>我们将两个网络联合一起进行训练，这使得每一个单独的网络在训练过程中可以感知到其他部分。</p>
+<h3 id="3-交叉网络分析"><a href="#3-交叉网络分析" class="headerlink" title="3 交叉网络分析"></a><strong>3 交叉网络分析</strong></h3><p>在这一部分，我们分析DCN的交叉网络为了更好地理解它的有效性。我们我们提拱了三个角度：多项式近似，泛化成FM，和高效映射。为了简化，我们假设$b_i = 0$。</p>
+<p><em>注意</em>。将$w<em>j$中的第i个元素表示成$w_j^{(i)}$。对于多索引$\alpha = [\alpha_1,…,\alpha_d] \in \mathbb N^d$和$x = [x_1,…,x_d] \in \mathbb R^d$，我们定义$|\alpha| = \sum</em>{i=1}^d \alpha_i$。</p>
+<p><em>术语</em>。交叉项（单个的）的等级$x_1^{\alpha_1}x_2^{\alpha_2}…x_d^{\alpha_d}$定义为$|\alpha|$。多项式的阶数由交叉项的最高阶来确定。</p>
+<p><strong>3.1 多项式近似</strong><br>根据魏尔斯特拉斯逼近定理，闭区间上的连续函数可以用多项式函数一致逼近。因此，我们将从多项式逼近的角度来分析交叉网络。特别地，交叉网络近似的同次多项式类，以一种有效地、更具表达力的并且泛化的方式拟合现实数据集。</p>
+<p>我们仔细地研究了关于交叉网络的同次多项式类的近似。我们定义$P_n(x)$表示n次多项式：</p>
+<script type="math/tex; mode=display">P_n(x) = \{\sum_{\alpha} w_{\alpha} x_1^{\alpha_1} x_2^{\alpha_2}...x_d^{\alpha_d}|0 \leq |\alpha| \leq n, \alpha \in \mathbb N^d\}</script><p>这个类中的每个多项式都有$O(d^n)$个系数。我们证明了，仅仅需要$O(d)$个参数，交叉网络就可以包含同次多项式汇总的所有交叉项，并且每一项的系数都互不相同。</p>
+<p><em>定理3.1</em> 考虑一个l层交叉网络，其第i+1层定义为$x_{i+1} = x_0x_i^Tw_i + x_i$。网络的输入设为$x_0 = [x_1,x_2,…,x_d]^T$，输出为$g_l(x_0) = x_l^Tw_l$，其中参数为$w_i,b_i \in \mathbb R^d$。然后，这个多项式$g_l(x_0)$将会衍生出下面的多项式类：</p>
+<script type="math/tex; mode=display">\{\sum_{\alpha} c_{\alpha}(w_0,...,w_L) x_1^{\alpha_1} x_2^{\alpha_2}...x_d^{\alpha_d}|0 \leq |\alpha| \leq l+1, \alpha \in \mathbb N^d \}</script><p>其中$c<em>{\alpha} = M</em>{\alpha} \sum<em>{i \in B</em>{\alpha}} \sum<em>{j \in P</em>{\alpha}} \prod<em>{k = 1}^{|\alpha|} w</em>{i<em>k}^{(j_k)}$，$M</em>{\alpha}$是常数，且与$w<em>i$无关，$i = [i_1,…,i</em>{|\alpha|}] 和 j = [j<em>1,…,i</em>{|\alpha|}]$是对应的索引，$B<em>{\alpha} = {y \in {0,1,…,l}^{|\alpha|}||y_i &lt; y_j \cap y</em>{|\alpha|} = l}$，并且$P_{\alpha}$是索引所有排列组成的集合$(1,…,1 \cdots d,…,d)$。</p>
+<p>定理3.1的证明在附录中。我们给定一个示例，考虑$x<em>1x_2x_3$的系数$c</em>{\alpha}$，其中$\alpha = (1,1,1,0,…,0)$。对于某些常数，当$l = 2, c<em>{\alpha} = \sum</em>{i,j,k \in P<em>{\alpha}} w_0^{(i)} w_1^{(j)} w_2^{(k)}$；当$l = 3, c</em>{\alpha} = \sum<em>{i,j,k \in P</em>{\alpha}} w_0^{(i)} w_1^{(j)} w_3^{(k)} +  w_0^{(i)} w_2^{(j)} w_3^{(k)} +  w_1^{(i)} w_2^{(j)} w_3^{(k)}$。</p>
+<p><strong>3.2 FM的推广</strong><br>交叉网络这种参数分享的思想类似于FM模型，进一步将其扩展到一个深度结构。</p>
+<p>在FM模型中，特征$x<em>i$是伴随着一个参数向量$v_i$，并且交叉项$x_ix_j$的权重是由$(v_i,v_i)$计算得到的。在DCN汇总，$x_i$是和标量集${w_k^{(i)} }_k^l$相关的，并且$x_i x_j$的权重是由集合${w_k^{(i)} }</em>{k=0}^l$ 和 ${w<em>k^{(j)} }</em>{k=0}^l$中的各参数相乘得到的。模型每个特征学习的一些参数是独立于其他特征的，交叉项的权重是对应参数的某种联合。参数贡献不仅能够是的模型更加有效，而且也能使得模型能够产生看不见的特征交叉项并且使其对于噪声更加稳健。例如，使用带有稀疏特征的数据集的时候。如果两个二值类特征$x_i$和$x_j$很少或者从来不会在训练集中出现，即$x_i \neq 0 \wedge x_j \neq 0$，所以学习到的$x_i,x_j$的权重就不会在预测中输出有异议的信息。</p>
+<p>FM模型是一个比较浅显的结构，其职能表征出2次的交叉项。相反，DCN能够构建所有的交叉项$x_1^{\alpha_1}x_2^{\alpha_2}…x_d^{\alpha_d}$其中$|\alpha|$由一些决定于网络层深度的常数来界定，如定理3.1所声明。因此，交叉网络是将参数共享这种思想从单层扩展到了多层和高次交叉项。注意到，不同于高阶的FM模型，一个交叉网络中的参数的个数仅仅随着输入层维度而线性增的长。</p>
+<p><strong>3.3 高效地投影</strong><br>每一个交叉网络层都会将$x_0和x_l$映射出它们之间所有的成对交叉项，并且以一种有效的方式产生输入层的维度。</p>
+<p>考虑$\tilde x \in \mathbb R^d$作为一个交叉层的输入。交叉层会隐式地构建出$d^2$个成对交叉项$x_i \tilde x_j$，并且会以一个高效记忆的方式将它们映射到d维空间。然而，直接的方式将会带来三倍的成本。</p>
+<p>我们的交叉层提供了有效地解决方案来将成本降低到关于d维的线性函数。对于$x_p = x_0 \tilde x^T w$。这实际上等于：</p>
+<script type="math/tex; mode=display">x_p^T = [x_1\tilde x_1 ... x_1 \tilde x_d \ ... \ x_d \tilde x_1 ... x_d \tilde x_d] \left[\begin{array}{cccc}w&0&...&0 \\ 0&w&...&0 \\ ...&...&...&... \\ 0&0&...&w \end{array} \right]</script><p>其中行向量包含所有的$d^2$个成对的交叉向量$x_i\tilde x_j$，投影矩阵有一个固定的对角结构，其中$w\in \mathbb R^d$是一个列向量。</p>
+<h3 id="4-实验结果"><a href="#4-实验结果" class="headerlink" title="4 实验结果"></a><strong>4 实验结果</strong></h3><p>在这一部分，我们字啊一些流行的预测数据及上评估DCN模型的表现。</p>
+<p><strong>4.1 Criteo Display Ads 数据</strong><br>Criteo Display广告数据及是为了预测广告点击率的。它包含13个整数型特征和26个类别型特征，其中每个类别都有高基数集。对于这个数据集，<strong>在对数损失上有0.001的提升就可以被认为是实践显著的。</strong>当考虑一个大的用户基础的时候，预测准确率的一个小提升就潜在地带来公司收益的大增长。数据包含11GB的横跨7天的用户日志（大约4100万条记录）。我们使用前6天的数据进行预测，并且将第7天的数据随机地等量地分成测试集和验证集。</p>
+<p><strong>4.2 实现细节</strong><br>DCN是在TensorFlow上实现的，我们简短地讨论一些DCN训练中的一些实现细节。</p>
+<p><em>数据的处理和嵌入*</em>。实值特征是使用对数变化来进行标准化处理的。对于类别特征，我们将特征嵌入成具有维度$6 \times (category cardinality)^{1/4}$的密集向量。将所有的嵌入结果全部连接到一起形成一个1026维的向量。</p>
+<p><em>优化</em>。我们使用Adam这种小批量随机优化的优化器。批量大小社会为512。批量标准化应用在了深度网络中，并且将梯度裁剪常数（gradient clip norm）设为100.</p>
+<p><em>正则化</em>。我们使用early stopping机制，因为我们使用L2正在和dropout都不起作用。</p>
+<p><em>超参数</em>。我们汇报了对隐含层个数，隐含层大小，初始学习率以及交叉层个数进行grid search的结果。隐含层的个数是从2到5，隐含层的大小是从32到1024.对于DCN，交叉层的个数是从1到6,。初始学习率从0.0001到0.001，每次增加0.0001。所有的实验都使用了early stopping，训练步数设为150000，过拟合发生的时候就会提前停止。</p>
+<p><strong>4.3 模型比较</strong><br>我们将DCN和5种模型进行了比较：没有交叉网络的DCN模型（DNN），逻辑回归（LR），因式分解机（FMs），Wide&amp;Deep模型（W&amp;D）和深度交叉模型（DC）。</p>
+<p><em>DNN</em>。嵌入层、输出层以及过程中的超参数都是用与DCN一致的。唯一和DCN不用的就是没有交叉层。</p>
+<p><em>LR</em>。我们使用Siby1——一个大型的机器学习系统来区分逻辑回归。整数型特征会被离散到一个对数尺度。交叉特征将会由一个精致且复杂的特诊供选择工具来进行筛选。所有的单特征是都会被使用。</p>
+<p><em>FM</em>。我们使用了带有特定细节的FM模型。</p>
+<p><em>W&amp;D</em>。不同于DCN，它的宽部分作为输入原始稀疏特征，并且依赖于穷举和知识域来选取有预测价值的交叉特征。我们跳过了这一块的比较因为没有比较好的方法来选择交叉特征。</p>
+<p><em>DC</em>。相比于DCN，DC没有显示地构造交叉特征。它主要依靠堆叠和残差项来隐式地创造交叉特征。我们使用和DCN相同的嵌入层，紧接着是另一个ReLu层来生成输入数据到残差单元系列中。残差单元的个数一半设为1到5之间，输入维度和交叉维度一般是从100到1026。</p>
+<h3 id="4-4-模型表现"><a href="#4-4-模型表现" class="headerlink" title="4.4 模型表现"></a><strong>4.4 模型表现</strong></h3><p>在这一部分，我们首先会列出不同模型在对数损失下的最好的结果，然后我们会将DCN和DNN进行仔细对比，之后，我们再进一步分析引入交叉网络的效果。</p>
+<p><strong>不同模型的表现</strong>。不同模型的对数损失的最好测试结果都列在了表1中。最优的超参数设置是DCN模型有2个深层且大小为1024和6个交叉层，DNN则有大小为1024的5层网络，DC模型有5个输入维度为424交叉维度为537的残差单元，LR模型有42个交叉特征。最终发现最深的交叉结构获得了最好的表现结果，这表明交叉网络中高次的特征交叉项是有用的。如我们所见，DCN要远好于所有其他的模型。特别地，它优于最先进的DNN模型，而且仅仅是相对于DNN用了40%的内存消费。</p>
+<p><em>表1 不同模型的最优对数损失</em></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Model</th>
+<th style="text-align:center">DCN</th>
+<th style="text-align:center">DC</th>
+<th style="text-align:center">DNN</th>
+<th style="text-align:center">FM</th>
+<th style="text-align:center">LR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Logloss</td>
+<td style="text-align:center"><strong>0.4419</strong></td>
+<td style="text-align:center">0.4425</td>
+<td style="text-align:center">0.4428</td>
+<td style="text-align:center">0.4464</td>
+<td style="text-align:center">0.4474</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>对于每个模型的最优超参数设置，我们也汇报了10次不同对数损失测试结果的均值和标准差：<br>$DCN:0.4422 \pm 9 \times 10^{-5}$<br>$DNN:0.4430 \pm 3.7 \times 10^{-4}$<br>$DC:0.4430 \pm 4.3 \times 10^{-4}$。<br>如我们如看到的，DCN一致的大幅优于其他模型。</p>
+<p><strong>DCN和DNN之间的比较</strong>。考虑到交叉网络仅仅额外引入了O(d)个参数，我们就将DCN和它——一个传统的DNN进行比较，并且将实验结果展现出来尽管存在较大的内存预算和损失公差。</p>
+<p>接下来，我们将会汇报一定数量参数的损失数据，它们都是在所有的学习率和模型结构上得到的最好的验证集的损失。嵌入层的参数个数被省略了，因为在我们所有模型的计算中这一部分保持不变。</p>
+<p>表2展示了要获得一个达到预期对数损失阈值的模型所需要的最少的参数个数。从表2中我们可以看出DCN的内存有效性要比单一的DNN模型高出近一个量级，这得益于交叉网络能够有效地学习到有限次的特征交叉项。</p>
+<p><em>表2 要获得一个达到预期对数损失阈值的模型所需要的最少的参数个数</em></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Logloss</th>
+<th style="text-align:center">0.4430</th>
+<th style="text-align:center">0.4460</th>
+<th style="text-align:center">0.4470</th>
+<th style="text-align:center">0.4480</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DNN</td>
+<td style="text-align:center">3.2E6</td>
+<td style="text-align:center">1.5E5</td>
+<td style="text-align:center">1.5E5</td>
+<td style="text-align:center">7.8E4</td>
+</tr>
+<tr>
+<td style="text-align:center">DCN</td>
+<td style="text-align:center">7.9E5</td>
+<td style="text-align:center">7.3E4</td>
+<td style="text-align:center">3.7E4</td>
+<td style="text-align:center">3.7E4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>表2对比了固定内存预算的神经网络的表现。我们可以看到，DCN一致的比DNN要好。在一个小参数体制里，交叉网络参数的个数和深度网络相比相差无几，但是可以看到明显提升这就表明交叉网络在学习有用特征交叉项中更为有效。在大参数体制中，DNN缩小了一些差距了。然而，DCN仍然要比DNN好一大截，这表明它可以有效地学习到一些很有用的甚至一个大DNN都学不到的特征交叉项。</p>
+<p><em>表3 不同的内存预算下获得的最好的对数损失</em></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">5E4</th>
+<th style="text-align:center">1E5</th>
+<th style="text-align:center">4E5</th>
+<th style="text-align:center">1.1E6</th>
+<th style="text-align:center">2.5E6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DNN</td>
+<td style="text-align:center">0.4480</td>
+<td style="text-align:center">0.4471</td>
+<td style="text-align:center">0.4439</td>
+<td style="text-align:center">0.4433</td>
+<td style="text-align:center">0.4431</td>
+</tr>
+<tr>
+<td style="text-align:center">DCN</td>
+<td style="text-align:center"><strong>0.4465</strong></td>
+<td style="text-align:center"><strong>0.4453</strong></td>
+<td style="text-align:center"><strong>0.4432</strong></td>
+<td style="text-align:center"><strong>0.4426</strong></td>
+<td style="text-align:center"><strong>0.4423</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们从更精确的细节来分析对于给定的DNN模型，引入交叉网络的DCN模型的影响。我们首先对比了拥有同样层数和层大小的DNN和DCN模型的最好表现，然后我们展示了验证集的对数损失是如何随着交叉网络层数的增加而变化的。表4展示了DCN和DNN模型在对数损失上面的区别。在同一实验设定下，从最优的对数损失上看DCN模型一致的优于有相同结构的单一DNN模型。这种对于所有超参数的改进是一致的，降低了参数在初始化和随机优化中的随机性影响。</p>
+<p><em>表4 DCN和DNN在验证集上的对数损失之间的区别</em></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Layers/Nodes</th>
+<th style="text-align:center">32</th>
+<th style="text-align:center">64</th>
+<th style="text-align:center">128</th>
+<th style="text-align:center">256</th>
+<th style="text-align:center">512</th>
+<th style="text-align:center">1024</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-0.28</td>
+<td style="text-align:center">-0.10</td>
+<td style="text-align:center">-0.16</td>
+<td style="text-align:center">-0.06</td>
+<td style="text-align:center">-0.05</td>
+<td style="text-align:center">-0.08</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">-0.19</td>
+<td style="text-align:center">-0.10</td>
+<td style="text-align:center">-0.13</td>
+<td style="text-align:center">-0.18</td>
+<td style="text-align:center">-0.07</td>
+<td style="text-align:center">-0.05</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">-0.12</td>
+<td style="text-align:center">-0.10</td>
+<td style="text-align:center">-0.06</td>
+<td style="text-align:center">-0.09</td>
+<td style="text-align:center">-0.09</td>
+<td style="text-align:center">-0.21</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">-0.21</td>
+<td style="text-align:center">-0.11</td>
+<td style="text-align:center">-0.13</td>
+<td style="text-align:center">-0.00</td>
+<td style="text-align:center">-0.06</td>
+<td style="text-align:center">-0.02</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>图3展示了在随机选择的设置中我们增加交叉层数的改进效果。对于图3中的深度网络，当增加了一个交叉层的时候有一个明显的提升。随着更多的交叉层引入的时候，对于某些模型设置会使得对数损失继续下降，这表明引入交叉项对于预测是有效的；鉴于对于其他模型设置对数损失开始波动甚至出现微幅增加，这就表明高阶的特征交叉项的银如意是没有太大作用的</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/deep%26cross-3.JPG" alt="D&amp;C-3.jpg"></p>
+<h3 id="4-5-非CTR数据集"><a href="#4-5-非CTR数据集" class="headerlink" title="4.5 非CTR数据集"></a><strong>4.5 非CTR数据集</strong></h3><p>我们证明了DCN模型在非CTR预测问题中也表现得很好。我们使用来自UCI提供的森林植被类型（forest covertype）（581012样本和54个特征）和 希格斯粒子（Higgs）（11M样本和28个特征）数据集。数据集随机得被分为训练集（90%）和测试集（10%）。对于超参数进行了梯度搜索。深度网络层数从1到10，大小从50到300.交叉网络层数从4到10。残差单元的个数从1到5，他们的出入维度和交叉维度从50到300。对于DCN，输入向量会被直接喂入交叉网络。</p>
+<p>对于森林植被类型数据，DCN在最少的内存消费下获得了最好的测试集准确率0.9740。DNN和DC都是0.9737。DCN最优的超参数设置是8个交叉层且大小为54，6个深度网络层且大小为292，DNN则是有7层大小为292的深度网络层，DC则是有输入维度为271交叉维度为287的4个残差单元。</p>
+<p>对于希格斯粒子数据集，DCN模型获得的最好对数损失测试结果是0.4494，而DNN是0.4506。DCN最优的超参数设定是4层大小为28的交叉网络和4层大小为209深度网络层，DNN则是10层大小为196的深度网络层。DCN在仅用了DNN一半的内存情况下依然表现得比其要好。</p>
+<h3 id="5-结论和未来方向"><a href="#5-结论和未来方向" class="headerlink" title="5 结论和未来方向"></a><strong>5 结论和未来方向</strong></h3><p>区分有效的特征交叉项已经称为了许多预测模型成功的关键。遗憾的是，过程往往需要进行手工特征和穷举。DNN是比较受欢迎的自动特征学习模型；然而，学到的特征是隐式的并且高度非线性的，同时网络并不一定需要很大而且无法学习到某些特征。本文剔除的Deep &amp; Cross Network模型能够处理大的稀疏和密集特征集，并且可以联合传统的深度表示来显示地学习有限次的交叉特征。交叉特征的阶数在每一个交叉层都会增加一。我们的实验结果已经证明了它在系数数据集和密集数据集上都要优于其他最先进的算法，优势体现在模型的准确率和内存使用上。</p>
+<p>我们会进一步地在其他模型中探索使用交叉层，使得深度交叉网络能够有效地训练，研究交叉网络在多项式近似中的有效性，并且在优化过程中可以更好地理解深度网络的交叉项。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/96501d7f.html">Deep and Cross Network for Ad Click Predictions (论文解析)</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/96501d7f.html" title="Deep and Cross Network for Ad Click Predictions (论文解析)">https://www.xiemingzhao.com/posts/96501d7f.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/96501d7f.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/%E6%8E%A8%E8%8D%90/" rel="tag"><i class="fa fa-tag"></i> 推荐</a>
+          
+            <a href="/tags/%E6%8E%92%E5%BA%8F/" rel="tag"><i class="fa fa-tag"></i> 排序</a>
+          
+            <a href="/tags/CTR%E9%A2%84%E4%BC%B0/" rel="tag"><i class="fa fa-tag"></i> CTR预估</a>
+          
+            <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 神经网络</a>
+          
+            <a href="/tags/Deep-Cross/" rel="tag"><i class="fa fa-tag"></i> Deep & Cross</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ABTestsignificancecomputing.html" rel="next" title="ABTest显著性计算">
+                <i class="fa fa-chevron-left"></i> ABTest显著性计算
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/sparseMatrix.html" rel="prev" title="稀疏矩阵(Sparse Matrix)">
+                稀疏矩阵(Sparse Matrix) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%92%8C%E4%BA%A4%E5%8F%89%E7%BD%91%E7%BB%9C%E7%9A%84%E5%B9%BF%E5%91%8A%E7%82%B9%E5%87%BB%E9%A2%84%E6%B5%8B"><span class="nav-number">1.</span> <span class="nav-text">深度和交叉网络的广告点击预测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">1 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B7%B1%E5%BA%A6-amp-%E4%BA%A4%E5%8F%89%E7%BD%91%E7%BB%9C%EF%BC%88DCN%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">2 深度&amp;交叉网络（DCN）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BA%A4%E5%8F%89%E7%BD%91%E7%BB%9C%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">3 交叉网络分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.5.</span> <span class="nav-text">4 实验结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E6%A8%A1%E5%9E%8B%E8%A1%A8%E7%8E%B0"><span class="nav-number">1.6.</span> <span class="nav-text">4.4 模型表现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E9%9D%9ECTR%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.7.</span> <span class="nav-text">4.5 非CTR数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%BB%93%E8%AE%BA%E5%92%8C%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="nav-number">1.8.</span> <span class="nav-text">5 结论和未来方向</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
