@@ -8,13 +8,3 @@ https://www.xiemingzhao.com/posts/bitArithmetic.html
 https://www.xiemingzhao.com/posts/sparseMatrix.html
 https://www.xiemingzhao.com/posts/96501d7f.html
 https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html
-https://www.xiemingzhao.com/posts/ABTestbuilding.html
-https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html
-https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html
-https://www.xiemingzhao.com/posts/4bbfbe93.html
-https://www.xiemingzhao.com/posts/IntroductionofLTR.html
-https://www.xiemingzhao.com/posts/5fb7303d.html
-https://www.xiemingzhao.com/posts/c7ab2b84.html
-https://www.xiemingzhao.com/posts/HexoblogSE.html
-https://www.xiemingzhao.com/posts/e59f436c.html
-https://www.xiemingzhao.com/posts/eafa0d01.html
