@@ -20,6 +20,15 @@
   </url>
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/50170875.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/cd33fbd0.html</loc>
     
     <lastmod>2025-01-12</lastmod>
@@ -38,15 +47,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/50170875.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/categories/index.html</loc>
     
     <lastmod>2025-01-12</lastmod>
@@ -56,7 +56,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/6ea3699c.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/57e6146c.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -65,7 +65,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/57e6146c.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/6ea3699c.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -164,6 +164,15 @@
   </url>
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/ABTestbuilding.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
     
     <lastmod>2025-01-12</lastmod>
@@ -173,7 +182,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/ABTestbuilding.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/d0f1b267.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -191,7 +200,16 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/d0f1b267.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/15b10533.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -227,43 +245,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/15b10533.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -281,25 +263,25 @@
   </url>
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/sparseMatrix.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/Hexoblogdomain.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/Hexoblogurloptimize.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/5fb7303d.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -317,7 +299,25 @@
   </url>
   
   <url>
+    <loc>https://www.xiemingzhao.com/posts/5fb7303d.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/posts/c7ab2b84.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/Hexoblogurloptimize.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -335,15 +335,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/399ba6ee.html</loc>
-    
-    <lastmod>2025-01-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/posts/GithubHexoNexttips.html</loc>
     
     <lastmod>2025-01-12</lastmod>
@@ -353,7 +344,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/Hexoblogbranch.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/399ba6ee.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -371,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/HexoblogSE.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/Hexoblogbranch.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -389,7 +380,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/posts/eafa0d01.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/HexoblogSE.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -408,6 +399,15 @@
   
   <url>
     <loc>https://www.xiemingzhao.com/posts/96501d7f.html</loc>
+    
+    <lastmod>2025-01-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/eafa0d01.html</loc>
     
     <lastmod>2025-01-12</lastmod>
     
@@ -471,27 +471,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/tags/Gradient-Descent/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xiemingzhao.com/tags/Optimization/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/tags/Classification/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -534,13 +513,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/DeepFM/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/tags/Deep-Cross/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -548,7 +520,7 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/FM/</loc>
+    <loc>https://www.xiemingzhao.com/tags/DeepFM/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -576,6 +548,13 @@
   </url>
   
   <url>
+    <loc>https://www.xiemingzhao.com/tags/FM/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xiemingzhao.com/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -583,7 +562,28 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E5%BD%95/</loc>
+    <loc>https://www.xiemingzhao.com/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/tags/Gradient-Descent/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/tags/Optimization/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/tags/LTR/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -597,14 +597,21 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/%E9%93%BE%E6%8E%A5%E4%BC%98%E5%8C%96/</loc>
+    <loc>https://www.xiemingzhao.com/tags/LightGBM/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/LTR/</loc>
+    <loc>https://www.xiemingzhao.com/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E5%BD%95/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/tags/%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -625,13 +632,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/LightGBM/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/tags/RF/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -639,14 +639,14 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5/</loc>
+    <loc>https://www.xiemingzhao.com/tags/LSTM/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/LSTM/</loc>
+    <loc>https://www.xiemingzhao.com/tags/XGB/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -667,13 +667,6 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/</loc>
-    <lastmod>2025-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xiemingzhao.com/tags/Hash/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -681,7 +674,14 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/tags/XGB/</loc>
+    <loc>https://www.xiemingzhao.com/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/</loc>
+    <lastmod>2025-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xiemingzhao.com/tags/%E9%93%BE%E6%8E%A5%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -718,14 +718,14 @@
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/</loc>
+    <loc>https://www.xiemingzhao.com/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.xiemingzhao.com/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <loc>https://www.xiemingzhao.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2025-01-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
