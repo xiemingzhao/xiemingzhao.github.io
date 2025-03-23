@@ -354,11 +354,11 @@
     
     <category term="机器学习" scheme="https://www.xiemingzhao.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
+    <category term="LightGBM" scheme="https://www.xiemingzhao.com/tags/LightGBM/"/>
+    
     <category term="XGBoost" scheme="https://www.xiemingzhao.com/tags/XGBoost/"/>
     
     <category term="GBDT" scheme="https://www.xiemingzhao.com/tags/GBDT/"/>
-    
-    <category term="LightGBM" scheme="https://www.xiemingzhao.com/tags/LightGBM/"/>
     
     <category term="RF" scheme="https://www.xiemingzhao.com/tags/RF/"/>
     
