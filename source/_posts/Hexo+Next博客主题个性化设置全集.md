@@ -1,14 +1,16 @@
 ﻿---
 title: Hexo+Next博客主题个性化设置全集
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
-- Next
+  - Hexo
+  - Next
 copyright: true
 abbrlink: HexoNextindividual
 date: 2019-06-10
+
 ---
+
 想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客[使用Github+Hexo+Next免费搭建自己的博客（最细攻略）](https://www.xiemingzhao.com/posts/GithubHexoNextblog)。
 
 **注意：以下非特殊说明路径都是基于你本地博客的根目录，效果主要基于hexo+next实现效果，大部分效果均可在[我的博客](www.xiemingzhao.com)中保留，可先睹为快，再决定是否需要**
@@ -751,3 +753,5 @@ fireworks: true
 [hexo的next主题个性化教程:打造炫酷网站](https://www.cnblogs.com/php-linux/p/8416122.html)
 [Hexo NexT主题中添加百度分享功能](https://asdfv1929.github.io/2018/05/25/baidu-share/)
 
+
+---

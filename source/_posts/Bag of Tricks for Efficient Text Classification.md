@@ -1,16 +1,17 @@
 ---
 title: Bag of Tricks for Efficient Text Classification (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- Classification
-- Bag of Tricks
+  - 机器学习
+  - Classification
+  - Bag of Tricks
 mathjax: true
 copyright: true
-abbrlink: cc821830
-date: 2019-03-17 00:00:00
+abbrlink: bagoftrickspaper
+date: 2019-03-17
+
 ---
 
 [原始论文：Bag of Tricks for Efficient Text Classification](https://arxiv.org/pdf/1607.01759v2.pdf)
@@ -70,7 +71,7 @@ $$P(n_{l+1}) = \prod_{i=1}^lP(n_i)$$
 
 我们调整验证集上的超参数，并观察使用多达5个导联的n-grams 达到最佳性能。 与Tang等人不同，fastText不使用预先训练的词嵌入，这可以解释1％的差异。
 
-训练时间 char-CNN和VDCNN都使用NVIDIA Tesla K40 GPU进行培训，而我们的模型则使用20个线程在CPU上进行培训。 表2显示使用卷积的方法比fastText慢几个数量级。 
+训练时间 char-CNN和VDCNN都使用NVIDIA Tesla K40 GPU进行培训，而我们的模型则使用20个线程在CPU上进行培训。 表2显示使用卷积的方法比fastText慢几个数量级。
 
 ![Table 3 Comparision with Tang et al. (2015).jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t3.JPG)
 表2：与char-CNN和VDCNN相比，情绪分析数据集的训练时间。 我们报告整个培训时间，除了char-CNN，我们报告每个时间。
@@ -83,12 +84,12 @@ $$P(n_{l+1}) = \prod_{i=1}^lP(n_i)$$
 
 我们考虑预测最频繁标签的基于频率的基线。我们还将它与标签预测模型Tagspace进行了比较，标签预测模型与我们的标签预测模型相似，但基于Weston等人的Wsabie模型。虽然使用卷积描述了标签空间模型，但我们认为线性版本具有可比较的性能，更快。
 
-**结果和训练时间**  
+**结果和训练时间**
 
 ![Table 5 Prec@1 on the test set for tag prediction.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t5.JPG)
 表5：YFCC100M上用于标记预测的测试集上的Prec @ 1。 我们还会报告训练时间和测试时间。 测试时间是单线程的报告，而两种模式的训练使用20个线程。
 
-表5给出了fastText和基线的比较。我们运行5个周期的fastText，并将它与Tagspace的两种尺寸的隐藏层（即50和200）进行比较。两种模型都实现了与隐藏层相似的性能，但增加了巨大值使我们在精度上有了显着提升。 在测试时间，Tagspace需要计算所有类别的分数，这使得它相对较慢，而当类别数量很多（此处超过300K）时，我们的快速推理会显着提高速度。 总体而言，获得质量更好的模型的速度要快一个数量级。 测试阶段的加速更加重要（600倍加速）。表4显示了一些定性的例子。 
+表5给出了fastText和基线的比较。我们运行5个周期的fastText，并将它与Tagspace的两种尺寸的隐藏层（即50和200）进行比较。两种模型都实现了与隐藏层相似的性能，但增加了巨大值使我们在精度上有了显着提升。 在测试时间，Tagspace需要计算所有类别的分数，这使得它相对较慢，而当类别数量很多（此处超过300K）时，我们的快速推理会显着提高速度。 总体而言，获得质量更好的模型的速度要快一个数量级。 测试阶段的加速更加重要（600倍加速）。表4显示了一些定性的例子。
 
 ![Table 4 Examples from the validation set of YFCC100M dataset.jpg](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t4.JPG)
 
@@ -100,15 +101,17 @@ FastText学习将标题中的单词与他们的主题标签相关联，例如“
 在这项工作中，我们开发了fastText，它扩展了word2vec来处理句子和文档分类。 与来自word2vec的无监督训练的单词向量不同，我们的单词特征可以平均在一起形成好的句子表示。 在几项任务中，我们获得的性能与最近提出的深度学习方法相媲美，同时观察到了大幅度的加速。 尽管深层神经网络在理论上比浅层模型具有更高的表征能力，但是如何分析简单的文本分类问题（如情感分析）是否正确评估它们并不明确。 我们将发布我们的代码，以便研究团体可以轻松构建我们的工作。
 
 ## 一些收获
-FastText词向量与word2vec对比
+>FastText词向量与word2vec对比
+
 **FastText= word2vec中 cbow + h-softmax的灵活使用**
-灵活体现在两个方面： 
->1. 模型的输出层：word2vec的输出层，对应的是每一个term，计算某term的概率最大；而fasttext的输出层对应的是 分类的label。不过不管输出层对应的是什么内容，起对应的vector都不会被保留和使用； 
+灵活体现在两个方面：
+1. 模型的输出层：word2vec的输出层，对应的是每一个term，计算某term的概率最大；而fasttext的输出层对应的是 分类的label。不过不管输出层对应的是什么内容，起对应的vector都不会被保留和使用；
 2. 模型的输入层：word2vec的输出层，是 context window 内的term；而fasttext 对应的整个sentence的内容，包括term，也包括 n-gram的内容；
 
 **两者本质的不同，体现在h-softmax的使用：**
->Wordvec的目的是得到词向量，embedding层 到 input层的 共享权重矩阵 就是 词向量矩阵，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。 
-fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）
+
+* Wordvec的目的是得到词向量，embedding层 到 input层的 共享权重矩阵 就是 词向量矩阵，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。
+* fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）
 
 [参考博文：论文阅读：《Bag of Tricks for Efficient Text Classification-卓寿杰_SoulJoy](https://blog.csdn.net/u011239443/article/details/80076720 )
 

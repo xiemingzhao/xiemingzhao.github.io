@@ -1,15 +1,16 @@
 ---
 title: Factorization Machines (论文解析)
 categories:
-- 学习笔记
-- 论文解析
+      - 学习笔记
+      - 论文解析
 tags:
-- 机器学习
-- FM
+      - 机器学习
+      - FM
 mathjax: true
 copyright: true
-abbrlink: 399ba6ee
-date: 2019-04-15 00:00:00
+abbrlink: fmpaper
+date: 2019-04-15
+
 ---
 
 [原始论文：Factorization Machines](https://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf)
@@ -22,7 +23,7 @@ date: 2019-04-15 00:00:00
 
 <!--more-->
 
-### 1、介绍
+### 1 介绍
 SVM是机器学习和数据挖掘中最流行的算法之一。然而在协同过滤的场景中，SVM并不重要，最好的模型要么直接使用矩阵的因式分解或者使用因式分解参数。本文中，我们会展示，SVM之所以在这些任务中表现不好，是因为SVM在复杂的非线性的稀疏的核空间中很难找到一个好的分割超平面。而张量分解模型的缺点在于（1）不用应用于标准的预测数据（2）不同的任务需要特殊的模型设计和学习算法。
 
 在本文中，我们介绍了一个新的预测器，Factorization Machine（FM），是一个像SVM一样的通用的预测模型，但是可以在非常稀疏的数据中估计出可靠的参数。FM对所有变量的相互关系的进行建模（对比SVM的多项式核），但是利用了可因式分解的参数，而不是像SVM一样使用了稠密的参数。我们展示了，模型的表达式可以在线性时间内求解，而且只依赖与线性数量大小的参数。这就允许了直接进行优化和存储模型的参数，而不需要存储任何的训练数据。（SVM是需要存储支持向量的）。非线性的SVM通常使用对偶形式进行求解，而且会使用到支持向量。我们也显示了在协同过滤的业务上FMs比许多很成功的模型如带偏置的MF，SVD++，PITF，FPMC等都好。
@@ -32,7 +33,7 @@ SVM是机器学习和数据挖掘中最流行的算法之一。然而在协同�
 2）FMs的复杂度是线性的，方便优化，不像SVM需要依赖支持向量。我们证明FM可以扩展应用在大数据集上，例如有1亿训练样例的Netflix数据集。
 3）FMs是通用的预测模型，可以适用于任意的实值的特征向量。与此相反，其他先进的分解模型只在特定输入数据的情况下起作用。我们将通过定义输入数据的特征向量来证明这一点，FM可以模仿其他最先进的模型例如带偏置项的MF，SVD++,PITF以及FPMC模型。
 
-### 2、在稀疏数据下进行预测
+### 2 在稀疏数据下进行预测
 大部分的常用的预测任务是估计一个预测的函数$y:\mathbb{R}^n \rightarrow T$，从一个实数向量$x \in \mathbb{R}^n$到目标$T$（如果是回归任务$T=R$，如果是分类任务$T={+，-}$）。在监督学习中，假设有个给定y值的样本训练数据集$D = \{(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),...\}$。我们也研究了排序的任务，拥有目标值$T=\mathbb{R}$的函数y可以适用于对x向量的评分和排序。评分函数可以通过成对的数据进行训练，当一个样本组合$(x_{(A)},x_{(B)})\in D$表示$x_{(A)}$应该排在$x_{(B)}$的前面。由于成对数据是反对称的，可以直接使用正的实例。
 
 在本文中，我们要解决的问题是数据的稀疏问题，也就是说在x向量中，大部分的值都是0，只有少部分不是0。让$m(x)$表示特征向量x中非0元素的个数，$\bar m_D$表示所有特征向量$x \in D$的非零元素个数$m(x)$的平均值。高稀疏性的特征在现实世界中是非常常见的，如文本分析和推荐系统中。高稀疏性的一个原因是在处理超多类别变量域的潜在问题。
@@ -44,8 +45,8 @@ $I = \{Titanic (TI),Notting Hill (NH), Star Wars (SW),Star Trek (ST), . . .\}$
 
 用观察到的数据S表示：
 $S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$
-      $(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$
-      $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$
+$(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$
+$(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)\}$
 任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。
 
 ![FM-1.JPG](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG)
@@ -54,7 +55,7 @@ $S = \{(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$
 
 我们将通过这篇论文用这个示例数据集来证明。然而，请注意FMs是一个像SVMs一样的通用模型，可以应用在任何一个现实中的特征向量，并且对推荐系统没有什么限制。
 
-### 3.因式分解机(FM)
+### 3 因式分解机(FM)
 在这一部分，我们将来介绍因式分解机。我们会详细地讨论模型中的公式推导，并且会展示怎么使用FMs进行多预测任务。
 
 *A. 因式分解模型*
@@ -89,13 +90,13 @@ V中的行向量$v_i$表示第k个因子的第i个变量。$k \in \mathbb{N}_0^+
 证明：由于所有的成对交互项都会做因式分解，于是模型中就没有需要直接利用两个变量进行直接估计的参数。所有成对的交互项可以进行如下的变化：
 
 $$
-\begin{align}
-&\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
-=&\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
-=&\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
-=&\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
-=&\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
-\end{align}
+\begin{array}{l}
+\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
+=\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
+=\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
+=\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
+=\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
+\end{array}
 $$
 
 以上的公式的结果仅仅有线性的计算复杂度，当k和n固定的时候，计算复杂度就为O(kn)。
@@ -143,7 +144,7 @@ FMs的优点：
 1）可以在稀疏的情况下进行很好的参数估计，特别是可以估计没有观测到的相互关系。
 2）参数的大小和运算时间都是线性的，可以通过SGD进行参数的更新，可以使用多种loss。
 
-### 4、FMs vs. SVMs
+### 4 FMs vs. SVMs
 *A. SVM模型*
 我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) =  \langle \phi (x),w \rangle $，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：
 
@@ -195,7 +196,7 @@ $$\hat y(x) = w_0 + \sqrt2 (w_u + w_i) + w_{u,u}^{(2)} + w_{i,i}^{(2)} + \sqrt2 
 2）FMs可以直接进行学习，非线性的SVM通常在对偶形式进行求解。
 3）FMs的函数不依赖与训练数据SVM的预测依赖部分训练数据（支持向量）。
 
-### 5、FMs vs. 其他的因式分解模型
+### 5 FMs vs. 其他的因式分解模型
 有各种各样的分解模型，从m-ary类别变量关系的标准模型（例如MF，PARAFAC）到用于特定数据和任务的专用模型（例如SVD ++，PITF，FPMC）。接下来，我们展示一下FM可以仅仅通过使用正确的输入数据就可以模仿很多其他的因式分解模型（例如特征向量x）。
 
 *A.矩阵和张量分解*
@@ -224,7 +225,7 @@ $$
 
 其中$N_u$是当前用户曾经评论过的所有电影的集合。一个二维的FM模型将以如下方式处理这个数据集：
 
-$$\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  + \\
+$$\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  +
 \frac{1}{\sqrt{|N_u|}}\sum_{l \in N_U}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{\sqrt{|N_u|}}\sum_{l' \in N_u, l'  \rangle  l} \langle v_l, v_l' \rangle )$$
 
 其中第一部分（即第一行）就等价于一个SVD++模型。但FM还包含一些额外的用户和电影$N_u$之间的交互项，以及$N_u$中电影对之间的电影$N_u$本身和交互项的基础效应。
@@ -260,8 +261,10 @@ $$
 
 其中$B_{t}^u \subseteq L$是一个用户u在时间t可购买的所有物品的集合，然后：
 
-$$\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
-\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )$$
+$$\begin{array}{c}
+\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
+\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )
+\end{array}$$
 
 
 就像标签推荐一样，这个模型被用来优化排名（这里是排序物品i），因此只有$(u,i_A,t)$和$(u,i_B,t)$之间的评分存在差异的时候会被用于预测和优化的评断标准中。因此，所有额外的不依赖于i都可以消失，FM模型的等式就相当于：
@@ -274,7 +277,7 @@ $$\hat y(x) = w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l \i
 1）标准分解模型，如PARAFAC或MF不是像因式分解机这样的一般预测模型。相反，他们需要特征向量被分成m个部分，每个部分都是精确的一个元素是1，其余元素是0。
 2）有许多关于专业化因子分解的建议为单个任务设计的模型。我们已经证明了这一点，因式分解机可以模仿许多最成功的分解模型（包括MF，PARAFAC，SVD++，PITF，FPMC）只需通过特征提取即可，这使得FM在实践中很容易应用。
 
-### 6、结论
+### 6 结论
 在这片论文中，我们介绍了因式分解机。FMs融合了SVM模型的泛化能力以及因式分解模型的优势。不同于SVM模型，1)FMs可以在高稀疏的情况下进行参数估计，2)模型等式是线性的并且仅依赖于模型的参数，因此3)它们可以在原始等式中进行优化。FMs模型的解释力相当于多项式SVMs模型。不同于像PARAFAC这种张量因子分解模型，FMs是一个泛化的模型，它可以处理任何实值向量。再者，可以通过在输入特征向量中使用正确的表征来进行简化，FMs相对于其他特别高级的模型来说是更单一且非常简单的，不像那些模型仅仅只能应用在特定的任务重，例如MF, SVD++, PITF和FPMC。
 
 [参考博文:点击率预测《Factorization Machines》论文精读-ronghuaiyang](https://www.jianshu.com/p/a194e05aeb53)

@@ -3,11 +3,12 @@ title: Hexo博客提交链接到搜索引擎来收录
 date: 2019-06-15
 abbrlink: HexoblogSE
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
-- 网站收录
+  - Hexo
+  - 网站收录
 copyright: true
+
 ---
 
 ## 写在前面
@@ -199,7 +200,7 @@ deploy:
 
 >注意：
 1. 百度每天主动提交的链接数量是有限制的。
-（主动推送可提交的链接数量上限是根据您提交的新产生有价值链接数量而决定的，百度会根据您提交数量的情况不定期对上限额进行调整，提交的新产生有价值链接数量越多，可提交链接的上限越高。）
+   （主动推送可提交的链接数量上限是根据您提交的新产生有价值链接数量而决定的，百度会根据您提交数量的情况不定期对上限额进行调整，提交的新产生有价值链接数量越多，可提交链接的上限越高。）
 2. 主动推送是否成功会在执行 hexo deploy 时显示, success后的数字为主动推送成功的链接数。
 
 **附录**
@@ -211,3 +212,5 @@ deploy:
 [Hexo 优化：提交 sitemap 及解决百度爬虫无法抓取 GitHub Pages 链接问题](http://www.yuan-ji.me/Hexo-%E4%BC%98%E5%8C%96%EF%BC%9A%E6%8F%90%E4%BA%A4sitemap%E5%8F%8A%E8%A7%A3%E5%86%B3%E7%99%BE%E5%BA%A6%E7%88%AC%E8%99%AB%E6%8A%93%E5%8F%96-GitHub-Pages-%E9%97%AE%E9%A2%98/)
 [Hexo博客第三方主题next进阶教程](https://www.jianshu.com/p/1ff2fcbdd155)
 [Hexo插件之百度主动提交链接](https://hui-wang.info/2016/10/23/Hexo%E6%8F%92%E4%BB%B6%E4%B9%8B%E7%99%BE%E5%BA%A6%E4%B8%BB%E5%8A%A8%E6%8F%90%E4%BA%A4%E9%93%BE%E6%8E%A5/)
+
+---

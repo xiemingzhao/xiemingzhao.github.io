@@ -3,11 +3,12 @@ title: Hexo博客文章链接优化
 date: 2019-06-11
 abbrlink: Hexoblogurloptimize
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
-- 链接优化
+  - Hexo
+  - 链接优化
 copyright: true
+
 ---
 
 ## 文章的URL
@@ -76,3 +77,5 @@ permalink_defaults:
 **参考文章**
 [Hexo | 博客文章链接优化](https://zuiyu1818.cn/posts/NexT_seourl.html)
 [永久链接（Permalinks）](https://hexo.io/zh-cn/docs/permalinks.html)
+
+---

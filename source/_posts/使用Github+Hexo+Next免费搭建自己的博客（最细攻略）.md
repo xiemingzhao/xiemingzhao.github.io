@@ -1,13 +1,14 @@
 ﻿---
 title: 使用Github+Hexo+Next免费搭建自己的博客（最细攻略）
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
-- Next
+  - Hexo
+  - Next
 copyright: true
 abbrlink: GithubHexoNextblog
 date: 2019-05-09
+
 ---
 
 ## 一、开篇
@@ -125,7 +126,7 @@ npm install
 public          
 source          
 themes          
-_config.yml 
+_config.yml
 package.json
 
 ### 3. Hexo初体验
@@ -294,14 +295,14 @@ Next主题也有多种scheme，不同的scheme会呈现出不同的外观，并�
 Mist - 单栏外观
 Pisces - 双栏设置
 
- 在主题配置文件中搜索scheme，能够找到对应的配置位置，想要启动哪一个，就将其他的注释掉即可。例如博主使用的是Pisces风格，则设置如下：
+在主题配置文件中搜索scheme，能够找到对应的配置位置，想要启动哪一个，就将其他的注释掉即可。例如博主使用的是Pisces风格，则设置如下：
 ```
 #scheme: Muse
 #scheme: Mist
 scheme: Pisces
 ```
 
-同样的，在这里也可以使用三个三个景点的发布语句，来测试不同scheme的效果，选择一个你最中意的即可。 
+同样的，在这里也可以使用三个三个景点的发布语句，来测试不同scheme的效果，选择一个你最中意的即可。
 
 ### 4. 设置站点
 打开站点配置文件，在前面你就可以发现如下的`site`配置区域：
@@ -538,8 +539,10 @@ hexo d
 [DeDeCMS + 服务器 + 域名 ](http://www.dedecms.com/)
 ...
 
-但是个人最喜欢Hexo + GitHub方案，一来是免费，二来是能够和自己的代码库一起管理。但是其也有自己的缺点，那就是不支持数据库管理，所以你只能做静态页面的博客，不能像其他博客（如 WordPress）那样通过数据库管理自己的博客内容。 但是GitHub Pages 无需购置服务器，免服务器费的同时还能做负载均衡，github pages有300M免费空间。静态的博客更有利于搜索引擎蜘蛛爬取，轻量化的感觉真的很好。 
+但是个人最喜欢Hexo + GitHub方案，一来是免费，二来是能够和自己的代码库一起管理。但是其也有自己的缺点，那就是不支持数据库管理，所以你只能做静态页面的博客，不能像其他博客（如 WordPress）那样通过数据库管理自己的博客内容。 但是GitHub Pages 无需购置服务器，免服务器费的同时还能做负载均衡，github pages有300M免费空间。静态的博客更有利于搜索引擎蜘蛛爬取，轻量化的感觉真的很好。
 
 **参考博文**
 [手把手教你用Hexo+Github 搭建属于自己的博客-gdutxiaoxu](https://blog.csdn.net/gdutxiaoxu/article/details/53576018)
 [可能是最详细的 Hexo + GitHub Pages 搭建博客的教程-QQ80583600](https://blog.csdn.net/qq80583600/article/details/72828063)
+
+---

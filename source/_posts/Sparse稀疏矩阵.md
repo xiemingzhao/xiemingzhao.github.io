@@ -1,16 +1,17 @@
 ---
 title: 稀疏矩阵(Sparse Matrix)
 categories:
-- 学习笔记
-- 算法总结
+  - 学习笔记
+  - 算法总结
 tags:
-- 稀疏矩阵
-- 算法
+  - 稀疏矩阵
+  - 算法
 mathjax: true
 copyright: true
 abbrlink: sparseMatrix
 date: 2020-01-08
----
+
+----
 
 ## 1 背景
 在企业的深度学习项目中，`Sparse稀疏矩阵`这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。
@@ -25,8 +26,7 @@ date: 2020-01-08
 
 如上所示，一般当矩阵非零项较少的时候，就称为非零矩阵，也即其中只有少量的有用信息-非零项。
 
-那么可以做一个更为书面的**定义**：
-`具有少量非零项的矩阵 - Number of Non-Zero (NNZ) < 0.5`
+那么可以做一个更为书面的**定义：具有少量非零项的矩阵 - Number of Non-Zero (NNZ) < 0.5**
 >在矩阵中，若数值0的元素数目远多于非0元素的数目，并且非0元素分布没有规律。
 
 **矩阵的稠密度**
@@ -189,25 +189,25 @@ array([[1, 0, 0, 0],
 **定义详解**
 * csr_matrix是按行对矩阵进行压缩的
 * 通过 indices, indptr，data 来确定矩阵。
-data 表示矩阵中的非零数据
+  data 表示矩阵中的非零数据
 * 对于第 i 行而言，该行中非零元素的列索引为 indices[indptr[i]:indptr[i+1]]
 * 可以将 indptr 理解成利用其自身索引 i 来指向第 i 行元素的列索引
 * 根据[indptr[i]:indptr[i+1]]，我就得到了该行中的非零元素个数，如
-    1. 若 index[i] = 3 且 index[i+1] = 3 ，则第 i 行的没有非零元素
-    2. 若 index[j] = 6 且 index[j+1] = 7 ，则第 j 行的非零元素的列索引为 indices[6:7]
+  1. 若 index[i] = 3 且 index[i+1] = 3 ，则第 i 行的没有非零元素
+  2. 若 index[j] = 6 且 index[j+1] = 7 ，则第 j 行的非零元素的列索引为 indices[6:7]
 * 得到了行索引、列索引，相应的数据存放在： data[indptr[i]:indptr[i+1]]
 
 ![sparseMatrix3](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix3.png)
 
 **构造方法**
 * 对于矩阵第 0 行，我们需要先得到其非零元素列索引
-    1. 由 indptr[0] = 0 和 indptr[1] = 2 可知，第 0 行有两个非零元素。
-    2. 它们的列索引为 indices[0:2] = [0, 2] ，且存放的数据为 data[0] = 8 ， data[1] = 2
-    3. 因此矩阵第 0 行的非零元素 csr[0][0] = 8 和 csr[0][2] = 2
+  1. 由 indptr[0] = 0 和 indptr[1] = 2 可知，第 0 行有两个非零元素。
+  2. 它们的列索引为 indices[0:2] = [0, 2] ，且存放的数据为 data[0] = 8 ， data[1] = 2
+  3. 因此矩阵第 0 行的非零元素 csr[0][0] = 8 和 csr[0][2] = 2
 * 对于矩阵第 4 行，同样我们需要先计算其非零元素列索引
-    1. 由 indptr[4] = 3 和 indptr[5] = 6 可知，第 4 行有3个非零元素。
-    2. 它们的列索引为 indices[3:6] = [2, 3，4] ，且存放的数据为 data[3] = 7 ，data[4] = 1 ，data[5] = 2
-    3. 因此矩阵第 4 行的非零元素 csr[4][2] = 7 ， csr[4][3] = 1 和 csr[4][4] = 2
+  1. 由 indptr[4] = 3 和 indptr[5] = 6 可知，第 4 行有3个非零元素。
+  2. 它们的列索引为 indices[3:6] = [2, 3，4] ，且存放的数据为 data[3] = 7 ，data[4] = 1 ，data[5] = 2
+  3. 因此矩阵第 4 行的非零元素 csr[4][2] = 7 ， csr[4][3] = 1 和 csr[4][4] = 2
 
 **适用场景**
 常用于读入数据后进行稀疏矩阵计算，运算高效。
@@ -260,22 +260,22 @@ array([[8, 0, 2, 0, 0],
 * 对于第 i 列而言，该行中非零元素的行索引为indices[indptr[i]:indptr[i+1]]
 * 可以将 indptr 理解成利用其自身索引 i 来指向第 i 列元素的列索引
 * 根据[indptr[i]:indptr[i+1]]，我就得到了该行中的非零元素个数，如
-    1. 若 index[i] = 1 且 index[i+1] = 1 ，则第 i 列的没有非零元素
-    2. 若 index[j] = 4 且 index[j+1] = 6 ，则第 j列的非零元素的行索引为 indices[4:6]
+  1. 若 index[i] = 1 且 index[i+1] = 1 ，则第 i 列的没有非零元素
+  2. 若 index[j] = 4 且 index[j+1] = 6 ，则第 j列的非零元素的行索引为 indices[4:6]
 * 得到了列索引、行索引，相应的数据存放在： data[indptr[i]:indptr[i+1]]
 
 ![sparseMatrix4](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/sparseMatrix4.png)
 
 **构造方法**
 * 对于矩阵第 0 列，我们需要先得到其非零元素行索引
-    1. 由 indptr[0] = 0 和 indptr[1] = 1 可知，第 0列行有1个非零元素。
-    2. 它们的行索引为 indices[0:1] = [0] ，且存放的数据为 data[0] = 8
-    3. 因此矩阵第 0 行的非零元素 csc[0][0] = 8
+  1. 由 indptr[0] = 0 和 indptr[1] = 1 可知，第 0列行有1个非零元素。
+  2. 它们的行索引为 indices[0:1] = [0] ，且存放的数据为 data[0] = 8
+  3. 因此矩阵第 0 行的非零元素 csc[0][0] = 8
 * 对于矩阵第 3 列，同样我们需要先计算其非零元素行索引
-    1. 由 indptr[3] = 4 和 indptr[4] = 6 可知，第 4 行有2个非零元素。
-    2. 它们的行索引为 indices[4:6] = [4, 6] ，且存放的数据为 data[4] = 1 ，data[5] = 9
-    3. 因此矩阵第 i 行的非零元素 csr[4][3] = 1 ， csr[6][3] = 9
-    
+  1. 由 indptr[3] = 4 和 indptr[4] = 6 可知，第 4 行有2个非零元素。
+  2. 它们的行索引为 indices[4:6] = [4, 6] ，且存放的数据为 data[4] = 1 ，data[5] = 9
+  3. 因此矩阵第 i 行的非零元素 csr[4][3] = 1 ， csr[6][3] = 9
+
 应用场景和优缺点基本上与`CSR`互相对应。
 
 **特殊属性**
@@ -320,9 +320,9 @@ array([[1, 0, 4],
 * 基于行的块压缩，与csr类似，都是通过data，indices，indptr来确定矩阵
 * 与csr相比，只是data中的元数据由0维的数变为了一个矩阵（块），其余完全相同
 * 块大小 blocksize
-    1. 块大小 (R, C) 必须均匀划分矩阵 (M, N) 的形状。
-    2. R和C必须满足关系：M % R = 0 和 N % C = 0
-    3. 适用场景及优点参考csr
+  1. 块大小 (R, C) 必须均匀划分矩阵 (M, N) 的形状。
+  2. R和C必须满足关系：M % R = 0 和 N % C = 0
+  3. 适用场景及优点参考csr
 
 **特殊属性**
 * data ：稀疏矩阵存储的值，一维数组
@@ -480,3 +480,5 @@ array([[1 7 0 0]
 [Sparse稀疏矩阵主要存储格式总结](https://zhuanlan.zhihu.com/p/188700729)
 [20190624_稀疏矩阵存储及计算介绍](https://www.jianshu.com/p/dca6ed5f213f)
 [sparse matrix 的分布式存储和计算](https://www.jianshu.com/p/b335ad456990)
+
+---

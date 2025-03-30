@@ -1,12 +1,13 @@
 ﻿---
 title: Hexo博客多设备管理
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
+  - Hexo
 copyright: true
 abbrlink: Hexoblogbranch
 date: 2019-05-27
+
 ---
 
 想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客[使用Github+Hexo+Next免费搭建自己的博客（最细攻略）](https://www.xiemingzhao.com/posts/GithubHexoNextblog)。
@@ -46,7 +47,7 @@ deploy:
 ```
 
 ### 3. 备份到分支
-进阶上述完成clone分支后，我们需要删除一些文件，因为我们需要的是备份部署资源，其他在发布生成过程中产生的静态文件并不需要保留。首先我们删除除了**.git**文件夹的其它所有文件和文件夹，主要是为了得到版本管理的.git。当然，最新版好像这一部分也不需要保留了，那就先保留着吧，到时候部署的时候不行的话再删也不迟。
+进阶上述完成clone分支后，我们需要删除一些文件，因为我们需要的是备份部署资源，其他在发布生成过程中产生的静态文件并不需要保留。首先我们删除除了`.git`文件夹的其它所有文件和文件夹，主要是为了得到版本管理的 .git。当然，最新版好像这一部分也不需要保留了，那就先保留着吧，到时候部署的时候不行的话再删也不迟。
 
 接着把本地主管理目录（也就是`yourname.github.io`的文件夹）一下7个文件/文件夹复制到本地分支目录`hexo`中去：
 ```
@@ -80,7 +81,7 @@ npm install
 ```
 防止后续的部署会失败，而所依赖的包都在上一步中的package.json备份文件里，所以直接这一个命令就可以了。
 
-**注：**如果使用的主题是从GitHub克隆的，那么主题文件夹下有Git管理文件，需要将它们移除，我使用的是hexo-next，需要移除的文件是`themes/next/.git*`。
+**注**：如果使用的主题是从GitHub克隆的，那么主题文件夹下有Git管理文件，需要将它们移除，我使用的是hexo-next，需要移除的文件是`themes/next/.git*`。
 
 **不要hexo init去整体初始化，因为需要的文件我们已经拷贝过来了。**
 
@@ -126,3 +127,5 @@ npm install
 **参考博文**
 [GitHub创建Git分支将Hexo博客迁移到其它电脑](https://blog.csdn.net/white_idiot/article/details/80685990)
 [hexo 迁移更换电脑，或多电脑终端更新博客](https://andyvj.coding.me/2019/02/19/190219-03/)
+
+---

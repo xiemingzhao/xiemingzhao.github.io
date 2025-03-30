@@ -1,12 +1,13 @@
 ﻿---
 title: Hexo博客绑定域名
 categories:
-- 博客搭建
+  - 博客搭建
 tags:
-- Hexo
+  - Hexo
 copyright: true
 abbrlink: Hexoblogdomain
 date: 2019-05-25
+
 ---
 
 想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客[使用Github+Hexo+Next免费搭建自己的博客（最细攻略）](https://www.xiemingzhao.com/posts/GithubHexoNextblog)。
@@ -84,4 +85,6 @@ permalink_defaults:
 
 **参考博文**
 [Hexo个人博客域名绑定 简明教程（小白篇）](https://www.jianshu.com/p/e3169b681038)
+
+---
 

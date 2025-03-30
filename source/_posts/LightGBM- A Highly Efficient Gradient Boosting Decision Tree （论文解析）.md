@@ -1,21 +1,24 @@
 ---
 title: LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）
 categories:
-- 学习笔记
-- 论文解析
+  - 学习笔记
+  - 论文解析
 tags:
-- 机器学习
-- LightGBM
+  - 机器学习
+  - LightGBM
 mathjax: true
 copyright: true
-abbrlink: c7ab2b84
-date: 2019-06-23 00:00:00
+abbrlink: lightgbmpaper
+date: 2019-06-23
+
 ---
 
 [原始论文：LightGBM-A Highly Efficient Gradient Boosting Decision Tree](https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf)
 
+# LightGBM 一种高效的梯度提升决策树
+
 ## 摘要
-Gradient Boosting Decision Tree (GBDT)是一个非常流行的机器学习算法，却只有像XGBoost和pGBRT的一些实现。尽管许多工程上的优化方案已经在这些实现中应用了，但是当特征维度较高和数据量巨大的时候，仍然存在效率和可扩展性的问题。一个主要原因就是对于每一个特征的每一个分裂点，都需要遍历全部数据计算信息增益，这一过程非常耗时。针对这一问题，本文提出两种新方法：Gradient-based One-Side Sampling (GOSS) 和Exclusive Feature Bundling (EFB)（基于梯度的one-side采样和互斥的特征捆绑）。在GOSS中，我们排除了一部分重要的具有小梯度实例数据的比例，只用剩下的来估计信息增益。我们证明，这些梯度大的实例在计算信息增益中扮演重要角色，GOSS可以用更小的数据量对信息增益进行相当准确的估计。对于EFB，我们捆绑互斥的特征（例如，特征间很少同时非零的特征），来降低特征的个数。我们完美地证明了捆绑互斥特征是NP难的，但贪心算法能够实现相当好的逼近率，因此我们能够在不损害分割点准确率许多的情况下，有效减少特征的数量。（牺牲一点分割准确率降低特征数量），这一算法命名为LightGBM。我们在多个公共数据集实验证明，LightGBM加速了传统GBDT训练过程20倍以上，同时达到了几乎相同的精度。
+`Gradient Boosting Decision Tree (GBDT)`是一个非常流行的机器学习算法，却只有像XGBoost和pGBRT的一些实现。尽管许多工程上的优化方案已经在这些实现中应用了，但是当特征维度较高和数据量巨大的时候，仍然存在效率和可扩展性的问题。一个主要原因就是对于每一个特征的每一个分裂点，都需要遍历全部数据计算信息增益，这一过程非常耗时。针对这一问题，本文提出两种新方法：Gradient-based One-Side Sampling (GOSS) 和Exclusive Feature Bundling (EFB)（基于梯度的one-side采样和互斥的特征捆绑）。在GOSS中，我们排除了一部分重要的具有小梯度实例数据的比例，只用剩下的来估计信息增益。我们证明，这些梯度大的实例在计算信息增益中扮演重要角色，GOSS可以用更小的数据量对信息增益进行相当准确的估计。对于EFB，我们捆绑互斥的特征（例如，特征间很少同时非零的特征），来降低特征的个数。我们完美地证明了捆绑互斥特征是NP难的，但贪心算法能够实现相当好的逼近率，因此我们能够在不损害分割点准确率许多的情况下，有效减少特征的数量。（牺牲一点分割准确率降低特征数量），这一算法命名为LightGBM。我们在多个公共数据集实验证明，LightGBM加速了传统GBDT训练过程20倍以上，同时达到了几乎相同的精度。
 
 <!--more-->
 
@@ -149,3 +152,5 @@ LightGBM在不同的数据集上得到了不同的加速率。整体的加速结
 
 **参考文章**
 [Lightgbm源论文解析-anshuai_aw1](https://blog.csdn.net/anshuai_aw1/article/details/83048709)
+
+---
