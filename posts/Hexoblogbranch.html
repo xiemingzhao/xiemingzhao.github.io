@@ -103,7 +103,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch2.jpg">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch3.jpg">
 <meta property="article:published_time" content="2019-05-26T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.653Z">
+<meta property="article:modified_time" content="2025-03-30T17:50:53.086Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
@@ -470,13 +470,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>创建好新的目录后，使用控制台进入博客根目录（也就是能够看到主分支和hexo分支的目录）执行下面的命令，将分之内容clone到本地分支：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b hexo https://github.com/yourname/yourname.github.io</span><br></pre></td></tr></table></figure></p>
 <p>然后本地的hexo分支文件夹中会多了很多文件，进入hexo文件夹中右键掉出<code>git bash</code>执行<code>git branch</code>，会返回你当前所处的是<code>hexo</code>分支。</p>
 <p>这里去站点配置文件<code>_config.yml</code>中检查一下branch的配置是否为主分支：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    type: git</span><br><span class="line">    repo: https://github.com/yourname/yourname.github.io</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure></p>
-<h3 id="3-备份到分支"><a href="#3-备份到分支" class="headerlink" title="3. 备份到分支"></a>3. 备份到分支</h3><p>进阶上述完成clone分支后，我们需要删除一些文件，因为我们需要的是备份部署资源，其他在发布生成过程中产生的静态文件并不需要保留。首先我们删除除了<strong>.git</strong>文件夹的其它所有文件和文件夹，主要是为了得到版本管理的.git。当然，最新版好像这一部分也不需要保留了，那就先保留着吧，到时候部署的时候不行的话再删也不迟。</p>
+<h3 id="3-备份到分支"><a href="#3-备份到分支" class="headerlink" title="3. 备份到分支"></a>3. 备份到分支</h3><p>进阶上述完成clone分支后，我们需要删除一些文件，因为我们需要的是备份部署资源，其他在发布生成过程中产生的静态文件并不需要保留。首先我们删除除了<code>.git</code>文件夹的其它所有文件和文件夹，主要是为了得到版本管理的 .git。当然，最新版好像这一部分也不需要保留了，那就先保留着吧，到时候部署的时候不行的话再删也不迟。</p>
 <p>接着把本地主管理目录（也就是<code>yourname.github.io</code>的文件夹）一下7个文件/文件夹复制到本地分支目录<code>hexo</code>中去：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scaffolds/ #文件夹（文章的模板）；</span><br><span class="line">source/ #资源文件夹；</span><br><span class="line">themes/ #文件夹里面的主题；</span><br><span class="line">.git/ #版本管理</span><br><span class="line">.gitignore #限定在提交的时候哪些文件可以忽略</span><br><span class="line">_config.yml #站点配置</span><br><span class="line">package.json #说明使用哪些包；</span><br></pre></td></tr></table></figure></p>
 <p>如下图所示，分支文件夹中应该包含上述的文件，我这里有一些其他的是因为已经使用了很久，添加了其他功能，部署的时候产生的：</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/branch3.jpg" alt="branch3"></p>
 <p>不需要更新的文件可利用.gitignore文件来配置需要忽略备份的文件：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/.deploy_git/  </span><br><span class="line">/blogSource/  </span><br><span class="line">/node_modules/  </span><br><span class="line">/public/  </span><br><span class="line">*.db  </span><br><span class="line">*.json  </span><br></pre></td></tr></table></figure><br><em>不过最新版一版不用配置，文件中应该已经有了</em></p>
 <p>这里可执行一下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure><br>防止后续的部署会失败，而所依赖的包都在上一步中的package.json备份文件里，所以直接这一个命令就可以了。</p>
-<p><strong>注：</strong>如果使用的主题是从GitHub克隆的，那么主题文件夹下有Git管理文件，需要将它们移除，我使用的是hexo-next，需要移除的文件是<code>themes/next/.git*</code>。</p>
+<p><strong>注</strong>：如果使用的主题是从GitHub克隆的，那么主题文件夹下有Git管理文件，需要将它们移除，我使用的是hexo-next，需要移除的文件是<code>themes/next/.git*</code>。</p>
 <p><strong>不要hexo init去整体初始化，因为需要的文件我们已经拷贝过来了。</strong></p>
 <h3 id="4-提交分支和更新"><a href="#4-提交分支和更新" class="headerlink" title="4. 提交分支和更新"></a>4. 提交分支和更新</h3><p>我们使用控制台进入hexo分支目录或者在hexo分支目录里面调出<code>git bash</code>一次运行以下命令：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .  #后面的点要加哦</span><br><span class="line">git commit -m ‘新电脑部署’  #引号内的内容是对每次提交的备注</span><br><span class="line">git push  #推送文件,保证xxx分支版本为最新版本</span><br></pre></td></tr></table></figure><br>以后每次更新，本地可使用<code>hexo</code>分支来操作，每次操作完将修改的部署文件提交到备份分支就可以了，具体可以使用如下命令：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git pull  # 保持本地操作为最新版本</span><br><span class="line">hexo n xxx #编辑、撰写文章或其他博客更新改动</span><br><span class="line">hexo clean # 可选，如果配置文件没有更改，忽略该命令</span><br><span class="line">hexo g</span><br><span class="line">hexo s #本地测试</span><br><span class="line">hexo d</span><br><span class="line">git add .</span><br><span class="line">git commit -m ‘在新电脑上提交新文章’</span><br><span class="line">git push #保证xxx分支版本为最新版本</span><br></pre></td></tr></table></figure><br><strong>如果上述中间出错，可删除<code>.git/ #版本管理</code>文件后重试。</strong></p>
 <h3 id="5-新电脑迁移"><a href="#5-新电脑迁移" class="headerlink" title="5. 新电脑迁移"></a>5. 新电脑迁移</h3><p>前面讲了一大堆已经实现了分制管理，且每次本地主机也是拉取线上最新的，更改部署后，也将最新的版本提交到线上。这样使得真个流程先关起来，每次都是对最新版本进行更新，线上<code>hexo</code>分支目录存储的也都是最新版本。</p>
@@ -488,6 +488,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>然后需要将新电脑生成<code>SSH key</code>配置到github上，这样新电脑才能得到信任，与线上github进行相连。这一步不会的也可以参考上述提到的我的另一篇博客。</p>
 <p>然后在新电脑本地创建一个管理目录，命名为hexo也行。紧接着将线上的<code>hexo</code>分支clone到本地，这一步与上述一样。然后安装<code>hexo</code>相关依赖：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure><br>如此便完成了将Hexo博客迁移到新电脑上了，很简单。后面更新部署和发表新文章就可以使用上一步中那几条命令。<strong>切记每次要拉取和更新线上最新版本哦。</strong></p>
 <p><strong>参考博文</strong><br><a href="https://blog.csdn.net/white_idiot/article/details/80685990">GitHub创建Git分支将Hexo博客迁移到其它电脑</a><br><a href="https://andyvj.coding.me/2019/02/19/190219-03/">hexo 迁移更换电脑，或多电脑终端更新博客</a></p>
+<hr>
 
       
     </div>
@@ -571,7 +572,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/eff2088e.html" rel="prev" title="Understanding LSTM Networks (论文解析)">
+              <a href="/posts/lstmpaper.html" rel="prev" title="Understanding LSTM Networks (论文解析)">
                 Understanding LSTM Networks (论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -695,7 +696,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -820,7 +821,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

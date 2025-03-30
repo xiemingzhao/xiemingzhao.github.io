@@ -104,7 +104,7 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/cuckooFilter3.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/cuckooFilter4.png">
 <meta property="article:published_time" content="2020-05-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.656Z">
+<meta property="article:modified_time" content="2025-03-30T17:49:33.017Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="数据结构">
@@ -472,7 +472,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在了解了布隆过滤器的缺点之后，如果想要解决就可以来学习一下布谷鸟过滤器。其最早是在2001年的论文<a href="https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf">《Cuckoo Filter: Practically Better Than Bloom》</a>中提出的。论文中也很直接的抨击布隆过滤器的缺点，表明自己可以有效支持反向删除操作。</p>
-<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>先来介绍最简单的布谷鸟过滤器的工作原理。假设我们有：</p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>先来介绍最简单的<code>布谷鸟过滤器</code>的工作原理。假设我们有：</p>
 <ul>
 <li>两个Hash表，T1和T2；</li>
 <li>两个Hash函数，H1和H2。</li>
@@ -491,17 +491,17 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>当x想要插入的时候，发现在T1和T2中对应的位置都存在了元素，那就随机把 T1 表对应位置上的 y 踢出去吧，而 y 的另一个位置被 z 元素占领了。于是 y 毫不留情把 z 也踢了出去。z 发现自己的备用位置还空着（虽然这个备用位置也是元素 v 的备用位置），赶紧就位。</p>
 </blockquote>
 <p>经过上述的插入过程后，整个数据结构就从(a)图中的左变成了右。这种类似于套娃的解决方式看是可行，但是总是有<code>出现循环踢出</code>导致放不进 x 的问题。比如上图中的(b)。</p>
-<p>当遇到这种情况时候，说明布谷鸟 hash 已经到了极限情况，应该进行扩容，或者 hash 函数的优化。所以，你再次去看伪代码的时候，你会明白里面的 <code>MaxLoop</code> 的含义是什么了。这个 <code>MaxLoop</code> 的含义就是<strong>为了避免相互踢出的这个过程执行次数太多，设置的一个阈值</strong>。</p>
+<p>当遇到这种情况时候，说明<strong>布谷鸟 hash 已经到了极限情况，应该进行扩容，或者 hash 函数的优化</strong>。所以，你再次去看伪代码的时候，你会明白里面的 <code>MaxLoop</code> 的含义是什么了。这个 <code>MaxLoop</code> 的含义就是<strong>为了避免相互踢出的这个过程执行次数太多，设置的一个阈值</strong>。</p>
 <h2 id="3-优化"><a href="#3-优化" class="headerlink" title="3 优化"></a>3 优化</h2><h3 id="3-1-思路"><a href="#3-1-思路" class="headerlink" title="3.1 思路"></a>3.1 思路</h3><p>看过上述的原理，相信依然对其性能和效果存在质疑。这里首先抛出论文中提到的短处。</p>
 <blockquote>
 <p>虽然<code>MaxLoop</code>能够避免太多循环踢出，但是这使得在完美的情况下，也就是没有发生哈希冲突之前，它的空间利用率最高只有 50%。</p>
 </blockquote>
 <p>对于上述的问题，一般会有下面的优化方法：</p>
 <ol>
-<li>增加 hash 函数，这样可以大大降低碰撞的概率，将空间利用率提高到 95%左右。</li>
-<li>在数组的每个位置上挂上多个座位，这样即使两个元素被 hash 在了同一个位置，也可以随意放一个。这种方案的空间利用率只有 85%左右，但是查询效率会很高。</li>
+<li>增加 hash 函数，这样可以大大降低碰撞的概率，将空间利用率提高到 95% 左右。</li>
+<li>在数组的每个位置上挂上多个座位，这样即使两个元素被 hash 在了同一个位置，也可以随意放一个。这种方案的空间利用率只有 85% 左右，但是查询效率会很高。</li>
 </ol>
-<h3 id="3-2-特殊的-hash-函数"><a href="#3-2-特殊的-hash-函数" class="headerlink" title="3.2 特殊的 hash 函数"></a>3.2 特殊的 hash 函数</h3><p>论文在市级的优化中，一个很重要的就是构建了特殊的Hash函数。回忆一下布谷鸟 Hash，它存储的是插入元素的原始值，比如 x 会经过两个 hash 函数，如果我们记数组的长度为 L，那么就是这样的：</p>
+<h3 id="3-2-特殊的-hash-函数"><a href="#3-2-特殊的-hash-函数" class="headerlink" title="3.2 特殊的 hash 函数"></a>3.2 特殊的 hash 函数</h3><p>论文在实际的优化中，一个很重要的就是构建了特殊的 Hash 函数。回忆一下布谷鸟 Hash，它存储的是插入元素的原始值，比如 x 会经过两个 hash 函数，如果我们记数组的长度为 L，那么就是这样的：</p>
 <ul>
 <li>p1 = H1(x) % L</li>
 <li>p2 = H2(x) % L</li>
@@ -511,11 +511,11 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>H1(x) = Hash(x)</li>
 <li>H2(x) = H1(x) $\oplus$ Hash(x’s fingerprint)</li>
 </ul>
-<p>可以看到，虽然有两个Hash函数，但实际上内部只有一个Hash函数构成，在H2中使用了H1和待插入元素 x 的指纹Hash结果，然后再做异或运算。</p>
+<p>可以看到，虽然有两个Hash函数，<strong>但实际上内部只有一个Hash函数构成</strong>，在H2中使用了H1和待插入元素 x 的指纹Hash结果，然后再做异或运算。</p>
 <blockquote>
 <p><code>指纹</code>其实就是插入的元素进行一个 Hash 计算，而 Hash 计算的产物就是 几个 bit 位。布谷鸟过滤器里面存储的就是元素的“指纹”。删除数据的时候，也只是抹掉该位置上的“指纹”而已：</p>
 </blockquote>
-<p><strong>注意</strong>：异或运算确保了一个重要的性质：这两个位置具有对偶性。</p>
+<p><strong>注意：异或运算确保了一个重要的性质，这两个位置具有对偶性</strong>。</p>
 <blockquote>
 <p>只要保证 Hash(x’s fingerprint) !=0，那么就可以确保 H2!=H1，也就可以确保，不会出现自己踢自己的死循环问题。</p>
 </blockquote>
@@ -530,8 +530,11 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <h3 id="3-3-空间利用率"><a href="#3-3-空间利用率" class="headerlink" title="3.3 空间利用率"></a>3.3 空间利用率</h3><p>由于是对元素进行 hash 计算，那么必然会出现“指纹”相同的情况，也就是会出现误判的情况。没有存储原数据，所以牺牲了数据的准确性，但是只保存了几个 bit，因此提升了空间效率。</p>
 <p>在完美的情况下，也就是没有发生哈希冲突之前，它的空间利用率最高只有 50%。因为没有发生冲突，说明至少有一半的位置是空着的。这个比率还是很低的，前面提到了优化方案，论文中也是基于只有2个Hash的条件下来进行优化的，也即<strong>增加数组的维度</strong>。</p>
 <p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/cuckooFilter2.png" alt="cuckooFilter2"></p>
-<p>参考上面论文中的图(c)，我们可以发现对数组进行展开，从一维变成了二维，这样每个位置可以放4个元素了。如此，论文中表述到，当 hash 函数固定为 2 个的时候，如果一个下标只能放一个元素，那么空间利用率是 50%。但是如果一个下标可以放 2，4，8 个元素的时候，空间利用率就会飙升到 84%，95%，98%。</p>
-<h3 id="3-4-最后的弊端"><a href="#3-4-最后的弊端" class="headerlink" title="3.4 最后的弊端"></a>3.4 最后的弊端</h3><p>布谷鸟过滤器整个了解下来，看起来一切都是这么的完美。各项指标都比布隆过滤器好，主打的是支持删除的操作。但实际上其依然存在不小的弊端。</p>
+<p>参考上面论文中的图(c)，我们可以发现对数组进行展开，从一维变成了二维，这样每个位置可以放4个元素了。如此，论文中表述到，当 hash 函数固定为 2 个的时候，如果一个下标只能放一个元素，那么空间利用率是 50%。</p>
+<blockquote>
+<p>但是如果一个下标可以放 2，4，8 个元素的时候，空间利用率就会飙升到 84%，95%，98%。</p>
+</blockquote>
+<h3 id="3-4-最后的弊端"><a href="#3-4-最后的弊端" class="headerlink" title="3.4 最后的弊端"></a>3.4 最后的弊端</h3><p>布谷鸟过滤器整个了解下来，看起来一切都是这么的完美。各项指标都比布隆过滤器好，<strong>主打的是支持删除的操作</strong>。但实际上其依然存在不小的弊端。</p>
 <blockquote>
 <p>对重复数据进行限制：如果需要布谷鸟过滤器支持删除，它必须知道一个数据插入过多少次。不能让同一个数据插入 kb+1 次。其中 k 是 Hash 函数的个数，b 是一个下标的位置能放几个元素。</p>
 </blockquote>
@@ -541,6 +544,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/cuckooFilter4.png" alt="cuckooFilter4"></p>
 <p>补充一个冷知识，虽然布谷鸟过滤器在2001年就被大佬 <code>Burton Howard Bloom</code> 提出来了，不少海内外博主一直想要看看这位大佬是和容颜。但是，海内外全网都没有，是一个彻彻底底的低调技术大佬。</p>
 <p><strong>参考文章</strong><br><a href="https://segmentfault.com/a/1190000039156246">布隆，牛逼！布谷鸟，牛逼！</a><br><a href="https://www.163.com/dy/article/G55C599D05372639.html">聊聊Redis布隆过滤器与布谷鸟过滤器？一文避坑</a></p>
+<hr>
 
       
     </div>
@@ -750,7 +754,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -875,7 +879,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

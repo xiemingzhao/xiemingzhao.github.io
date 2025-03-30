@@ -95,7 +95,7 @@
 <meta name="description" content="原始论文：XGBoost: A Scalable Tree Boosting System 摘要Tree boosting 是一个高效的并且广泛应用的机器学习方法。在本文中，我们会介绍一个可扩展的端到端的 tree boosting 系统，它叫 XGBoost，它被数据科学家广泛地应用，并且在许多机器学习挑战取得了最好的结果。对于稀疏数据我们提出了稀疏性感知算法，以及加权分位数梗概用来近似树模型学">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XGBoost A Scalable Tree Boosting System (论文解析)">
-<meta property="og:url" content="https://www.xiemingzhao.com/posts/15b10533.html">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/xgboostpaper.html">
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：XGBoost: A Scalable Tree Boosting System 摘要Tree boosting 是一个高效的并且广泛应用的机器学习方法。在本文中，我们会介绍一个可扩展的端到端的 tree boosting 系统，它叫 XGBoost，它被数据科学家广泛地应用，并且在许多机器学习挑战取得了最好的结果。对于稀疏数据我们提出了稀疏性感知算法，以及加权分位数梗概用来近似树模型学">
 <meta property="og:locale">
@@ -120,7 +120,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-12.JPG">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-13.JPG">
 <meta property="article:published_time" content="2019-06-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.656Z">
+<meta property="article:modified_time" content="2025-03-30T17:52:36.162Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="算法">
@@ -156,7 +156,7 @@
 
 
 
-  <link rel="canonical" href="https://www.xiemingzhao.com/posts/15b10533.html"/>
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/xgboostpaper.html"/>
 
 
 
@@ -340,7 +340,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/15b10533.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/xgboostpaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -421,8 +421,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/15b10533.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/15b10533.html" itemprop="commentCount"></span>
+                <a href="/posts/xgboostpaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/xgboostpaper.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -490,9 +490,9 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
         <p><a href="http://delivery.acm.org/10.1145/2940000/2939785/p785-chen.pdf?">原始论文：XGBoost: A Scalable Tree Boosting System</a></p>
 <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Tree boosting 是一个高效的并且广泛应用的机器学习方法。在本文中，我们会介绍一个可扩展的端到端的 tree boosting 系统，它叫 XGBoost，它被数据科学家广泛地应用，并且在许多机器学习挑战取得了最好的结果。对于稀疏数据我们提出了稀疏性感知算法，以及加权分位数梗概用来近似树模型学习。更重要的是，我们提供了对缓存访问模式，数据压缩和分片的见解来建立一个可扩展的提升树系统。通过综合这些看法， XGBoost 只需要使用比现有系统少得多的资源就可以扩展出超过数十亿的实例。</p>
-<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>大规模机器学习</p>
+<p>关键词：大规模机器学习</p>
 <span id="more"></span>
-<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>机器学习和数据驱动的方法在许多领域变得非常重要。智能垃圾邮件分类器通过从大量垃圾邮件数据和用户反馈中学习来如何保护我们免受垃圾邮件的侵害；广告系统学会将正确的广告放到正确的语境中；欺诈检测系统保护银行免受恶意攻击者的攻击；异常现象检测系统帮助实验物理学家发现引发新物理现象的因素。驱动这些技术成功应用的因素有两个：使用能够发现复杂数据依赖性的有效的（统计）模型，以及能从大型数据集里学习获得偏好模型的可扩展的学习系统。</p>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1 简介"></a>1 简介</h2><p>机器学习和数据驱动的方法在许多领域变得非常重要。智能垃圾邮件分类器通过从大量垃圾邮件数据和用户反馈中学习来如何保护我们免受垃圾邮件的侵害；广告系统学会将正确的广告放到正确的语境中；欺诈检测系统保护银行免受恶意攻击者的攻击；异常现象检测系统帮助实验物理学家发现引发新物理现象的因素。驱动这些技术成功应用的因素有两个：使用能够发现复杂数据依赖性的有效的（统计）模型，以及能从大型数据集里学习获得偏好模型的可扩展的学习系统。</p>
 <p>在机器学习算法的实践应用中，梯度提升树算法非常卓越。提升树在很多标准分类基准上表现非常出色。LambdaMART是提升树算法的变种，在排序任务中也表现出了不错的效果。XGBoost除了被用作单独的预测器，还被用于实际的广告点击率的问题中。它是集成算法的一种，也经常用于Netfix等竞赛。</p>
 <p>在本文中，我们描述了XGBoost，一种针对提升树的可扩展的机器学习系统。该系统有开源的软件包可用。该系统的影响已经在许多机器学习和数据挖掘任务重得到认可。以机器学习竞赛网站kaggle为例。2015年，kaggle的博客上发布了29个挑战获胜的解决方案，其中17个解决方案用了XGBoost。在这些解决方案中，8个只用了XGBoost来训练模型，而大多数其他解决方案将XGBoost与神经网络进行了结合。第二种常用的方法是深度神经网络，出现在了11个解决方案中。KDDCup2015也证明了该系统的成功，其中前10名的队伍都用了XGBoost。此外，获胜团队表示，集成算法的效果仅仅比XGBoost略优一点。</p>
 <p>这些结果表明，我们的系统在各种问题中表现都非常优异。这些获胜的解决方案涉及到的问题有：商店销量预测；高能物理事件分类；网络文本分类；顾客行为预测；运动检测；广告点击率预测；恶意软件识别；产品分类；风险预测；在线课程辍学率预测；虽然数据分析和特征工程在其中发挥了重要作用，但大家都选择XGBoost算法也是一个事实，这表明了我们的系统和提升树的影响和重要性。</p>
@@ -505,7 +505,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 </ul>
 <p>虽然现在存在一些并行提升树模型的研究工作，但核外计算、缓存感知和稀疏感知学习等方向还尚未有人涉略。更重要的是，结合这些方面的技术构建出的端对端的系统为实际应用提供了一种新的解决方案。这使得数据科学家和研究人员能够构建提升树算法的强大变种。除了这些主要的贡献之外，我们还提出了一个正则化学习的方法。</p>
 <p>本文其余的部分安排如下。第二部分我们回顾了提升树，并介绍了正则化的目标。然后，我们在第三部分介绍分割节点寻找的方法，第四部分是系统设计，包括相关的实验结果，为我们提到的每个优化方法提供量化支持。相关工作放在在第五节讨论。第六部分详细的介绍了端对端的评估。最后，我们在第七部分总结这篇论文。</p>
-<h2 id="2-提升树简介"><a href="#2-提升树简介" class="headerlink" title="2.提升树简介"></a>2.提升树简介</h2><p>我们在这一节中介绍梯度提升树算法。公式推导遵循文献中的梯度提升思想。特别地，其中的二阶方法源自Friedman等人。我们对正则项进行了微小的改进，这在实践中有所帮助。</p>
+<h2 id="2-提升树简介"><a href="#2-提升树简介" class="headerlink" title="2 提升树简介"></a>2 提升树简介</h2><p>我们在这一节中介绍梯度提升树算法。公式推导遵循文献中的梯度提升思想。特别地，其中的二阶方法源自Friedman等人。我们对正则项进行了微小的改进，这在实践中有所帮助。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-1.JPG" alt="xgb-1.jpg"></p>
 <h3 id="2-1-正则化学习目标"><a href="#2-1-正则化学习目标" class="headerlink" title="2.1 正则化学习目标"></a>2.1 正则化学习目标</h3><p>对于一个给定的数据集有n个样本和m个特征$\mathcal D={(x_i,y_i)}(|\mathcal D|=n,x_i \in \mathbb R^m,y_i \in \mathbb R)$，树集成算法使用个数为K的加法模型（如图1）来预测输出。</p>
 <script type="math/tex; mode=display">\hat y_i = \phi(x_i) = \sum_{k=1}^k F_k (x_i), f_k \in \mathcal F</script><p>其中$\mathcal F = {f(x) = w_{q(x)}}(q: \mathbb R^m \rightarrow T, w \in \mathbb R^T)$是回归树（也叫做CART）的空间。$q$表示将样本映射到叶节点的树的结构。$T$是每棵树叶子的数量。每个$F_k$对应了独立的树结构$q$和叶权值$w$。与决策树不同，每棵回归树的每个叶子上包含连续的连续值打分，我们用$w_i$表示第$i$个叶子的打分。对于一个给定的例子，我们将使用树中的决策规则（由$q$给出）将其分类到叶子节点中，并通过对相应叶子中的分数求和来计算最终预测（由$w$给出）。为了学习模型中使用的函数集合，我们最小化下面的正则化的项。</p>
@@ -514,15 +514,17 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <script type="math/tex; mode=display">\mathcal L^{(t)} = \sum_{t=1}^n l(y_i,\hat y_i^{(t-1)} + f_t(x_i)) + \Omega(f_t)</script><p>这意味着我们根据公式（2）贪婪地将$f_t$加到了目标函数中，这对我们模型提升最大（因为是沿梯度下降的）。一般情况下，二阶近似（泰勒二阶展开近似）可以用于快速优化目标函数。（因为有二阶信息，所以优化起来比一阶速度快。例如，牛顿法就比传统的梯度下降快）。</p>
 <script type="math/tex; mode=display">\mathcal L^{(t)} \simeq \sum_{t=1}^n [l(y_i,\hat y^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)</script><p>其中，$g<em>i = \partial</em>{\hat y^{(t-1)}} l(y<em>i,\hat y^{(t-1)})$和$h_i = \partial</em>{\hat y^{(t-1)}}^2 l(y_i,\hat y^{(t-1)})$，分别为损失函数一阶和二阶的梯度值。在第$t$步迭代中，我们可以去掉常数项以简化目标函数。（t步的时候t-1步的损失已经是定值）</p>
 <script type="math/tex; mode=display">\tilde{\mathcal L}^{(t)} \simeq \sum_{t=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)</script><p>定义$I_j = {i|q(x_i)=j}$为叶子结点j里面的样本，我们可以通过扩展$\Omega$来重写公式（3）：</p>
-<script type="math/tex; mode=display">\tilde{\mathcal L}^{(t)} = \sum_{t=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2 \\
-=\sum_{j=1}^T[(\sum_{i \in I_j} g_i) w_j + \frac{1}{2}(\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T</script><p>对于一个固定的结构$q(x)$，我们可以计算叶子结点$j$的最优权重$w_j^*$：</p>
+<script type="math/tex; mode=display">\begin{array}{c}
+\tilde{\mathcal L}^{(t)} = \sum_{t=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2 \\
+=\sum_{j=1}^T[(\sum_{i \in I_j} g_i) w_j + \frac{1}{2}(\sum_{i \in I_j} h_i + \lambda) w_j^2] + \gamma T
+\end{array}</script><p>对于一个固定的结构$q(x)$，我们可以计算叶子结点$j$的最优权重$w_j^*$：</p>
 <script type="math/tex; mode=display">w_j^* = -\frac{\sum_{i \in I_j} g_i} {\sum_{i \in I_j} h_i + \lambda}</script><p>并通过下式计算相应的最优值：</p>
 <script type="math/tex; mode=display">\tilde{\mathcal{L}}^{(t)}(q)=-\frac{1}{2} \sum_{j=1}^{T} \frac{\left(\sum_{i \in I_{j}} g_{i}\right)^{2}}{\sum_{i \in I_{j}} h_{i}+\lambda}+\gamma T</script><p>公式（6）可以作为一个评估方程去评价一棵树的结构$q$。这个打分就像评估决策树的杂质分数，不同的是它是为了更广泛的目标函数导出的。图2示出了如何计算这个分数。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-2.JPG" alt="xgb-2.jpg"></p>
 <p>通常来说不可能枚举出所有的树结构$q$，而是用贪心算法，从一个叶子开始分裂，反复给树添加分支。假设$I_L$和$I_R$ 是分裂后左右节点中包含的样本集合。使$I＝I_L \cup I_R$，通过下式分裂后会使损失函数降低。</p>
 <script type="math/tex; mode=display">\mathcal{L}_{\text {split}}=\frac{1}{2}\left[\frac{\left(\sum_{i \in I_{L}} g_{i}\right)^{2}}{\sum_{i \in I_{L}} h_{i}+\lambda}+\frac{\left(\sum_{i \in I_{R}} g_{i}\right)^{2}}{\sum_{i \in I_{R}} h_{i}+\lambda}-\frac{\left(\sum_{i \in I} g_{i}\right)^{2}}{\sum_{i \in I} h_{i}+\lambda}\right]-\gamma</script><p>这个公式用于评价候选分裂节点的好坏。</p>
 <h3 id="2-3-收缩和列子采样"><a href="#2-3-收缩和列子采样" class="headerlink" title="2.3 收缩和列子采样"></a>2.3 收缩和列子采样</h3><p>除了在2.1节中使用的正则化项，我们还使用了两种技术来进一步防止过拟合。第一种技术是Friedman引入的收缩。在每一次提升树训练迭代后，在前面乘一个因子$η$来收缩其权重（也就是我们说的学习率，或者叫步长）。与随机优化中的学习率类似，收缩减少了每棵树的影响，并为将来的树模型留出了改进模型的空间。第二种技术上列（特征）子采样。这个技术用于随机森林中，在商业软件TreeNet4中实现，用于梯度增强，但未在现有的开源包中实现。根据用户反馈，使用列子采样可以比传统的行子采样（也支持）更能防止过度采样。列子采样还能加速稍后描述的并行算法。</p>
-<h2 id="3-分裂查找算法"><a href="#3-分裂查找算法" class="headerlink" title="3. 分裂查找算法"></a>3. 分裂查找算法</h2><h3 id="3-1-基准贪婪算法"><a href="#3-1-基准贪婪算法" class="headerlink" title="3.1 基准贪婪算法"></a>3.1 基准贪婪算法</h3><p>树模型学习过程中的一个关键问题是找到最佳分裂节点，如公式（7）所示。为了做到这一点，一个分裂查找算法枚举出了所有特征上的所有可能的分裂节点，我们称之为贪婪算法。大多数现有的单机版本的提升树已经实现了，如scikit-learn、R中的GBM以及XGBoost的单机版本。在Alg.1中给出贪婪算法的详细描述。算法要求列举出所有特征的所有可能的分割点。为了提高效率，算法必须先将特征取值排序，并按顺序访问数据，然后根据公式（7）计算出当前分割点的梯度统计量。</p>
+<h2 id="3-分裂查找算法"><a href="#3-分裂查找算法" class="headerlink" title="3 分裂查找算法"></a>3 分裂查找算法</h2><h3 id="3-1-基准贪婪算法"><a href="#3-1-基准贪婪算法" class="headerlink" title="3.1 基准贪婪算法"></a>3.1 基准贪婪算法</h3><p>树模型学习过程中的一个关键问题是找到最佳分裂节点，如公式（7）所示。为了做到这一点，一个分裂查找算法枚举出了所有特征上的所有可能的分裂节点，我们称之为贪婪算法。大多数现有的单机版本的提升树已经实现了，如scikit-learn、R中的GBM以及XGBoost的单机版本。在Alg.1中给出贪婪算法的详细描述。算法要求列举出所有特征的所有可能的分割点。为了提高效率，算法必须先将特征取值排序，并按顺序访问数据，然后根据公式（7）计算出当前分割点的梯度统计量。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-a1.JPG" alt="xgb-a1.jpg"></p>
 <h3 id="3-2-近似算法"><a href="#3-2-近似算法" class="headerlink" title="3.2 近似算法"></a>3.2 近似算法</h3><p>贪婪算法是非常有效的，因为它贪婪地枚举除了所有可能的分裂点。然而，当数据不能完全读入内存时，这样做就不会很有效率。同样的问题也出现在分布式环境中。为了有效支持这两种环境中的提升树，我们需要一种近似算法。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-a2.JPG" alt="xgb-a2.jpg"></p>
@@ -547,7 +549,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-6.JPG" alt="xgb-6.jpg"></p>
 <p>当使用近似算法时，block结构也非常有用。在这种情况下，可以使用多个block，每个block对应于数据集中的不同的行子集。不同的block可以分布在机器上，或者在非核心设置中存储在磁盘上。使用排序结构，分位数查找步骤在完成排序的列上就变成了线性扫描。这对于在每个分支中频繁更新候选分割点的本地优先算法非常有价值。直方图聚合中的二分搜索也变成了线性时间合并样式算法。</p>
 <p>收集每列统计信息这一步骤可以实现并行化，这也给我们提供了一种寻找分割点的并行算法。还有一点重要的是，列的block结构同样支持列子采样，因为从block结构中选择列子集是非常容易的。</p>
-<p><strong>时间复杂度分析</strong><br>设$d$为树的最大深度，$K$为树的总数。对于贪婪算法，原始稀疏感知算法的时间复杂度为$O(Kd∥x∥_0\log n)$。这里我们使用$||x||_0$来表示训练数据中的非缺失条目的数量。另一方面，在block结构上仅消耗$O(Kd∥x∥_0+∥x∥_0\log n)$。这里$O(x∥_0\log n)$是可以摊销的有一次性预处理成本。该分析表名block结构可以节省额外的logn的复杂度，这在$n$很大时很重要。对于近似算法，基于二分搜索的原始算法的时间复杂度为$O(Kd∥x∥_0\log q)$。这里$q$是数据集中候选分割节点的数量。虽然$q$通常介于32和100之间，但对数因子仍会引入开销。使用block结构，我们可以将之间减少到$O(Kd∥x∥_0+∥x∥_0\log n)$，其中$B$是每个块中的最大行数。我们再次可以在计算中保存额外的$log q$因子。</p>
+<p><strong>时间复杂度分析</strong><br>设$d$为树的最大深度，$K$为树的总数。对于贪婪算法，原始稀疏感知算法的时间复杂度为$O(Kd|x|_0\log n)$。这里我们使用$|x|_0$来表示训练数据中的非缺失条目的数量。另一方面，在block结构上仅消耗$O(Kd|x|_0+|x|_0\log n)$。这里$O(|x|_0\log n)$是可以摊销的有一次性预处理成本。该分析表名block结构可以节省额外的logn的复杂度，这在$n$很大时很重要。对于近似算法，基于二分搜索的原始算法的时间复杂度为$O(Kd|x|_0\log q)$。这里$q$是数据集中候选分割节点的数量。虽然$q$通常介于32和100之间，但对数因子仍会引入开销。使用block结构，我们可以将之间减少到$O(Kd|x|_0+|x|_0\log n)$，其中$B$是每个块中的最大行数。我们再次可以在计算中保存额外的$log q$因子。</p>
 <h3 id="4-2-缓存感知访问"><a href="#4-2-缓存感知访问" class="headerlink" title="4.2 缓存感知访问"></a>4.2 缓存感知访问</h3><p>虽然block结构有助于优化分割点查找的时间复杂度，但是算法需要通过行索引间接提取梯度统计量，因为这些值是按特征的顺序访问的，这是一种非连续的内存访问（意思就是按值排序以后指针就乱了）。分割点枚举的简单实现在累积和非连续内存提取之间引入了即时读/写依赖性（参见图8）。当梯度统计信息不适合CPU缓存进而发生缓存未命中时，这会减慢分割点查找的速度。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/xgb-8.JPG" alt="xgb-8.jpg"></p>
 <p>对于贪心算法，我们可以通过缓存感知预取算法来缓解这个问题。 具体来说，我们在每个线程中分配一个内部缓冲区，获取梯度统计信息并存入，然后以小批量方式执行累积。预取的操作将直接读/写依赖关系更改为更长的依赖关系，有助于数据行数较大时减少运行开销。图7给出了Higgs和Allstate数据集上缓存感知与非缓存感知算法的比较。我们发现，当数据集很大时，实现缓存感知的贪婪算法的运行速度是朴素版本的两倍。</p>
@@ -608,10 +610,10 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/posts/15b10533.html">XGBoost A Scalable Tree Boosting System (论文解析)</a></p>
+  <p><span>本文标题:</span><a href="/posts/xgboostpaper.html">XGBoost A Scalable Tree Boosting System (论文解析)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
-  <p><span>原始链接:</span><a href="/posts/15b10533.html" title="XGBoost A Scalable Tree Boosting System (论文解析)">https://www.xiemingzhao.com/posts/15b10533.html</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/15b10533.html"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/posts/xgboostpaper.html" title="XGBoost A Scalable Tree Boosting System (论文解析)">https://www.xiemingzhao.com/posts/xgboostpaper.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/xgboostpaper.html"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -659,7 +661,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/eff2088e.html" rel="next" title="Understanding LSTM Networks (论文解析)">
+              <a href="/posts/lstmpaper.html" rel="next" title="Understanding LSTM Networks (论文解析)">
                 <i class="fa fa-chevron-left"></i> Understanding LSTM Networks (论文解析)
               </a>
             
@@ -793,7 +795,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -871,7 +873,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="nav-number">3.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8F%90%E5%8D%87%E6%A0%91%E7%AE%80%E4%BB%8B"><span class="nav-number">4.</span> <span class="nav-text">2.提升树简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%AD%A3%E5%88%99%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 正则化学习目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 梯度提升树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%94%B6%E7%BC%A9%E5%92%8C%E5%88%97%E5%AD%90%E9%87%87%E6%A0%B7"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 收缩和列子采样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%88%86%E8%A3%82%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">3. 分裂查找算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9F%BA%E5%87%86%E8%B4%AA%E5%A9%AA%E7%AE%97%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 基准贪婪算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 近似算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%8A%A0%E6%9D%83%E5%88%86%E4%BD%8D%E6%95%B0%E6%A2%97%E6%A6%82"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 加权分位数梗概</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%A8%80%E7%96%8F%E6%80%A7%E6%84%9F%E7%9F%A5%E5%88%86%E8%A3%82%E6%9F%A5%E6%89%BE"><span class="nav-number">5.4.</span> <span class="nav-text">3.4 稀疏性感知分裂查找</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="nav-number">6.</span> <span class="nav-text">4. 系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%B9%B6%E8%A1%8C%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%88%97%E5%AD%98%E5%82%A8"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 并行学习的列存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E7%BC%93%E5%AD%98%E6%84%9F%E7%9F%A5%E8%AE%BF%E9%97%AE"><span class="nav-number">6.2.</span> <span class="nav-text">4.2 缓存感知访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%A0%B8%E5%A4%96%E8%AE%A1%E7%AE%97%E7%9A%84%E5%9D%97"><span class="nav-number">6.3.</span> <span class="nav-text">4.3 核外计算的块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">5 . 相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E9%A2%84%E4%BC%B0"><span class="nav-number">8.</span> <span class="nav-text">6. 端到端的预估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0"><span class="nav-number">8.1.</span> <span class="nav-text">6.1 系统实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">8.2.</span> <span class="nav-text">6.2 数据集和设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%88%86%E7%B1%BB"><span class="nav-number">8.3.</span> <span class="nav-text">6.3 分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0"><span class="nav-number">8.4.</span> <span class="nav-text">6.4 排序学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E6%A0%B8%E5%A4%96%E5%AE%9E%E9%AA%8C"><span class="nav-number">8.5.</span> <span class="nav-text">6.5 核外实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E5%88%86%E5%B8%83%E5%AE%9E%E9%AA%8C"><span class="nav-number">8.6.</span> <span class="nav-text">6.6 分布实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%BB%93%E8%AE%BA"><span class="nav-number">9.</span> <span class="nav-text">7. 结论</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">1 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8F%90%E5%8D%87%E6%A0%91%E7%AE%80%E4%BB%8B"><span class="nav-number">3.</span> <span class="nav-text">2 提升树简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%AD%A3%E5%88%99%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 正则化学习目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 梯度提升树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%94%B6%E7%BC%A9%E5%92%8C%E5%88%97%E5%AD%90%E9%87%87%E6%A0%B7"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 收缩和列子采样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%88%86%E8%A3%82%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">3 分裂查找算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9F%BA%E5%87%86%E8%B4%AA%E5%A9%AA%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 基准贪婪算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 近似算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%8A%A0%E6%9D%83%E5%88%86%E4%BD%8D%E6%95%B0%E6%A2%97%E6%A6%82"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 加权分位数梗概</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%A8%80%E7%96%8F%E6%80%A7%E6%84%9F%E7%9F%A5%E5%88%86%E8%A3%82%E6%9F%A5%E6%89%BE"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 稀疏性感知分裂查找</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">4. 系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%B9%B6%E8%A1%8C%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%88%97%E5%AD%98%E5%82%A8"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 并行学习的列存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E7%BC%93%E5%AD%98%E6%84%9F%E7%9F%A5%E8%AE%BF%E9%97%AE"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 缓存感知访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%A0%B8%E5%A4%96%E8%AE%A1%E7%AE%97%E7%9A%84%E5%9D%97"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 核外计算的块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">6.</span> <span class="nav-text">5 . 相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E9%A2%84%E4%BC%B0"><span class="nav-number">7.</span> <span class="nav-text">6. 端到端的预估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 系统实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 数据集和设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%88%86%E7%B1%BB"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 排序学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E6%A0%B8%E5%A4%96%E5%AE%9E%E9%AA%8C"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 核外实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E5%88%86%E5%B8%83%E5%AE%9E%E9%AA%8C"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 分布实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%BB%93%E8%AE%BA"><span class="nav-number">8.</span> <span class="nav-text">7. 结论</span></a></li></ol></div>
             
 
           </div>
@@ -918,7 +920,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

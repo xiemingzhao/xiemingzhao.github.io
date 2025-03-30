@@ -6,5 +6,5 @@ https://www.xiemingzhao.com/posts/hnswAlgo.html
 https://www.xiemingzhao.com/posts/vecRetrieval.html
 https://www.xiemingzhao.com/posts/bitArithmetic.html
 https://www.xiemingzhao.com/posts/sparseMatrix.html
-https://www.xiemingzhao.com/posts/96501d7f.html
+https://www.xiemingzhao.com/posts/dcnpaper.html
 https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html

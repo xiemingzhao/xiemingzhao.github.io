@@ -676,7 +676,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
         
           <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在了解了布隆过滤器的缺点之后，如果想要解决就可以来学习一下布谷鸟过滤器。其最早是在2001年的论文<a href="https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf">《Cuckoo Filter: Practically Better Than Bloom》</a>中提出的。论文中也很直接的抨击布隆过滤器的缺点，表明自己可以有效支持反向删除操作。</p>
-<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>先来介绍最简单的布谷鸟过滤器的工作原理。假设我们有：</p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>先来介绍最简单的<code>布谷鸟过滤器</code>的工作原理。假设我们有：</p>
 <ul>
 <li>两个Hash表，T1和T2；</li>
 <li>两个Hash函数，H1和H2。</li>
@@ -890,7 +890,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         
           <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在实际工作中，我们经常涉及判断一个对象或者数据是否存在于内存或者数据库。往往大家会想到HashMap，但是这时候有一个问题,存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，而一旦你的值很多例如上亿的时候，可行性就差了。<br>另一方面，如果很多请求是在请求数据库根本不存在的数据,那么数据库就要频繁响应这种不必要的IO查询,如果再多一些,数据库大多数IO都在响应这种毫无意义的请求操作,为了解决这一个问题，过滤器由此诞生！</p>
 <h2 id="2-布隆过滤器"><a href="#2-布隆过滤器" class="headerlink" title="2 布隆过滤器"></a>2 布隆过滤器</h2><blockquote>
-<p>过滤原理：布隆过滤器(Bloom Filter)大概的思路就是,当你请求的信息来的时候,先检查一下你查询的数据我这有没有,有的话将请求压给数据库,没有的话直接返回。</p>
+<p>过滤原理：布隆过滤器(Bloom Filter)大概的思路就是，当你请求的信息来的时候，先检查一下你查询的数据我这有没有，有的话将请求压给数据库,没有的话直接返回。</p>
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1730,7 +1730,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 </li>
 <li><p><code>|</code> 或运算 两个位都是 0 时，结果才为 0，否则为 1，如 <code>10011 | 11001 = 11011</code></p>
 </li>
-<li><p><code>^</code> 异或运算，两个位相同则为 0，不同则为 1，如 <code>10011 ^ 11001 = 01010</code> </p>
+<li><p><code>^</code> 异或运算，两个位相同则为 0，不同则为 1，如 <code>10011 ^ 11001 = 01010</code></p>
 </li>
 <li><p><code>~</code> 取反运算，0 则变为 1，1 则变为 0，如<code>~ 10011 = 01100</code></p>
 </li>
@@ -1944,7 +1944,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在企业的深度学习项目中，<code>Sparse稀疏矩阵</code>这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。</p>
+          <p>-</p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在企业的深度学习项目中，<code>Sparse稀疏矩阵</code>这个词想必大家都不陌生。在模型的矩阵计算中，往往会遇到矩阵较为庞大且非零元素较少。由其是现在深度学习中embedding大行其道，稀疏矩阵成为必不可少的基建。而这种情况下，如果依然使用dense的矩阵进行存储和计算将是极其低效且耗费资源的。Sparse稀疏矩阵就称为了救命稻草。在拜读多篇优秀博客后，这里做一些自己的汇总和填补。</p>
 <h2 id="2-稀疏矩阵"><a href="#2-稀疏矩阵" class="headerlink" title="2 稀疏矩阵"></a>2 稀疏矩阵</h2><h3 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h3>
           <!--noindex-->
           <div class="post-button text-center">
@@ -2007,7 +2008,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/96501d7f.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/dcnpaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -2026,7 +2027,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/posts/96501d7f.html" itemprop="url">Deep and Cross Network for Ad Click Predictions (论文解析)</a></h1>
+                <a class="post-title-link" href="/posts/dcnpaper.html" itemprop="url">Deep and Cross Network for Ad Click Predictions (论文解析)</a></h1>
         
 
         <div class="post-meta">
@@ -2090,8 +2091,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/96501d7f.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/96501d7f.html" itemprop="commentCount"></span>
+                <a href="/posts/dcnpaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/dcnpaper.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2154,11 +2155,11 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
         
           <p><a href="https://arxiv.org/pdf/1708.05123.pdf">原始论文：Deep &amp; Cross Network for Ad Click Predictions</a></p>
-<h2 id="深度和交叉网络的广告点击预测"><a href="#深度和交叉网络的广告点击预测" class="headerlink" title="深度和交叉网络的广告点击预测"></a>深度和交叉网络的广告点击预测</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a><strong>摘要</strong></h3><p>特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保持了深度模型的优势，并且又超越了这，它是一种在学习某种边界程度特征交叉项中更为有效的新奇网络。此外，DCN显示地在每一层应用特征交叉，不要求做人工程特征工程，同时也只是给DNN模型增加了一些可以忽略不计的复杂度。我们的实验结果已经证明它在CTR预测数据集和密集的分类数据集上，相对于其他高级模型在模型准确性和记忆方法上都具有优越性。</p>
-<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a><strong>1 介绍</strong></h3><p>点击率（CTR）预测是一个大规模的问题，它对数十亿美元的在线广告业来说至关重要。在广告业中，广告商会想发布商付费以在发布商的网站上展示他们的广告。一个普遍的付费模式是平均点击成本（CPC）模型，即广告商仅在点击发生的时候才会付费。因此，出版商的收入很大程度上依赖于能够准确预测CTR。</p>
+<h2 id="深度和交叉网络的广告点击预测"><a href="#深度和交叉网络的广告点击预测" class="headerlink" title="深度和交叉网络的广告点击预测"></a>深度和交叉网络的广告点击预测</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>特征工程已经成为许多预测模型成功的关键。然而，这个过程是不平常的并且经常会要手动特征工程或者穷举搜索。DNNs能够自动地学习特征交叉项；然而，它们都是隐式地生成所有交叉项，并且学习所有类型的交叉特征不一定有效。在本文中，我们提出深度和交叉网络(DCN)，它保持了深度模型的优势，并且又超越了这，它是一种在学习某种边界程度特征交叉项中更为有效的新奇网络。此外，DCN显示地在每一层应用特征交叉，不要求做人工程特征工程，同时也只是给DNN模型增加了一些可以忽略不计的复杂度。我们的实验结果已经证明它在CTR预测数据集和密集的分类数据集上，相对于其他高级模型在模型准确性和记忆方法上都具有优越性。</p>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h3><p>点击率（CTR）预测是一个大规模的问题，它对数十亿美元的在线广告业来说至关重要。在广告业中，广告商会想发布商付费以在发布商的网站上展示他们的广告。一个普遍的付费模式是平均点击成本（CPC）模型，即广告商仅在点击发生的时候才会付费。因此，出版商的收入很大程度上依赖于能够准确预测CTR。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/posts/96501d7f.html#more" rel="contents">
+            <a class="btn" href="/posts/dcnpaper.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2314,7 +2315,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5.3k
+                  2.8k
                 </span>
               
 
@@ -2330,7 +2331,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  26
+                  11
                 </span>
               
             </div>
@@ -2352,7 +2353,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          <h2 id="显著性计算—uv-based"><a href="#显著性计算—uv-based" class="headerlink" title="显著性计算—uv based"></a>显著性计算—uv based</h2><p><strong>这里以实验目标为提升CR（Conversion Rate）为例说明</strong></p>
+          <h2 id="显著性计算（uv-based）"><a href="#显著性计算（uv-based）" class="headerlink" title="显著性计算（uv based）"></a>显著性计算（uv based）</h2><p><strong>这里以实验目标为提升CR（Conversion Rate）为例说明</strong></p>
 <h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><p><strong>显著性：</strong> 显著：新版和老版的CR有明显差异，不显著: 新版和老版没有明显差异。<br><strong>上升幅度：</strong>(新版CR-老版CR)/老版CR<br><strong>功效:</strong> 一般功效（即power值）达到0.8, 我们认为样本量即实验UV充足，可下结论。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -2456,7 +2457,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2565,7 +2566,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

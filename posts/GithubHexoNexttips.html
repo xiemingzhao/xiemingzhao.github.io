@@ -100,7 +100,7 @@
 <meta property="og:description" content="想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客使用Github+Hexo+Next免费搭建自己的博客（最细攻略）。 博客撰写1. MarkdownHexo是基于标准的Markdown格式进行解析博客文章的，markdown应该不用多说了，如果你除了office全家桶外不知道全加的编辑器也没关系，学习起来很简单，网上教程比比皆是，看看语法就学会了。然后你就会爱上">
 <meta property="og:locale">
 <meta property="article:published_time" content="2019-05-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.653Z">
+<meta property="article:modified_time" content="2025-03-30T17:48:44.352Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="Hexo">
 <meta property="article:tag" content="markdown">
@@ -461,14 +461,19 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>当然，它只是一个通用型很高的文档编辑器，而Hexo博客的头部包含一些并不是很通用的格式模块，例如<code>tile</code>,<code>tags</code>以及<code>date</code>等等，这一块在创建博客的文章用已经阐述过，或者去Hexo的官方文档<a href="https://hexo.io/zh-cn/">https://hexo.io/zh-cn/</a>一探究竟。还有一个需要提的是，markdown本身的语法在标题上面用#来区分，无其他要求，但是hexo解析的时候要求标题类的#与文字之间要有一个空格，反正养成一个良好的习惯，<strong>格式符号与文字之间保留空格。</strong></p>
 <span id="more"></span>
 <h3 id="2-编辑器"><a href="#2-编辑器" class="headerlink" title="2. 编辑器"></a>2. 编辑器</h3><p>提到这里，<code>Markdown</code>本身只是一种编辑格式，那么真正的编辑器用什么呢，可能你已经有自己喜欢的编辑器了，这里推荐几款个人绝对很好用的编辑器仅供参考：</p>
-<blockquote>
-<p><a href="https://www.zybuluo.com/cmd/">Cmd Markdown</a>，作业部落出品，本人使用最多的，强推<br><a href="http://markdownpad.com/">MarkdownPad</a>，使用免费的版本 MarkdownPad2 足以<br><a href="http://soft.xiaoshujiang.com/">小书匠</a>，也分为分为免费版和收费版，文件管理功能强<br><a href="http://marxi.co/">Marxico</a>，中文名马克飞象，可以直接把文本存到印象笔记</p>
-</blockquote>
+<ul>
+<li><a href="https://www.zybuluo.com/cmd/">Cmd Markdown</a>，作业部落出品，本人使用最多的，强推</li>
+<li><a href="http://markdownpad.com/">MarkdownPad</a>，使用免费的版本 MarkdownPad2 足以</li>
+<li><a href="http://soft.xiaoshujiang.com/">小书匠</a>，也分为分为免费版和收费版，文件管理功能强</li>
+<li><a href="http://marxi.co/">Marxico</a>，中文名马克飞象，可以直接把文本存到印象笔记</li>
+</ul>
 <p><em>更多的可以参考<a href="https://blog.csdn.net/qq_36759224/article/details/82229243">这里</a></em></p>
 <h3 id="3-图床"><a href="#3-图床" class="headerlink" title="3. 图床"></a>3. 图床</h3><p>既然要写作，在这个信息爆炸的时代，大家都很赶时间，一篇只有文字的博客难免使人心生倦意，图文并茂的方式往往更好。那么博客附属图片常常食用的就是图床，而一般的网盘是不能够生成外链的，这里推荐几款好用的 <strong>免费</strong> 图床：</p>
-<blockquote>
-<p><a href="https://postimages.org">postimg</a>，本人在用，国外的图床，但是速度也很快。永久存储免注册，图片链接支持https，可以删除上传的图片，提供多种图片链接格式。<br><a href="https://portal.qiniu.com">七牛云</a>，中文名七牛云，注册认证后有10G永久免费空间，每月10G国内和10G国外流量，速度相当快，需要实名认证较为麻烦。<br><a href="http://jiantuku.com">极简图床</a>，不太熟悉，据说是主要提供图片上传和管理界面，需要用户自己设置微博、七牛云或者阿里云OSS信息。</p>
-</blockquote>
+<ul>
+<li><a href="https://postimages.org">postimg</a>，本人在用，国外的图床，但是速度也很快。永久存储免注册，图片链接支持https，可以删除上传的图片，提供多种图片链接格式。</li>
+<li><a href="https://portal.qiniu.com">七牛云</a>，中文名七牛云，注册认证后有10G永久免费空间，每月10G国内和10G国外流量，速度相当快，需要实名认证较为麻烦。</li>
+<li><a href="http://jiantuku.com">极简图床</a>，不太熟悉，据说是主要提供图片上传和管理界面，需要用户自己设置微博、七牛云或者阿里云OSS信息。</li>
+</ul>
 <h3 id="4-公式"><a href="#4-公式" class="headerlink" title="4. 公式"></a>4. 公式</h3><p>作为技术博客，就难免会使用公式，相信经历过word中的公式编辑mathtype的难友们一定难以忘怀其如恶魔般的体验。编辑一个公式，点来点去费时费力，修改和转移都复杂得多，关键是正版的还需要注册收费。而<code>markdown</code>大法就完美地解决了这一问题，其内部支持<code>Latex</code>公式编辑格式，行内编辑可用<script type="math/tex">latex公式</script>格式来操作，地理成行的则用双刀符号$$$latex公式$$$格式。举例：</p>
 <ol>
 <li>这里展示行内公式，开始$f(x) = \sum<em>{i=1}^m \frac{1}{x_i}$结束。结果就会如下：<br>这里展示行内公式，开始$f(x) = \sum</em>{i=1}^m \frac{1}{x_i}$结束。</li>
@@ -476,6 +481,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 </ol>
 <p>Latex公式编辑语法也不难学，可参考其<a href="https://www.latex-project.org/">Latex官方网站</a>的语法指南，分分钟让你爱上公式编辑，再也不会害怕编辑公式了。</p>
 <p><strong>参考博文</strong><br><a href="https://blog.csdn.net/qq80583600/article/details/72828063">可能是最详细的 Hexo + GitHub Pages 搭建博客的教程</a><br><a href="https://blog.csdn.net/qq_36759224/article/details/82229243">最新主流 Markdown 编辑器推荐</a></p>
+<hr>
 
       
     </div>
@@ -687,7 +693,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -812,7 +818,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

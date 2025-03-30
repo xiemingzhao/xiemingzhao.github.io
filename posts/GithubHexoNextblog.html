@@ -114,7 +114,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo13.jpg">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/hexoBlog/hexo12.jpg">
 <meta property="article:published_time" content="2019-05-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.657Z">
+<meta property="article:modified_time" content="2025-03-30T17:53:05.017Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="Hexo">
 <meta property="article:tag" content="Next">
@@ -559,8 +559,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <blockquote>
 <p>Muse - 默认 Scheme，横栏<br>Mist - 单栏外观<br>Pisces - 双栏设置</p>
 </blockquote>
-<p> 在主题配置文件中搜索scheme，能够找到对应的配置位置，想要启动哪一个，就将其他的注释掉即可。例如博主使用的是Pisces风格，则设置如下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#scheme: Muse</span><br><span class="line">#scheme: Mist</span><br><span class="line">scheme: Pisces</span><br></pre></td></tr></table></figure></p>
-<p>同样的，在这里也可以使用三个三个景点的发布语句，来测试不同scheme的效果，选择一个你最中意的即可。 </p>
+<p>在主题配置文件中搜索scheme，能够找到对应的配置位置，想要启动哪一个，就将其他的注释掉即可。例如博主使用的是Pisces风格，则设置如下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#scheme: Muse</span><br><span class="line">#scheme: Mist</span><br><span class="line">scheme: Pisces</span><br></pre></td></tr></table></figure></p>
+<p>同样的，在这里也可以使用三个三个景点的发布语句，来测试不同scheme的效果，选择一个你最中意的即可。</p>
 <h3 id="4-设置站点"><a href="#4-设置站点" class="headerlink" title="4. 设置站点"></a>4. 设置站点</h3><p>打开站点配置文件，在前面你就可以发现如下的<code>site</code>配置区域：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Site</span><br><span class="line">title: 我的博客</span><br><span class="line">subtitle: 愿世界和平！！！</span><br><span class="line">description: 小白的进阶</span><br><span class="line">author: 小火箭</span><br><span class="line">language: zh-Hans</span><br><span class="line">timezone:</span><br></pre></td></tr></table></figure>
 <p>上面是我配置好的示例，每一项的配置内容都一目了然，对应的含义如下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Site</span><br><span class="line">title: 你博客的大标题</span><br><span class="line">subtitle: 你博客的副标题</span><br><span class="line">description: 个人的描述</span><br><span class="line">author: 作者名称</span><br><span class="line">language: 语言类型</span><br><span class="line">timezone: 时区</span><br></pre></td></tr></table></figure><br>其他的没什么好说的，这里提一下language的配置。目前可用的语种有很多，这个示例中的<code>zh-Hans</code>是中文，详细可参考前面的Hexo官方文档。设置好站点的语言后，对应的一些关键词翻译可在主题文件中配置，打开<code>/themes/next/languages/</code>路径下的文件夹，可以找到对应的语言配置文件，例如中文的就是<code>zh-Hans.yml</code>。</p>
@@ -596,8 +596,9 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <blockquote>
 <p><a href="https://hexo.io/zh-cn/">Hexo + GitHub Pages </a><br><a href="https://www.jekyll.com.cn/">Jekyll + GitHub Pages </a><br><a href="https://cn.wordpress.org/">WordPress + 服务器 + 域名</a><br><a href="http://www.dedecms.com/">DeDeCMS + 服务器 + 域名 </a><br>…</p>
 </blockquote>
-<p>但是个人最喜欢Hexo + GitHub方案，一来是免费，二来是能够和自己的代码库一起管理。但是其也有自己的缺点，那就是不支持数据库管理，所以你只能做静态页面的博客，不能像其他博客（如 WordPress）那样通过数据库管理自己的博客内容。 但是GitHub Pages 无需购置服务器，免服务器费的同时还能做负载均衡，github pages有300M免费空间。静态的博客更有利于搜索引擎蜘蛛爬取，轻量化的感觉真的很好。 </p>
+<p>但是个人最喜欢Hexo + GitHub方案，一来是免费，二来是能够和自己的代码库一起管理。但是其也有自己的缺点，那就是不支持数据库管理，所以你只能做静态页面的博客，不能像其他博客（如 WordPress）那样通过数据库管理自己的博客内容。 但是GitHub Pages 无需购置服务器，免服务器费的同时还能做负载均衡，github pages有300M免费空间。静态的博客更有利于搜索引擎蜘蛛爬取，轻量化的感觉真的很好。</p>
 <p><strong>参考博文</strong><br><a href="https://blog.csdn.net/gdutxiaoxu/article/details/53576018">手把手教你用Hexo+Github 搭建属于自己的博客-gdutxiaoxu</a><br><a href="https://blog.csdn.net/qq80583600/article/details/72828063">可能是最详细的 Hexo + GitHub Pages 搭建博客的教程-QQ80583600</a></p>
+<hr>
 
       
     </div>
@@ -673,7 +674,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/c800c340.html" rel="next" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
+              <a href="/posts/slopeonecfpaper.html" rel="next" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
                 <i class="fa fa-chevron-left"></i> Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)
               </a>
             
@@ -807,7 +808,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -932,7 +933,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

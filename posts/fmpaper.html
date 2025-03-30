@@ -95,7 +95,7 @@
 <meta name="description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Factorization Machines (论文解析)">
-<meta property="og:url" content="https://www.xiemingzhao.com/posts/399ba6ee.html">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/fmpaper.html">
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="原始论文：Factorization Machines 因式分解机摘要：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可">
 <meta property="og:locale">
@@ -103,7 +103,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-2.JPG">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-3.JPG">
 <meta property="article:published_time" content="2019-04-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.653Z">
+<meta property="article:modified_time" content="2025-03-30T18:05:39.667Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="FM">
@@ -138,7 +138,7 @@
 
 
 
-  <link rel="canonical" href="https://www.xiemingzhao.com/posts/399ba6ee.html"/>
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/fmpaper.html"/>
 
 
 
@@ -322,7 +322,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/399ba6ee.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/fmpaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -403,8 +403,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/399ba6ee.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/399ba6ee.html" itemprop="commentCount"></span>
+                <a href="/posts/fmpaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/fmpaper.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -474,18 +474,18 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <h2 id="因式分解机"><a href="#因式分解机" class="headerlink" title="因式分解机"></a>因式分解机</h2><p><strong>摘要</strong>：在本文中，我们介绍了一种因式分解机，这是一种新的模型，结合了SVM的优点，利用了因式分解模型。类似SVM，因式分解机是一种通用的预测器，可以适用于任意的实值特征向量。对比SVM，FMs利用因式分解对变量之间的关系进行建模。因此，FMs可以在大量稀疏特征中进行相互关系的估计。我们展示了，模型的表达式可以在线性时间内求解，FMs可以进行直接的优化。所以，不像非线性的SVM，不需要进行对偶变换，模型的参数可以直接的进行估计，不需要用到支持向量。我们展示了和SVM的关系，以及在稀疏的设置下的参数估计的优势。</p>
 <p>另外，有许多因式分解模型如矩阵分解，并行因子分析如SVD++，PITF，FPMC。这些方法的缺点是通用性不好，只对特殊的输入数据有用。优化方法对于不同的任务也各不相同。我们展示了，FMs通过制定不同的输入就可以模拟这些模型。这就使得FMs非常的易用，甚至可以不需要分解模型的专业知识都可以。</p>
 <span id="more"></span>
-<h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>SVM是机器学习和数据挖掘中最流行的算法之一。然而在协同过滤的场景中，SVM并不重要，最好的模型要么直接使用矩阵的因式分解或者使用因式分解参数。本文中，我们会展示，SVM之所以在这些任务中表现不好，是因为SVM在复杂的非线性的稀疏的核空间中很难找到一个好的分割超平面。而张量分解模型的缺点在于（1）不用应用于标准的预测数据（2）不同的任务需要特殊的模型设计和学习算法。</p>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h3><p>SVM是机器学习和数据挖掘中最流行的算法之一。然而在协同过滤的场景中，SVM并不重要，最好的模型要么直接使用矩阵的因式分解或者使用因式分解参数。本文中，我们会展示，SVM之所以在这些任务中表现不好，是因为SVM在复杂的非线性的稀疏的核空间中很难找到一个好的分割超平面。而张量分解模型的缺点在于（1）不用应用于标准的预测数据（2）不同的任务需要特殊的模型设计和学习算法。</p>
 <p>在本文中，我们介绍了一个新的预测器，Factorization Machine（FM），是一个像SVM一样的通用的预测模型，但是可以在非常稀疏的数据中估计出可靠的参数。FM对所有变量的相互关系的进行建模（对比SVM的多项式核），但是利用了可因式分解的参数，而不是像SVM一样使用了稠密的参数。我们展示了，模型的表达式可以在线性时间内求解，而且只依赖与线性数量大小的参数。这就允许了直接进行优化和存储模型的参数，而不需要存储任何的训练数据。（SVM是需要存储支持向量的）。非线性的SVM通常使用对偶形式进行求解，而且会使用到支持向量。我们也显示了在协同过滤的业务上FMs比许多很成功的模型如带偏置的MF，SVD++，PITF，FPMC等都好。</p>
 <p>总的来说，我们提出的FM的优点有：<br>1）FMs可以在非常稀疏的数据上进行参数估计。<br>2）FMs的复杂度是线性的，方便优化，不像SVM需要依赖支持向量。我们证明FM可以扩展应用在大数据集上，例如有1亿训练样例的Netflix数据集。<br>3）FMs是通用的预测模型，可以适用于任意的实值的特征向量。与此相反，其他先进的分解模型只在特定输入数据的情况下起作用。我们将通过定义输入数据的特征向量来证明这一点，FM可以模仿其他最先进的模型例如带偏置项的MF，SVD++,PITF以及FPMC模型。</p>
-<h3 id="2、在稀疏数据下进行预测"><a href="#2、在稀疏数据下进行预测" class="headerlink" title="2、在稀疏数据下进行预测"></a>2、在稀疏数据下进行预测</h3><p>大部分的常用的预测任务是估计一个预测的函数$y:\mathbb{R}^n \rightarrow T$，从一个实数向量$x \in \mathbb{R}^n$到目标$T$（如果是回归任务$T=R$，如果是分类任务$T={+，-}$）。在监督学习中，假设有个给定y值的样本训练数据集$D = {(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),…}$。我们也研究了排序的任务，拥有目标值$T=\mathbb{R}$的函数y可以适用于对x向量的评分和排序。评分函数可以通过成对的数据进行训练，当一个样本组合$(x<em>{(A)},x</em>{(B)})\in D$表示$x<em>{(A)}$应该排在$x</em>{(B)}$的前面。由于成对数据是反对称的，可以直接使用正的实例。</p>
+<h3 id="2-在稀疏数据下进行预测"><a href="#2-在稀疏数据下进行预测" class="headerlink" title="2 在稀疏数据下进行预测"></a>2 在稀疏数据下进行预测</h3><p>大部分的常用的预测任务是估计一个预测的函数$y:\mathbb{R}^n \rightarrow T$，从一个实数向量$x \in \mathbb{R}^n$到目标$T$（如果是回归任务$T=R$，如果是分类任务$T={+，-}$）。在监督学习中，假设有个给定y值的样本训练数据集$D = {(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),…}$。我们也研究了排序的任务，拥有目标值$T=\mathbb{R}$的函数y可以适用于对x向量的评分和排序。评分函数可以通过成对的数据进行训练，当一个样本组合$(x<em>{(A)},x</em>{(B)})\in D$表示$x<em>{(A)}$应该排在$x</em>{(B)}$的前面。由于成对数据是反对称的，可以直接使用正的实例。</p>
 <p>在本文中，我们要解决的问题是数据的稀疏问题，也就是说在x向量中，大部分的值都是0，只有少部分不是0。让$m(x)$表示特征向量x中非0元素的个数，$\bar m_D$表示所有特征向量$x \in D$的非零元素个数$m(x)$的平均值。高稀疏性的特征在现实世界中是非常常见的，如文本分析和推荐系统中。高稀疏性的一个原因是在处理超多类别变量域的潜在问题。</p>
 <p><strong>例1</strong> 假设我们有个电影评分系统的交互数据。系统记录了用户$u\in U$在特定的时间$t \in R$对电影$i \in I$的评分$r \in {1,2,3,4,5}$.用户U和电影I为：</p>
 <p>$U = {Alice (A), Bob (B), Charlie (C), . . .}$<br>$I = {Titanic (TI),Notting Hill (NH), Star Wars (SW),Star Trek (ST), . . .}$</p>
-<p>用观察到的数据S表示：<br>$S = {(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$<br>      $(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$<br>      $(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)}$<br>任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。</p>
+<p>用观察到的数据S表示：<br>$S = {(A, TI, 2010-1, 5), (A,NH, 2010-2, 3), (A, SW, 2010-4, 1),$<br>$(B, SW, 2009-5, 4), (B, ST, 2009-8, 5),$<br>$(C, TI, 2009-9, 1), (C, SW, 2009-12, 5)}$<br>任务是使用这些数据，估计一个函数$\hat y$，这个函数能够预测一个用户在某个时间对某个电影的评分。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/FM-1.JPG" alt="FM-1.JPG"></p>
 <p>图1展示了一个示例，在这个任务中如何从观测数据S中构建特征向量。在这里，首先$|U|$是一个二值示性变量（蓝色的），它表示一个交互中活跃的用户，总是可以确定的是在一次交互$(u,i,t,r) \in S$中有一个确定的活跃用户。例如，第一行中的Alice($x<em>A^{(1)} = 1$)。下一个二值示性变量$|I|$（红色的）表示活跃的物品，同样的总是有一个活跃的物品，例如$x</em>{TI}^{(1)}=1$。图1中的特征向量也包含了用来表示用户曾经评价过的其他物品的表示向量（黄色的）。对于每个用户来说，变量均是被归一化之后的。例如Alice评价过Notting Hill 和 Star Wars。此外，样本还包含一个从2019年一月开始的月份向量（绿色的）来表示时间。最后几列表示用户评价过的最后一个电影，最右边的是当前电影的评分y。在第五部分，我们将展示因式分解机是如何利用输入数据中的特征向量来做到最特殊的顶级的因式分解模型的。</p>
 <p>我们将通过这篇论文用这个示例数据集来证明。然而，请注意FMs是一个像SVMs一样的通用模型，可以应用在任何一个现实中的特征向量，并且对推荐系统没有什么限制。</p>
-<h3 id="3-因式分解机-FM"><a href="#3-因式分解机-FM" class="headerlink" title="3.因式分解机(FM)"></a>3.因式分解机(FM)</h3><p>在这一部分，我们将来介绍因式分解机。我们会详细地讨论模型中的公式推导，并且会展示怎么使用FMs进行多预测任务。</p>
+<h3 id="3-因式分解机-FM"><a href="#3-因式分解机-FM" class="headerlink" title="3 因式分解机(FM)"></a>3 因式分解机(FM)</h3><p>在这一部分，我们将来介绍因式分解机。我们会详细地讨论模型中的公式推导，并且会展示怎么使用FMs进行多预测任务。</p>
 <p><em>A. 因式分解模型</em><br>1）模型方程：2维的因式分解机模型方程：</p>
 <script type="math/tex; mode=display">\hat y(x):=w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i,v_j \rangle x_i x_j</script><p>公式中的模型参数必须在下面的值域中进行估计：</p>
 <script type="math/tex; mode=display">w_0 \in \mathbb{R}, w \in \mathbb{R}^n, V \in \mathbb{R}^{n \times k}</script><p>其中，$ \langle ·,· \rangle $表示长度为k的点乘，k是一个超参数：</p>
@@ -502,13 +502,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>引理3.1：因式分解机的计算复杂度可以变成线性的时间复杂度O(kn)。</p>
 <p>证明：由于所有的成对交互项都会做因式分解，于是模型中就没有需要直接利用两个变量进行直接估计的参数。所有成对的交互项可以进行如下的变化：</p>
 <script type="math/tex; mode=display">
-\begin{align}
-&\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
-=&\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
-=&\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
-=&\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
-=&\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
-\end{align}</script><p>以上的公式的结果仅仅有线性的计算复杂度，当k和n固定的时候，计算复杂度就为O(kn)。</p>
+\begin{array}{l}
+\sum_{i=1}^n \sum_{j=i+1}^n  \langle v_i, v_j \rangle x_i x_j\\
+=\frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n  \langle v_i, v_j \rangle x_i x_j - \frac{1}{2} \sum_{i=1}^n  \langle v_i, v_i \rangle x_i x_i \\
+=\frac{1}{2} (\sum_{i=1}^n \sum_{j=1}^n \sum_{f=1}^k v_{i,f} v_{j,f} x_i x_j - \sum_{i=1}^n \sum_{f=1}^k v_{i,f} v_{i,f} x_i x_i) \\
+=\frac{1}{2} \sum_{f=1}^k ((\sum_{i=1}^n v_{i,f} x_i)(\sum_{j=1}^n v_{j,f} x_j)-\sum_{i=1}^n v_{i,f}^2  x_i^2) \\
+=\frac{1}{2} \sum_{f=1}^k((\sum_{i=1}^n v_{i,f} x_i)^2 - \sum_{i=1}^n v_{i,f}^2 x_i^2)
+\end{array}</script><p>以上的公式的结果仅仅有线性的计算复杂度，当k和n固定的时候，计算复杂度就为O(kn)。</p>
 <p>进一步，在稀疏性的条件下，x中的大部分元素值都是0，因此求和就可以只在非0的元素中进行。因此在稀疏数据中因式分解机的计算复杂度就在$O(k\bar m_D)$，例如当$\bar m_D=2$时就是一个经典的推荐系统例如MF算法。</p>
 <p><em>B. 使用因式分解机进行预测</em><br>因式分解机可以用在各种预测任务中：</p>
 <ul>
@@ -529,7 +529,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 <script type="math/tex; mode=display">\hat y(x) := w_0 + \sum_{i=1}^n w_i x_i + \sum_{l=2}^d \sum_{i_1=1}^n \cdots \sum_{i_l = i_{l-1} + 1}^n (\prod_{j=1}^l x_{i_j}) (\sum_{f=1}^{k_l} \prod_{j=1}^l v_{i_j, f}^{(l)})</script><p>其中，第l个相互关系参数可以通过PARAFAC模型进行因式分解:</p>
 <script type="math/tex; mode=display">V^{(l)} \in \mathbb{R}^{n \times k_l}, k_l \in \mathbb{N}_0^+</script><p>通过变换，同样可以在线性的时间复杂度上求解，复杂度降为$O(k_d n^d)$。</p>
 <p><em>E. 总结</em><br>FMs的优点：<br>1）可以在稀疏的情况下进行很好的参数估计，特别是可以估计没有观测到的相互关系。<br>2）参数的大小和运算时间都是线性的，可以通过SGD进行参数的更新，可以使用多种loss。</p>
-<h3 id="4、FMs-vs-SVMs"><a href="#4、FMs-vs-SVMs" class="headerlink" title="4、FMs vs. SVMs"></a>4、FMs vs. SVMs</h3><p><em>A. SVM模型</em><br>我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) =  \langle \phi (x),w \rangle $，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：</p>
+<h3 id="4-FMs-vs-SVMs"><a href="#4-FMs-vs-SVMs" class="headerlink" title="4 FMs vs. SVMs"></a>4 FMs vs. SVMs</h3><p><em>A. SVM模型</em><br>我们知道SVM可以表示成变换后的特征向量x和参数w的内积的形式:$\hat y(x) =  \langle \phi (x),w \rangle $，其中$\phi$是一个映射将特征空间$\mathbb{R}^n$映射到一个更复杂的空间$\mathcal{F}$。这个映射通常使用核函数来进行：</p>
 <script type="math/tex; mode=display">K:\mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}, K(x,z) =  \langle \phi (x),\phi(z) \rangle</script><p>下面我们通过分析SVMs主要形式来讨论FM和SVM之间的关系。</p>
 <p><em>1）线性核</em>：最简单的核函数就是线性核：$ K_l(x,z):=1 +  \langle x,z \rangle  $，这对应的映射就是$\phi (x) := (1,x_1, \cdots , x_n)$。因此线性核的SVM模型等式可以重写为：</p>
 <script type="math/tex; mode=display">\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i, w_0 \in \mathbb{R}, w \in \mathbb{R}^n</script><p>很明显可以发现线性的SVM模型和FM为1阶的情况完全等效</p>
@@ -545,7 +545,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 <script type="math/tex; mode=display">\hat y(x) = w_0 + \sqrt2 (w_u + w_i) + w_{u,u}^{(2)} + w_{i,i}^{(2)} + \sqrt2 w_{u,i}^{(2)}</script><p>首先，$w<em>u \ and \ w</em>{u,u}^{(2)}$代表的是同样的，可以期初其中一个例如后者。现在模型的等式就变成了线性的除了有一个额外的用户交叉项$w<em>{u,i}^{(2)}$。在经典的协同过滤(FM)问题中，对于每个交叉项参数$w</em>{u,i}^{(2)}$，训练数据中至少有一个观测样本(u,i)，而在测试数据中的案例$(u’,i’)$就一般不会在训练数据及中再次出现了。这意味着对于所有的测试案例(u,i)的交叉项参数来说，最大边际解是0。因此对于预测测试集的时候，多项式SVM对于二阶的交叉项来说没有任何作用；所以多项式核的SVM模型仅仅依赖于用户和物品偏置项，在效果上并没有比线性的SVM好多少。</p>
 <p>对于SVM模型，估计一个高级的交叉项并不是CF模型中的问题，但是当数据是高稀疏性的时候这个问题就存在了。因为对于一个成对的交叉项$(i,j)$想要得到一个可靠的参数估计$w_{i,j}^{(2)}$的话，必须提供足够多的样例$x \in D,where \ x_i \neq 0 \wedge x_i \neq 0$。只要不同时出现$x_i=0,x_j=0$，这个样例就可以用来进行参数估计。<br>总结一下，只要数据比较稀疏的时候，即没有足够的(i,j)的样例的时候，SVMs模型基本上失效的。</p>
 <p><em>C. 总结</em><br>1）SVM的稠密的参数需要相互关系的直接的观测值，而在稀疏的输入的情况下，这种直接的观测值很少。但是FMs模型就可以在稀疏的情况将进行很好的参数估计。<br>2）FMs可以直接进行学习，非线性的SVM通常在对偶形式进行求解。<br>3）FMs的函数不依赖与训练数据SVM的预测依赖部分训练数据（支持向量）。</p>
-<h3 id="5、FMs-vs-其他的因式分解模型"><a href="#5、FMs-vs-其他的因式分解模型" class="headerlink" title="5、FMs vs. 其他的因式分解模型"></a>5、FMs vs. 其他的因式分解模型</h3><p>有各种各样的分解模型，从m-ary类别变量关系的标准模型（例如MF，PARAFAC）到用于特定数据和任务的专用模型（例如SVD ++，PITF，FPMC）。接下来，我们展示一下FM可以仅仅通过使用正确的输入数据就可以模仿很多其他的因式分解模型（例如特征向量x）。</p>
+<h3 id="5-FMs-vs-其他的因式分解模型"><a href="#5-FMs-vs-其他的因式分解模型" class="headerlink" title="5 FMs vs. 其他的因式分解模型"></a>5 FMs vs. 其他的因式分解模型</h3><p>有各种各样的分解模型，从m-ary类别变量关系的标准模型（例如MF，PARAFAC）到用于特定数据和任务的专用模型（例如SVD ++，PITF，FPMC）。接下来，我们展示一下FM可以仅仅通过使用正确的输入数据就可以模仿很多其他的因式分解模型（例如特征向量x）。</p>
 <p><em>A.矩阵和张量分解</em><br>矩阵分解（MF）是研究最多的因子分解模型之一。它是分解了在两个分类变量之间的关系（例如U和I）。标准处理分类变量的方法是为每个U和I级别定义二值的指标变量（例如见图1，<br>第一个（蓝色）和第二个（红色）组）：</p>
 <script type="math/tex; mode=display">n:=|U \cup I|, x_j := \delta(j=i \vee j=u)</script><p>使用这个特征向量x的FM模型与矩阵分解模型相同，因为$x_j$仅仅在当前u和i是非0的，所以其他的偏置项和交互项都可以舍去：</p>
 <script type="math/tex; mode=display">\hat y(x)=w_0 + w_u + w_i +  \langle v_u, v_i \rangle</script><p>同样的考虑，当有两个以上的分类变量的时候可以发现存在一样的问题，FM包括了一个嵌套并行因子分析模型（PARAFAC）。</p>
@@ -556,7 +556,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 \frac{1}{\sqrt{|N_u|}},& if \ j \in N_u \\
 0,& else
 \end{cases}</script><p>其中$N_u$是当前用户曾经评论过的所有电影的集合。一个二维的FM模型将以如下方式处理这个数据集：</p>
-<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  + \\
+<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{\sqrt{|N_u|}} \sum_{l \in N_U}  \langle v_i, v_l \rangle  +
 \frac{1}{\sqrt{|N_u|}}\sum_{l \in N_U}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{\sqrt{|N_u|}}\sum_{l' \in N_u, l'  \rangle  l} \langle v_l, v_l' \rangle )</script><p>其中第一部分（即第一行）就等价于一个SVD++模型。但FM还包含一些额外的用户和电影$N_u$之间的交互项，以及$N_u$中电影对之间的电影$N_u$本身和交互项的基础效应。</p>
 <p><em>C.PITF的标签推荐</em><br>标签预测的问题被定义为对于给定的用户和项目组合来排名标签。这意味着有涉及三个分类域：用户U，项目I和标签T.在关于标签推荐的ECML / PKDD发现挑战中，基于分解成对的交互项的模型（PITF）取得了最好成绩[3]。我们将展示FM如何<br>可以模仿这个模型。一个对于活动用户u，项目i和标签t有二值表示变量的分解机的可以写成以下模型：</p>
 <script type="math/tex; mode=display">n:=|U \cup I \cup L|, x_j := \delta (j = i \vee j = u \vee j = t)\\
@@ -571,11 +571,13 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 \frac{1}{|B_{t-1}^u|},& if \ j \in B_{t-1}^u \\
 0,& else
 \end{cases}</script><p>其中$B_{t}^u \subseteq L$是一个用户u在时间t可购买的所有物品的集合，然后：</p>
-<script type="math/tex; mode=display">\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
-\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )</script><p>就像标签推荐一样，这个模型被用来优化排名（这里是排序物品i），因此只有$(u,i_A,t)$和$(u,i_B,t)$之间的评分存在差异的时候会被用于预测和优化的评断标准中。因此，所有额外的不依赖于i都可以消失，FM模型的等式就相当于：</p>
+<script type="math/tex; mode=display">\begin{array}{c}
+\hat y(x) = w_0 + w_u + w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|} \sum_{l \in B_{t-1}^u}  \langle v_i, v_l \rangle  + \\
+\frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u}(w_l +  \langle v_u, v_l \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l' \in B_{t-1}^u, l'  \rangle  l} \langle v_l, v_l' \rangle )
+\end{array}</script><p>就像标签推荐一样，这个模型被用来优化排名（这里是排序物品i），因此只有$(u,i_A,t)$和$(u,i_B,t)$之间的评分存在差异的时候会被用于预测和优化的评断标准中。因此，所有额外的不依赖于i都可以消失，FM模型的等式就相当于：</p>
 <script type="math/tex; mode=display">\hat y(x) = w_i +  \langle v_u, v_i \rangle  + \frac{1}{|B_{t-1}^u|}\sum_{l \in B_{t-1}^u} \langle v_i, v_l \rangle</script><p>现在人们可以看到原始的FPMC模型和FM模型几乎是相同的，仅在附加的偏置项$w_i$中有所不同，以及FM模型中的(u,i)和(i,l)交互项物品的分解参数的共享。</p>
 <p><em>E.总结</em><br>1）标准分解模型，如PARAFAC或MF不是像因式分解机这样的一般预测模型。相反，他们需要特征向量被分成m个部分，每个部分都是精确的一个元素是1，其余元素是0。<br>2）有许多关于专业化因子分解的建议为单个任务设计的模型。我们已经证明了这一点，因式分解机可以模仿许多最成功的分解模型（包括MF，PARAFAC，SVD++，PITF，FPMC）只需通过特征提取即可，这使得FM在实践中很容易应用。</p>
-<h3 id="6、结论"><a href="#6、结论" class="headerlink" title="6、结论"></a>6、结论</h3><p>在这片论文中，我们介绍了因式分解机。FMs融合了SVM模型的泛化能力以及因式分解模型的优势。不同于SVM模型，1)FMs可以在高稀疏的情况下进行参数估计，2)模型等式是线性的并且仅依赖于模型的参数，因此3)它们可以在原始等式中进行优化。FMs模型的解释力相当于多项式SVMs模型。不同于像PARAFAC这种张量因子分解模型，FMs是一个泛化的模型，它可以处理任何实值向量。再者，可以通过在输入特征向量中使用正确的表征来进行简化，FMs相对于其他特别高级的模型来说是更单一且非常简单的，不像那些模型仅仅只能应用在特定的任务重，例如MF, SVD++, PITF和FPMC。</p>
+<h3 id="6-结论"><a href="#6-结论" class="headerlink" title="6 结论"></a>6 结论</h3><p>在这片论文中，我们介绍了因式分解机。FMs融合了SVM模型的泛化能力以及因式分解模型的优势。不同于SVM模型，1)FMs可以在高稀疏的情况下进行参数估计，2)模型等式是线性的并且仅依赖于模型的参数，因此3)它们可以在原始等式中进行优化。FMs模型的解释力相当于多项式SVMs模型。不同于像PARAFAC这种张量因子分解模型，FMs是一个泛化的模型，它可以处理任何实值向量。再者，可以通过在输入特征向量中使用正确的表征来进行简化，FMs相对于其他特别高级的模型来说是更单一且非常简单的，不像那些模型仅仅只能应用在特定的任务重，例如MF, SVD++, PITF和FPMC。</p>
 <p><a href="https://www.jianshu.com/p/a194e05aeb53">参考博文:点击率预测《Factorization Machines》论文精读-ronghuaiyang</a></p>
 <hr>
 
@@ -604,10 +606,10 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/posts/399ba6ee.html">Factorization Machines (论文解析)</a></p>
+  <p><span>本文标题:</span><a href="/posts/fmpaper.html">Factorization Machines (论文解析)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
-  <p><span>原始链接:</span><a href="/posts/399ba6ee.html" title="Factorization Machines (论文解析)">https://www.xiemingzhao.com/posts/399ba6ee.html</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/399ba6ee.html"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/posts/fmpaper.html" title="Factorization Machines (论文解析)">https://www.xiemingzhao.com/posts/fmpaper.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/fmpaper.html"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -653,7 +655,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/d0f1b267.html" rel="next" title="The Learning Behind Gmail Priority Inbox (论文解析)">
+              <a href="/posts/gmailprioinboxpaper.html" rel="next" title="The Learning Behind Gmail Priority Inbox (论文解析)">
                 <i class="fa fa-chevron-left"></i> The Learning Behind Gmail Priority Inbox (论文解析)
               </a>
             
@@ -663,7 +665,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/3c1887e0.html" rel="prev" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
+              <a href="/posts/amazomi2icfpaper.html" rel="prev" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
                 Amazon.com Recommendations Item-to-item collaborative filtering (论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -787,7 +789,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -865,7 +867,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">因式分解机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">1、介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%9C%A8%E7%A8%80%E7%96%8F%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BF%9B%E8%A1%8C%E9%A2%84%E6%B5%8B"><span class="nav-number">1.2.</span> <span class="nav-text">2、在稀疏数据下进行预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA-FM"><span class="nav-number">1.3.</span> <span class="nav-text">3.因式分解机(FM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81FMs-vs-SVMs"><span class="nav-number">1.4.</span> <span class="nav-text">4、FMs vs. SVMs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81FMs-vs-%E5%85%B6%E4%BB%96%E7%9A%84%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">5、FMs vs. 其他的因式分解模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E7%BB%93%E8%AE%BA"><span class="nav-number">1.6.</span> <span class="nav-text">6、结论</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">因式分解机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">1 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9C%A8%E7%A8%80%E7%96%8F%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BF%9B%E8%A1%8C%E9%A2%84%E6%B5%8B"><span class="nav-number">1.2.</span> <span class="nav-text">2 在稀疏数据下进行预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%9C%BA-FM"><span class="nav-number">1.3.</span> <span class="nav-text">3 因式分解机(FM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-FMs-vs-SVMs"><span class="nav-number">1.4.</span> <span class="nav-text">4 FMs vs. SVMs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-FMs-vs-%E5%85%B6%E4%BB%96%E7%9A%84%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">5 FMs vs. 其他的因式分解模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="nav-number">1.6.</span> <span class="nav-text">6 结论</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -912,7 +914,7 @@ x_i\sum_{j=1}^n v_{j,f}x_j - v_{j,f}x_i^2,& if \ \theta \ is \ v_{i,f}
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

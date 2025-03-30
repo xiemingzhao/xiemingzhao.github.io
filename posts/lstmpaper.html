@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="机器学习,推荐系统,CF," />
+  <meta name="keywords" content="机器学习,神经网络,LSTM," />
 
 
 
@@ -92,23 +92,37 @@
 
 
 
-<meta name="description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
+<meta name="description" content="原始论文：Understanding LSTM Networks 循环神经网络人类并不是每时每刻都从一片空白的大脑开始他们的思考。在你阅读这篇文章时候，你都是基于自己已经拥有的对先前所见词的理解来推断当前词的真实含义。我们不会将所有的东西都全部丢弃，然后用空白的大脑进行思考。我们的思想拥有持久性。 传统的神经网络并不能做到这点，看起来也像是一种巨大的弊端。例如，假设你希望对电影中的每个时间点的时间">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">
-<meta property="og:url" content="https://www.xiemingzhao.com/posts/3c1887e0.html">
+<meta property="og:title" content="Understanding LSTM Networks (论文解析)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/lstmpaper.html">
 <meta property="og:site_name" content="小火箭的博客">
-<meta property="og:description" content="原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering 亚马逊推荐：物到物的协同过滤推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术">
+<meta property="og:description" content="原始论文：Understanding LSTM Networks 循环神经网络人类并不是每时每刻都从一片空白的大脑开始他们的思考。在你阅读这篇文章时候，你都是基于自己已经拥有的对先前所见词的理解来推断当前词的真实含义。我们不会将所有的东西都全部丢弃，然后用空白的大脑进行思考。我们的思想拥有持久性。 传统的神经网络并不能做到这点，看起来也像是一种巨大的弊端。例如，假设你希望对电影中的每个时间点的时间">
 <meta property="og:locale">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG">
-<meta property="article:published_time" content="2019-04-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.650Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-6.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-7.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-8.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-9.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-10.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-11.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-12.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-13.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-14.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-15.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-16.png">
+<meta property="article:published_time" content="2019-05-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-30T17:52:21.853Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="机器学习">
-<meta property="article:tag" content="推荐系统">
-<meta property="article:tag" content="CF">
+<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="LSTM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-1.png">
 
 
 
@@ -138,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiemingzhao.com/posts/3c1887e0.html"/>
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/lstmpaper.html"/>
 
 
 
 
 
-  <title>Amazon.com Recommendations Item-to-item collaborative filtering (论文解析) | 小火箭的博客</title>
+  <title>Understanding LSTM Networks (论文解析) | 小火箭的博客</title>
   
 
 
@@ -322,7 +336,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/3c1887e0.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/lstmpaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -339,7 +353,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
         
         
-          <h1 class="post-title" itemprop="name headline">Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)</h1>
+          <h1 class="post-title" itemprop="name headline">Understanding LSTM Networks (论文解析)</h1>
         
 
         <div class="post-meta">
@@ -351,8 +365,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
-                2019-04-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T00:00:00+08:00">
+                2019-05-29
               </time>
             
 
@@ -403,8 +417,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/3c1887e0.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/3c1887e0.html" itemprop="commentCount"></span>
+                <a href="/posts/lstmpaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/lstmpaper.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -433,7 +447,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  4.3k
+                  3.3k
                 </span>
               
 
@@ -449,7 +463,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  14
+                  11
                 </span>
               
             </div>
@@ -470,52 +484,65 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
 
       
-        <p><a href="https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf">原始论文：Amazon.com Recommendations: Item-to-item collaborative filtering</a></p>
-<h2 id="亚马逊推荐：物到物的协同过滤"><a href="#亚马逊推荐：物到物的协同过滤" class="headerlink" title="亚马逊推荐：物到物的协同过滤"></a>亚马逊推荐：物到物的协同过滤</h2><p>推荐算法因在电子商务网站的应用而广为人知，它们用客户的兴趣爱好作为输入来生成物品的推荐列表。许多应用仅仅用用户明确购买的物品来代表兴趣爱好，dan但其实它们可以用更多的其他特征，包括看过的物品，人口统计下数据，主题兴趣以及最爱的艺术。</p>
-<p>在Amazon.com，我们使用推荐算法为每个客户个性化在线商店。商店根据客户的兴趣从根本上改变，达到给软件工程师显示编程主题和给一位新妈妈展示婴儿玩具。点击率和转化率这两个基于Web和电子邮件的重要测算结果显示了其二者上的广告效果要远远超过横幅广告等非目标内容和畅销书清单。</p>
-<p>电子商务推荐算法经常在不断变化的环境中运行。例如：</p>
+        <p><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">原始论文：Understanding LSTM Networks</a></p>
+<h2 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a>循环神经网络</h2><p>人类并不是每时每刻都从一片空白的大脑开始他们的思考。在你阅读这篇文章时候，你都是基于自己已经拥有的对先前所见词的理解来推断当前词的真实含义。我们不会将所有的东西都全部丢弃，然后用空白的大脑进行思考。我们的思想拥有持久性。</p>
+<p>传统的神经网络并不能做到这点，看起来也像是一种巨大的弊端。例如，假设你希望对电影中的每个时间点的时间类型进行分类。传统的神经网络应该很难来处理这个问题——使用电影中先前的事件推断后续的事件。</p>
+<p>RNN 解决了这个问题。RNN 是包含循环的网络，允许信息的持久化。</p>
 <span id="more"></span>
-<ul>
-<li>一个大的零售商一般会有大量的数据。数以千万计的客户和百万级的不同品类的商品。</li>
-<li>许多应用就需要推荐的结果可以实时返回，不能超过半秒，同时还要保证一定的高质量推荐。</li>
-<li>新用户是基于其仅有的一些购买和产品评分导致拥有极其有限信息的典型案例。</li>
-<li>老用户由于有大量的购买和评分数据使得其拥有大量的信息。</li>
-<li>用户数据是不稳定的：每一次交互都会产生有价值的用户数据，算法必须及时的根据新信息做出反馈。</li>
-</ul>
-<p>一般有三种方法来解决推荐问题：传统的协同过滤，聚类模型，基于搜索的方法。这里，我们用这些方法和我们的算法进行比较，我们的算法称为物到物的协同过滤。不像传统的协同过滤，我们算法的在线大规模计算能力不收用户量和产品量以及产品类别的影响。我们的算法可以实时的生成推荐，并且可以大规模地处理数据集，同时能够生成高质量的推荐。</p>
-<h2 id="推荐算法"><a href="#推荐算法" class="headerlink" title="推荐算法"></a>推荐算法</h2><p>大多数的推荐算法开始都是找一群购买以及评论的产品和推荐目标用户购买过以及评论过的产品有交集的用户。然后从这些相似的用户中聚合出来这些物品，再去除他们已经购买和评论过的物品。这些算法里两个比较流行的版本是协同过滤和聚类模型。其他的算法-包括基于搜索的方法以及我们的物到物的协同过滤，都是集中于找到相似的物品而不是相似的用户。对于每个用户购买和评论过的商品来说，算法尝试去找到相似的物品。然后它聚合出这些相似的物品并推荐它们。</p>
-<h2 id="传统的协同过滤"><a href="#传统的协同过滤" class="headerlink" title="传统的协同过滤"></a>传统的协同过滤</h2><p>一个传统的协同过滤算法将一个用户表示成一个N维的物品向量，N是不用品类的物品数。向量中的元素正的代表用户购买过或者正向评分过的物品，负的代表负向评分的物品。为了补偿那些畅销的产品，该算法通常将用户向量乘以逆频率（对物品有购买或者评分行为的用户数量），使得较不为人知的物品更具有相关性。对于大多数用户来说，这个向量极度稀疏。</p>
-<p>算法基于和目标用户极为相似的一小部分用户产生推荐。有各种各样的方法计算A和B两个用户之间的相似度，普遍采取的方法是两个用户向量之间的cosine角度：</p>
-<script type="math/tex; mode=display">similarity(\vec{A},\vec{B})=\cos(\vec{A},\vec{B})=\frac{\vec{A} \bullet \vec{B}}{||\vec{A}|| \ast ||\vec{B}||}</script><p>从相似用户的物品中选择推荐物品的算法也有很多，一种通用的方法是按照物品被相似用户购买的数量排序。</p>
-<p>使用协同过滤产生推荐计算花费大。最坏的复杂度是O(MN)，其中M是用户数N是产品数，因为对于每个目标用户测试了M个用户以及产品数的上限N。然而，由于用户购买行为的稀疏性，算法最终的花费接近于o(M+N)，因为大部分用户的向量只包含很小数量的物品，不论产品类目有多少。但是有一小部分用户购买和评论了大量的物品质的计算花费时间接近o(N)。因此，算法最终的花费大约为o(M+N)。甚至因此，对于非常大的数据集-例如1000万或更多客户和100万或更多类目产品-算法遇到严重的性能和扩展问题。</p>
-<p>可以通过减小数据规模部分解决计算花费问题。我们可以通过随机抽样客户或丢弃购买少的客户减少M，通过丢弃非常受欢迎或不受欢迎的项目减少N。也可以基于产品类别或主题分类的空间通过分割项目的一个小的、恒定的因素来减少检查的项目数量。降维等技术作为聚类和主成分分析可以大幅减少M或N。</p>
-<p>不幸的是，所有减小数据规模的方法都会降低推荐质量。首先，如果算法近检测一小部分用户样本，那么这些被选中的用户就不会与目标用户那么的相似。第二，品类空间的划分限制了特定产品和主题领域的推荐。第三，如果算法丢弃了最受欢迎或者最不受欢迎的物品，那么它们经永远不会出现在推荐之中，并且仅购买这些物品的客户也得不到这些推荐。将为技术应用于物品空间往往会起到消除低频品类物品的类似效应。降维技术类似于用户分组有效地应用于用户空间，就如我们现在所描述的，这样的聚类也可以降维推荐质量。</p>
-<h2 id="聚类模型"><a href="#聚类模型" class="headerlink" title="聚类模型"></a>聚类模型</h2><p>为了找到那些与目标用户相似的客户，聚类模型将用户分为很多segments，将寻找目标用户相似用户的任务视为一个分类任务。算法目标是将目标用户分配到包含最相似用户的segment中，然后使用segment中用户购买的商品和评分产生推荐。</p>
-<p>通常segments是用聚类模型或者其他无监督的学习算法构建的，虽然有些应用程序使用手动确定segments。使用相似性矩阵，聚类算法将最相似的客户分组一起形成集群或segments。因为对大数据集进行最优聚类是不切实际的，大多数应用程序使用各种形式贪婪的聚类生成算法。通常这些算法从一组初始段开始，且经常会包含一个随机选择的客户。然后他们反复匹配客户到现有的segments中，通常碎玉创建新的或合并现有的segments有一些规定。对于非常大的数据集-特别是那些高数据集维度 - 抽样或降维也是必要的。</p>
-<p>一旦算法生成了segments，就会计算每个用户与每个segments总结向量之间的相似性，然后选择具有最强的相似性segments并根据此对用户进行分类。一些算法将用户分类为多个部分并描述其每个关系的强弱。</p>
-<p>聚类模型相比CF有更好的在线可扩展性和表现，因为聚类算法只将用户和可控制的segments数量进行比较而不是所有用户。复杂花费高的聚类计算是在离线进行的。然而，推荐质量却很低。聚类模型将许多用户分组在一起形成一个segment，将一个用户匹配到一个segment中，然后考虑在这个细分市场中说所有客户的相似客户来产生推荐。由于聚类模型找到的相似客户并不一定是最相似的客户，所以他们产生的推荐并没有太大的相关性。为了提高推荐质量，可以增加类别数量，但这会加大用户在线计算类别的花费。</p>
-<h2 id="基于搜索的模型"><a href="#基于搜索的模型" class="headerlink" title="基于搜索的模型"></a>基于搜索的模型</h2><p>基于搜索或者内容的模型将推荐看作是一个搜索相关物品的问题。给定一些用户的购买和评级的物品，算法会构造搜索查询找到同一作者的其他热门产品，艺术家，导演，以及类似的关键词或<br>主题。如果客户购买了教父DVD收藏，例如，系统可能会推荐其他犯罪剧集，其他马龙白兰度主演的，或其他弗朗西斯福特科波拉导演的电影。</p>
-<p>如果用户只有很少的购买和评分记录，基于搜索的推荐算法可规模化并表现地很好。然而，对于那些有成千上万的购买记录的用户来说，基于一个所有物品的请求来进行推荐是不实际的。算法必须只是用数据集中的一个子集或者汇总数据，这会降低推荐质量。以上例子中，推荐的质量相对较差。推荐结果经常会太宽泛（例如最好卖的电视剧DVD主题）或者太狭隘（例如相同作者的所有书籍）。推荐应该是帮助客户去寻找和发现新的，相关的并且有趣的物品。同一作者的流行作品以及相似主题的类别物品都是不能满足这一目标的。</p>
-<h2 id="物到物的协同过滤"><a href="#物到物的协同过滤" class="headerlink" title="物到物的协同过滤"></a>物到物的协同过滤</h2><p>Amazon.com将推荐作为许多电子邮件活动以及它的大部分网站页面中的营销工具，包括高流量的Amazon.com主页。点击“您的推荐”链接将会引导客户访问一个推荐区域，在这里他们可以通过产品线和主题领域来进行筛选，也可以评价推荐的产品，评价他们以前购买的物品，同时可以看到为什么这些物品被推荐了（如图片1所示）。</p>
-<p>如图2所示，是我们的购物车推荐，根据客户购物车中的物品给他们推荐了一些商品。该功能类似于在超市收银台旁的那些易冲动消费的物品，但我们的冲动项目针对每个客户的。</p>
-<p>亚马逊网站基于他们客户的兴趣广泛地使用推荐算法来个性化他们的网站。由于现存的推荐算法无法扩展到亚马逊网站上数以千万的客户和产品，所以我们开发自己的推荐算法。我们的算法是物到物的协同过滤，可以扩展到巨大的数据集并实时产生高质量的推荐。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-1.JPG" alt="AmazonCF-1"></p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/AmazonCF-2.JPG" alt="AmazonCF-2"></p>
-<h2 id="它是怎么工作的"><a href="#它是怎么工作的" class="headerlink" title="它是怎么工作的"></a>它是怎么工作的</h2><p>物到物的协同过滤并不是对目标用户进行匹配到他们相似的客户，而是对他们购买和评论过的物品匹配到相似的物品，然后聚合这些相似的物品生成推荐列表。</p>
-<p>为了确定地匹配出给定物品的最相似取票，算法通过寻找那些用户会一起购买的物品来建立了一个相似物品表。我们可以构建产品到产品的矩阵通过迭代所有项目对和计算每对的相似性度量。然而，许多产品对没有共同的客户，因此，这种方法效率低下在处理时间和内存使用情况上面。下面的迭代算法提供了一个更好地方法来计算一个商品和其他所有商品之间的相似性。<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">For each item in product catalog, I_1</span><br><span class="line">    For each customer C who purchased I_1</span><br><span class="line">        For each item I_2 purchased by</span><br><span class="line">            customer C</span><br><span class="line">            Record that a customer purchased I_1</span><br><span class="line">            and I_2</span><br><span class="line">    For each item I_2</span><br><span class="line">        Compute the similiarity between I_1 and I_2</span><br></pre></td></tr></table></figure></p>
-<p>有各种各样的方法可以计算两者之间的相似性，但一个常见的方法是使用我们之前描述的余弦量度，其中每个向量对应一个物品而不是一个客户，矢量的M维度对应已购买该商品的客户。</p>
-<p>这种相似物品表的离线计算是非常耗时的，O（N2M）为最糟糕的情况。然而，在实践中，它更接近于O（NM），因为大多数客户购买的很少。对购买最畅销主题的客户进行抽样可以进一步减少运行时间，同时会伴随一点质量降低。</p>
-<p>给定一个相似物品表，算法会找到与用户购买的每个项目类似的项目评分，汇总这些项目，然后推荐最受欢迎或相关的项目。这个计算非常快，仅取决于用户购买或评级的商品数量。</p>
-<h2 id="扩展性：比较"><a href="#扩展性：比较" class="headerlink" title="扩展性：比较"></a>扩展性：比较</h2><p>Amazon.com拥有超过2900万客户和数百万品类物品。其他专业零售商拥有相对较大的数据来源。这些数据是一个机会也是一个诅咒，打破了设计算法的背后对于数据集小三个数量级。几乎所有现有的算法都经过了小数据集评估。例如，MovieLens数据set4包含35,000个客户和3,000个项目，并且EveryMovie数据集3包含4,000个客户和1,600项。</p>
-<p>对于非常大的数据集，可扩展的推荐算法必须执行最昂贵的离线计算。如下简要比较显示，现有方法不足：</p>
-<ul>
-<li>传统的协调过滤做很少的甚至没有离线计算，并且它的在线计算的扩展性受到客户和物品数量的限制。算法在大数据集上运行是不现实的，除非它用降维，抽样或者分区等方法，这些都会降低推荐质量。</li>
-<li>聚类模型可以在离线计算中有很大的表现，但是推荐质量相对很差。为了提升它，可以增加聚类中的segments，但是这会使得在线用户的segment分类变得很复杂。</li>
-<li>基于搜索的模型离线建立了关键词，品类和作者指标，但是没能够提供一个又去的目标推荐。他们都很难扩展到那些有大量购买和评论的记录的用户。</li>
-</ul>
-<p>物到物协同过滤扩展性和表现的关键创建一个花费很高的离线计算得到的相似物品表。这个算法的在线部分就是与寻找用户购买和评论过物品的相似物品，其可扩展性与品类大小和总客户数量不相关；仅仅与用户有多少的购买和评论记录有关。因此，即使在很大的数据集上算法也可以运行的很快。由于算法推荐高度相关的相似物品，因此推荐质量是极高的。不像传统的协同过滤，算法也可以在有限的用户数据的条件下表现得很好，可以基于两到三个物品的数据产生高质量的推荐。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>推荐算法通过为每位客户创建个性化的购物体验提供了有效的目标营销形式。对于亚马逊等大型零售商，一个很好的推荐算法可扩展到非常大客户群和产品目录，要求仅仅亚秒处理时间以生成在线推荐，能够对改变用户的数据立即做出反应，并为所有用户提供吸引人的推荐，无论他们的购买和评级物品的数量多少。不像其他的算法，物到物的协同过滤能够迎接这一挑战。</p>
-<p>在未来，我们期待零售业更广泛地应用推荐算法来达到有针对性的营销，在线和离线均是如此。而电子商务企业拥有最简单的个性化工具，技术的转换率提高与传统的大规模方法相比这些方法对于离线的零售商来说也会使其脱颖而出，在用户的邮件邮寄，优惠券和其他形式的客户沟通。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-1.png" alt="Recurrent Neural Networks have loops.jpg"></p>
+<p>在上面的示例图中，神经网络的模块，正在读取某个输入 ，并输出一个值。循环可以使得信息可以从当前步传递到下一步。</p>
+<p>这些循环使得 RNN 看起来非常神秘。然而，如果你仔细想想，这样也不比一个正常的神经网络难于理解。RNN 可以被看做是同一神经网络的多次复制，每个神经网络模块会把消息传递给下一个。所以，如果我们将这个循环展开：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-2.png" alt="An unrolled recurrent neural network.jpg"></p>
+<p>链式的特征揭示了 RNN 本质上是与序列和列表相关的。他们是对于这类数据的最自然的神经网络架构。</p>
+<p>并且 RNN 也已经被人们应用了！在过去几年中，应用 RNN 在语音识别，语言建模，翻译，图片描述等问题上已经取得一定成功，并且这个列表还在增长。我建议大家参考 Andrej Karpathy 的博客文章——<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">The Unreasonable Effectiveness of Recurrent Neural Networks</a> 来看看更丰富有趣的 RNN 的成功应用。</p>
+<p>而这些成功应用的关键之处就是 LSTM 的使用，这是一种特别的 RNN，比标准的 RNN 在很多的任务上都表现得更好。几乎所有的令人振奋的关于RNN的结果都是通过 LSTM 达到的。这篇博文也会就 LSTM 进行展开。</p>
+<h2 id="长期依赖（Long-Term-Dependencies）问题"><a href="#长期依赖（Long-Term-Dependencies）问题" class="headerlink" title="长期依赖（Long-Term Dependencies）问题"></a>长期依赖（Long-Term Dependencies）问题</h2><p>RNN 的关键点之一就是他们可以用来连接先前的信息到当前的任务上，例如使用过去的视频段来推测对当前段的理解。如果 RNN 可以做到这个，他们就变得非常有用。但是真的可以么？答案是，还有很多依赖因素。</p>
+<p>有时候，我们仅仅需要知道先前的信息来执行当前的任务。例如，我们有一个语言模型用来基于先前的词来预测下一个词。如果我们试着预测 “the clouds are in the sky” 最后的词，我们并不需要任何其他的上下文 —— 因此下一个词很显然就应该是 sky。在这样的场景中，相关的信息和预测的词位置之间的间隔是非常小的，RNN 可以学会使用先前的信息。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-3.png" alt="不太长的相关信息和位置间隔"></p>
+<p>但是同样会有一些更加复杂的场景。假设我们试着去预测“I grew up in France… I speak fluent French”最后的词。当前的信息建议下一个词可能是一种语言的名字，但是如果我们需要弄清楚是什么语言，我们是需要先前提到的离当前位置很远的 France 的上下文的。这说明相关信息和当前预测位置之间的间隔就肯定变得相当的大。</p>
+<p>不幸的是，在这个间隔不断增大时，RNN 会丧失学习到连接如此远的信息的能力。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-4.png" alt="相当长的相关信息和位置间隔"></p>
+<p>在理论上，RNN 绝对可以处理这样的 长期依赖 问题。人们可以仔细挑选参数来解决这类问题中的最初级形式，但在实践中，RNN 肯定不能够成功学习到这些知识。<a href="http://www-dsi.ing.unifi.it/~paolo/ps/tnn-94-gradient.pdf">Bengio, et al. (1994)</a>等人对该问题进行了深入的研究，他们发现一些使训练 RNN 变得非常困难的相当根本的原因。<br>然而，幸运的是，LSTM 并没有这个问题！</p>
+<h2 id="LSTM-网络"><a href="#LSTM-网络" class="headerlink" title="LSTM 网络"></a>LSTM 网络</h2><p>Long Short Term 网络—— 一般就叫做 LSTM ——是一种 RNN 特殊的类型，可以学习长期依赖信息。LSTM 由Hochreiter &amp; Schmidhuber (1997)提出，并在近期被Alex Graves进行了改良和推广。在很多问题，LSTM 都取得相当巨大的成功，并得到了广泛的使用。<br>LSTM 通过刻意的设计来避免长期依赖问题。记住长期的信息在实践中是 LSTM 的默认行为，而非需要付出很大代价才能获得的能力！<br>所有 RNN 都具有一种重复神经网络模块的链式的形式。在标准的 RNN 中，这个重复的模块只有一个非常简单的结构，例如一个 tanh 层。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-5.png" alt="The repeating module in a standard RNN contains a single layer"></p>
+<p>LSTM 同样是这样的结构，但是重复的模块拥有一个不同的结构。不同于 单一神经网络层，这里是有四个，以一种非常特殊的方式进行交互。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-6.png" alt="The repeating module in an LSTM contains four interacting layers."></p>
+<p>不必担心这里的细节。我们会一步一步地剖析 LSTM 解析图。现在，我们先来熟悉一下图中使用的各种元素的图标。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-7.png" alt="LSTM 中的图标"></p>
+<p>在上面的图例中，每一条黑线传输着一整个向量，从一个节点的输出到其他节点的输入。粉色的圈代表按位 pointwise 的操作，诸如向量的和，而黄色的矩阵就是学习到的神经网络层。合在一起的线表示向量的连接，分开的线表示内容被复制，然后分发到不同的位置。</p>
+<h2 id="LSTM-的核心思想"><a href="#LSTM-的核心思想" class="headerlink" title="LSTM 的核心思想"></a>LSTM 的核心思想</h2><p>LSTM 的关键就是细胞状态，水平线在图上方贯穿运行。</p>
+<p>细胞状态类似于传送带。直接在整个链上运行，只有一些少量的线性交互。信息在上面流传保持不变会很容易。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-8.png" alt="LSTM单元"></p>
+<p>LSTM 有通过精心设计的称作为“门”的结构来去除或者增加信息到细胞状态的能力。门是一种让信息选择式通过的方法。他们包含一个 sigmoid 神经网络层和一个按位的乘法操作。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-9.png" alt="LSTM操作节点"></p>
+<p>Sigmoid 层输出 0 到 1 之间的数值，描述每个部分有多少量可以通过。0 代表“不许任何量通过”，1 就指“允许任意量通过”！</p>
+<p>LSTM 拥有三个门，来保护和控制细胞状态。</p>
+<h2 id="逐步理解-LSTM"><a href="#逐步理解-LSTM" class="headerlink" title="逐步理解 LSTM"></a>逐步理解 LSTM</h2><p>在我们 LSTM 中的第一步是决定我们会从细胞状态中丢弃什么信息。这个决定通过一个称为忘记门层完成。该门会读取 $h<em>{t-1}$ 和 $x_t$，输出一个在 0 到 1 之间的数值给每个在细胞状态 $C</em>{t-1}$ 中的数字。1 表示“完全保留”，0 表示“完全舍弃”。<br>让我们回到语言模型的例子中来基于已经看到的预测下一个词。在这个问题中，细胞状态可能包含当前<strong>主语</strong>的性别，因此正确的<strong>代词</strong>可以被选择出来。当我们看到新的<strong>主语</strong>，我们希望忘记旧的<strong>主语</strong>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-10.png" alt="决定丢弃信息"></p>
+<p>下一步是确定什么样的新信息被存放在细胞状态中。这里包含两个部分。第一，sigmoid 层称 “输入门层” 决定什么值我们将要更新。然后，一个 tanh 层创建一个新的候选值向量，$\tilde{C_t}$，会被加入到状态中。下一步，我们会讲这两个信息来产生对状态的更新。</p>
+<p>在我们语言模型的例子中，我们希望增加新的主语的性别到细胞状态中，来替代旧的需要忘记的主语。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-11.png" alt="确定更新的信息"></p>
+<p>现在是更新旧细胞状态的时间了，$C_{t-1}$ 更新为 $C_t$。前面的步骤已经决定了将会做什么，我们现在就是实际去完成。</p>
+<p>我们把旧状态与 $f_t$ 相乘，丢弃掉我们确定需要丢弃的信息。接着加上 $i_t * \tilde{C_t}$。这就是新的候选值，根据我们决定更新每个状态的程度进行变化。</p>
+<p>在语言模型的例子中，这就是我们实际根据前面确定的目标，丢弃旧代词的性别信息并添加新的信息的地方。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-12.png" alt="更新细胞状态"></p>
+<p>最终，我们需要确定输出什么值。这个输出将会基于我们的细胞状态，但是也是一个过滤后的版本。首先，我们运行一个 sigmoid 层来确定细胞状态的哪个部分将输出出去。接着，我们把细胞状态通过 tanh 进行处理（得到一个在 -1 到 1 之间的值）并将它和 sigmoid 门的输出相乘，最终我们仅仅会输出我们确定输出的那部分。</p>
+<p>在语言模型的例子中，因为他就看到了一个 <strong>代词</strong>，可能需要输出与一个<strong>动词</strong> 相关的信息。例如，可能输出是否代词是单数还是负数，这样如果是动词的话，我们也知道动词需要进行的词形变化。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-13.png" alt="输出信息"></p>
+<h2 id="LSTM-的变体"><a href="#LSTM-的变体" class="headerlink" title="LSTM 的变体"></a>LSTM 的变体</h2><p>我们到目前为止都还在介绍正常的 LSTM。但是不是所有的 LSTM 都长成一个样子的。实际上，几乎所有包含 LSTM 的论文都采用了微小的变体。差异非常小，但是也值得拿出来讲一下。</p>
+<p>其中一个流形的 LSTM 变体，就是由 <a href="ftp://ftp.idsia.ch/pub/juergen/TimeCount-IJCNN2000.pdf">Gers &amp; Schmidhuber (2000)</a> 提出的，增加了 “peephole connection”。是说，我们让 门层 也会接受细胞状态的输入。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-14.png" alt="peephole 连接"></p>
+<p>上面的图例中，我们增加了 peephole 到每个门上，但是许多论文会加入部分的 peephole 而非所有都加。</p>
+<p>另一个变体是通过使用 coupled 忘记和输入门。不同于之前是分开确定什么忘记和需要添加什么新的信息，这里是一同做出决定。我们仅仅会当我们将要输入在当前位置时忘记。我们仅仅输入新的值到那些我们已经忘记旧的信息的那些状态 。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-15.png" alt="coupled 忘记门和输入门"></p>
+<p>另一个改动较大的变体是 Gated Recurrent Unit (GRU)，这是由 <a href="http://arxiv.org/pdf/1406.1078v3.pdf">Cho, et al. (2014)</a> 提出。它将忘记门和输入门合成了一个单一的 更新门。同样还混合了细胞状态和隐藏状态，和其他一些改动。最终的模型比标准的 LSTM 模型要简单，也是非常流行的变体。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LSTM-16.png" alt="GRU"></p>
+<p>这里只是部分流行的 LSTM 变体。当然还有很多其他的，如<a href="http://arxiv.org/pdf/1508.03790v2.pdf">Yao, et al. (2015)</a> 提出的 Depth Gated RNN。还有用一些完全不同的观点来解决长期依赖的问题，如<a href="http://arxiv.org/pdf/1402.3511v1.pdf">Koutnik, et al. (2014)</a> 提出的 Clockwork RNN。<br>要问哪个变体是最好的？其中的差异性真的重要吗？<a href="http://arxiv.org/pdf/1503.04069.pdf">Greff, et al. (2015)</a> 给出了流行变体的比较，<strong>结论是他们基本上是一样的</strong>。<a href="http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf">Jozefowicz, et al. (2015)</a> 则在超过 1 万种 RNN 架构上进行了测试，发现一些架构在某些任务上也取得了比 LSTM 更好的结果。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>刚开始，我提到通过 RNN 得到重要的结果。本质上所有这些都可以使用 LSTM 完成。对于大多数任务确实展示了更好的性能！</p>
+<p>由于 LSTM 一般是通过一系列的方程表示的，使得 LSTM 有一点令人费解。然而本文中一步一步地解释让这种困惑消除了不少。</p>
+<p>LSTM 是我们在 RNN 中获得的重要成功。很自然地，我们也会考虑：哪里会有更加重大的突破呢？在研究人员间普遍的观点是：“Yes! 下一步已经有了——那就是注意力！” 这个想法是让 RNN 的每一步都从更加大的信息集中挑选信息。例如，如果你使用 RNN 来产生一个图片的描述，可能会选择图片的一个部分，根据这部分信息来产生输出的词。实际上，Xu, et al.(2015)已经这么做了——如果你希望深入探索注意力可能这就是一个有趣的起点！还有一些使用注意力的相当振奋人心的研究成果，看起来有更多的东西亟待探索……</p>
+<p>注意力也不是 RNN 研究领域中唯一的发展方向。例如，Kalchbrenner, et al. (2015) 提出的 Grid LSTM 看起来也是很有前途。使用生成模型的 RNN，诸如Gregor, et al. (2015) Chung, et al. (2015) 和 Bayer &amp; Osendorfer (2015) 提出的模型同样很有趣。在过去几年中，RNN 的研究已经相当的燃，而研究成果当然也会更加丰富！</p>
+<p><strong>参考博文：</strong><br><a href="https://www.jianshu.com/p/9dc9f41f0b29#">[译]理解 LSTM 网络-朱小虎</a></p>
 <hr>
 
       
@@ -543,10 +570,10 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/posts/3c1887e0.html">Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)</a></p>
+  <p><span>本文标题:</span><a href="/posts/lstmpaper.html">Understanding LSTM Networks (论文解析)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
-  <p><span>原始链接:</span><a href="/posts/3c1887e0.html" title="Amazon.com Recommendations Item-to-item collaborative filtering (论文解析)">https://www.xiemingzhao.com/posts/3c1887e0.html</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/3c1887e0.html"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/posts/lstmpaper.html" title="Understanding LSTM Networks (论文解析)">https://www.xiemingzhao.com/posts/lstmpaper.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/lstmpaper.html"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -579,9 +606,9 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
           
             <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
           
-            <a href="/tags/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 推荐系统</a>
+            <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 神经网络</a>
           
-            <a href="/tags/CF/" rel="tag"><i class="fa fa-tag"></i> CF</a>
+            <a href="/tags/LSTM/" rel="tag"><i class="fa fa-tag"></i> LSTM</a>
           
         </div>
       
@@ -594,8 +621,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/399ba6ee.html" rel="next" title="Factorization Machines (论文解析)">
-                <i class="fa fa-chevron-left"></i> Factorization Machines (论文解析)
+              <a href="/posts/Hexoblogbranch.html" rel="next" title="Hexo博客多设备管理">
+                <i class="fa fa-chevron-left"></i> Hexo博客多设备管理
               </a>
             
           </div>
@@ -604,8 +631,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/c800c340.html" rel="prev" title="Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析)">
-                Slope One Predictors for Online Rating-Based Collaborative Filtering(论文解析) <i class="fa fa-chevron-right"></i>
+              <a href="/posts/xgboostpaper.html" rel="prev" title="XGBoost A Scalable Tree Boosting System (论文解析)">
+                XGBoost A Scalable Tree Boosting System (论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -728,7 +755,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -806,7 +833,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%9A%E9%A9%AC%E9%80%8A%E6%8E%A8%E8%8D%90%EF%BC%9A%E7%89%A9%E5%88%B0%E7%89%A9%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">亚马逊推荐：物到物的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">推荐算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">传统的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">聚类模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%90%9C%E7%B4%A2%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">基于搜索的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%A9%E5%88%B0%E7%89%A9%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">物到物的协同过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">7.</span> <span class="nav-text">它是怎么工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%80%A7%EF%BC%9A%E6%AF%94%E8%BE%83"><span class="nav-number">8.</span> <span class="nav-text">扩展性：比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">9.</span> <span class="nav-text">结论</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">循环神经网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%BF%E6%9C%9F%E4%BE%9D%E8%B5%96%EF%BC%88Long-Term-Dependencies%EF%BC%89%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">长期依赖（Long-Term Dependencies）问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">LSTM 网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">4.</span> <span class="nav-text">LSTM 的核心思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%90%E6%AD%A5%E7%90%86%E8%A7%A3-LSTM"><span class="nav-number">5.</span> <span class="nav-text">逐步理解 LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-%E7%9A%84%E5%8F%98%E4%BD%93"><span class="nav-number">6.</span> <span class="nav-text">LSTM 的变体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div>
             
 
           </div>
@@ -853,7 +880,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

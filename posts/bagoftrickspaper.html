@@ -79,7 +79,7 @@
 
 
 
-  <meta name="keywords" content="机器学习,排序,LTR," />
+  <meta name="keywords" content="机器学习,Classification,Bag of Tricks," />
 
 
 
@@ -92,23 +92,27 @@
 
 
 
-<meta name="description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
+<meta name="description" content="原始论文：Bag of Tricks for Efficient Text Classification 有效的文本分类技巧摘要本文提出了一种简单而有效的文本分类和表示学习方法。 我们的实验表明，我们的快速文本分类器fastText在准确性方面通常与深度学习分类器保持一致，并且在训练和评估中速度快很多。 我们可以在不到10分钟的时间内使用标准的多核CPU对超过10亿个单词进行快速文本训练，并在不到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LTR信息检索评价指标">
-<meta property="og:url" content="https://www.xiemingzhao.com/posts/5fb7303d.html">
+<meta property="og:title" content="Bag of Tricks for Efficient Text Classification (论文解析)">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/bagoftrickspaper.html">
 <meta property="og:site_name" content="小火箭的博客">
-<meta property="og:description" content="1 RPR（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：     —- Predict P Predict N     Target P TP FN   Target N FP TN">
+<meta property="og:description" content="原始论文：Bag of Tricks for Efficient Text Classification 有效的文本分类技巧摘要本文提出了一种简单而有效的文本分类和表示学习方法。 我们的实验表明，我们的快速文本分类器fastText在准确性方面通常与深度学习分类器保持一致，并且在训练和评估中速度快很多。 我们可以在不到10分钟的时间内使用标准的多核CPU对超过10亿个单词进行快速文本训练，并在不到">
 <meta property="og:locale">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
-<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg">
-<meta property="article:published_time" content="2019-06-26T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.654Z">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-p1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t1.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t2.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t3.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t5.JPG">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t4.JPG">
+<meta property="article:published_time" content="2019-03-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-30T17:49:55.001Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="机器学习">
-<meta property="article:tag" content="排序">
-<meta property="article:tag" content="LTR">
+<meta property="article:tag" content="Classification">
+<meta property="article:tag" content="Bag of Tricks">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-p1.JPG">
 
 
 
@@ -138,13 +142,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiemingzhao.com/posts/5fb7303d.html"/>
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/bagoftrickspaper.html"/>
 
 
 
 
 
-  <title>LTR信息检索评价指标 | 小火箭的博客</title>
+  <title>Bag of Tricks for Efficient Text Classification (论文解析) | 小火箭的博客</title>
   
 
 
@@ -322,7 +326,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/5fb7303d.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/bagoftrickspaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -339,7 +343,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
         
         
-          <h1 class="post-title" itemprop="name headline">LTR信息检索评价指标</h1>
+          <h1 class="post-title" itemprop="name headline">Bag of Tricks for Efficient Text Classification (论文解析)</h1>
         
 
         <div class="post-meta">
@@ -351,8 +355,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-27T00:00:00+08:00">
-                2019-06-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-17T00:00:00+08:00">
+                2019-03-17
               </time>
             
 
@@ -385,8 +389,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解析</span>
                   </a>
                 </span>
 
@@ -403,8 +407,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/5fb7303d.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/5fb7303d.html" itemprop="commentCount"></span>
+                <a href="/posts/bagoftrickspaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/bagoftrickspaper.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -433,7 +437,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.7k
+                  3.2k
                 </span>
               
 
@@ -449,7 +453,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  11
                 </span>
               
             </div>
@@ -470,99 +474,53 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
 
       
-        <h2 id="1-RP"><a href="#1-RP" class="headerlink" title="1 RP"></a>1 RP</h2><p>R（recall）表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；P（precision）表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。假设有如下的混淆矩阵：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">—-</th>
-<th style="text-align:center">Predict P</th>
-<th style="text-align:center">Predict N</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Target P</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FN</td>
-</tr>
-<tr>
-<td style="text-align:center">Target N</td>
-<td style="text-align:center">FP</td>
-<td style="text-align:center">TN</td>
-</tr>
-</tbody>
-</table>
-</div>
+        <p><a href="https://arxiv.org/pdf/1607.01759v2.pdf">原始论文：Bag of Tricks for Efficient Text Classification</a></p>
+<h2 id="有效的文本分类技巧"><a href="#有效的文本分类技巧" class="headerlink" title="有效的文本分类技巧"></a>有效的文本分类技巧</h2><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文提出了一种简单而有效的文本分类和表示学习方法。 我们的实验表明，我们的快速文本分类器fastText在准确性方面通常与深度学习分类器保持一致，并且在训练和评估中速度快很多。 我们可以在不到10分钟的时间内使用标准的多核CPU对超过10亿个单词进行快速文本训练，并在不到一分钟的时间内对312K类中的50万个句子进行分类。</p>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h2><p>建立良好的文本分类表示是许多应用程序的重要任务，如Web搜索，信息检索，排序和文档分类。 最近，基于神经网络的模型在计算句子表示方面越来越受欢迎。 虽然这些模型在实践中取得了非常好的表现，但是在训练和测试时间，它们往往相对较慢，限制了它们在非常大的数据集上的使用。</p>
 <span id="more"></span>
-<p>正确率、召回率（查全率）、精准度、$F_{\beta}$ score、假阳率以及真阳率：</p>
-<script type="math/tex; mode=display">Accuracy = \frac{TP+FN}{TP+TN+FP+FN}</script><script type="math/tex; mode=display">Recall=\frac{TP}{TP+FN}</script><script type="math/tex; mode=display">Precision=\frac{TP}{TP+FP}</script><script type="math/tex; mode=display">F_{\beta}=(1+\beta^2) \cdot \frac{Precision \cdot Recall}{\beta^2 \cdot Precision + Recall}</script><p>其中，F-Score/F-measure 作为综合指标，平衡 recall 和 precision 的影响，较为全面的评价一个模型。F1-Score 表示准确率和召回率一样重要；F2-Score 表示召回率比准确率重要一倍；F0.5-Score 表示准确率比召回率重要一倍。</p>
-<script type="math/tex; mode=display">FPR=\frac{FP}{FP+TN}</script><script type="math/tex; mode=display">TPR=\frac{TP}{TP+FN}</script><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-AUC.png" alt="LTRindex-AUC"></p>
-<p>其中：<br>假阳率FPR=ROC曲线的X轴指标<br>真阳率TPR=ROC曲线的Y轴指标=召回率<br>AUC值就是曲线右下部分面积。</p>
-<h2 id="2-MAP"><a href="#2-MAP" class="headerlink" title="2 MAP"></a>2 MAP</h2><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/LTRindex-PR.jpg" alt="LTRindex-PR"></p>
-<p>如上图的PR曲线，对其进行积分求曲线下方的面积，就是AP(Average Precision)，即</p>
-<script type="math/tex; mode=display">AP=\int_0^1 p(r) dr</script><p>其中，p 表示 precision，r 表示 recall，p 是一个以 r 为参数的函数，AP 的计算是对排序位置敏感的，相关文档排序的位置越靠前，检索出相关的文档越多，AP 值越大。</p>
-<p>近似计算约等于 AAP（Aproximate Average Precision）：</p>
-<script type="math/tex; mode=display">AAP=\sum_{k=1}^Np(k)\Delta r(k)=\frac{\sum_{k=1}^Np(k) \cdot rel(k)}{number Of Relevant Documents}</script><p>其中，N 代表所有相关文档的总数，p(k) 表示能检索出 k 个相关文档时的 precision 值，而 △r(k) 则表示检索相关文档个数从 k-1 变化到 k 时（通过调整阈值）recall 值的变化情况。<br>rel(k) 表示第 k 个文档是否相关，若相关则为1，否则为0，则可以简化公式为：</p>
-<script type="math/tex; mode=display">AP=\frac{1}{N} \cdot \sum_{i=1}^N\frac{i}{position(i)}</script><p>其中，N 表示相关文档总数，position(i) 表示第 i 个相关文档在检索结果列表中的位置。</p>
-<p>MAP（Mean Average Precision）即多个查询的平均正确率（AP）的均值，从整体上反映模型的检索性能。</p>
-<p>下面举一个例子来说明上述公式的计算：<br>查询 query1 对应总共有4个相关文档，查询 query2 对应总共有5个相关文档。当通过模型执行查询1、2时，分别检索出4个相关文档（Rank=1、2、4、7）和3个相关文档（Rank=1、3、5）。<br>则 query1AP=(1/1+2/2+3/4+4/7)/4=0.83，query2AP=(1/1+2/3+3/5+0+0)/5=0.45，最后 MAP=(0.83+0.45)/2=0.64。</p>
-<h2 id="3-NDCG"><a href="#3-NDCG" class="headerlink" title="3 NDCG"></a>3 NDCG</h2><h3 id="3-1-CG-Cumulative-Gain-累计效益"><a href="#3-1-CG-Cumulative-Gain-累计效益" class="headerlink" title="3.1 CG(Cumulative Gain)累计效益"></a>3.1 CG(Cumulative Gain)累计效益</h3><script type="math/tex; mode=display">CG@k=\sum_{i=1}^k rel_i</script><p>其中 k 表示 k 个文档组成的集合，rel 表示第 i 个文档的相关度，例如相关度分为以下几个等级：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Relevance Rating</th>
-<th style="text-align:center">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Perfect</td>
-<td style="text-align:center">5</td>
-</tr>
-<tr>
-<td style="text-align:center">Excellent</td>
-<td style="text-align:center">4</td>
-</tr>
-<tr>
-<td style="text-align:center">Good</td>
-<td style="text-align:center">3</td>
-</tr>
-<tr>
-<td style="text-align:center">Fair</td>
-<td style="text-align:center">2</td>
-</tr>
-<tr>
-<td style="text-align:center">Simple</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">Bad</td>
-<td style="text-align:center">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="3-2-DCG-Discounted-Cumulative-Gain"><a href="#3-2-DCG-Discounted-Cumulative-Gain" class="headerlink" title="3.2 DCG(Discounted Cumulative Gain)"></a>3.2 DCG(Discounted Cumulative Gain)</h3><p>在 CG 的计算中没有考虑到位置信息，例如检索到三个文档的相关度依次为（3，-1，1）和（-1，1，3），根据 CG 的计算公式得出的排名是相同的，但是显然前者的排序好一些。</p>
-<p>所以需要在 CG 计算的基础上加入位置信息的计算，现假设根据位置的递增，对应的价值递减，为 1/log2(i+1)，其中 log2(i+1) 为折扣因子；</p>
-<script type="math/tex; mode=display">DCG@k=\sum_{i=1}^k \frac{rel_i}{log_2 (i+1)}</script><p>另一种增加相关度影响比重的 DCG 计算公式：</p>
-<script type="math/tex; mode=display">DCG@k=\sum_{i=1}^k \frac{2^{rel_i}-1}{log_2 (i+1)}</script><h3 id="3-3-IDCG-idea-DCG"><a href="#3-3-IDCG-idea-DCG" class="headerlink" title="3.3 IDCG(idea DCG)"></a>3.3 IDCG(idea DCG)</h3><p>理想情况下，按照相关度从大到小排序，然后计算 DCG 可以取得最大值情况。</p>
-<script type="math/tex; mode=display">IDCG@k=\sum_{i=1}^{|REL|} \frac{2^{rel_i}-1}{log_2 (i+1)}</script><p>其中 |REL| 表示文档按照相关度从大到小排序，取前 k 个文档组成的集合。就是按理想排序情景的前k个。</p>
-<h3 id="3-4-NDCG-Normalized-DCG"><a href="#3-4-NDCG-Normalized-DCG" class="headerlink" title="3.4 NDCG(Normalized DCG)"></a>3.4 NDCG(Normalized DCG)</h3><p>由于每个查询所能检索到的结果文档集合长度不一致，k 值的不同会影响 DCG 的计算结果。所以不能简单的对不同查询的 DCG 结果进行平均，需要先归一化处理。</p>
-<p>NDCG 就是利用 IDCG 进行归一化处理，表示当前的 DCG 与理想情况下的 IDCG 相差多大：</p>
-<script type="math/tex; mode=display">NDCG@k=\frac{DCG@k}{IDCG@K}</script><p>这样每个查询的 NDCG 均在 0-1 范围内，不同查询之间就可以进行比较，求取多个查询的平均 NDCG。</p>
-<h2 id="4-ERR"><a href="#4-ERR" class="headerlink" title="4 ERR"></a>4 ERR</h2><h3 id="4-1-PR-reciprocal-rank"><a href="#4-1-PR-reciprocal-rank" class="headerlink" title="4.1 PR(reciprocal rank)"></a>4.1 PR(reciprocal rank)</h3><p>倒数排名，指检索结果中第一个相关文档的排名的倒数。</p>
-<script type="math/tex; mode=display">RR=\frac{1}{rank_i}</script><h3 id="4-2-MRR-mean-reciprocal-rank"><a href="#4-2-MRR-mean-reciprocal-rank" class="headerlink" title="4.2 MRR(mean reciprocal rank)"></a>4.2 MRR(mean reciprocal rank)</h3><p>多个查询的倒数排名的均值，公式如下：</p>
-<script type="math/tex; mode=display">MRR=\frac{1}{|N|} \sum_{i=1}^{|N|} \frac{1}{rank_i}</script><p>ranki 表示第 i 个查询的第一个相关文档的排名。</p>
-<h3 id="4-3-Cascade-Model-瀑布模型"><a href="#4-3-Cascade-Model-瀑布模型" class="headerlink" title="4.3 Cascade Model(瀑布模型)"></a>4.3 Cascade Model(瀑布模型)</h3><p>点击模型中的瀑布模型，考虑到在同一个检索结果列表中各文档之间的位置依赖关系，假设用户从上至下查看，如果遇到某一检索结果项满意并进行点击，则操作结束；否则跳过该项继续往后查看。第 i 个位置的文档项被点击的概率为：</p>
-<script type="math/tex; mode=display">P(C_i)=r_i \prod_{j=1}^{i-1} (1-r_j)</script><p>其中 ri 表示第 i 个文档被点击的概率，前 i-1 个文档则没有被点击，概率均为 1-rj；</p>
-<h3 id="4-4-ERR-Expected-reciprocal-rank"><a href="#4-4-ERR-Expected-reciprocal-rank" class="headerlink" title="4.4 ERR(Expected reciprocal rank)"></a>4.4 ERR(Expected reciprocal rank)</h3><p>预期的倒数排名，表示用户的需求被满足时停止的位置的倒数的期望，与 RR 计算第一个相关文档的位置倒数不同。<br>首先用户在位置 r 处停止的概率 PPr 计算公式如下：</p>
-<script type="math/tex; mode=display">PP_r=\prod_{i=1}^{r-1}(1-R_i) R_r</script><p>其中 Ri 是关于文档相关度等级的函数，现假设该函数为：</p>
-<script type="math/tex; mode=display">R_i=R(g_i)=\frac{2^g-1}{2^{g_max}}</script><p>当文档是不相关的（g=0），则用户检索到相关文档的概率为0；而当文档极其相关（g=4，如果相关度划分5个等级）时，用户检索到相关文档的概率接近于1。上面公式中的 g 表示文档的相关度，参考 NDCG 中的 rel。</p>
-<p>更通用一点来讲，ERR 不一定是计算用户需求满足时停止的位置的倒数的期望，它可以是基于位置的函数</p>
-<script type="math/tex; mode=display">ERR=\sum_{r=1}^n \varphi(r)P Pr=\sum_{r=1}^n \frac{1}{r} P Pr=\sum_{r=1}^n \frac{1}{r} \prod_{i=1}^{r-1}(1-R_i)R_r</script><p>可以看出，当 φ(r)=1/r 时就是 ERR，当 φ(r)=1/log2(r+1) 就是DCG。</p>
-<p><a href="https://www.cnblogs.com/memento/p/8673309.html">参考文章:https://www.cnblogs.com/memento/p/8673309.html</a></p>
+<p>与此同时，简单的线性模型也显示出令人印象深刻的性能，同时计算效率非常高。 他们通常学习单词级别的表示，后来组合起来形成句子表示。 在这项工作中，我们提出了这些模型的扩展，以直接学习句子表示。 我们通过引入其他统计数据（如使用n-gram包）来显示，我们减少了线性和深度模型之间精度的差距，同时速度提高了许多个数量级。</p>
+<p>我们的工作与标准线性文本分类器密切相关。 与Wang和Manning类似，我们的动机是探索由用于学习无监督词表示的模型启发的简单基线。 与Le和Mikolov不同的是，我们的方法在测试时不需要复杂的推理，使得其学习表示很容易在不同问题上重复使用。 我们在两个不同的任务中评估模型的质量，即标签预测和情感分析。</p>
+<h2 id="2-模型架构"><a href="#2-模型架构" class="headerlink" title="2 模型架构"></a>2 模型架构</h2><p>句子分类的简单而有效的基线是将句子表示为词袋（BoW）并训练线性分类器，例如逻辑回归或支持向量机。 但是，线性分类器不能在特征和类之间共享参数，可能会限制泛化。 这个问题的常见解决方案是将线性分类器分解成低秩矩阵或使用多层神经网络。在神经网络的情况下，信息通过隐藏层共享。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-p1.JPG" alt="Model architecture of fastText.jpg"></p>
+<p>图1显示了一个带有1个隐藏层的简单模型。 第一个权重矩阵可以看作是一个句子单词的查找表。 词表示被平均为文本表示，然后反馈给线性分类器。 这种结构类似于Mikolov等人的cbow模型，其中中间的单词被标签取代。 该模型将一系列单词作为输入，并在预定义的类上生成概率分布。 我们使用softmax函数来计算这些概率。对于N篇文档，我们最小化下面的负的似然值：</p>
+<script type="math/tex; mode=display">-\frac{1}{N}\sum_{n=1}^{N}y_nlog(f(BAx_n))</script><p>训练这样的模型本质上与word2vec相似，也就是说，我们使用随机梯度下降和反向传播以及线性衰减的学习速率。 我们的模型在多个CPU上异步训练。</p>
+<h3 id="2-1-分层softmax"><a href="#2-1-分层softmax" class="headerlink" title="2.1 分层softmax"></a>2.1 分层softmax</h3><p>当目标数量很大时，计算线性分类器的计算量很大。 更准确地说，计算复杂度为O（Kd）O（Kd），其中K是目标的数量，d是隐藏层的维数。 为了改善我们的运行时间，我们使用基于霍夫曼编码树的分层softmax。 在训练期间，计算复杂度降至O（dlog2（K））O（dlog2（K））。 在这棵树上，目标是树叶。</p>
+<p>当搜索最可能的类别时，分层softmax在测试时间也是有利的。 每个节点都与从根节点到该节点的路径概率相关联。 如果节点与父节点n1，…，nl处于深度l + 1，则其概率为</p>
+<script type="math/tex; mode=display">P(n_{l+1}) = \prod_{i=1}^lP(n_i)</script><p>这意味着节点的概率总是低于其父节点的概率。 通过深度遍历探索树并跟踪叶子之间的最大概率允许我们丢弃与较小概率相关的任何分支。 在实践中，我们观察到在测试时O（dlog2（K））O（dlog2（K））的复杂度降低。 这种方法进一步扩展到以O（log（T））O（log（T））为代价，使用二进制堆计算T-top目标。</p>
+<h3 id="2-2-N-gram特征"><a href="#2-2-N-gram特征" class="headerlink" title="2.2 N-gram特征"></a>2.2 N-gram特征</h3><p>单词包对于词序是不变的，但考虑到这个顺序通常在计算上非常昂贵。 相反，我们使用一袋n-gram作为附加功能来捕获有关本地词序的部分信息。 这在实践中非常高效，同时实现了与明确使用订单的方法类似的结果。</p>
+<p>如果我们只使用bigrams，则使用与Mikolov和10M bin相同的哈希函数，否则我们使用哈希函数保持n-gram的快速和高效内存映射。</p>
+<h2 id="3-实验"><a href="#3-实验" class="headerlink" title="3 实验"></a>3 实验</h2><p>我们用两个不同的任务来评估fastText算法。首先，我们拿它跟现有的文本分类算法在情感分析的问题中进行比较。然后，我们再在大规模输出空间的标签预测数据及来评估算法的性能。我们的算法虽然基于Vowpal Wabbit资料集的工具化生效，但是可以发现我们特定的工具要至少快2-5倍。</p>
+<h3 id="3-1-情绪分析"><a href="#3-1-情绪分析" class="headerlink" title="3.1 情绪分析"></a>3.1 情绪分析</h3><p>数据集和基线 我们使用Zhang等人的相同的8个数据集和评估协议。我们报告Zhang等人的N-gram和TFI-DF基线以及Zhang和LeCun的字符级卷积模型（char-CNN）和 Conneau等人的非常深的卷积网络（VDCNN）。我们还与Tang等人的评估协议进行了比较。 我们报告他们的主要基线以及基于递归网络（Conv-GRNN和LSTM-GRNN）的两种方法。</p>
+<p><strong>结果</strong> 我们在表1中给出了结果。我们使用10个隐藏单元并运行5个纪元的fastText，并在{0.05,0.1,0.25,0.5}的验证集上选择了一个学习率。 在这项任务中，添加bigram信息将使性能提高1 - 4％。 总体而言，我们的准确度略好于char-CNN，稍差于VDCNN。 请注意，我们可以通过使用更多的n-gram来稍微提高精度，例如，搜狗的性能上升到97.1％。 最后，表1表明我们的方法与Tang等人提出的方法相比是有竞争力的。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t1.JPG" alt="Test accuracy% on sentiment datasets.jpg"><br>表1：情绪数据集的测试准确度[％]。 所有数据集都使用相同的参数运行FastText。 它有10个隐藏的单位，我们评估它有没有bigrams。 对于VDCNN和char-CNN，我们显示没有数据增加的最佳报告数字。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t2.JPG" alt="Table 2 Training time for a single epoch on sentiment analysis.jpg"><br>表3：与Tang等人的比较。在验证集上选择超参数。</p>
+<p>我们调整验证集上的超参数，并观察使用多达5个导联的n-grams 达到最佳性能。 与Tang等人不同，fastText不使用预先训练的词嵌入，这可以解释1％的差异。</p>
+<p>训练时间 char-CNN和VDCNN都使用NVIDIA Tesla K40 GPU进行培训，而我们的模型则使用20个线程在CPU上进行培训。 表2显示使用卷积的方法比fastText慢几个数量级。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t3.JPG" alt="Table 3 Comparision with Tang et al. (2015).jpg"><br>表2：与char-CNN和VDCNN相比，情绪分析数据集的训练时间。 我们报告整个培训时间，除了char-CNN，我们报告每个时间。</p>
+<p>请注意，对于char-CNN，我们报告每个时期的时间，同时报告其他方法的整体训练时间。 虽然使用更新的CUDA实现的卷积可以使char-CNN的速度提高10倍，但fastText只需不到一分钟的时间就可以训练这些数据集。 与基于CNN的方法相比，我们的加速比随着数据集的大小而增加，至少达到15,000倍的加速。</p>
+<h3 id="3-2-标签预测"><a href="#3-2-标签预测" class="headerlink" title="3.2 标签预测"></a>3.2 标签预测</h3><p><strong>数据集和基线</strong><br>为了测试我们方法的可伸缩性，对YFCC100M数据集进行了进一步评估，该数据集由几乎100M的带有字幕，标题和标签的图像组成。我们专注于根据标题和标题预测标签（我们不使用图像）。我们删除少于100次的字词和标签，并将数据分成训练，验证和测试集。该训练集包含91,188,648个样本。验证有930,497个样本和测试集543,424个样本。词汇大小为297,141，并且有312,116个标签。我们将发布一个脚本来重新创建这个数据集，以便我们的数据可以被复制。</p>
+<p>我们考虑预测最频繁标签的基于频率的基线。我们还将它与标签预测模型Tagspace进行了比较，标签预测模型与我们的标签预测模型相似，但基于Weston等人的Wsabie模型。虽然使用卷积描述了标签空间模型，但我们认为线性版本具有可比较的性能，更快。</p>
+<p><strong>结果和训练时间</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t5.JPG" alt="Table 5 Prec@1 on the test set for tag prediction.jpg"><br>表5：YFCC100M上用于标记预测的测试集上的Prec @ 1。 我们还会报告训练时间和测试时间。 测试时间是单线程的报告，而两种模式的训练使用20个线程。</p>
+<p>表5给出了fastText和基线的比较。我们运行5个周期的fastText，并将它与Tagspace的两种尺寸的隐藏层（即50和200）进行比较。两种模型都实现了与隐藏层相似的性能，但增加了巨大值使我们在精度上有了显着提升。 在测试时间，Tagspace需要计算所有类别的分数，这使得它相对较慢，而当类别数量很多（此处超过300K）时，我们的快速推理会显着提高速度。 总体而言，获得质量更好的模型的速度要快一个数量级。 测试阶段的加速更加重要（600倍加速）。表4显示了一些定性的例子。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/fastText-t4.JPG" alt="Table 4 Examples from the validation set of YFCC100M dataset.jpg"></p>
+<p>表4：使用具有200个隐藏单元和两个bigrams的fastText获取的YFCC100M数据集验证集的示例。 我们展示了一些正确和不正确的标签预测。</p>
+<p>FastText学习将标题中的单词与他们的主题标签相关联，例如“christmas”与“＃christmas”。 它还捕捉单词之间的简单关系，如“snowfall”和“#snow”。 最后，使用bigrams还可以捕捉诸如“twin cities”和“#minneapolis”之类的关系。</p>
+<h2 id="4-讨论和结论"><a href="#4-讨论和结论" class="headerlink" title="4 讨论和结论"></a>4 讨论和结论</h2><p>在这项工作中，我们开发了fastText，它扩展了word2vec来处理句子和文档分类。 与来自word2vec的无监督训练的单词向量不同，我们的单词特征可以平均在一起形成好的句子表示。 在几项任务中，我们获得的性能与最近提出的深度学习方法相媲美，同时观察到了大幅度的加速。 尽管深层神经网络在理论上比浅层模型具有更高的表征能力，但是如何分析简单的文本分类问题（如情感分析）是否正确评估它们并不明确。 我们将发布我们的代码，以便研究团体可以轻松构建我们的工作。</p>
+<h2 id="一些收获"><a href="#一些收获" class="headerlink" title="一些收获"></a>一些收获</h2><blockquote>
+<p>FastText词向量与word2vec对比</p>
+</blockquote>
+<p><strong>FastText= word2vec中 cbow + h-softmax的灵活使用</strong><br>灵活体现在两个方面：</p>
+<ol>
+<li>模型的输出层：word2vec的输出层，对应的是每一个term，计算某term的概率最大；而fasttext的输出层对应的是 分类的label。不过不管输出层对应的是什么内容，起对应的vector都不会被保留和使用；</li>
+<li>模型的输入层：word2vec的输出层，是 context window 内的term；而fasttext 对应的整个sentence的内容，包括term，也包括 n-gram的内容；</li>
+</ol>
+<p><strong>两者本质的不同，体现在h-softmax的使用：</strong></p>
+<ul>
+<li>Wordvec的目的是得到词向量，embedding层 到 input层的 共享权重矩阵 就是 词向量矩阵，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。</li>
+<li>fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）</li>
+</ul>
+<p><a href="https://blog.csdn.net/u011239443/article/details/80076720">参考博文：论文阅读：《Bag of Tricks for Efficient Text Classification-卓寿杰_SoulJoy</a></p>
 <hr>
 
       
@@ -590,10 +548,10 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/posts/5fb7303d.html">LTR信息检索评价指标</a></p>
+  <p><span>本文标题:</span><a href="/posts/bagoftrickspaper.html">Bag of Tricks for Efficient Text Classification (论文解析)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
-  <p><span>原始链接:</span><a href="/posts/5fb7303d.html" title="LTR信息检索评价指标">https://www.xiemingzhao.com/posts/5fb7303d.html</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/5fb7303d.html"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/posts/bagoftrickspaper.html" title="Bag of Tricks for Efficient Text Classification (论文解析)">https://www.xiemingzhao.com/posts/bagoftrickspaper.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/bagoftrickspaper.html"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -626,9 +584,9 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
           
             <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
           
-            <a href="/tags/%E6%8E%92%E5%BA%8F/" rel="tag"><i class="fa fa-tag"></i> 排序</a>
+            <a href="/tags/Classification/" rel="tag"><i class="fa fa-tag"></i> Classification</a>
           
-            <a href="/tags/LTR/" rel="tag"><i class="fa fa-tag"></i> LTR</a>
+            <a href="/tags/Bag-of-Tricks/" rel="tag"><i class="fa fa-tag"></i> Bag of Tricks</a>
           
         </div>
       
@@ -641,8 +599,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/c7ab2b84.html" rel="next" title="LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）">
-                <i class="fa fa-chevron-left"></i> LightGBM A Highly Efficient Gradient Boosting Decision Tree （论文解析）
+              <a href="/posts/2cf4a7cf.html" rel="next" title="推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）">
+                <i class="fa fa-chevron-left"></i> 推荐系统三十六式--读书笔记（35-38 产品-团队-参考阅读）
               </a>
             
           </div>
@@ -651,8 +609,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/IntroductionofLTR.html" rel="prev" title="LTR(Learning to Rank)概述">
-                LTR(Learning to Rank)概述 <i class="fa fa-chevron-right"></i>
+              <a href="/posts/gmailprioinboxpaper.html" rel="prev" title="The Learning Behind Gmail Priority Inbox (论文解析)">
+                The Learning Behind Gmail Priority Inbox (论文解析) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -775,7 +733,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -853,7 +811,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RP"><span class="nav-number">1.</span> <span class="nav-text">1 RP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-MAP"><span class="nav-number">2.</span> <span class="nav-text">2 MAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-NDCG"><span class="nav-number">3.</span> <span class="nav-text">3 NDCG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-CG-Cumulative-Gain-%E7%B4%AF%E8%AE%A1%E6%95%88%E7%9B%8A"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 CG(Cumulative Gain)累计效益</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-DCG-Discounted-Cumulative-Gain"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 DCG(Discounted Cumulative Gain)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-IDCG-idea-DCG"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 IDCG(idea DCG)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-NDCG-Normalized-DCG"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 NDCG(Normalized DCG)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ERR"><span class="nav-number">4.</span> <span class="nav-text">4 ERR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-PR-reciprocal-rank"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 PR(reciprocal rank)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-MRR-mean-reciprocal-rank"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 MRR(mean reciprocal rank)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Cascade-Model-%E7%80%91%E5%B8%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Cascade Model(瀑布模型)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-ERR-Expected-reciprocal-rank"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 ERR(Expected reciprocal rank)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E6%95%88%E7%9A%84%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%8A%80%E5%B7%A7"><span class="nav-number">1.</span> <span class="nav-text">有效的文本分类技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.</span> <span class="nav-text">1 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">2 模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%88%86%E5%B1%82softmax"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 分层softmax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-N-gram%E7%89%B9%E5%BE%81"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 N-gram特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%9E%E9%AA%8C"><span class="nav-number">5.</span> <span class="nav-text">3 实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%83%85%E7%BB%AA%E5%88%86%E6%9E%90"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 情绪分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%A0%87%E7%AD%BE%E9%A2%84%E6%B5%8B"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 标签预测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AE%A8%E8%AE%BA%E5%92%8C%E7%BB%93%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">4 讨论和结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%94%B6%E8%8E%B7"><span class="nav-number">7.</span> <span class="nav-text">一些收获</span></a></li></ol></div>
             
 
           </div>
@@ -900,7 +858,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共222.2k字</span>
+  <span class="post-count">博客全站共218.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
