@@ -118,11 +118,11 @@ date: 2020-04-08
 
 在实际的映射中，服务器可能会被映射成如下模样。
 
-![consistentHash11](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash11.png?x-oss-credential=TMP.3KnQFZMmSVZnNE3GDQDbVF76rJLb2VgD5t7E6Ypzb7zwUkGWEr8MwgWvUEhsex83p9Lpdc8ThaYBppuWmXWGYMs1Q8KAwa%2F20250330%2Fcn-hangzhou%2Foss%2Faliyun_v4_request&x-oss-date=20250330T174351Z&x-oss-expires=3600&x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-signature=c8df52cadc12b5b5e8c9543d478439b504192b83032be15f3339ac90fd23d262)
+![consistentHash11](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash14.png)
 
 如果服务器被映射成上图中的模样，那么被缓存的对象很有可能大部分集中缓存在某一台服务器上，如下图所示。
 
-![consistentHash12](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash12.png?x-oss-credential=TMP.3KnQFZMmSVZnNE3GDQDbVF76rJLb2VgD5t7E6Ypzb7zwUkGWEr8MwgWvUEhsex83p9Lpdc8ThaYBppuWmXWGYMs1Q8KAwa%2F20250330%2Fcn-hangzhou%2Foss%2Faliyun_v4_request&x-oss-date=20250330T174410Z&x-oss-expires=3600&x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-signature=3f4df8187ef3d15b27709aa33a03d79c247a606461a3c2e5d4bcf16c8c41aff1)
+![consistentHash12](http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/papers/consistentHash15.png)
 
 上图中，1号、2号、3号、4号、6号图片均被缓存在了服务器A上，只有5号图片被缓存在了服务器B上，服务器C上甚至没有缓存任何图片，如果出现上图中的情况，A、B、C三台服务器并没有被合理的平均的充分利用，缓存分布的极度不均匀，而且，如果此时服务器A出现故障，那么失效缓存的数量也将达到最大值，在极端情况下，仍然有可能引起系统的崩溃，上图中的情况则被称之为hash环的偏斜。当然也有办法解决此问题的。
 

@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/hexo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/hexo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -156,7 +152,7 @@
       <updated>1636688611291</updated>
       <workItem from="1636688614042" duration="8304000" />
       <workItem from="1736686128405" duration="28447000" />
-      <workItem from="1740844671901" duration="11593000" />
+      <workItem from="1740844671901" duration="21025000" />
     </task>
     <task id="LOCAL-00001" summary="add &lt;more&gt;">
       <created>1636693291369</created>
