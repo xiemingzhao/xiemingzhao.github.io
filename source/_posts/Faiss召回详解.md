@@ -19,6 +19,8 @@ Faiss的是由FaceBook的AI团队公开的项目[Facebook AI Similarity Search](
 
 其核心思想：**把候选向量集封装成一个index数据库，加速检索TopK相似向量的过程，尽量维持召回率，其中部分索引支持GPU构建。**
 
+<!--more-->
+
 ## 2 原理
 Faiss框架中，需要了解`k-means`、`PCA`以及`PQ`等算法。但最需要了解的2个核心原理便是：
 
