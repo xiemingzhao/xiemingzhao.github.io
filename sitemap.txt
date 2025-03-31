@@ -1,5 +1,5 @@
-https://www.xiemingzhao.com/posts/consistentHash.html
 https://www.xiemingzhao.com/posts/faissrecall.html
+https://www.xiemingzhao.com/posts/consistentHash.html
 https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html
 https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html
 https://www.xiemingzhao.com/posts/vecRetrieval.html
