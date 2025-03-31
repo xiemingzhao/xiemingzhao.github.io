@@ -101,6 +101,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc1.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc2.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc3.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc4.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc5.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc6.png">
@@ -114,7 +115,6 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc14.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc15.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc16.png">
-<meta property="og:image" content="https://www.xiemingzhao.com/posts/%E6%B7%B1%E5%BA%A6%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%BB%AC.resources/32DC77F2-3E16-464C-A477-BCCF6EE22BEE.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc17.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc18.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc19.png">
@@ -127,7 +127,7 @@
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc26.png">
 <meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc27.png">
 <meta property="article:published_time" content="2020-06-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-12T12:48:46.662Z">
+<meta property="article:modified_time" content="2025-03-31T16:31:34.948Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="深度学习">
 <meta property="article:tag" content="激活函数">
@@ -503,33 +503,33 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>其中<strong>非线性</strong>激活函数允许网络复制复杂的非线性行为。正如绝大多数神经网络借助某种形式的梯度下降进行优化，激活函数需要是<strong>可微分</strong>（或者至少是几乎完全可微分的）。此外，复杂的激活函数也许产生一些梯度消失或爆炸的问题。因此，神经网络倾向于部署若干个特定的激活函数（identity、sigmoid、ReLU 及其变体）。<br>因此，神经网络中激励函数的作用通俗上讲就是将多个线性输入转换为非线性的关系。如果不使用激励函数的话，神经网络的每层都只是做线性变换，即使是多层输入叠加后也还是线性变换。通过激励函数引入非线性因素后，使神经网络的表达能力更强了。</p>
 <span id="more"></span>
 <h2 id="2-常见激活函数"><a href="#2-常见激活函数" class="headerlink" title="2 常见激活函数"></a>2 常见激活函数</h2><p>下面是多个激活函数的图示及其一阶导数，图的右侧是一些与神经网络相关的属性。</p>
-<p>单调性（Montonic）： 单调性使得在激活函数处的梯度方向不会经常改变，从而让训练更容易收敛</p>
-<p>连续性（Continuous）：个人认为作者想表达可微性，可微性保证了在优化中梯度的可计算性</p>
-<p>非饱和性（saturation）：饱和指的是在某些区间梯度接近于零（即梯度消失），使得参数无法继续更新的问题。</p>
-<p>在深度神经网络中，前面层上的梯度是来自于后面层上梯度的乘乘积。当存在过多的层次时，就出现了内在本质上的不稳定场景，如梯度消失和梯度爆炸</p>
-<p>梯度消失（Vanishing Gradient）：某些区间梯度接近于零；前面的层比后面的层梯度变化更小，故变化更慢，从而引起了梯度消失问题</p>
-<p>梯度爆炸(Exploding Gradient):  某些区间梯度接近于无穷大或者权重过大；前面层比后面层梯度变化更快，会引起梯度爆炸问题</p>
+<p><code>单调性（Montonic）</code>： 单调性使得在激活函数处的梯度方向不会经常改变，从而让训练更容易收敛</p>
+<p><code>连续性（Continuous）</code>：个人认为作者想表达可微性，可微性保证了在优化中梯度的可计算性</p>
+<p><code>非饱和性（saturation）</code>：饱和指的是在某些区间梯度接近于零（即梯度消失），使得参数无法继续更新的问题。</p>
+<p>在深度神经网络中，前面层上的梯度是来自于后面层上梯度的乘乘积。当存在过多的层次时，就出现了内在本质上的不稳定场景，如<code>梯度消失</code>和<code>梯度爆炸</code></p>
+<p><code>梯度消失（Vanishing Gradient）</code>：某些区间梯度接近于零；前面的层比后面的层梯度变化更小，故变化更慢，从而引起了梯度消失问题</p>
+<p><code>梯度爆炸(Exploding Gradient)</code>:  某些区间梯度接近于无穷大或者权重过大；前面层比后面层梯度变化更快，会引起梯度爆炸问题</p>
 <h3 id="2-1-Step"><a href="#2-1-Step" class="headerlink" title="2.1 Step"></a>2.1 Step</h3><p>它的函数和倒数表达式是：</p>
 <script type="math/tex; mode=display">f(x)=
-\left\{\begin{matrix} 
-  1 \quad for \ x \ge 0 \\  
-  0 \quad for \ x < 0
+\left\{\begin{matrix}
+1 \quad for \ x \ge 0 \\  
+0 \quad for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">f'(x)=
-\left\{\begin{matrix} 
-  0 \quad for \ x \ne 0 \\  
-  ? \quad for \ x = 0
+\left\{\begin{matrix}
+0 \quad for \ x \ne 0 \\  
+? \quad for \ x = 0
 \end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc1.png" alt="activefunc1"></p>
 <p>激活函数 Step 更倾向于理论而不是实际，它模仿了生物神经元要么全有要么全无的属性。它无法应用于神经网络，因为其导数是 0（除了零点导数无定义以外），这意味着基于梯度的优化方法并不可行。</p>
 <h3 id="2-2-Identity"><a href="#2-2-Identity" class="headerlink" title="2.2 Identity"></a>2.2 Identity</h3><script type="math/tex; mode=display">Identity(x)=x</script><script type="math/tex; mode=display">Identity'(x)=1</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc2.png" alt="activefunc2"><br>通过激活函数 Identity，节点的输入等于输出。它完美适合于潜在行为是线性（与线性回归相似）的任务。当存在非线性，单独使用该激活函数是不够的，但它依然可以在最终输出节点上作为激活函数用于回归任务。</p>
 <h3 id="2-3-ReLU"><a href="#2-3-ReLU" class="headerlink" title="2.3 ReLU"></a>2.3 ReLU</h3><script type="math/tex; mode=display">ReLU(x)=
-\left\{\begin{matrix} 
-  x \quad for \ x \ge 0 \\  
-  0 \quad for \ x < 0
+\left\{\begin{matrix}
+x \quad for \ x \ge 0 \\  
+0 \quad for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">ReLU'(x)=
-\left\{\begin{matrix} 
-  1 \quad for \ x \ge 0 \\  
-  0 \quad for \ x < 0
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc4.png" alt="activefunc4"></p>
+\left\{\begin{matrix}
+1 \quad for \ x \ge 0 \\  
+0 \quad for \ x < 0
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc3.png" alt="activefunc3"></p>
 <p>修正线性单元（Rectified linear unit，ReLU）是神经网络中最常用的激活函数。</p>
 <p>优点：<br>1，解决了gradient vanishing （梯度消失）问题（在正区间）<br>2，计算方便，求导方便，计算速度非常快，只需要判断输入是否大于0<br>3，收敛速度远远大于 Sigmoid函数和 tanh函数，可以加速网络训练</p>
 <p>缺点：</p>
@@ -543,7 +543,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>learning rate 太高，导致在训练过程中参数更新太大，不幸使网络进入这种状态。</li>
 </ol>
 <p>另，<strong>ReLU 激活函数在零点不可导</strong>，求导按左导数来计算，是0。</p>
-<h3 id="2-4-Sigmoid"><a href="#2-4-Sigmoid" class="headerlink" title="2.4 Sigmoid"></a>2.4 Sigmoid</h3><script type="math/tex; mode=display">Sig(x)=\frac{1}{1 + e^{-x}}</script><script type="math/tex; mode=display">Sig'(x)=Sig(x)(1-Sig(x))</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc5.png" alt="activefunc5"></p>
+<h3 id="2-4-Sigmoid"><a href="#2-4-Sigmoid" class="headerlink" title="2.4 Sigmoid"></a>2.4 Sigmoid</h3><script type="math/tex; mode=display">Sig(x)=\frac{1}{1 + e^{-x}}</script><script type="math/tex; mode=display">Sig'(x)=Sig(x)(1-Sig(x))</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc4.png" alt="activefunc4"></p>
 <p>Sigmoid 因其在 logistic 回归中的重要地位而被人熟知，值域在 0 到 1 之间。Logistic Sigmoid（或者按通常的叫法，Sigmoid）激活函数给神经网络引进了概率的概念。它的导数是非零的，并且很容易计算（是其初始输出的函数）。然而，在分类任务中，sigmoid 正逐渐被 Tanh 函数取代作为标准的激活函数，因为后者为奇函数（关于原点对称）。</p>
 <p>主要是其有一些缺点：</p>
 <ul>
@@ -551,105 +551,105 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>Sigmoid函数的output不是0均值（zero-centered）；</li>
 <li>对其解析式中含有幂函数，计算机求解时相对比较耗时。</li>
 </ul>
-<h3 id="2-5-Tanh"><a href="#2-5-Tanh" class="headerlink" title="2.5 Tanh"></a>2.5 Tanh</h3><script type="math/tex; mode=display">tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}</script><script type="math/tex; mode=display">tanh'(x)=1-tanh^2(x)</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc6.png" alt="activefunc6"></p>
+<h3 id="2-5-Tanh"><a href="#2-5-Tanh" class="headerlink" title="2.5 Tanh"></a>2.5 Tanh</h3><script type="math/tex; mode=display">tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}</script><script type="math/tex; mode=display">tanh'(x)=1-tanh^2(x)</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc5.png" alt="activefunc5"></p>
 <p>在分类任务中，双曲正切函数（Tanh）逐渐取代 Sigmoid 函数作为标准的激活函数，其具有很多神经网络所钟爱的特征。它是完全可微分的，反对称，对称中心在原点。输出均值是0，使得其收敛速度要比Sigmoid快，减少迭代次数。为了解决学习缓慢和/或梯度消失问题，可以使用这个函数的更加平缓的变体（log-log、softsign、symmetrical sigmoid 等等）.</p>
 <h3 id="2-6-Leaky-ReLU"><a href="#2-6-Leaky-ReLU" class="headerlink" title="2.6 Leaky ReLU"></a>2.6 Leaky ReLU</h3><script type="math/tex; mode=display">LeakyReLU(x)=
-\left\{\begin{matrix} 
-  x \quad &for \ x \ge 0 \\  
-  0.01 x \quad &for \ x < 0
+\left\{\begin{matrix}
+x \quad &for \ x \ge 0 \\  
+0.01 x \quad &for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">LeakyReLU'(x)=
-\left\{\begin{matrix} 
-  1 \quad &for \ x \ge 0 \\  
-  0.01 \quad &for \ x < 0
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc7.png" alt="activefunc7"></p>
+\left\{\begin{matrix}
+1 \quad &for \ x \ge 0 \\  
+0.01 \quad &for \ x < 0
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc6.png" alt="activefunc6"></p>
 <p>经典（以及广泛使用的）ReLU 激活函数的变体，带泄露修正线性单元（Leaky ReLU）的输出对负值输入有很小的坡度。由于导数总是不为零，这能减少静默神经元的出现，允许基于梯度的学习（虽然会很慢）。</p>
 <h3 id="2-7-PReLU"><a href="#2-7-PReLU" class="headerlink" title="2.7 PReLU"></a>2.7 PReLU</h3><script type="math/tex; mode=display">PReLU(x)=
-\left\{\begin{matrix} 
-  x \quad for \ x \ge 0 \\  
-  \alpha x \quad for \ x < 0
+\left\{\begin{matrix}
+x \quad for \ x \ge 0 \\  
+\alpha x \quad for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">PReLU'(x)=
-\left\{\begin{matrix} 
-  1 \quad for \ x \ge 0 \\  
-  \alpha \quad for \ x < 0
+\left\{\begin{matrix}
+1 \quad for \ x \ge 0 \\  
+\alpha \quad for \ x < 0
 \end{matrix}\right.</script><p><strong>其中$\alpha$一般取根据数据来确定.</strong></p>
-<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc8.png" alt="activefunc8"></p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc7.png" alt="activefunc7"></p>
 <p>参数化修正线性单元（Parameteric Rectified Linear Unit，PReLU）属于 ReLU 修正类激活函数的一员。它和 RReLU 以及 Leaky ReLU 有一些共同点，即为负值输入添加了一个线性项。而最关键的区别是，这个线性项的斜率实际上是在模型训练中学习到的。如果$\alpha$是一个很小的固定值（如 ai=0.01），则PReLU 退化为 Leaky ReLU（LReLU）。有实验证明：与 ReLU 相比，LReLU 对最终结果几乎没有什么影响。</p>
 <h3 id="2-8-RReLU"><a href="#2-8-RReLU" class="headerlink" title="2.8 RReLU"></a>2.8 RReLU</h3><script type="math/tex; mode=display">RReLU(x_{ji})=
-\left\{\begin{matrix} 
-  x_{ji} \quad &for \ x_{ji} \ge 0 \\  
-  \alpha_{ji} x_{ji} \quad &for \ x_{ji} < 0
+\left\{\begin{matrix}
+x_{ji} \quad &for \ x_{ji} \ge 0 \\  
+\alpha_{ji} x_{ji} \quad &for \ x_{ji} < 0
 \end{matrix}\right.</script><p>where</p>
 <script type="math/tex; mode=display">\alpha_{ji} \sim U(l,u),l<u \ and \ l,u \in [0,1)</script><script type="math/tex; mode=display">RReLU'(x)=
-\left\{\begin{matrix} 
-  1 \quad for \ x \ge 0 \\  
-  \alpha \quad for \ x < 0
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc9.png" alt="activefunc9"></p>
+\left\{\begin{matrix}
+1 \quad for \ x \ge 0 \\  
+\alpha \quad for \ x < 0
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc8.png" alt="activefunc8"></p>
 <p>随机带泄露的修正线性单元（Randomized Leaky Rectified Linear Unit，RReLU 也是 Leaky ReLU的一个变体。在 PReLU中，负值的斜率在训练中是随机的，在之后的测试中就变成了固定的了。RReLU 的亮点在于，在训练环节中，aji 是从一个均匀的分布 U(I, u) 中随机抽取的数值。</p>
-<p>这里我们要上一个经典的三者对比图：<br><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc10.png" alt="activefunc10"><br>其中 PReLU 中的 ai 是根据数据变换的；Leaky ReLU中的 ai 是固定的；RReLU中的 aji 是在一个给定的范围内随机抽取的值，这个值在测试环境就会固定下来。</p>
+<p>这里我们要上一个经典的三者对比图：<br><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc9.png" alt="activefunc10"><br>其中 PReLU 中的 ai 是根据数据变换的；Leaky ReLU中的 ai 是固定的；RReLU中的 aji 是在一个给定的范围内随机抽取的值，这个值在测试环境就会固定下来。</p>
 <h3 id="2-9-ELU"><a href="#2-9-ELU" class="headerlink" title="2.9 ELU"></a>2.9 ELU</h3><script type="math/tex; mode=display">ELU(x)=
-\left\{\begin{matrix} 
-  x \quad &for \ x \ge 0 \\  
-  \alpha (e^x-1) \quad &for \ x < 0
+\left\{\begin{matrix}
+x \quad &for \ x \ge 0 \\  
+\alpha (e^x-1) \quad &for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">ELU'(x)=
-\left\{\begin{matrix} 
-  1 \quad &for \ x \ge 0 \\  
-  \alpha e^x \quad &for \ x < 0
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc11.png" alt="activefunc11"></p>
+\left\{\begin{matrix}
+1 \quad &for \ x \ge 0 \\  
+\alpha e^x \quad &for \ x < 0
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc10.png" alt="activefunc10"></p>
 <p>指数线性单元（Exponential Linear Unit，ELU）也属于 ReLU 修正类激活函数的一员。和 PReLU 以及 RReLU 类似，为负值输入添加了一个非零输出。和其它修正类激活函数不同的是，它包括一个负指数项，从而防止静默神经元出现，导数收敛为零，从而提高学习效率。<br>根据一些研究，ELUs 分类精确度是高于 ReLUs的。ELU在正值区间的值为x本身，这样减轻了梯度弥散问题（x&gt;0区间导数处处为1），这点跟ReLU、Leaky ReLU相似。而在负值区间，ELU在输入取较小值类似于 Leaky ReLU ，理论上虽然好于 ReLU，但是实际使用中目前并没有好的证据 ELU 总是优于 ReLU。时具有软饱和的特性，提升了对噪声的鲁棒性。类似于 Leaky ReLU ，理论上虽然好于 ReLU，但是实际使用中目前并没有好的证据 ELU 总是优于 ReLU。</p>
 <h3 id="2-10-SELU"><a href="#2-10-SELU" class="headerlink" title="2.10 SELU"></a>2.10 SELU</h3><script type="math/tex; mode=display">SELU(x)=\lambda
-\left\{\begin{matrix} 
-  x \quad &for \ x \ge 0 \\  
-  \alpha (e^x-1) \quad &for \ x < 0
+\left\{\begin{matrix}
+x \quad &for \ x \ge 0 \\  
+\alpha (e^x-1) \quad &for \ x < 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">with \lambda=1.0507, \alpha=1.67326</script><script type="math/tex; mode=display">SELU'(x)=
-\left\{\begin{matrix} 
-  \lambda \quad &for \ x \ge 0 \\  
-  \lambda \alpha e^x \\ =\lambda(SELU(x)+\alpha) \quad &for \ x < 0
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc12.png" alt="activefunc12"><br>扩展指数线性单元（Scaled Exponential Linear Unit，SELU）是激活函数指数线性单元（ELU）的一个变种。其中λ和α是固定数值（分别为 1.0507 和 1.6726）。这些值背后的推论（零均值/单位方差）构成了自归一化神经网络的基础（SNN）。值看似是乱讲的，实际上是作者推导出来的，详情也可以看<a href="https://github.com/bioinf-jku/SNNs">作者的github</a>。</p>
+\left\{\begin{matrix}
+\lambda \quad &for \ x \ge 0 \\  
+\lambda \alpha e^x \\ =\lambda(SELU(x)+\alpha) \quad &for \ x < 0
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc11.png" alt="activefunc11"><br>扩展指数线性单元（Scaled Exponential Linear Unit，SELU）是激活函数指数线性单元（ELU）的一个变种。其中λ和α是固定数值（分别为 1.0507 和 1.6726）。这些值背后的推论（零均值/单位方差）构成了自归一化神经网络的基础（SNN）。值看似是乱讲的，实际上是作者推导出来的，详情也可以看<a href="https://github.com/bioinf-jku/SNNs">作者的github</a>。</p>
 <h3 id="2-11-SReLU"><a href="#2-11-SReLU" class="headerlink" title="2.11 SReLU"></a>2.11 SReLU</h3><script type="math/tex; mode=display">SReLU(x)=
-\left\{\begin{matrix} 
-  t_l + a_l(x-t_l) &for \ x \le t_l \\  
-  x &for \ t_l < x < t_r \\ t_r + a_r(x - t_r) &for \ x \ge t_r
+\left\{\begin{matrix}
+t_l + a_l(x-t_l) &for \ x \le t_l \\  
+x &for \ t_l < x < t_r \\ t_r + a_r(x - t_r) &for \ x \ge t_r
 \end{matrix}\right.</script><script type="math/tex; mode=display">SReLU'(x)=
-\left\{\begin{matrix} 
-  a_l &for \ x \le t_l \\  
-  1 &for \ t_l < x < t_r \\ 
-  a_r &for \ x \ge t_r
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc13.png" alt="activefunc13"><br>S 型整流线性激活单元（S-shaped Rectified Linear Activation Unit，SReLU）属于以 ReLU 为代表的整流激活函数族。它由三个分段线性函数组成。其中两种函数的斜度，以及函数相交的位置会在模型训练中被学习。</p>
+\left\{\begin{matrix}
+a_l &for \ x \le t_l \\  
+1 &for \ t_l < x < t_r \\
+a_r &for \ x \ge t_r
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc12.png" alt="activefunc12"><br>S 型整流线性激活单元（S-shaped Rectified Linear Activation Unit，SReLU）属于以 ReLU 为代表的整流激活函数族。它由三个分段线性函数组成。其中两种函数的斜度，以及函数相交的位置会在模型训练中被学习。</p>
 <h3 id="2-12-Hard-Sigmoid"><a href="#2-12-Hard-Sigmoid" class="headerlink" title="2.12 Hard Sigmoid"></a>2.12 Hard Sigmoid</h3><script type="math/tex; mode=display">Hard Sigmoid(x)=
 max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard Sigmoid'(x)=
-\left\{\begin{matrix} 
-  0 &for \ x \le t_l \\  
-  0.5 &for \ t_l < x < t_r \\ 
-  0 &for \ x \ge t_r
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc14.png" alt="activefunc14"><br>Hard Sigmoid 是 Logistic Sigmoid 激活函数的分段线性近似。它更易计算，这使得学习计算的速度更快，尽管首次派生值为零可能导致静默神经元/过慢的学习速率（详见 ReLU）。</p>
+\left\{\begin{matrix}
+0 &for \ x \le t_l \\  
+0.5 &for \ t_l < x < t_r \\
+0 &for \ x \ge t_r
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc13.png" alt="activefunc13"><br>Hard Sigmoid 是 Logistic Sigmoid 激活函数的分段线性近似。它更易计算，这使得学习计算的速度更快，尽管首次派生值为零可能导致静默神经元/过慢的学习速率（详见 ReLU）。</p>
 <h3 id="2-13-Hard-Tanh"><a href="#2-13-Hard-Tanh" class="headerlink" title="2.13 Hard Tanh"></a>2.13 Hard Tanh</h3><script type="math/tex; mode=display">Hard Tanh(x)=
-\left\{\begin{matrix} 
-  -1 &for \ x < -1 \\  
-  x &for \ -1 \le x \le 1 \\ 
-  1 &for \ x > 1
+\left\{\begin{matrix}
+-1 &for \ x < -1 \\  
+x &for \ -1 \le x \le 1 \\
+1 &for \ x > 1
 \end{matrix}\right.</script><script type="math/tex; mode=display">Hard Tanh'(x)=
-\left\{\begin{matrix} 
-  0 &for \ x < -1 \\  
-  1 &for \ -1 \le x \le 1 \\ 
-  0 &for \ x > 1
-\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc15.png" alt="activefunc15"></p>
+\left\{\begin{matrix}
+0 &for \ x < -1 \\  
+1 &for \ -1 \le x \le 1 \\
+0 &for \ x > 1
+\end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc14.png" alt="activefunc14"></p>
 <p>Hard Tanh 是 Tanh 激活函数的线性分段近似。相较而言，它更易计算，这使得学习计算的速度更快，尽管首次派生值为零可能导致静默神经元/过慢的学习速率（详见 ReLU）。</p>
-<h3 id="2-14-LeCun-Tanh"><a href="#2-14-LeCun-Tanh" class="headerlink" title="2.14 LeCun Tanh"></a>2.14 LeCun Tanh</h3><script type="math/tex; mode=display">LeCun Tanh(x)=1.7519tanh(\frac{2}{3} x)</script><script type="math/tex; mode=display">LeCun Tanh'(x)=1.7519 * \frac{2}{3} (1 - tanh^2(\frac{2}{3} x))</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc16.png" alt="activefunc16"></p>
+<h3 id="2-14-LeCun-Tanh"><a href="#2-14-LeCun-Tanh" class="headerlink" title="2.14 LeCun Tanh"></a>2.14 LeCun Tanh</h3><script type="math/tex; mode=display">LeCun Tanh(x)=1.7519tanh(\frac{2}{3} x)</script><script type="math/tex; mode=display">LeCun Tanh'(x)=1.7519 * \frac{2}{3} (1 - tanh^2(\frac{2}{3} x))</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc15.png" alt="activefunc15"></p>
 <p>LeCun Tanh（也被称作 Scaled Tanh）是 Tanh 激活函数的扩展版本。它具有以下几个可以改善学习的属性：f(± 1) = ±1；二阶导数在 x=1 最大化；且有效增益接近 1。</p>
-<h3 id="2-15-ArcTan"><a href="#2-15-ArcTan" class="headerlink" title="2.15 ArcTan"></a>2.15 ArcTan</h3><script type="math/tex; mode=display">ArcTan(x)=tan^{-1}(x)</script><script type="math/tex; mode=display">ArcTan'(x)=\frac{1}{x^2 + 1}</script><p><img src="深度模型中的激活函数们.resources/32DC77F2-3E16-464C-A477-BCCF6EE22BEE.png" alt="4750b64c7e1471b58e36b2774392f5f5"><br>视觉上类似于双曲正切（Tanh）函数，ArcTan 激活函数更加平坦，这让它比其他双曲线更加清晰。在默认情况下，其输出范围在-π/2 和π/2 之间。其导数趋向于零的速度也更慢，这意味着学习的效率更高。但这也意味着，导数的计算比 Tanh 更加昂贵。</p>
+<h3 id="2-15-ArcTan"><a href="#2-15-ArcTan" class="headerlink" title="2.15 ArcTan"></a>2.15 ArcTan</h3><script type="math/tex; mode=display">ArcTan(x)=tan^{-1}(x)</script><script type="math/tex; mode=display">ArcTan'(x)=\frac{1}{x^2 + 1}</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc16.png" alt="activefunc16"><br>视觉上类似于双曲正切（Tanh）函数，ArcTan 激活函数更加平坦，这让它比其他双曲线更加清晰。在默认情况下，其输出范围在-π/2 和π/2 之间。其导数趋向于零的速度也更慢，这意味着学习的效率更高。但这也意味着，导数的计算比 Tanh 更加昂贵。</p>
 <h3 id="2-16-Softsign"><a href="#2-16-Softsign" class="headerlink" title="2.16 Softsign"></a>2.16 Softsign</h3><script type="math/tex; mode=display">Softsign(x)=\frac{x}{1 + |x|}</script><script type="math/tex; mode=display">Softsign'(x)=\frac{1}{(|x| + 1)^2}</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc17.png" alt="activefunc17"></p>
 <p>Softsign 是 Tanh 激活函数的另一个替代选择。就像 Tanh 一样，Softsign 是反对称、去中心、可微分，并返回-1 和 1 之间的值。其更平坦的曲线与更慢的下降导数表明它可以更高效地学习。另一方面，导数的计算比 Tanh 更麻烦。</p>
 <h3 id="2-17-SoftPlus"><a href="#2-17-SoftPlus" class="headerlink" title="2.17 SoftPlus"></a>2.17 SoftPlus</h3><script type="math/tex; mode=display">SoftPlus(x)=ln(1 + e^x)</script><script type="math/tex; mode=display">SoftPlus'(x)=\frac{1}{1 + e ^{-x}}</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc18.png" alt="activefunc18"></p>
 <p>作为 ReLU 的一个不错的替代选择，SoftPlus 能够返回任何大于 0 的值。与 ReLU 不同，SoftPlus 的导数是连续的、非零的，无处不在，从而防止出现静默神经元。然而，SoftPlus 另一个不同于 ReLU 的地方在于其不对称性，不以零为中心，这兴许会妨碍学习。此外，由于导数常常小于 1，也可能出现梯度消失的问题。</p>
 <h3 id="2-18-Signum"><a href="#2-18-Signum" class="headerlink" title="2.18 Signum"></a>2.18 Signum</h3><script type="math/tex; mode=display">Signum(x)=
-\left\{\begin{matrix} 
-  1 &for \ x > 0 \\  
-  -1 &for \ x < 0 \\ 
-  0 &for \ x = 0
+\left\{\begin{matrix}
+1 &for \ x > 0 \\  
+-1 &for \ x < 0 \\
+0 &for \ x = 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">Signum'(x)=
-\left\{\begin{matrix} 
-  0 &for \ x \ne 0 \\  
-  ? &for \ x = 0
+\left\{\begin{matrix}
+0 &for \ x \ne 0 \\  
+? &for \ x = 0
 \end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc19.png" alt="activefunc19"></p>
 <p>激活函数 Signum（或者简写为 Sign）是二值阶跃激活函数的扩展版本。它的值域为 [-1,1]，原点值是 0。尽管缺少阶跃函数的生物动机，Signum 依然是反对称的，这对激活函数来说是一个有利的特征。</p>
 <h3 id="2-19-Bent-Identity"><a href="#2-19-Bent-Identity" class="headerlink" title="2.19 Bent Identity"></a>2.19 Bent Identity</h3><script type="math/tex; mode=display">Bent Identity(x)=\frac{\sqrt{x ^ 2 + 1} - 1}{2} + x</script><script type="math/tex; mode=display">Bent Identity'(x)=\frac{x}{2 \sqrt{x ^ 2 + 1}} + 1</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc20.png" alt="activefunc20"><br>激活函数 Bent Identity 是介于 Identity 与 ReLU 之间的一种折衷选择。它允许非线性行为，尽管其非零导数有效提升了学习并克服了与 ReLU 相关的静默神经元的问题。由于其导数可在 1 的任意一侧返回值，因此它可能容易受到梯度爆炸和消失的影响。</p>
@@ -657,23 +657,23 @@ max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard
 <h3 id="2-21-Log-Log"><a href="#2-21-Log-Log" class="headerlink" title="2.21 Log Log"></a>2.21 Log Log</h3><script type="math/tex; mode=display">Log Log(x)=1 - e^{-e^x}</script><script type="math/tex; mode=display">Log Log'(x)=e^x(e^{-e^x})=e^{x-e^x}</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc22.png" alt="activefunc22"><br>Log Log 激活函数（由上图 f(x) 可知该函数为以 e 为底的嵌套指数函数）的值域为 [0,1]，Complementary Log Log 激活函数有潜力替代经典的 Sigmoid 激活函数。该函数饱和地更快，且零点值要高于 0.5。</p>
 <h3 id="2-22-Gaussian"><a href="#2-22-Gaussian" class="headerlink" title="2.22 Gaussian"></a>2.22 Gaussian</h3><script type="math/tex; mode=display">Gaussian(x)=e^{-x^2}</script><script type="math/tex; mode=display">Gaussian'(x)=-2xe^{-x^2}</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc23.png" alt="activefunc23"><br>高斯激活函数（Gaussian）并不是径向基函数网络（RBFN）中常用的高斯核函数，高斯激活函数在多层感知机类的模型中并不是很流行。该函数处处可微且为偶函数，但一阶导会很快收敛到零。</p>
 <h3 id="2-23-Absolute"><a href="#2-23-Absolute" class="headerlink" title="2.23 Absolute"></a>2.23 Absolute</h3><script type="math/tex; mode=display">Absolute(x)=|x|</script><script type="math/tex; mode=display">Absolute'(x)=
-\left\{\begin{matrix} 
-  -1 &for \ x < 0 \\  
-  ? &for \ x = 0 \\
-  1 &for x > 0
+\left\{\begin{matrix}
+-1 &for \ x < 0 \\  
+? &for \ x = 0 \\
+1 &for x > 0
 \end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc24.png" alt="activefunc24"><br>顾名思义，绝对值（Absolute）激活函数返回输入的绝对值。该函数的导数除了零点外处处有定义，且导数的量值处处为 1。这种激活函数一定不会出现梯度爆炸或消失的情况。</p>
 <h3 id="2-24-Sinusoid"><a href="#2-24-Sinusoid" class="headerlink" title="2.24 Sinusoid"></a>2.24 Sinusoid</h3><script type="math/tex; mode=display">Sinusoid(x)=sin(x)</script><script type="math/tex; mode=display">Sinusoid'(x)=cos(x)</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc25.png" alt="activefunc25"></p>
 <p>如同余弦函数，Sinusoid（或简单正弦函数）激活函数为神经网络引入了周期性。该函数的值域为 [-1,1]，且导数处处连续。此外，Sinusoid 激活函数为零点对称的奇函数。</p>
 <h3 id="2-25-Cos"><a href="#2-25-Cos" class="headerlink" title="2.25 Cos"></a>2.25 Cos</h3><script type="math/tex; mode=display">Cos(x)=cos(x)</script><script type="math/tex; mode=display">Cos'(x)=sin(x)</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc26.png" alt="activefunc26"></p>
 <p>如同正弦函数，余弦激活函数（Cos/Cosine）为神经网络引入了周期性。它的值域为 [-1,1]，且导数处处连续。和 Sinusoid 函数不同，余弦函数为不以零点对称的偶函数。</p>
 <h3 id="2-26-Sinc"><a href="#2-26-Sinc" class="headerlink" title="2.26 Sinc"></a>2.26 Sinc</h3><script type="math/tex; mode=display">Sinc(x)=
-\left\{\begin{matrix} 
-  1 &for \ x = 0 \\
-  \frac{sin(x)}{x} &for x \ne 0
+\left\{\begin{matrix}
+1 &for \ x = 0 \\
+\frac{sin(x)}{x} &for x \ne 0
 \end{matrix}\right.</script><script type="math/tex; mode=display">Sinc'(x)=
-\left\{\begin{matrix} 
-  0 &for \ x = 0 \\
-  \frac{cos(x)}{x} - \frac{sin(x)}{x^2} &for x \ne 0
+\left\{\begin{matrix}
+0 &for \ x = 0 \\
+\frac{cos(x)}{x} - \frac{sin(x)}{x^2} &for x \ne 0
 \end{matrix}\right.</script><p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/notes/activefunc27.png" alt="activefunc27"><br>Sinc 函数（全称是 Cardinal Sine）在信号处理中尤为重要，因为它表征了矩形函数的傅立叶变换（Fourier transform）。作为一种激活函数，它的优势在于处处可微和对称的特性，不过它比较容易产生梯度消失的问题。</p>
 <p><strong>参考文章</strong><br><a href="https://www.cnblogs.com/wj-1314/p/12015278.html">深度学习笔记——常用的激活（激励）函数</a><br><a href="https://dashee87.github.io/deep%20learning/visualising-activation-functions-in-neural-networks/">Visualising Activation Functions in Neural Networks</a></p>
 
@@ -760,6 +760,10 @@ max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/faissrecall.html" rel="prev" title="Faiss 召回详解">
+                Faiss 召回详解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -881,7 +885,7 @@ max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -903,7 +907,7 @@ max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1006,7 +1010,7 @@ max(0, min(1, \frac{x+1}{2}))</script><script type="math/tex; mode=display">Hard
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共218.7k字</span>
+  <span class="post-count">博客全站共222.8k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

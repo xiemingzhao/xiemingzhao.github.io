@@ -1,3 +1,4 @@
+https://www.xiemingzhao.com/posts/faissrecall.html
 https://www.xiemingzhao.com/posts/activefunc.html
 https://www.xiemingzhao.com/posts/cuckooFilter.html
 https://www.xiemingzhao.com/posts/bloomFilter.html
@@ -7,4 +8,3 @@ https://www.xiemingzhao.com/posts/vecRetrieval.html
 https://www.xiemingzhao.com/posts/bitArithmetic.html
 https://www.xiemingzhao.com/posts/sparseMatrix.html
 https://www.xiemingzhao.com/posts/dcnpaper.html
-https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html

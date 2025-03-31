@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/faissrecall.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/cuckooFilter.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/bloomFilter.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/activefunc.html</loc>
+    <lastmod>2025-03-31</lastmod>
+  </url>
+  <url>
     <loc>https://www.xiemingzhao.com/posts/IntroductionofLTR.html</loc>
     <lastmod>2025-03-30</lastmod>
   </url>
@@ -18,10 +54,6 @@
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/bitArithmetic.html</loc>
-    <lastmod>2025-03-30</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
     <lastmod>2025-03-30</lastmod>
   </url>
   <url>
@@ -89,14 +121,6 @@
     <lastmod>2025-03-30</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/cuckooFilter.html</loc>
-    <lastmod>2025-03-30</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/bloomFilter.html</loc>
-    <lastmod>2025-03-30</lastmod>
-  </url>
-  <url>
     <loc>https://www.xiemingzhao.com/posts/ABTestsignificancecomputing.html</loc>
     <lastmod>2025-03-30</lastmod>
   </url>
@@ -109,23 +133,19 @@
     <lastmod>2025-03-30</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/cd33fbd0.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
     <loc>https://www.xiemingzhao.com/posts/50170875.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/activefunc.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/6ea3699c.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/cd33fbd0.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/57e6146c.html</loc>
+    <lastmod>2025-01-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/6ea3699c.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
@@ -149,10 +169,6 @@
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/99410703.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
     <loc>https://www.xiemingzhao.com/posts/61333c5e.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
@@ -161,19 +177,7 @@
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/diffofRFGBDTXGBLGB.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/99410703.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
 </urlset> 

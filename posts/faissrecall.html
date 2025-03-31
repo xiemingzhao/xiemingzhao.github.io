@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="Faiss,召回," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言向量检索普遍应用于搜索、推荐、以及CV领域，往往候选集合两集都在千万甚至上亿规模。那么，速度很容易成为瓶颈，这时候就需要牺牲一定的精度来换取速度。于是诞生了许多ANN（近邻检索）算法，例如HNSW就是其中一种。但是，不同的ANN具有各自的优劣势，本文主要介绍faiss这一工业界普遍使用的向量检索框架。 Faiss的是由FaceBook的AI团队公开的项目Facebook AI Simila">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Faiss 召回详解">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/faissrecall.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言向量检索普遍应用于搜索、推荐、以及CV领域，往往候选集合两集都在千万甚至上亿规模。那么，速度很容易成为瓶颈，这时候就需要牺牲一定的精度来换取速度。于是诞生了许多ANN（近邻检索）算法，例如HNSW就是其中一种。但是，不同的ANN具有各自的优劣势，本文主要介绍faiss这一工业界普遍使用的向量检索框架。 Faiss的是由FaceBook的AI团队公开的项目Facebook AI Simila">
+<meta property="og:locale">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss0.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss1.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss2.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss3.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss4.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss5.png">
+<meta property="og:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss6.png">
+<meta property="article:published_time" content="2020-09-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-31T17:30:23.242Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="Faiss">
+<meta property="article:tag" content="召回">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/faissrecall.html"/>
+
+
+
+
+
+  <title>Faiss 召回详解 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/faissrecall.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Faiss 召回详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-05T00:00:00+08:00">
+                2020-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/faissrecall.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/faissrecall.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>向量检索普遍应用于搜索、推荐、以及CV领域，往往候选集合两集都在千万甚至上亿规模。那么，速度很容易成为瓶颈，这时候就需要牺牲一定的精度来换取速度。于是诞生了许多ANN（近邻检索）算法，例如HNSW就是其中一种。但是，不同的ANN具有各自的优劣势，本文主要介绍<code>faiss</code>这一工业界普遍使用的向量检索框架。</p>
+<p>Faiss的是由FaceBook的AI团队公开的项目<a href="https://github.com/facebookresearch/faiss">Facebook AI Similarity Search</a>，是针对大规模相似度检索问题开发的一个工具，使用C++编写，有python接口，对10亿量级的索引可以做到毫秒级检索的性能。</p>
+<p>其核心思想：<strong>把候选向量集封装成一个index数据库，加速检索TopK相似向量的过程，尽量维持召回率，其中部分索引支持GPU构建。</strong></p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>Faiss框架中，需要了解<code>k-means</code>、<code>PCA</code>以及<code>PQ</code>等算法。但最需要了解的2个核心原理便是：</p>
+<ul>
+<li>Product Quantizer, 简称<code>PQ</code>.</li>
+<li>Inverted File System, 简称<code>IVF</code>.</li>
+</ul>
+<h3 id="2-1-乘积量化-PQ-原理"><a href="#2-1-乘积量化-PQ-原理" class="headerlink" title="2.1 乘积量化(PQ)原理"></a>2.1 乘积量化(PQ)原理</h3><p>矢量量化方法，即<code>vector quantization</code>，其具体定义为: <strong>将向量空间的点用一个有限子集来进行编码的过程</strong>。常见的聚类算法，都是一种矢量量化方法。向量量化方法又以<code>乘积量化</code>(PQ, Product Quantization)最为典型。</p>
+<p>乘积量化的<code>核心思想</code>:<strong>分段（划分子空间）和聚类，KMeans是PQ乘积量化子空间数目为1的特例。</strong></p>
+<p>PQ乘积量化生成码本和量化的过程可以用如下图示来说明：</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss0.png" alt="faissrecall0"></p>
+<h5 id="在训练阶段"><a href="#在训练阶段" class="headerlink" title="在训练阶段:"></a>在训练阶段:</h5><ol>
+<li>针对N个训练样本，假设样本维度为128维，我们将其切分为4个子空间，则每一个子空间的维度为32维;</li>
+<li>然后我们在每一个子空间中，对子向量采用K-Means对其进行聚类(图中示意聚成256类)，这样每一个子空间都能得到一个码本，这步称为<code>Clustering</code>。</li>
+<li>这样训练样本的每个子段，都可以用子空间的聚类中心来近似，对应的编码即为类中心的ID(8bit)，这步称为 <code>Assign</code>。</li>
+<li>如图所示，通过这样一种编码方式，训练样本仅使用的很短的一个编码得以表示，从而达到量化的目的。</li>
+<li>对于待编码的样本，将它进行相同的操作，在各个子空间里使用距离它们最近类中心的id来表示它们，即完成了编码。</li>
+</ol>
+<p>通过下图可以看到，作者做了相应的实验，最终发现，压缩后的类中心ID设置为<strong>m=8bit（即上述的256类）效果最好</strong>。</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss1.png" alt="faissrecall1"></p>
+<h4 id="在查询阶段"><a href="#在查询阶段" class="headerlink" title="在查询阶段:"></a>在查询阶段:</h4><p>下面过程示意的是查询样本来到时，以<code>非对称距离</code>的方式(红框标识出来的部分)计算到dataset样本间的过程：</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss2.png" alt="faissrecall2"></p>
+<ol>
+<li>按生成码本的过程，将其同样分成相同的子段，然后在每个子空间中，计算子段到该子空间中所有聚类中心得距离，得到距离表（维度4x256）。</li>
+<li>在计算库中某个样本到查询向量的距离时，比如编码为(124, 56, 132, 222)这个样本，我们分别到距离表中取各个子段对应的距离即可。</li>
+<li>所有子段对应的距离取出来后，将这些子段的距离求和相加，即得到该样本到查询样本间的<code>非对称距离</code>。</li>
+<li>所有距离算好后，排序后即得到我们最终想要的结果。（实际上距离计算节省了，但是依然要遍历排序查找）</li>
+</ol>
+<p>PQ乘积量化能够<code>加速索引</code>的原理：<strong>即将全样本的距离计算，转化为到子空间类中心的距离计算。</strong></p>
+<ul>
+<li>比如上面所举的例子，原本brute-force search的方式计算距离的次数随样本数目N成线性增长，但是经过PQ编码后，对于耗时的距离计算，只要计算4x256次，<strong>几乎可以忽略此时间的消耗。</strong></li>
+<li>另外，从上图也可以看出，对特征进行编码后，可以用一个相对比较短的编码来表示样本，自然对于<strong>内存的消耗要大大小于 brute-force search 的方式</strong>。</li>
+</ul>
+<p>在某些特殊的场合，我们总是希望获得精确的距离，而不是近似的距离，并且我们总是喜欢获取向量间的余弦相似度（余弦相似度距离范围在[-1,1]之间，便于设置固定的阈值），针对这种场景，<strong>可以针对PQ乘积量化得到的前top@K做一个brute-force search的排序</strong>。</p>
+<h3 id="2-2-倒排乘积量化（IVFPQ）原理"><a href="#2-2-倒排乘积量化（IVFPQ）原理" class="headerlink" title="2.2  倒排乘积量化（IVFPQ）原理"></a>2.2  倒排乘积量化（IVFPQ）原理</h3><p>如果向量比较多，虽然降低了距离的计算复杂度，但是依然要便利所有的向量，需要进一步优化。<code>倒排PQ乘积量化(IVFPQ)</code>是PQ乘积量化的更进一步加速版。</p>
+<p>其加速的本质依然是<strong>加速原理：为了加快查找的速度，几乎所有的ANN方法都是通过对全空间分割，将其分割成很多小的子空间，在搜索的时候，通过某种方式，快速锁定在某一（几）子空间，然后在该（几个）子空间里做遍历</strong>。</p>
+<p>仔细观察PQ乘积量化存在一定的<code>优化空间</code>：</p>
+<ul>
+<li>实际上我们感兴趣的是那些跟查询样本相近的样本（姑且称这样的区域为<code>感兴趣区域</code>），也就是说老老实实挨个相加其实做了很多的无用功。如果能够通过某种手段<strong>快速将全局遍历锁定为感兴趣区域，则可以舍去不必要的全局计算以及排序。</strong></li>
+<li>倒排PQ乘积量化的”倒排“，正是这样一种思想的体现，在具体实施手段上，采用的是通过<strong>聚类的方式实现感兴趣区域的快速定位</strong>，在倒排PQ乘积量化中，聚类可以说应用得淋漓尽致。</li>
+</ul>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss3.png" alt="faissrecall3"></p>
+<p>如上图所示：<strong>在PQ乘积量化之前，增加了一个粗量化过程。</strong></p>
+<h4 id="具体地"><a href="#具体地" class="headerlink" title="具体地:"></a>具体地:</h4><ol>
+<li>先对N个训练样本采用<code>KMeans聚类</code>，这里聚类的数目一般设置得不应过大，<strong>一般设置为1024差不多</strong>，这种可以以比较快的速度完成聚类过程。</li>
+<li>得到了聚类中心后，针对每一个样本$x_i$，找到其距离最近的类中心$c_i$后，两者相减得到样本$x_i$的<code>残差向量(x_i-c_i)</code>;</li>
+<li>后面剩下的过程，就是<strong>针对$(x_i-c_i)$的PQ乘积量化过程</strong>。</li>
+</ol>
+<p>在查询的时候，通过相同的粗量化，可以快速定位到查询向量属于哪个$c_i$（即在哪一个感兴趣区域），也可以是多个感兴趣聚类中心，然后在该感兴趣区域按上面所述的 P Q乘积量化距离计算方式计算距离。整体流程如下图所示。</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss4.png" alt="faissrecall4"></p>
+<h3 id="2-3-最优乘积量化（OPQ）"><a href="#2-3-最优乘积量化（OPQ）" class="headerlink" title="2.3 最优乘积量化（OPQ）"></a>2.3 最优乘积量化（OPQ）</h3><p>最优乘积量化（Optimal Product Quantization, OPQ）是PQ的一种改进版本。其改进体现在，<strong>致力于在子空间分割时，对各子空间的方差进行均衡</strong>。</p>
+<p>用于检索的原始特征维度较高，所以实际在使用PQ等方法构建索引的时候，常会对高维的特征使用<strong>PCA等降维</strong>方法对特征先做降维处理。这样降维预处理，可以达到两个<code>目的</code>：</p>
+<ul>
+<li>一是<strong>降低特征维度</strong>；</li>
+<li>二是利用PCA使得在对向量进行子段切分的时候要求特征<strong>各个维度尽可能不相关</strong>。</li>
+</ul>
+<p>但是这么做了后，在切分子段的时候，采用顺序切分子段仍然存在一定的问题，这个问题可以借用ITQ中的一个二维平面的例子加以说明：</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss5.png" alt="faissrecall5"></p>
+<p><strong>这个问题就是：</strong></p>
+<ul>
+<li>如上面a图所示，对于PCA降维后的二维空间，假设在做PQ的时候，将子段数目设置为2段，即切分成x和y两个子向量，然后分别在x和y上做聚类（假设聚类中心设置为2）。</li>
+<li>对a图和c图聚类的结果进行比较，可以明显的发现，<strong>a图在y方向上聚类的效果明显差于c图</strong>，而PQ又是采用聚类中心来近似原始向量（这里指降维后的向量），也就是c图是我们需要的结果。</li>
+</ul>
+<blockquote>
+<p>这个问题可以转化为数据方差来描述：<strong>在做PQ编码时，对于切分的各个子空间，我们应尽可能使得各个子空间的方差比较接近，最理想的情况是各个子空间的方差都相等。</strong></p>
+</blockquote>
+<p><strong>解决办法：</strong><br>OPQ致力于解决的问题正是对各个子空间方差的均衡。思想主要是<strong>在聚类的时候对聚类中心寻找对应的最优旋转矩阵，使得所有子空间中各个数据点到对应子空间的类中心的L2损失的求和最小</strong>。具体可以分为非参求解方法和带参求解方法，这里不再赘述。</p>
+<h2 id="3-code"><a href="#3-code" class="headerlink" title="3 code"></a>3 code</h2><p>注意faiss包的安装：<code>conda install faiss-cpu -c pytorch</code></p>
+<p><strong>Flat ：暴力检索</strong></p>
+<blockquote>
+<p>优点：最准确的，召回率最高；<br>缺点：速度慢，占内存大。<br>使用情况：向量候选集很少，在50万以内，并且内存不紧张。</p>
+</blockquote>
+<p><strong>IVFx Flat ：倒排暴力检索</strong></p>
+<blockquote>
+<p>优点：IVF主要利用倒排的思想，会大大减少了检索的时间。具体可以拿出每个聚类中心下的向量ID，每个中心ID后面挂上一堆非中心向量，每次查询向量的时候找到最近的几个中心ID，分别搜索这几个中心下的非中心向量。通过减小搜索范围，提升搜索效率。<br>缺点：速度也还不是很快。<br>使用情况：向量候选集很少，在50万以内，并且内存不紧张。</p>
+</blockquote>
+<p><strong>PQx ：乘积量化</strong></p>
+<blockquote>
+<p>优点：利用乘积量化的方法，改进了普通检索，将一个向量的维度切成x段，每段分别进行检索，每段向量的检索结果取交集后得出最后的TopK。因此速度很快，而且占用内存较小，召回率也相对较高。<br>缺点：召回率相较于暴力检索，下降较多。<br>使用情况：内存及其稀缺，并且需要较快的检索速度，不那么在意召回率</p>
+</blockquote>
+<p><strong>IVFxPQy 倒排乘积量化</strong></p>
+<blockquote>
+<p>优点：工业界大量使用此方法，各项指标都均可以接受，利用乘积量化的方法，改进了IVF的k-means，将一个向量的维度切成x段，每段分别进行k-means再检索。<br>缺点：集百家之长，自然也集百家之短<br>使用情况：一般来说，各方面没啥特殊的极端要求的话，最推荐使用该方法！</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> faiss</span><br><span class="line"><span class="keyword">from</span> scipy.cluster.vq <span class="keyword">import</span> vq, kmeans2</span><br><span class="line"><span class="keyword">from</span> scipy.spatial.distance <span class="keyword">import</span> cdist</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">vec, M, Ks</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    :param vec: 向量</span></span><br><span class="line"><span class="string">    :param M: 子向量组数</span></span><br><span class="line"><span class="string">    :param Ks: 每组向量聚类个数</span></span><br><span class="line"><span class="string">    :return: codeword: [M, Ks, Ds]，</span></span><br><span class="line"><span class="string">        codeword[m][k]表示第m组子向量第k个子向量所属的聚类中心向量</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    Ds = <span class="built_in">int</span>(vec.shape[<span class="number">1</span>] / M)</span><br><span class="line">    codeword = np.empty((M, Ks, Ds), np.float32)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="built_in">range</span>(M):</span><br><span class="line">        vec_sub = vec[:, m * Ds: (m + <span class="number">1</span>) * Ds]</span><br><span class="line">        <span class="comment"># 第m组子向量vec_sub聚成Ks类</span></span><br><span class="line">        <span class="comment"># kmeans2返回两个结果，第一个是原始向量归属类目的中心向量，第二个是类目ID</span></span><br><span class="line">        codeword[m], label = kmeans2(vec_sub, Ks)</span><br><span class="line">    <span class="keyword">return</span> codeword</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">codeword, vec</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    :param codeword: 码本，shape为[M, Ks, Ds]</span></span><br><span class="line"><span class="string">    :param vec: 原始向量</span></span><br><span class="line"><span class="string">    :return: pqcode: pq编码结果,</span></span><br><span class="line"><span class="string">        shape为[N, M]，每个原始向量用M组子向量的聚类中心ID表示</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    M, Ks, Ds = codeword.shape</span><br><span class="line">    <span class="comment"># pq编码shape为[N, M]</span></span><br><span class="line">    pqcode = np.empty((vec.shape[<span class="number">0</span>], M), np.int64)</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="built_in">range</span>(M):</span><br><span class="line">        vec_sub = vec[:, m * Ds: (m + <span class="number">1</span>) * Ds]</span><br><span class="line">        <span class="comment"># 第m组子向量</span></span><br><span class="line">        <span class="comment"># 第m组子向量中每个子向量在第m个码本中查找距离最近的</span></span><br><span class="line">        pqcode[:, m], dist = vq(vec_sub, codeword[m])</span><br><span class="line">    <span class="keyword">return</span> pqcode</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">codeword, pqcode, query</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    :param codeword:</span></span><br><span class="line"><span class="string">    :param pqcode: pq编码结果, shape为[N, M]，每个原始向量用M组子向量的聚类中心ID表示</span></span><br><span class="line"><span class="string">    :param query: 查询向量[1, d]</span></span><br><span class="line"><span class="string">    :return: dist：查询向量与原始向量的距离，shape为[N,]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    M, Ks, Ds = codeword.shape</span><br><span class="line">    <span class="comment"># 距离向量表, [M, Ks]</span></span><br><span class="line">    dist_table = np.empty((M, Ks))</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> <span class="built_in">range</span>(M):</span><br><span class="line">        query_sub = query[m * Ds: (m + <span class="number">1</span>) * Ds]</span><br><span class="line">        <span class="comment"># query_sub向量与第m个码本每个向量距离</span></span><br><span class="line">        dist_table[m, :] = cdist([query_sub], codeword[m], <span class="string">&#x27;sqeuclidean&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># dist_table[range(M), pqcode] 为 query向量与原始向量在每个子向量的聚类，shape为[N, M]</span></span><br><span class="line">    <span class="comment"># 每组子向量距离相加</span></span><br><span class="line">    dist = np.<span class="built_in">sum</span>(dist_table[<span class="built_in">range</span>(M), pqcode], axis=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> dist</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">PQmain</span>():</span><br><span class="line">    <span class="comment"># 数据量</span></span><br><span class="line">    N = <span class="number">50000</span></span><br><span class="line">    <span class="comment"># 向量维度</span></span><br><span class="line">    d = <span class="number">128</span></span><br><span class="line">    <span class="comment"># 每组子向量聚类个数</span></span><br><span class="line">    Ks = <span class="number">32</span></span><br><span class="line">    <span class="comment"># 训练向量[N, d]</span></span><br><span class="line">    vec_train = np.random.random((N, d))</span><br><span class="line">    <span class="comment"># 查询向量[1, d]</span></span><br><span class="line">    <span class="comment"># mock 第100个是距离查询向量最近的</span></span><br><span class="line">    selected_vec = vec_train[<span class="number">100</span>]</span><br><span class="line">    query_vec = selected_vec + [np.random.uniform(-<span class="number">0.001</span>, <span class="number">0.001</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(d)]</span><br><span class="line">    query = np.random.random((<span class="number">1</span>, d))</span><br><span class="line">    <span class="comment"># 子向量组数</span></span><br><span class="line">    M = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对原始向量划分子向量组，并对每组子向量进行聚类</span></span><br><span class="line">    codeword = train(vec_train, M, Ks)</span><br><span class="line">    <span class="comment"># pq编码</span></span><br><span class="line">    pqcode = encode(codeword, vec_train)</span><br><span class="line">    <span class="comment"># 查询向量</span></span><br><span class="line">    dist = search(codeword, pqcode, query_vec)</span><br><span class="line"></span><br><span class="line">    sorted_dist = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(dist), key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>])</span><br><span class="line">    <span class="built_in">print</span>(sorted_dist[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_IndexFlatL2</span>(<span class="params">vec_train, query, top_k=<span class="number">5</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    暴力检索</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    N, d = vec_train.shape</span><br><span class="line">    <span class="comment"># 1. 创建索引</span></span><br><span class="line">    index = faiss.IndexFlatL2(d)</span><br><span class="line">    <span class="comment"># 2. 添加数据集</span></span><br><span class="line">    index.add(vec_train)</span><br><span class="line">    <span class="comment"># 3. 检索</span></span><br><span class="line">    dist_list, label_list = index.search(np.array([query]), k=top_k)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;FlatL2 recall top %d is&quot;</span> % top_k + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;dist:&quot;</span> + <span class="built_in">str</span>(dist_list))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;index:&quot;</span> + <span class="built_in">str</span>(label_list))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_IndexIVFFlat</span>(<span class="params">vec_train, query_vec, top_k=<span class="number">5</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过创建倒排索引优化</span></span><br><span class="line"><span class="string">    流程：使用k-means对train向量进行聚类，查询时query_vec所归属的类目中进行检索</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    nlist = <span class="number">100</span>  <span class="comment"># 聚类中心的个数</span></span><br><span class="line">    N, d = vec_train.shape</span><br><span class="line">    quantizer = faiss.IndexFlatL2(d)  <span class="comment"># the other index</span></span><br><span class="line">    index = faiss.IndexIVFFlat(quantizer, d, nlist, faiss.METRIC_L2)</span><br><span class="line">    <span class="comment"># 添加 训练集</span></span><br><span class="line">    index.train(vec_train)</span><br><span class="line">    index.add(vec_train)</span><br><span class="line">    <span class="comment"># 检索</span></span><br><span class="line">    query_vec = np.reshape(query_vec, [-<span class="number">1</span>,d])</span><br><span class="line">    D, I = index.search(query_vec, top_k)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;IVFFlat recall top %d is&quot;</span> % top_k + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;dist:&quot;</span> + <span class="built_in">str</span>(D))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;index:&quot;</span> + <span class="built_in">str</span>(I))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_IndexIVFPQ</span>(<span class="params">vec_train, query_vec, top_k=<span class="number">10</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过创建倒排索引优化</span></span><br><span class="line"><span class="string">    流程：使用k-means对train向量进行聚类，查询时query_vec所归属的类目中进行检索</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    nlist = <span class="number">100</span>  <span class="comment"># 聚类中心的个数</span></span><br><span class="line">    m = <span class="number">8</span></span><br><span class="line">    N, d = vec_train.shape</span><br><span class="line">    quantizer = faiss.IndexFlatL2(d)  <span class="comment"># the other index</span></span><br><span class="line">    index = faiss.IndexIVFPQ(quantizer, d, nlist, m, <span class="number">8</span>)</span><br><span class="line">    <span class="comment"># 添加 训练集</span></span><br><span class="line">    index.train(vec_train)</span><br><span class="line">    index.add(vec_train)</span><br><span class="line">    <span class="comment"># 检索</span></span><br><span class="line">    query_vec = np.reshape(query_vec, [-<span class="number">1</span>,d])</span><br><span class="line">    D, I = index.search(query_vec, top_k)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">8</span> + <span class="string">&quot;IVFPQ recall top %d is&quot;</span> % top_k+<span class="string">&quot;=&quot;</span>*<span class="number">8</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;dist:&quot;</span> + <span class="built_in">str</span>(D))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;index:&quot;</span> + <span class="built_in">str</span>(I))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">faissmain</span>():</span><br><span class="line">    <span class="comment"># 数据量</span></span><br><span class="line">    N = <span class="number">50000</span></span><br><span class="line">    <span class="comment"># 向量维度</span></span><br><span class="line">    d = <span class="number">128</span></span><br><span class="line">    vec_train = np.ascontiguousarray(np.random.random((N, d)), np.float32)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># mock 第100个是距离查询向量最近的</span></span><br><span class="line">    selected_vec = vec_train[<span class="number">100</span>]</span><br><span class="line">    query_vec = selected_vec + [np.random.uniform(-<span class="number">0.001</span>, <span class="number">0.001</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(d)]</span><br><span class="line">    query_vec = np.ascontiguousarray(query_vec, np.float32)</span><br><span class="line">    <span class="comment"># 1. 暴力检索，全量检索</span></span><br><span class="line">    test_IndexFlatL2(vec_train, query_vec)</span><br><span class="line">    <span class="comment"># 2. 倒排索引</span></span><br><span class="line">    test_IndexIVFFlat(vec_train, query_vec)</span><br><span class="line">    <span class="comment"># 3. 倒排PQ</span></span><br><span class="line">    test_IndexIVFPQ(vec_train, query_vec)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    PQmain()</span><br><span class="line">    faissmain()</span><br></pre></td></tr></table></figure>
+<h2 id="4-相关拓展"><a href="#4-相关拓展" class="headerlink" title="4 相关拓展"></a>4 相关拓展</h2><p>IndexIVFPQ（”IVFx,PQy”）的性能损失来自于向量压缩和倒排列表两部分。如果IndexIVFPQ的精度太低，可以：<strong>设置nprobe为nlist，以搜索整个数据集，然后查看其性能。请注意，默认nprobe值为1。</strong></p>
+<p>单个向量检索的速度慢，Faiss针对批量搜索进行了优化：</p>
+<ul>
+<li>矩阵-矩阵乘法通常比对应数量的矩阵-向量乘法快得多</li>
+<li>搜索并行化</li>
+<li>采用多线程同时执行多个搜索，以完全占用计算机的cores</li>
+</ul>
+<p><strong>Faiss不支持字符串ID或in64以外的任何数据类型。</strong></p>
+<p>不同框架的召回效果对比如下图，更全的对比可参考<a href="http://ann-benchmarks.com">ann-Benchmarking Results</a>：</p>
+<p><img src="http://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/faiss6.png" alt="faissrecall6"></p>
+<p><strong>参考文献：</strong></p>
+<p><a href="https://www.jstage.jst.go.jp/article/mta/6/1/6_2/_pdf">A Survey of Product Quantization</a><br><a href="https://lear.inrialpes.fr/pubs/2011/JDS11/jegou_searching_with_quantization.pdf">Product quantization for nearest neighbor search</a><br><a href="https://blog.csdn.net/weixin_42486623/article/details/121990806">Faiss原理介绍</a><br><a href="https://zhuanlan.zhihu.com/p/534004381">faiss原理（Product Quantization）</a><br><a href="https://zhuanlan.zhihu.com/p/432317877">搜索召回 | Facebook: 亿级向量相似度检索库Faiss原理+应用</a><br><a href="https://zhuanlan.zhihu.com/p/107241260">Fiass - 常见问题总结</a><br><a href="https://blog.csdn.net/sgyuanshi/article/details/119878434">推荐系统的向量检索工具: Annoy &amp; Faiss</a><br><a href="https://blog.csdn.net/luoyexuge/article/details/84235421?spm=1001.2101.3001.6650.3&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-3-84235421-blog-124058746.pc_relevant_multi_platform_featuressortv2removedup&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-3-84235421-blog-124058746.pc_relevant_multi_platform_featuressortv2removedup&amp;utm_relevant_index=6">topk相似度性能比较（kd-tree、kd-ball、faiss、annoy、线性搜索）</a><br><a href="https://zhongqiang.blog.csdn.net/article/details/122516942?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-122516942-blog-124058746.pc_relevant_multi_platform_featuressortv2removedup&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-122516942-blog-124058746.pc_relevant_multi_platform_featuressortv2removedup&amp;utm_relevant_index=2">annoy(快速近邻向量搜索包)学习小记 - pip命令学习与annoy基础使用</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/faissrecall.html">Faiss 召回详解</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/faissrecall.html" title="Faiss 召回详解">https://www.xiemingzhao.com/posts/faissrecall.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/faissrecall.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Faiss/" rel="tag"><i class="fa fa-tag"></i> Faiss</a>
+          
+            <a href="/tags/%E5%8F%AC%E5%9B%9E/" rel="tag"><i class="fa fa-tag"></i> 召回</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/activefunc.html" rel="next" title="深度学习中的激活函数们">
+                <i class="fa fa-chevron-left"></i> 深度学习中的激活函数们
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B9%98%E7%A7%AF%E9%87%8F%E5%8C%96-PQ-%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 乘积量化(PQ)原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">在训练阶段:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E6%9F%A5%E8%AF%A2%E9%98%B6%E6%AE%B5"><span class="nav-number">2.1.1.</span> <span class="nav-text">在查询阶段:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%80%92%E6%8E%92%E4%B9%98%E7%A7%AF%E9%87%8F%E5%8C%96%EF%BC%88IVFPQ%EF%BC%89%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">2.2  倒排乘积量化（IVFPQ）原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%9C%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">具体地:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%9C%80%E4%BC%98%E4%B9%98%E7%A7%AF%E9%87%8F%E5%8C%96%EF%BC%88OPQ%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 最优乘积量化（OPQ）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-code"><span class="nav-number">3.</span> <span class="nav-text">3 code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%9B%B8%E5%85%B3%E6%8B%93%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">4 相关拓展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共222.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
