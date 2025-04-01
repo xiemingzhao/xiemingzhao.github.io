@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="change">
-      <change afterPath="$PROJECT_DIR$/source/_posts/Batch Normalization 小记.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/SNE 和 t-SNE 算法.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/word2vec详解.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/深度学习的常用损失函数.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/Faiss召回详解.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Faiss召回详解.md" afterDir="false" />
+    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="add some blogs">
+      <change beforePath="$PROJECT_DIR$/source/_posts/word2vec详解.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/word2vec详解.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +166,7 @@
       <updated>1636688611291</updated>
       <workItem from="1636688614042" duration="8304000" />
       <workItem from="1736686128405" duration="28447000" />
-      <workItem from="1740844671901" duration="28786000" />
+      <workItem from="1740844671901" duration="29699000" />
     </task>
     <task id="LOCAL-00001" summary="add &lt;more&gt;">
       <created>1636693291369</created>
@@ -202,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743443290986</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add some blogs">
+      <option name="closed" value="true" />
+      <created>1743526092613</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1743526092613</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -272,7 +275,8 @@
     <MESSAGE value="add new blog" />
     <MESSAGE value="workspace" />
     <MESSAGE value="change" />
-    <option name="LAST_COMMIT_MESSAGE" value="change" />
+    <MESSAGE value="add some blogs" />
+    <option name="LAST_COMMIT_MESSAGE" value="add some blogs" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/themes/next/source/lib/font-awesome/css/font-awesome.css">
