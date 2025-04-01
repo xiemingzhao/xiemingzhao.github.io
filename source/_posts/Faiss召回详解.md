@@ -1,6 +1,6 @@
 ---
 title: Faiss 召回详解
-date: 2020-09-05
+date: 2020-05-05
 abbrlink: faissrecall
 categories:
 - 学习笔记

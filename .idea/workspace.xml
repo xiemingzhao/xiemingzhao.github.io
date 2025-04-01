@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="" />
+    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="change">
+      <change afterPath="$PROJECT_DIR$/source/_posts/Batch Normalization 小记.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/_posts/SNE 和 t-SNE 算法.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/_posts/word2vec详解.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/_posts/深度学习的常用损失函数.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Faiss召回详解.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Faiss召回详解.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +31,18 @@
     <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "xiemingzhao"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/xiemingzhao/xiemingzhao.github.io.git",
+    "accountId": "77d8d4bb-9730-439f-9ffb-4a2310e47616"
+  }
+}]]></component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -152,7 +171,7 @@
       <updated>1636688611291</updated>
       <workItem from="1636688614042" duration="8304000" />
       <workItem from="1736686128405" duration="28447000" />
-      <workItem from="1740844671901" duration="21025000" />
+      <workItem from="1740844671901" duration="28786000" />
     </task>
     <task id="LOCAL-00001" summary="add &lt;more&gt;">
       <created>1636693291369</created>
@@ -175,7 +194,15 @@
       <option name="project" value="LOCAL" />
       <updated>1636731788944</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="change">
+      <option name="closed" value="true" />
+      <created>1743443290986</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1743443290986</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -222,7 +249,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="hexo" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -232,7 +271,8 @@
     <MESSAGE value="add &lt;more&gt;" />
     <MESSAGE value="add new blog" />
     <MESSAGE value="workspace" />
-    <option name="LAST_COMMIT_MESSAGE" value="workspace" />
+    <MESSAGE value="change" />
+    <option name="LAST_COMMIT_MESSAGE" value="change" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/themes/next/source/lib/font-awesome/css/font-awesome.css">
