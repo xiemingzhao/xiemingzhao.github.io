@@ -87,11 +87,11 @@ $$\vec King - \vec Man + \vec Womman = \vec Queen$$
 3. 之后经过 softmax 层，便得到每个词的概率。
 
 整个过程用数学来表达就是：
-$$u_j = W'W^T x = {w'_{ij}} = {v'}_{w_j}^{T} {v}_{w_i}^T$$
+$$u_j = W'W^T x = { w'_{ij} } = {v'}_{w_j}^{T} {v}_{w_i}^T$$
 
-$$p{w_j | w_i} = y_i = \frac{exp(u_j)}{\sum_{{j}'=1}^V exp(u'_j)} = \frac{exp({v'}_{w_j}^T v_{w_i})}{\sum_{{j}'=1}^V exp({v'}_{w_{j'}}^T  v_{w_i}) )}$$
+$$p{w_j | w_i} = y_i = \frac{exp(u_j)}{\sum_{ {j}'=1}^V exp(u'_j)} = \frac{exp({v'}_{w_j}^T v_{w_i})}{\sum_{ {j}'=1}^V exp({v'}_{w_{j'} }^T  v_{w_i}) )}$$
 
-其中 $u_i$ 代表了输出向量中第 i 个单词的概率， $v_{w_i}$ 和 ${v'}_{w_{j'}}^T$ 分别代表了 $W$ 中对应的行向量和 $W'$ 中对应的列向量。
+其中 $u_i$ 代表了输出向量中第 i 个单词的概率， $v_{w_i}$ 和 ${v'}_{w_{j' } }^T$ 分别代表了 $W$ 中对应的行向量和 $W'$ 中对应的列向量。
 
 ### 3.2 CBOW(Continuous Bags-of-word)
 基于上述，我们来看一个经典的模型结构，`CBOW`，即连续词袋模型。与基准模型结构不同的是，**CBOW 模型利用输入 context 多个词的向量均值作为输入**。
@@ -106,8 +106,8 @@ $$h = \frac{1}{C} W^T (x_1 ++ x_2 + \dots + x_C) = \frac{1}{C}(v_{w_1} + v_{w_2}
 $$
 \begin{array}{l}
 E & = & -log p(w_O|w_{I,1}, \dots , w_{I,C}) \\
-& = & - u_{j^*} + log \sum_{{j}' = 1} ^ V exp(u_{{j}'}) \\
-& = & - v'_{w_O} \cdot h + log \sum_{{j}' = 1} ^ V exp({v'}_{w_j}^T) \cdot h
+& = & - u_{j^*} + log \sum_{ {j}' = 1} ^ V exp(u_{ {j}'}) \\
+& = & - v'_{w_O} \cdot h + log \sum_{ {j}' = 1} ^ V exp({v'}_{w_j}^T) \cdot h
 \end{array}
 $$
 
@@ -119,7 +119,7 @@ $$
 
 在传递过程中，其不再输出单个的多项分布（即一个词语的 one-hot 编码），而是利用共享的参数输出映射矩阵输出 C 个多项分布（此处  C 为context词语的数量）：
 
-$$p(w_{c,j} = w_{O,c}|w_I) = y_{c,j} = \frac{exp(u_{c,j})}{\sum_{{j'} - 1}^V exp(u_{j'})}$$
+$$p(w_{c,j} = w_{O,c}|w_I) = y_{c,j} = \frac{exp(u_{c,j})}{\sum_{ {j'} - 1}^V exp(u_{j'})}$$
 
 其中：
 
@@ -137,8 +137,8 @@ $$u_{c,j} = u_j = {v'}_{w_j}^T \cdot h, \quad for  c = 1, 2, \dots , C$$
 $$
 \begin{array}{l}
 E & = & -log p(w_{O,1}, w_{O,2}, \dots , w_{O,C} | w_I) \\
-& = & - log \prod_{c = 1} ^C \frac{exp(u_{j'})}{\sum_{{j'}-1}^V exp(u_{j'})} \\
-& = & -\sum_{c = 1}^C u_{j_c^*} + C \cdot log \sum_{{j'}-1}^V exp(u_{j'})
+& = & - log \prod_{c = 1} ^C \frac{exp(u_{j'})}{\sum_{ {j'}-1}^V exp(u_{j'})} \\
+& = & -\sum_{c = 1}^C u_{j_c^*} + C \cdot log \sum_{ {j'}-1}^V exp(u_{j'})
 \end{array}
 $$
 
@@ -195,7 +195,7 @@ $$
 除了上述的`分层Softmax`方法，另一个更为经典和常用的便是`Negative Sampling`（负采样）方法。它的核心思想是：
 >放弃全局 Softmax 计算的过程，按照固定概率采样一定量的子集作为负例，从而转化成计算这些负例的sigmoid二分类过程，可以大大降低计算复杂度。
 
-$$E = -\log{\sigma{(v_{w_o}^T h)}} - \sum_{w_j \in W_{neg}} \log{\sigma{(-v_{w_j}^T h)}}$$
+$$E = -\log{\sigma{(v_{w_o}^T h) } } - \sum_{w_j \in W_{neg } } \log{\sigma{(-v_{w_j}^T h) } }$$
 
 上述便是新的 Loss 函数，公式中前者是 input 词，后部分为负采样得到的负样本词。容易发现，网络的计算空间从$|V|$降低到了$|w_O \cup W_{neg}|$。**而这本质上是对训练集进行了采样，从而减小了训练集的大小。**
 
@@ -207,7 +207,7 @@ $$E = -\log{\sigma{(v_{w_o}^T h)}} - \sum_{w_j \in W_{neg}} \log{\sigma{(-v_{w_j
 
 之所以如此，是因为在大语料数据集中，有很多高频但信息量少的词，例如"the, a"等。对它们的下采样不仅可以加速还可以提高词向量的质量。为了平衡高低频词，一般采用如下权重：
 
-$$P(w_i) = 1 - \sqrt{\frac{t}{f(w_i)}}$$
+$$P(w_i) = 1 - \sqrt{\frac{t}{f(w_i) } }$$
 
 其中，$f(w_i)$是单词$w_i$出现频率，参数$t$根据经验值一般取$10^{-5}$。如此可以确保频率超过$t$的词可以被欠采样，且不会影响原单词的频率相对大小。
 
