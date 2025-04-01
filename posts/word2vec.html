@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/word2vec4.png">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/word2vec5.png">
 <meta property="article:published_time" content="2020-12-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-01T17:01:23.401Z">
+<meta property="article:modified_time" content="2025-04-01T17:05:43.840Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="word2vec">
@@ -436,7 +436,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.8k
+                  3.9k
                 </span>
               
 
@@ -475,6 +475,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
       
         <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>很多算法工程师认为 Embedding 技术是机器学习中最迷人的一种思想，在过去的近10年中，该技术在各个深度学习领域大放异彩。已经逐步进化到了近几年基于 BERT 和 GPT2 等模型的语境化嵌入。本文重点基于原始论文<a href="https://arxiv.org/pdf/1301.3781v3.pdf">Efficient Estimation of Word Representations in Vector Space</a>，整理 word2vec 相关技术的基础原理和应用经验，旨在利于自己回溯巩固和他人参考学习。</p>
 <p>首先 Embedding 的思想是如何来的呢？我们知道计算机底层只能识别数字，并基于其进行逻辑等计算。而世间大多的实体或概念都不是以数据形式存在的，如何让计算机能够记住甚至理解是一件很难的事情。</p>
+<p>&lt;！—more—&gt;</p>
 <p>如果我们能够将实体或概念以一种有意义的代数向量的形式输入给计算机，那么计算机对于它们的存储、理解和计算将会极大的友好。比如，对于一个人，如果我们重点关注他的性别、年龄、身高、体重、胸围、存款这些信息，那么我们可以将其记为以下形式：</p>
 <p>[1,18,180,70,90,100]</p>
 <p>其中每个维度的数值对应该维度的信息，也即性别=男（1）、年龄=18、身高=180cm、体重=70kg、胸围=90cm、存款=100W。当然你可以继续扩增更多的维度，维度信息越多，计算机对这个对象认识的更全面。</p>
