@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="损失函数,loss fuction," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言在深度学习中，损失函数（Loss Function）至关重要，它决定着深度模型的训练学习的方式，其设计的恰当与否，往往会影响到最终模型的有效性。虽然在很多通用型任务上，业内逐渐形成使用惯例，（如点击率建模，默认都用对数损失，logloss），但对损失函数的认识越清楚，会有助于算法工程师在面临新任务时，在模型设计上事半功倍。 2 常用损失函数 损失函数的任务是：针对一个样本，度量模型的预估值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习的常用损失函数">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/popularlossfuncs.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言在深度学习中，损失函数（Loss Function）至关重要，它决定着深度模型的训练学习的方式，其设计的恰当与否，往往会影响到最终模型的有效性。虽然在很多通用型任务上，业内逐渐形成使用惯例，（如点击率建模，默认都用对数损失，logloss），但对损失函数的认识越清楚，会有助于算法工程师在面临新任务时，在模型设计上事半功倍。 2 常用损失函数 损失函数的任务是：针对一个样本，度量模型的预估值">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc1.png">
+<meta property="article:published_time" content="2021-04-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-01T16:44:34.707Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="损失函数">
+<meta property="article:tag" content="loss fuction">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/popularlossfuncs.html"/>
+
+
+
+
+
+  <title>深度学习的常用损失函数 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/popularlossfuncs.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习的常用损失函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-23T00:00:00+08:00">
+                2021-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/popularlossfuncs.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/popularlossfuncs.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  17
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在深度学习中，<code>损失函数</code>（Loss Function）至关重要，它决定着深度模型的训练学习的方式，其设计的恰当与否，往往会影响到最终模型的有效性。<br>虽然在很多通用型任务上，业内逐渐形成使用惯例，（如点击率建模，默认都用对数损失，logloss），但对损失函数的认识越清楚，会有助于算法工程师在面临新任务时，在模型设计上事半功倍。</p>
+<h2 id="2-常用损失函数"><a href="#2-常用损失函数" class="headerlink" title="2 常用损失函数"></a>2 常用损失函数</h2><blockquote>
+<p>损失函数的任务是：针对一个样本，度量模型的预估值 logit 即$\hat y$和对应真实 Label 即$y$之间的差异。</p>
+</blockquote>
+<p>不同的损失函数有不同的含义，主要是模型学习逼近样本分布的方式。所以它是一个非负实值函数，主要<strong>特点为：恒非负；误差越小，函数值越小；收敛快。</strong></p>
+<span id="more"></span>
+<p>基于<strong>距离度量</strong>的损失函数</p>
+<ul>
+<li>均方差损失函数（MSE）；</li>
+<li>L2 损失函数；</li>
+<li>L1 损失函数；</li>
+<li>Smooth L1损失函数；</li>
+<li>huber 损失函数；</li>
+</ul>
+<p>基于<strong>概率分布度量</strong>的损失函数</p>
+<ul>
+<li>Logloss；</li>
+<li>KL 散度函数（相对熵）；</li>
+<li>Cross Entropy 损失；</li>
+<li>Softmax 损失函数；</li>
+<li>Focal loss。</li>
+</ul>
+<h3 id="2-1-均方差损失函数（MSE）"><a href="#2-1-均方差损失函数（MSE）" class="headerlink" title="2.1 均方差损失函数（MSE）"></a>2.1 均方差损失函数（MSE）</h3><script type="math/tex; mode=display">MSE = \frac{1}{n} \sum_{i=1}^n (y_i - p_i)^2</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p>该损失函数一般是用在回归问题中，用于度量样本点到回归曲线的距离。<strong>它对离群点比较敏感，所以它不适合离群点较多的数据集。</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">MSE_Loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_pred:list，代表模型预测的一组数据</span></span><br><span class="line"><span class="string">    y_true:list，代表真实样本对应的一组数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    y_pred=np.array(y_pred)</span><br><span class="line">    y_true=np.array(y_true)</span><br><span class="line">    loss=np.<span class="built_in">sum</span>(np.square(y_pred - y_true)) / <span class="built_in">len</span>(y_pred)</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-2-L2-损失函数"><a href="#2-2-L2-损失函数" class="headerlink" title="2.2 L2 损失函数"></a>2.2 L2 损失函数</h3><script type="math/tex; mode=display">L2 = \sqrt{\frac{1}{n} \sum_{i=1}^n (y_i - p_i)^2}</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p>L2 函数，即<code>最小平方误差</code>（(Least Square Error(LSE))，也叫作<code>欧氏距离</code>。其在独立、同分布的高斯噪声情况下，它能提供最大似然估计，所以常用在回归、模式识别、图像任务中。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">L2_Loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_pred:list，代表模型预测的一组数据</span></span><br><span class="line"><span class="string">    y_true:list，代表真实样本对应的一组数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    y_pred=np.array(y_pred)</span><br><span class="line">    y_true=np.array(y_true)</span><br><span class="line">    loss=np.sqrt(np.<span class="built_in">sum</span>(np.square(y_pred - y_true)) / <span class="built_in">len</span>(y_pred))</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-3-L1-损失函数"><a href="#2-3-L1-损失函数" class="headerlink" title="2.3 L1 损失函数"></a>2.3 L1 损失函数</h3><script type="math/tex; mode=display">L1 = \sum_{i=1}^n |y_i - p_i|</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p>L1 Loss 即<code>最小绝对误差</code>(Least Abosulote Error(LAE))，又称为<code>曼哈顿距离</code>，表示残差的绝对值之和。</p>
+<p>但它有2个缺点：</p>
+<ul>
+<li>残差为零处却不可导；</li>
+<li>梯度始终相同。</li>
+</ul>
+<p>更适用于有较多离群点的数据集，但由于上述的缺点使得不利于模型的收敛。为了缓解此问题，实际中如果使用的话，往往使用后文介绍的优化版 Smooth L1 Loss。</p>
+<p>这里顺便提一个与其非常接近的 MAE，即平均绝对误差：</p>
+<script type="math/tex; mode=display">MAE = \frac{1}{n} \sum_{i=1}^n |y_i - p_i|</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">L1Loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_pred:list，代表模型预测的一组数据</span></span><br><span class="line"><span class="string">    y_true:list，代表真实样本对应的一组数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    y_pred=np.array(y_pred)</span><br><span class="line">    y_true=np.array(y_true)</span><br><span class="line">    loss=np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(y_pred - y_true)) / <span class="built_in">len</span>(y_pred)</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-Smooth-L1损失函数"><a href="#2-4-Smooth-L1损失函数" class="headerlink" title="2.4 Smooth L1损失函数"></a>2.4 Smooth L1损失函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Smooth L1 =</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">\frac&#123;1&#125;&#123;2&#125;(Y-f(x))^2 &amp; \quad\text&#123;|Y-f(x)|&lt;1&#125; \\</span><br><span class="line">|Y-f(x)|-\frac&#123;1&#125;&#123;2&#125; &amp; \quad\text&#123;|Y-f(x)|&gt;=1&#125; &amp; </span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png" alt="lossfunc0"></p>
+<p>该函数是由 Girshick R 在 Fast R-CNN 中提出的，<strong>主要用在目标检测中防止梯度爆炸</strong>。其实际上是一个分段函数：</p>
+<ul>
+<li>在[-1,1]，等价L2损失，解决了L1的不光滑问题；</li>
+<li>在[-1,1]区间外，是L1损失，解决了L2离群点梯度易爆炸的问题。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">Smooth_L1_Loss</span>(<span class="params">y_true_pred,y_true</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_true_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    loss=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i_y_true_pred,i_y_true <span class="keyword">in</span> <span class="built_in">zip</span>(y_true_pred,y_true):</span><br><span class="line">        tmp = <span class="built_in">abs</span>(i_y_true-i_y_true_pred)</span><br><span class="line">        <span class="keyword">if</span> tmp&lt;<span class="number">1</span>:</span><br><span class="line">            loss+=<span class="number">0.5</span>*(tmp**<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            loss+=tmp-<span class="number">0.5</span></span><br><span class="line">     <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-huber-损失函数"><a href="#2-5-huber-损失函数" class="headerlink" title="2.5 huber 损失函数"></a>2.5 huber 损失函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\left.\left.\left. Huber=\left\&#123;</span><br><span class="line">\begin&#123;array&#125;</span><br><span class="line">&#123;ll&#125;\frac&#123;1&#125;&#123;2&#125;(Y-f(x))^2 &amp; |\mathrm&#123;Y-f(x)&#125;|&lt;=\delta \\</span><br><span class="line">\delta|Y-f(x)|-\frac&#123;1&#125;&#123;2&#125;\delta^2 &amp; |\mathrm&#123;Y-f(x)&#125;|&gt;\delta</span><br><span class="line">\end&#123;array&#125;\right.\right.\right.\right.</span><br></pre></td></tr></table></figure>
+<p><code>Huber</code> 损失是 MSE 和 MAE 的结合，又称作 Smooth Mean Absolute Error Loss。</p>
+<p>它克服了L1和L2的缺点：</p>
+<ul>
+<li>不仅使损失函数具有连续的导数；</li>
+<li>而且利用MSE梯度随误差减小的特性，可取得更精确的最小值。</li>
+</ul>
+<p>但是，它有自己的缺点，不仅引入了额外的参数，而且选择合适的参数比较困难。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">huber_loss</span>(<span class="params">y_pred,y_true,delta=<span class="number">1.0</span></span>):</span><br><span class="line">   <span class="keyword">assert</span> <span class="built_in">len</span>(y_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">   loss=<span class="number">0</span></span><br><span class="line">   <span class="keyword">for</span> i_y_pred,i_y_true <span class="keyword">in</span> <span class="built_in">zip</span>(y_pred,y_true):</span><br><span class="line">       tmp = <span class="built_in">abs</span>(i_y_true-i_y_pred)</span><br><span class="line">       <span class="keyword">if</span> tmp&lt;=delta:</span><br><span class="line">           loss+=<span class="number">0.5</span>*(tmp**<span class="number">2</span>)</span><br><span class="line">       <span class="keyword">else</span>:</span><br><span class="line">           loss+=tmp*delta-<span class="number">0.5</span>*delta**<span class="number">2</span></span><br><span class="line">   <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h3 id="2-6-KL-散度函数（相对熵）"><a href="#2-6-KL-散度函数（相对熵）" class="headerlink" title="2.6 KL 散度函数（相对熵）"></a>2.6 KL 散度函数（相对熵）</h3><script type="math/tex; mode=display">KL = \sum_{i=1}^n y_i \times log(\frac{y_i}{p_i})</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p><code>KL散度</code>（ Kullback-Leibler divergence）也被称为<code>相对熵</code>，是一种<strong>非对称度量方法，即A、B两个分布，A对比B计算和B对A计算结果不一样。</strong></p>
+<p>相对熵是恒大于等于0的，当且仅当两分布相同时，相对熵等于0。KL散度可以用于比较文本标签或图像的相似性。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">kl_loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_true,y_pred，分别是两个概率分布</span></span><br><span class="line"><span class="string">    比如：y_true=[0.1,0.2,0.8]</span></span><br><span class="line"><span class="string">        y_pred=[0.3,0.3,0.4]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_true)==<span class="built_in">len</span>(y_pred)</span><br><span class="line">    KL=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> y,fx <span class="keyword">in</span> <span class="built_in">zip</span>(y_true,y_pred):</span><br><span class="line">        KL+=y*np.log(y/fx)</span><br><span class="line">    <span class="keyword">return</span> KL</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-7-Cross-Entropy-损失"><a href="#2-7-Cross-Entropy-损失" class="headerlink" title="2.7 Cross Entropy 损失"></a>2.7 Cross Entropy 损失</h3><script type="math/tex; mode=display">CE = -\frac{1}{n} \sum_{i=1}^n \sum_{j = 1}^m y_{ij} log(p_{ij})</script><p>其中，n 是样本数，m 是类别数，$y<em>{ij}$是样本 i 所属类别 j 的示性变量，即属于时位1，否则为0，$p</em>{ij}$表示预测的样本 i 属于类别 j 的概率。</p>
+<p><code>交叉熵</code>是信息论中的一个概念，最初用于估算平均编码长度，在深度学习中往往用于评估当前训练得到的概率分布与真实分布的差异情况。</p>
+<p>为了使神经网络的每一层输出从线性组合转为<strong>非线性逼近，以提高模型的预测精度</strong>，一般配合softmax激活函数，在多分类问题中常常被使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">CrossEntropy_loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_true,y_pred，分别是两个概率分布list</span></span><br><span class="line"><span class="string">    比如：y_true=[[0.1,0.9],[0.2,0.8],[0.4,0.6]]</span></span><br><span class="line"><span class="string">         y_pred=[[0.3,0.7],[0.1,0.9],[0.4,0.6]]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_true)==<span class="built_in">len</span>(y_pred)</span><br><span class="line">    cate_size = <span class="built_in">len</span>(y_true[<span class="number">0</span>])</span><br><span class="line">    loss=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> y,fx <span class="keyword">in</span> <span class="built_in">zip</span>(y_true,y_pred):</span><br><span class="line">        loss+=-<span class="built_in">sum</span>([y[i] * np.log(fx[i]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(cate_size)]</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h3 id="2-8-LogLoss-函数"><a href="#2-8-LogLoss-函数" class="headerlink" title="2.8 LogLoss 函数"></a>2.8 LogLoss 函数</h3><script type="math/tex; mode=display">LogLoss = -\frac{1}{n}\sum_{i=1}^n (y_i log(p_i) + (1 - y_i) log(1 - p_i))</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p><code>对数损失</code>（logarithm loss）也被称为<code>对数似然损失</code>，实际上<strong>是交叉熵损失在二分类任务下的特例</strong>。其假设样本服从伯努利分布，利用极大似然估计的思想求得极值，它常作为二分类问题的损失函数，一般结合 sigmoid 输出函数使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">Log_loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_true,y_pred，分别是两个概率分布</span></span><br><span class="line"><span class="string">    比如：y_true=[0.1,0.2,0.8]</span></span><br><span class="line"><span class="string">         y_pred=[0.3,0.3,0.4]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_true)==<span class="built_in">len</span>(y_pred)</span><br><span class="line">    loss=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> y,fx <span class="keyword">in</span> <span class="built_in">zip</span>(y_true,y_pred):</span><br><span class="line">        loss+=-y * np.log(fx)</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<h3 id="2-9-Focal-loss"><a href="#2-9-Focal-loss" class="headerlink" title="2.9 Focal loss"></a>2.9 Focal loss</h3><script type="math/tex; mode=display">FL = -\frac{1}{n}\sum_{i=1}^n (\alpha (1-p_i)^{\gamma} y_i log(p_i) + (1 - \alpha) p_i^{\gamma} (1 - y_i) log(1 - p_i))</script><p>其中，n 是样本量，$y_i$是第 i 样本的真实 label，$p_i$是模型的预测结果。</p>
+<p><code>Focal Loss</code> 的引入主要是为了<strong>解决难易样本不均衡的问题，注意有区别于正负样本不均衡的问题</strong>。易分样本虽然损失很低，但是数量太多，对模型的效果提升贡献很小，模型应该重点关注那些难分样本.<br>因此需要把置信度高的损失再降低一些性质：</p>
+<ul>
+<li>当样本分类错误时，$p_t$趋于0，调变因子趋于1，使得损失函数几乎不受影响;</li>
+<li>如果正确分类，$p_t$将趋于1，调变因子将趋向于0，使得损耗非常接近于0，从而降低了该特定示例的权重。</li>
+</ul>
+<p>如下图，聚焦参数（γ）平滑地调整易于分类的样本向下加权的速率。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc1.png" alt="lossfunc1"></p>
+<p>其中：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p_&#123;\mathbf&#123;t&#125;&#125;=</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">p &amp; \mathrm&#123;if~&#125;y=1 \\</span><br><span class="line">1-p &amp; \text&#123;otherwise&#125; &amp; &amp; </span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-交叉熵的渊源"><a href="#3-交叉熵的渊源" class="headerlink" title="3 交叉熵的渊源"></a>3 交叉熵的渊源</h2><h3 id="3-1-交叉熵与信息论"><a href="#3-1-交叉熵与信息论" class="headerlink" title="3.1 交叉熵与信息论"></a>3.1 交叉熵与信息论</h3><p>交叉熵（Cross Entropy）出自 Shannon <code>信息论</code>，主要<strong>用于度量两个概率分布间的差异性信息。</strong></p>
+<p>假设 p 表示真实分布，q 表示预估分布，那么 $H(p,q)$ 就称为交叉熵：</p>
+<script type="math/tex; mode=display">H(p,q) = \sum_i p_i \cdot log \frac{1}{q_i} = -\sum_i p_ilog(q_i)</script><p>要追溯它的源头，需要再回到信息论中，<code>信息量</code>的表示方式：$I(x) = -log(p(x))$<br>$x$表示一个事件，$p(x)$表示事件 x 发生的概率，$I(x)$则表示信息量。<br>根据$log$函数的性质，<strong>事件发生概率越小时，它一旦发生后的信息量就越大。</strong></p>
+<p>假设随机变量 x，有两个独立的概率分布 $P(x)$ 和 $Q(x)$，怎么度量两个分布的差异呢？</p>
+<p>使用 <code>KL 散度</code>（Kullback-Leibler (KL) divergence），又称<code>相对熵</code>。</p>
+<p>KL散度的计算公式：</p>
+<script type="math/tex; mode=display">D_{KL}(q||p) = \sum_{i = 1}^n q(x_i) log \frac{q(x_i)}{p(x_i)}</script><p>其中，n为事件的所有可能性种类，D 的值越小，表示 Q 分布和 P 分布越接近。</p>
+<p>我们简单做一下分解：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;aligned&#125;</span><br><span class="line"> &amp; \mathrm&#123;&#125; \\</span><br><span class="line">D_&#123;KL&#125;(q||p) &amp; =\sum_&#123;i=1&#125;^n q(x_&#123;i&#125;)\log q(x_&#123;i&#125;)-\sum_&#123;i=1&#125;^n q(x_&#123;i&#125;)\log p(x_&#123;i&#125;) \\</span><br><span class="line"> &amp; =-H(q(x))+H(q,p)</span><br><span class="line">\end&#123;aligned&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里，你可能已经发现他们之间的关联了。</p>
+<p>在深度学习中的分类任务，我们<strong>想要度量模型预估是否准确，就可以通过度量样本的真实分布（Label）与预估分布（Predict）之间的距离来判断</strong>。我们令：</p>
+<ul>
+<li>真实分布（Label）：Q(x)</li>
+<li>预估分布（Predict）：P(x)</li>
+</ul>
+<p>真实分布往往就是训练样本，是给定不变的，所以在$D_{KL}(q||p)$中需要关注和优化的就只有分解后的第二项$H(q,p)$，即<code>交叉熵</code>。</p>
+<p>如果我们令 n 表示样本数，m 表示分类数，$y<em>{ij}$是样本 label，$p</em>{ij}$表示预测的概率。批量的交叉熵便是：</p>
+<script type="math/tex; mode=display">CE = -\frac{1}{n} \sum_{i=1}^n \sum_{j = 1}^m y_{ij} log(p_{ij})</script><p>如果在<strong>二分类任务中</strong>，那么 $y_{ij}$ 就只有 0 和 1 两类，所以交叉熵可以简化为：</p>
+<script type="math/tex; mode=display">CE = -\frac{1}{n} \sum_{i=1}^n (y_i log(p_{i}) + (1 - y_i)log(1 - p_{i}))</script><p>相信你已经看出来了，这就是 <code>LogLoss</code>。</p>
+<p>我们以 Logloss 为例，接着用<strong>极大值点的方式（导数为0）来求解极大似然估计</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;aligned&#125;</span><br><span class="line"> &amp; \mathrm&#123;&#125; \\</span><br><span class="line">\sum_&#123;i=1&#125;^n (y_i \frac&#123;1&#125;&#123;p_&#123;i&#125;&#125; + (1 - y_i)\frac&#123;1&#125;&#123;p_&#123;i&#125; - 1&#125;) = 0 \\</span><br><span class="line">\sum_&#123;i=1&#125;^n (p_i - y_i) = 0 \\</span><br><span class="line">\bar p = \frac&#123;1&#125;&#123;n&#125; \sum_&#123;i=1&#125;^n y_i</span><br><span class="line">\end&#123;aligned&#125;</span><br></pre></td></tr></table></figure>
+<p>这就解释了实际应用中，对于<strong>二分类任务（比如ctr预估）模型的预估期望是等于 Label 的均值的</strong>，所以我们往往用 <code>pcoc</code> 来判断模型在局部样本上是高估还是低估。</p>
+<h3 id="3-2-交叉熵与极大似然"><a href="#3-2-交叉熵与极大似然" class="headerlink" title="3.2 交叉熵与极大似然"></a>3.2 交叉熵与极大似然</h3><p>区别：</p>
+<ul>
+<li>交叉熵是度量分布差距的大小，越大代表越不相近；</li>
+<li>似然函数是度量分布一样的概率，越大代表越相近。</li>
+</ul>
+<p><strong>实际上，最小化交叉熵函数的本质就是对数似然函数的最大化。</strong></p>
+<blockquote>
+<p>最大似然估计中采样需满足假设：独立同分布实验。</p>
+</blockquote>
+<p>我们假设独立采样 n 个样本，样本分布为 q，预估分布为 p，那么就有：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;gathered&#125;</span><br><span class="line">L=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^&#123;n&#125;log\prod_&#123;j=1&#125;^&#123;m&#125;p_&#123;ij&#125;^&#123;q_&#123;ij&#125;&#125;=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^&#123;n&#125;log(p_&#123;1&#125;^&#123;q_&#123;1&#125;&#125;.p_&#123;2&#125;^&#123;q_&#123;2&#125;&#125;...p_&#123;m&#125;^&#123;q_&#123;m&#125;&#125;) \\</span><br><span class="line">=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^n(q_1log(p_1)+q_2log(p_2)+...+q_m log(p_m)) \\</span><br><span class="line">=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^n\sum_&#123;j=1&#125;^m q_ilog(p_i)</span><br><span class="line">\end&#123;gathered&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以发现，实际上就是交叉熵的绝对值。</p>
+<h3 id="3-3-交叉熵损失的优势"><a href="#3-3-交叉熵损失的优势" class="headerlink" title="3.3 交叉熵损失的优势"></a>3.3 交叉熵损失的优势</h3><blockquote>
+<p>为什么不能使用均方差做为分类问题的损失函数？</p>
+</blockquote>
+<p><strong>均方差损失适合回归</strong>：与激活函数叠加是个凸函数，即可以得到最优解。</p>
+<p><strong>均方差损失不适合分类：</strong></p>
+<ul>
+<li>与激活函数（Sigmoid/Softmax）叠加不是凸函数，就很难得到最优解。</li>
+<li>求导结果复杂，运算量比较大。</li>
+</ul>
+<p><strong>交叉熵适合分类：</strong></p>
+<ul>
+<li>可以保证区间内单调；</li>
+<li>梯度计算简单，纯减法。</li>
+</ul>
+<p>正如上面所述，交叉上损失在梯度计算上也有优势。我们以常用的二分类任务为例，单条样本交叉熵公式为：</p>
+<script type="math/tex; mode=display">C = -(y log(p) + (1 - y)log(1-p))</script><p>其中，y 是 label，p 是深度模型输出，如果结合输出层和激活函数，就有：</p>
+<script type="math/tex; mode=display">p = \sigma{(z)} , z = w x + b</script><p>我们就可以分别推导出<strong>参数$w,b$的梯度，如下所示，可以发现非常简洁，只与$p - y$有关，即预估误差越大，梯度更新越快。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;gathered&#125;</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial p&#125; &amp;=&amp; -(y \frac&#123;1&#125;&#123;p&#125; + \frac&#123;y - 1&#125;&#123;1 - p&#125;)\\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;)\\</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial z&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial p&#125; \frac&#123;\partial p&#125;&#123;\partial z&#125; \\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;) \cdot \sigma&#x27;(z) \\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;) \cdot \sigma(z)(1 - \sigma(z)) \\</span><br><span class="line">&amp;=&amp; p - y \\</span><br><span class="line"></span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial w&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial z&#125; \frac&#123;\partial z&#125;&#123;\partial w&#125; = (p - y)x \\</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial b&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial z&#125; \frac&#123;\partial z&#125;&#123;\partial b&#125; = (p - y) </span><br><span class="line">\end&#123;gathered&#125;</span><br></pre></td></tr></table></figure>
+<p>同样的，如果是多分类，使用 softmax 激活函数 + 交叉熵损失，也有类似的性质。虽然推导起来复杂一些，但结果也是只和$p - y$有关，这里不再赘述。</p>
+<p><strong>参考文章：</strong><br><a href="https://blog.csdn.net/light169/article/details/124602481">深度学习之损失函数</a><br><a href="https://cloud.tencent.com/developer/article/1950150">六个深度学习常用损失函数总览</a><br><a href="https://www.nowcoder.com/discuss/353148846177984512">深度学习——损失函数</a><br><a href="https://mp.weixin.qq.com/s?subscene=23&amp;__biz=MzAxOTQ2NzUxOQ==&amp;mid=2651912913&amp;idx=1&amp;sn=68f62cb548b35ec93f18027458352434&amp;chksm=8022c741b7554e57616ac8dcd80a11acd7a8a6ada181f4584c602c9f242815f5863ed96b4529&amp;scene=7&amp;key=9c1744d1bffeab4b0c8d19d08eff803bc5bf556e7dad290931316859107869eae11c8d2ef08d1c445c32f9564b88b15a7ddefa9ecba47e9f30595d3194cb93202f018216f272734d0502965e5172c528b84d6f7ee4a2970563bd1594a1ee84cb78bedc97a8d73b1f2c1c8b796374470272fd4c44a5a5badebefe79f797dd9006&amp;ascene=0&amp;uin=NzY2MzMyNDAx&amp;devicetype=Windows+10+x64&amp;version=62090538&amp;lang=zh_CN&amp;exportkey=AbDFP%2Fy90lQvupKLsin%2BqIY%3D&amp;pass_ticket=xXJHSvXALrdXBNLifG37ggdjbeqxXtSOQYVggNqQRRey1Vm1lBPWCAlvlwRUGwZW&amp;wx_header=0">监督学习中的损失函数及应用研究</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/popularlossfuncs.html">深度学习的常用损失函数</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/popularlossfuncs.html" title="深度学习的常用损失函数">https://www.xiemingzhao.com/posts/popularlossfuncs.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/popularlossfuncs.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" rel="tag"><i class="fa fa-tag"></i> 损失函数</a>
+          
+            <a href="/tags/loss-fuction/" rel="tag"><i class="fa fa-tag"></i> loss fuction</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/batchnormnotes.html" rel="next" title="Batch Normalization 小记">
+                <i class="fa fa-chevron-left"></i> Batch Normalization 小记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%B8%B8%E7%94%A8%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">2 常用损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%9D%87%E6%96%B9%E5%B7%AE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%88MSE%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 均方差损失函数（MSE）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-L2-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 L2 损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-L1-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 L1 损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Smooth-L1%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 Smooth L1损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-huber-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 huber 损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-KL-%E6%95%A3%E5%BA%A6%E5%87%BD%E6%95%B0%EF%BC%88%E7%9B%B8%E5%AF%B9%E7%86%B5%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 KL 散度函数（相对熵）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Cross-Entropy-%E6%8D%9F%E5%A4%B1"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 Cross Entropy 损失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-LogLoss-%E5%87%BD%E6%95%B0"><span class="nav-number">2.8.</span> <span class="nav-text">2.8 LogLoss 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-Focal-loss"><span class="nav-number">2.9.</span> <span class="nav-text">2.9 Focal loss</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BA%A4%E5%8F%89%E7%86%B5%E7%9A%84%E6%B8%8A%E6%BA%90"><span class="nav-number">3.</span> <span class="nav-text">3 交叉熵的渊源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BA%A4%E5%8F%89%E7%86%B5%E4%B8%8E%E4%BF%A1%E6%81%AF%E8%AE%BA"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 交叉熵与信息论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%BA%A4%E5%8F%89%E7%86%B5%E4%B8%8E%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 交叉熵与极大似然</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 交叉熵损失的优势</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共236.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

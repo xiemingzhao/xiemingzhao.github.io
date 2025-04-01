@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="算法,降维,SNE," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言实际研究中有很多的降维算法，例如经典的线性降维算法PCA，相信很多人都比较熟悉了。而在这里，我们要介绍的是一个经典的降维算法t-SNE，它往往用来对高维数据做非线性降维来进行可视化分析。参考了不少大牛的文章，加上一些自己的思考，从一个小白的角度来总结一下该算法的原理和使用姿势。 1.1 维数灾难维数灾难（curse of dimensionality）：描述的是高维空间中若干迥异于低维空间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SNE 和 t-SNE 算法">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/senalgo.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言实际研究中有很多的降维算法，例如经典的线性降维算法PCA，相信很多人都比较熟悉了。而在这里，我们要介绍的是一个经典的降维算法t-SNE，它往往用来对高维数据做非线性降维来进行可视化分析。参考了不少大牛的文章，加上一些自己的思考，从一个小白的角度来总结一下该算法的原理和使用姿势。 1.1 维数灾难维数灾难（curse of dimensionality）：描述的是高维空间中若干迥异于低维空间">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen0.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen1.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen2.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen5.gif">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen6.png">
+<meta property="article:published_time" content="2021-03-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-01T16:33:14.807Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="降维">
+<meta property="article:tag" content="SNE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen0.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/senalgo.html"/>
+
+
+
+
+
+  <title>SNE 和 t-SNE 算法 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/senalgo.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SNE 和 t-SNE 算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-04T00:00:00+08:00">
+                2021-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/senalgo.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/senalgo.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>实际研究中有很多的<code>降维算法</code>，例如经典的线性降维算法<code>PCA</code>，相信很多人都比较熟悉了。而在这里，我们要介绍的是一个经典的降维算法<code>t-SNE</code>，它往往用来对高维数据做非线性降维来进行可视化分析。参考了不少大牛的文章，加上一些自己的思考，从一个小白的角度来总结一下该算法的原理和使用姿势。</p>
+<h3 id="1-1-维数灾难"><a href="#1-1-维数灾难" class="headerlink" title="1.1 维数灾难"></a>1.1 维数灾难</h3><p><code>维数灾难</code>（curse of dimensionality）：描述的是高维空间中若干迥异于低维空间、甚至反直觉的现象。</p>
+<p>在这里我们要阐述两个理论：</p>
+<ol>
+<li>高维空间中数据样本极其稀疏。<br>如下图所示，高维数据降维到低维空间将发生“拥挤问题（Crowding Problem）。</li>
+</ol>
+<span id="more"></span>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen0.jpg" alt="sen0"></p>
+<ol>
+<li>高维单位空间中数据几乎全部位于超立方体的边缘。</li>
+</ol>
+<h3 id="1-2-数理佐证"><a href="#1-2-数理佐证" class="headerlink" title="1.2 数理佐证"></a>1.2 数理佐证</h3><p>以上两个理论并不是空口而谈，我们能够用几何学来证明。首先，在高维空间中的单位超立方体的体积是：</p>
+<script type="math/tex; mode=display">V_{hypercube} = 1^d = 1</script><p>对应的内切球体积为：</p>
+<script type="math/tex; mode=display">V_{hypersphere} = \frac{\pi^{n/2}}{\Gamma(n/2 + 1)} \cdot 0.5^d</script><p>两者的商取极限就有：</p>
+<script type="math/tex; mode=display">lim_{d \to +\infty} \frac{V_{hypersphere}}{V_{hypercube}} = 0</script><p>上述表明：<strong>在极端的高维情况下，单元空间只有边角，而没有中心</strong>。数据也只能处于边缘上，而远离中心。</p>
+<p>由此我们又能推出结论：<strong>欧式距离会失效</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen1.jpg" alt="sen1"></p>
+<p>上图描述的是高维空间中大距离和小距离的差异越来越不明显：</p>
+<script type="math/tex; mode=display">lim_{d \to +\infty} \frac{dist_{max} - dist_{min}}{d_{min}} = 0</script><p>所以<strong>降维的基本作用</strong>：</p>
+<ul>
+<li>缓解维数灾难，使得欧式距离重新生效；</li>
+<li>数据预处理，降噪去冗余；</li>
+<li>可视化分析。</li>
+</ul>
+<h3 id="1-3-SNE算法的思想基础"><a href="#1-3-SNE算法的思想基础" class="headerlink" title="1.3 SNE算法的思想基础"></a>1.3 SNE算法的思想基础</h3><p><strong>SNE 的两个思想要点</strong>：</p>
+<ul>
+<li>构建一个高维对象之间的概率分布，使得对象间的相似度和被选择的概率成正相关；</li>
+<li>将高维的数据映射到低维空间，使得两个空间的概率分布尽可能相似；</li>
+</ul>
+<p>看下面的图，比较形似。高维空间中的数据点对应低维空间的数据点，通过一个链接关系牵引使得两个空间中对应数据点的分布类似。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen2.jpg" alt="sen2"></p>
+<p>SNE 两个主要步骤：</p>
+<ul>
+<li>将欧氏距离转化为条件概率来表征点间相似度（pairwise similarity）。</li>
+<li>使用梯度下降算法来使低维分布学习/拟合高维分布。</li>
+</ul>
+<h2 id="2-SNE的算法原理"><a href="#2-SNE的算法原理" class="headerlink" title="2 SNE的算法原理"></a>2 SNE的算法原理</h2><p>给定一组高维空间的数据样本：$(x_1, … , x_N)$，<strong>其中<code>N</code>表示的是样本数，并不是维度</strong>。前面我们提到，在高维空间中，欧式距离将会失效，所以这里会将其转化成<code>条件概率</code>来度量两个样本数据之间的相似度或者说距离。</p>
+<h3 id="2-1-相似性度量-条件概率"><a href="#2-1-相似性度量-条件概率" class="headerlink" title="2.1 相似性度量-条件概率"></a>2.1 相似性度量-条件概率</h3><p>那么对于样本点$x<em>i$来说，上面提到的相似性度量$p</em>{j|i}$就是以高斯分布来选择$x_j$作为近邻点的条件概率：</p>
+<script type="math/tex; mode=display">p_{j \mid i} = \frac{\exp(- \mid  \mid  x_i -x_j  \mid  \mid  ^2 / (2 \sigma^2_i ))} {\sum_{k \neq i} \exp(- \mid  \mid  x_i - x_k  \mid  \mid  ^2 / (2 \sigma^2_i))}</script><p>这里需要指出三点：</p>
+<ol>
+<li>对除 i 外其他所有 j 都计算一个条件概率后，形成一个概率分布列，所以分母需要归一化；</li>
+<li>设定 $p_{i|i}=0$，因为我们关注的是两两之间的相似度。</li>
+<li>有一个参数是 $\sigma_i$，对于不同的点 $x_i$ 取值不一样。</li>
+</ol>
+<p>另一方面，如前面所述，降维就是将高维映射到低维，那么我们对上述的高维样本点$(x_1, … , x_N)$，构造出低维空间中对应的样本点$(y_1, … , y_N)$。同样的，该空间中也有对应的度量相似度的条件概率：</p>
+<script type="math/tex; mode=display">q_ {j \mid i} = \frac{\exp(- \mid  \mid  x_i -x_j  \mid  \mid  ^2)} {\sum_{k \neq i} \exp(- \mid  \mid  x_i - x_k  \mid  \mid  ^2)}</script><p><strong>注意：这里我们令$\sigma_i = \frac{1}{\sqrt 2}$，若方差取其他值，对结果影响仅仅是缩放而已。</strong></p>
+<h3 id="2-2-高低维空间分布一致性"><a href="#2-2-高低维空间分布一致性" class="headerlink" title="2.2 高低维空间分布一致性"></a>2.2 高低维空间分布一致性</h3><p>到这里，我们已经定义了原始高维空间的样本数据以及映射到低位空间后的对应数据点，以及两个空间中度量样本相似度的条件概率。基于前文的算法思想：<strong>我们需要做的就是让低维空间的数据分布尽可能的靠近或者拟合高维空间中的样本分布</strong>。提到度量分布的一致程度，很自然的能够想到<code>KL散度</code>。</p>
+<script type="math/tex; mode=display">C = \sum_i KL(P_i  \mid  \mid  Q_i) = \sum_i \sum_j p_{j \mid i} \log \frac{p_{j \mid i}}{q_{j \mid i}}</script><p>其中，$P<em>i(k = j) = p</em>{j|i}$和$Q<em>i(k = j) = q</em>{j|i}$是两个分布列。所以，我们期望，在降维效果好的时候局部分布保留相似性，即$p<em>{i|j} = q</em>{i|j}$。</p>
+<blockquote>
+<p>这里需要注意：<strong>KL散度具有不对称性</strong>。</p>
+</blockquote>
+<p><em>则如果高维数据相邻而低维数据分开（即p大q小），则cost很大；相反，如果高维数据分开而低维数据相邻（即p小q大），则cost很小。</em></p>
+<p>所以，<strong>SNE倾向于保留高维数据的局部结构</strong>。</p>
+<h3 id="2-3-困惑度-perplexity"><a href="#2-3-困惑度-perplexity" class="headerlink" title="2.3 困惑度(perplexity)"></a>2.3 困惑度(perplexity)</h3><p>前面的公式中我们提到了不同的点具有不同的$\sigma_i$，而$P_i$的熵会随着$\sigma_i$的增加而增加。</p>
+<script type="math/tex; mode=display">Perp(P_i) = 2^{H(P_i)} = 2^{-\sum_j p_{j \mid i} \log_2 p_{j \mid i}}</script><blockquote>
+<p>注意：困惑度设的大，则显然σ_i也大。两者是单调关系，因此可以使用<code>二分查找</code>。</p>
+</blockquote>
+<p>虽然该取值对效果具有一定的鲁棒性，但一般<strong>建议困惑度设为5-50</strong>比较好，它可以解释为<strong>一个点附近的有效近邻点个数</strong>。</p>
+<h3 id="2-4-梯度求解"><a href="#2-4-梯度求解" class="headerlink" title="2.4 梯度求解"></a>2.4 梯度求解</h3><p>前面已经介绍了 lossfunc，简单推导可知其梯度公式为：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial y_i} = 2 \sum_j (p_{j \mid i} - q_{j \mid i} + p_{i \mid j} - q_{i \mid j})(y_i - y_j)</script><p>其结构与 softmax 类似。我们知道$\sum -y \log p$对应的梯度为$y-p$可以简单推导得知SNE的lossfunc中的i在j下的条件概率情况的梯度是$2(p<em>{i \mid j}-q</em>{i \mid j})(y<em>i-y_j)$， 同样j在i下的条件概率的梯度是$2(p</em>{j \mid i}-q_{j \mid i})(y_i-y_j)$.</p>
+<p>为了加速优化过程和避免陷入局部最优解，我们需要引入动量，即之前的梯度累加的指数衰减项：</p>
+<script type="math/tex; mode=display">y_i^{(t)} = y_i^{(t-1)} + \eta \frac{\partial C}{\partial y_i} + \alpha(t)(y_i^{(t-1)} - y_i^{(t-2)})</script><blockquote>
+<p>在初始优化的阶段，每次迭代中可以引入一些高斯噪声，之后像模拟退火一样逐渐减小该噪声，可以用来避免陷入局部最优解。因此，SNE在选择高斯噪声，以及学习速率，什么时候开始衰减，动量选择等等超参数上，需要跑多次优化才可以。</p>
+</blockquote>
+<h3 id="2-5-SNE的问题"><a href="#2-5-SNE的问题" class="headerlink" title="2.5 SNE的问题"></a>2.5 SNE的问题</h3><p>虽然上述给出了SNE算法的原理和求解方式，但实际上其是比较难以优化的，而且存在<code>crowding problem</code>(拥挤问题)：</p>
+<blockquote>
+<p>由于降维后的空间压缩，会使得哪怕高维空间中离得较远的点，在低维空间中留不出这么多空间来映射。于是到最后高维空间中的点，尤其是远距离和中等距离的点，在低维空间中统统被塞在了一起。</p>
+</blockquote>
+<p>这里的原理在前文已经详细介绍过，是一个比较重要的问题。所以，Hinton 等人又提出了 t-SNE 的方法。与 SNE 不同，主要如下:</p>
+<ul>
+<li>使用对称版的SNE，简化梯度公式</li>
+<li>低维空间下，使用t分布替代高斯分布表达两点之间的相似度</li>
+</ul>
+<h2 id="3-对称-SNE-Symmetric-SNE"><a href="#3-对称-SNE-Symmetric-SNE" class="headerlink" title="3 对称 SNE(Symmetric SNE)"></a>3 对称 SNE(Symmetric SNE)</h2><p>我们首先简单介绍一下<code>对称SNE</code>，它也是一种缓解拥挤问题的办法。它的主要思想就是<strong>使用联合概率分布来替换条件概率分布</strong>。我们假设P是高维空间里的各个点的联合概率分布，Q是对应的低维空间，目前函数：</p>
+<script type="math/tex; mode=display">C = KL(P \mid  \mid Q) = \sum_i \sum_j p_{i,j} \log \frac{p_{ij}}{q_{ij}}</script><p>这里的$p<em>{ii}, q</em>{ii}$为0，我们将这种SNE称之为 <code>symmetric SNE</code> (对称SNE)，因为他假设了对于任意i,$p<em>{ij} = p</em>{ji}, q<em>{ij} = q</em>{ji}$，因此概率分布可以改写为:</p>
+<script type="math/tex; mode=display">p_{ij} = \frac{\exp(- \mid  \mid x_i - x_j \mid  \mid ^2 / 2\sigma^2)}{\sum_{k \neq l} \exp(- \mid  \mid x_k-x_l \mid  \mid ^2 / 2\sigma^2)}  \ \ \ \ q_{ij} = \frac{\exp(- \mid  \mid y_i - y_j \mid  \mid ^2)}{\sum_{k \neq l} \exp(- \mid  \mid y_k-y_l \mid  \mid ^2)}</script><p>公式整体简洁一些，但是如果$x_i$是异常值，将会使得$||x_i - x_j||^2$很大，那么对应的lossfunc就会很小，会使得训练不好。为了解决此问题，我们可以将联合概率分布修改为：</p>
+<script type="math/tex; mode=display">p_{ij} = \frac{p_{i|j} + p_{j|i}}{2}</script><p>如此便可以保证$\sum<em>j p</em>{ij} &gt; \frac{1}{2n}$，即每一个样本都会贡献一定的lossfunc，并且使得梯度变成：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial y_i} = 4 \sum_j (p_{ij} - q_{ij})(y_i - y_j)</script><p><strong>实际使用中<code>对称SNE</code>往往不会比<code>SNE</code>的效果差</strong>。</p>
+<h2 id="4-t-SNE算法"><a href="#4-t-SNE算法" class="headerlink" title="4 t-SNE算法"></a>4 t-SNE算法</h2><h3 id="4-1-t分布的应用到SNE"><a href="#4-1-t分布的应用到SNE" class="headerlink" title="4.1 t分布的应用到SNE"></a>4.1 t分布的应用到SNE</h3><p>上面介绍了SNE的问题和对称SNE，更正统的做法便是<code>t-SNE</code>算法：</p>
+<blockquote>
+<p>在不同空间使用不同的分布来将距离转换成概率分布，高维空间中一般用<code>高斯分布</code>，而在对应的低维空间中我们一般使用更加长尾的<code>t-分布</code>，如此便可以使得高维度下中低等的距离在映射后能够有一个较大的距离。</p>
+</blockquote>
+<p>首先我们知道<code>t-分布</code>的概率密度函数（PDF）形式为：</p>
+<script type="math/tex; mode=display">f(t) = \frac{\Gamma(\frac{v+1}{2})}{\sqrt{v \pi} \Gamma(\frac{v}{2})} (1 + \frac{t^2}{v})^{-\frac{v+1}{2}}</script><p>其中v代表数据的自由度，当$v=1$的时候一般称为<code>柯西分布</code>（Cauchy distribution），这就是我们在低维空间中将要使用的具体分布：</p>
+<script type="math/tex; mode=display">f(t) = \frac{1}{\pi(1 + t^2)}</script><p>而当$v = \infty$的时候就称为<code>高斯/正态分布</code>(Guassian/Normal distribution)，也就是原始数据高维空间中使用的分布：</p>
+<script type="math/tex; mode=display">f(t) = \frac{1}{\sqrt{2 \pi}} e^{- \frac{t^2}{2}}</script><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen3.png" alt="sen3"></p>
+<p>上图展示了所介绍的两个分布的对比图，可以发现<code>t-分布</code>相对厚尾许多，能够更好的捕捉真实数据特征。</p>
+<p>回到SNE求解那里，我们使用<code>t-分布</code>带入变换之后，将得到：</p>
+<script type="math/tex; mode=display">q_{ij} = \frac{(1 +  \mid  \mid y_i -y_j \mid  \mid ^2)^{-1}}{\sum_{k \neq l} (1 +  \mid  \mid y_i -y_j \mid  \mid ^2)^{-1}}</script><p>对应的梯度为：</p>
+<script type="math/tex; mode=display">\frac{\delta C}{\delta y_i} = 4 \sum_j(p_{ij}-q_{ij})(y_i-y_j)(1+ \mid  \mid y_i-y_j \mid  \mid ^2)^{-1}</script><p>为了更好的展示为什么使用<code>t-分布</code>可以通过“把尾巴抬高”来缓解SNE的拥挤问题，我们将两个分布的映射对比图画出如下所示。其中，横轴表示距离，纵轴表示相似度。我们可以发现t-分布很好的满足了我们的需求，即：</p>
+<ul>
+<li>对于较大相似度的点，即图中上方的红线，表明t分布在低维空间中的距离需要稍小一点；</li>
+<li>对于低相似度的点，即图中下方的红线，表明t分布在低维空间中的距离需要更远。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen4.png" alt="sen4"></p>
+<h3 id="4-2-t-SNE缺点"><a href="#4-2-t-SNE缺点" class="headerlink" title="4.2 t-SNE缺点"></a>4.2 t-SNE缺点</h3><ol>
+<li>时间、空间复杂度为O(n^2)，计算代价昂贵。百万量级的数据需要几小时，对于PCA可能只需要几分钟。</li>
+<li>升级版 Barnes-Hut t-SNE 可以让复杂度降为O(nlogn)，但只限于获得二维和三维的嵌入。（sklearn中可以直接使用参数method=’barnes_hut’）</li>
+<li>由于代价函数非凸，多次执行算法的结果是随机的（名字中“Stochatsic”的由来？），需要多次运行选取最好的结果。</li>
+<li>全局结构不能很清楚的保留。<strong>这个问题可以通过先用PCA降维到一个合理的维度（如50）后再用t-SNE来缓解</strong>，前置的PCA步骤也可以起到去除噪声等功能。（sklearn中可以直接使用参数init=’pca’）</li>
+</ol>
+<h3 id="4-3-小补充"><a href="#4-3-小补充" class="headerlink" title="4.3 小补充"></a>4.3 小补充</h3><p>优化过程中可以尝试的两个 trick:</p>
+<ol>
+<li><code>提前压缩</code>(early compression)：开始初始化的时候，各个点要离得近一点。这样小的距离，方便各个聚类中心的移动。可以通过引入L2正则项(距离的平方和)来实现。</li>
+<li><code>提前夸大</code>(early exaggeration)：在开始优化阶段，pij 乘以一个大于1的数进行扩大，来避免因为 qij 太小导致优化太慢的问题。比如前50次迭代，pij 乘以4。</li>
+</ol>
+<p>最后附上一幅常见的t-SNE降维过程效果图：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen5.gif" alt="sen5"></p>
+<h2 id="5-t-SNE实战coding"><a href="#5-t-SNE实战coding" class="headerlink" title="5 t-SNE实战coding"></a>5 t-SNE实战coding</h2><p>我们来看两个简单的例子。</p>
+<ol>
+<li><p>假设现在有一组3维数据，我需要将其降维到2维进行可视化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">hello_tSNE</span>():</span><br><span class="line">    X = np.array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br><span class="line">    tsne = TSNE(n_components=<span class="number">2</span>)</span><br><span class="line">    tsne.fit_transform(X)</span><br><span class="line">    <span class="built_in">print</span>(tsne.embedding_)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>高维S曲线数据的降维可视化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">S curve visualization</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="comment"># # Next line to silence pyflakes. This import is needed.</span></span><br><span class="line"><span class="comment"># Axes3D</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tSNE_forS</span>():</span><br><span class="line">    n_points = <span class="number">1000</span></span><br><span class="line">    <span class="comment"># 生成S曲线的样本数据</span></span><br><span class="line">    <span class="comment"># X是一个(1000, 3)的2维数据，color是一个(1000,)的1维数据</span></span><br><span class="line">    X, color = datasets.make_s_curve(n_points, random_state=<span class="number">0</span>)</span><br><span class="line">    n_neighbors = <span class="number">10</span></span><br><span class="line">    n_components = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    fig = plt.figure(figsize=(<span class="number">8</span>, <span class="number">8</span>))</span><br><span class="line">    <span class="comment"># 创建了一个figure，标题为&quot;Manifold Learning with 1000 points, 10 neighbors&quot;</span></span><br><span class="line">    plt.suptitle(<span class="string">&quot;Manifold Learning with %i points, %i neighbors&quot;</span></span><br><span class="line">                 % (<span class="number">1000</span>, n_neighbors), fontsize=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;绘制S曲线的3D图像&#x27;&#x27;&#x27;</span></span><br><span class="line">    ax = fig.add_subplot(<span class="number">211</span>, projection=<span class="string">&#x27;3d&#x27;</span>)</span><br><span class="line">    ax.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], X[:, <span class="number">2</span>], c=color, cmap=plt.cm.Spectral)</span><br><span class="line">    ax.view_init(<span class="number">4</span>, -<span class="number">72</span>)  <span class="comment"># 初始化视角</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;t-SNE&#x27;&#x27;&#x27;</span></span><br><span class="line">    t0 = time()</span><br><span class="line">    tsne = manifold.TSNE(n_components=n_components, init=<span class="string">&#x27;pca&#x27;</span>, random_state=<span class="number">0</span>)</span><br><span class="line">    Y = tsne.fit_transform(X)  <span class="comment"># 转换后的输出</span></span><br><span class="line">    t1 = time()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;t-SNE: %.2g sec&quot;</span> % (t1 - t0))  <span class="comment"># 算法用时</span></span><br><span class="line">    ax = fig.add_subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    plt.scatter(Y[:, <span class="number">0</span>], Y[:, <span class="number">1</span>], c=color, cmap=plt.cm.Spectral)</span><br><span class="line">    plt.title(<span class="string">&quot;t-SNE (%.2g sec)&quot;</span> % (t1 - t0))</span><br><span class="line">    ax.xaxis.set_major_formatter(NullFormatter())  <span class="comment"># 设置标签显示格式为空</span></span><br><span class="line">    ax.yaxis.set_major_formatter(NullFormatter())</span><br><span class="line">    <span class="comment"># plt.axis(&#x27;tight&#x27;)</span></span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>效果：<br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/cluster/sen6.png" alt="sen6"></p>
+<p><strong>参考文章</strong><br><a href="http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf">Visualizing Data using t-SNE</a><br><a href="http://www.datakit.cn/blog/2017/02/05/t_sne_full.html">t-SNE完整笔记</a><br><a href="https://blog.csdn.net/hustqb/article/details/78144384">数据降维与可视化——t-SNE</a><br><a href="https://www.jiqizhixin.com/articles/2017-11-13-7">详解可视化利器 t-SNE 算法：数无形时少直觉</a><br><a href="https://www.jianshu.com/p/700f017cd330">t-SNE降维原理</a><br><a href="https://kknews.cc/education/83ajqm4.html">t-SNE：最好的降维方法之一</a><br><a href="https://bindog.github.io/blog/2016/06/04/from-sne-to-tsne-to-largevis/">从SNE到t-SNE再到LargeVis</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/senalgo.html">SNE 和 t-SNE 算法</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/senalgo.html" title="SNE 和 t-SNE 算法">https://www.xiemingzhao.com/posts/senalgo.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/senalgo.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E9%99%8D%E7%BB%B4/" rel="tag"><i class="fa fa-tag"></i> 降维</a>
+          
+            <a href="/tags/SNE/" rel="tag"><i class="fa fa-tag"></i> SNE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/word2vec.html" rel="next" title="word2vec 详解">
+                <i class="fa fa-chevron-left"></i> word2vec 详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/batchnormnotes.html" rel="prev" title="Batch Normalization 小记">
+                Batch Normalization 小记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%BB%B4%E6%95%B0%E7%81%BE%E9%9A%BE"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 维数灾难</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%95%B0%E7%90%86%E4%BD%90%E8%AF%81"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 数理佐证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-SNE%E7%AE%97%E6%B3%95%E7%9A%84%E6%80%9D%E6%83%B3%E5%9F%BA%E7%A1%80"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 SNE算法的思想基础</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SNE%E7%9A%84%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2 SNE的算法原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%9B%B8%E4%BC%BC%E6%80%A7%E5%BA%A6%E9%87%8F-%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 相似性度量-条件概率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%AB%98%E4%BD%8E%E7%BB%B4%E7%A9%BA%E9%97%B4%E5%88%86%E5%B8%83%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 高低维空间分布一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%9B%B0%E6%83%91%E5%BA%A6-perplexity"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 困惑度(perplexity)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E6%A2%AF%E5%BA%A6%E6%B1%82%E8%A7%A3"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 梯度求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-SNE%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 SNE的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AF%B9%E7%A7%B0-SNE-Symmetric-SNE"><span class="nav-number">3.</span> <span class="nav-text">3 对称 SNE(Symmetric SNE)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-t-SNE%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">4 t-SNE算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-t%E5%88%86%E5%B8%83%E7%9A%84%E5%BA%94%E7%94%A8%E5%88%B0SNE"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 t分布的应用到SNE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-t-SNE%E7%BC%BA%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 t-SNE缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%B0%8F%E8%A1%A5%E5%85%85"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 小补充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-t-SNE%E5%AE%9E%E6%88%98coding"><span class="nav-number">5.</span> <span class="nav-text">5 t-SNE实战coding</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共236.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

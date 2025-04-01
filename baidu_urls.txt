@@ -1,10 +1,10 @@
-https://www.xiemingzhao.com/posts/faissrecall.html
+https://www.xiemingzhao.com/posts/popularlossfuncs.html
+https://www.xiemingzhao.com/posts/batchnormnotes.html
+https://www.xiemingzhao.com/posts/senalgo.html
+https://www.xiemingzhao.com/posts/word2vec.html
 https://www.xiemingzhao.com/posts/activefunc.html
 https://www.xiemingzhao.com/posts/cuckooFilter.html
 https://www.xiemingzhao.com/posts/bloomFilter.html
+https://www.xiemingzhao.com/posts/faissrecall.html
 https://www.xiemingzhao.com/posts/consistentHash.html
 https://www.xiemingzhao.com/posts/hnswAlgo.html
-https://www.xiemingzhao.com/posts/vecRetrieval.html
-https://www.xiemingzhao.com/posts/bitArithmetic.html
-https://www.xiemingzhao.com/posts/sparseMatrix.html
-https://www.xiemingzhao.com/posts/dcnpaper.html

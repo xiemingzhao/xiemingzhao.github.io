@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="算法,批标准化,BN," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 背景如果你是一个玩深度学习的算法工程师，那么相信你对批标准化（Batch Normalization）一定不陌生。在实际训练深度模型中，BN 往往用来加速模型收敛或者缓解梯度消失&#x2F;爆炸的问题。笔者在实际使用过程中也有一定的收获和思考，收获是不同的使用姿势确实能够带来不一样的效果。思考就是，虽然大致知道BN的原理和公式，但是创建 BN 这个方法的出发点和一些边界问题的思考始终萦绕在周围。在此做一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Batch Normalization 小记">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/batchnormnotes.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 背景如果你是一个玩深度学习的算法工程师，那么相信你对批标准化（Batch Normalization）一定不陌生。在实际训练深度模型中，BN 往往用来加速模型收敛或者缓解梯度消失&#x2F;爆炸的问题。笔者在实际使用过程中也有一定的收获和思考，收获是不同的使用姿势确实能够带来不一样的效果。思考就是，虽然大致知道BN的原理和公式，但是创建 BN 这个方法的出发点和一些边界问题的思考始终萦绕在周围。在此做一">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/batchnormnotes0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/batchnormnotes1.jpg">
+<meta property="article:published_time" content="2021-04-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-01T16:37:00.621Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="批标准化">
+<meta property="article:tag" content="BN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/batchnormnotes0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/batchnormnotes.html"/>
+
+
+
+
+
+  <title>Batch Normalization 小记 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/batchnormnotes.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Batch Normalization 小记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-05T00:00:00+08:00">
+                2021-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/batchnormnotes.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/batchnormnotes.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>如果你是一个玩深度学习的算法工程师，那么相信你对批标准化（<code>Batch Normalization</code>）一定不陌生。在实际训练深度模型中，<strong>BN 往往用来加速模型收敛或者缓解梯度消失/爆炸的问题</strong>。笔者在实际使用过程中也有一定的收获和思考，收获是不同的使用姿势确实能够带来不一样的效果。思考就是，虽然大致知道BN的原理和公式，但是创建 BN 这个方法的出发点和一些边界问题的思考始终萦绕在周围。在此做一个汇总整理，旨在帮助和我一样有此困惑的朋友们。</p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><h3 id="2-1-优化原理"><a href="#2-1-优化原理" class="headerlink" title="2.1 优化原理"></a>2.1 优化原理</h3><p>训练网络深度的加深可能会带来梯度迭代上的<code>梯度消失</code>（Gradient Vanishing)或者<code>梯度爆炸</code>(Gradient Explore)问题。这两个问题的产生原理这里不做赘述，一般都是由于网络层数过深，梯度链式传导带来的结果。</p>
+<span id="more"></span>
+<p>网络训练过程中参数不断改变导致后续每一层输入的分布也发生变化，而学习的过程又要使每一层适应输入的分布，所以一般只能选取较低的学习率和较小值来初始化。这种分布的变化一般称之为<code>internal covariate shift</code>。</p>
+<p><em><code>Convariate Shift</code>是指训练集的样本数据和目标样本集分布不一致时，训练得到的模型无法很好的<code>Generalization</code>。</em></p>
+<p>在训练网络模型的时候经常会对输入做均值归0化，有的做白化，都是为了加速训练。<em>但是能够加速的原理是什么呢？</em></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/batchnormnotes0.png" alt="batchnormnotes0"></p>
+<p>如上图所示，假设初始的样本数据分布如图a所示。当我们进行模型拟合的时候，以单层网络$y = Wx+b$为例，由于参数初始化的时候都是0均值附近的很小值，所以拟合曲线一般都会过原点，如上图 b 红色虚线所示，想要达到收敛的情况就会比较慢。但是，如果将数据平移至原点附近，如图 c 所示，陷入可以加快拟合速度。更甚者对数据做去相关，如图 d 所示，样本间的区分度就会更高。</p>
+<p>而做标准化的方式也有多种，<strong>效果比较好的是PCA，但是在复杂的网络中需要计算协方差矩阵、求逆等操作，计算量很大，此外，反向传播时，标准化操作不一定可导</strong>。这时候<code>Batch Normalization</code>的优势就体现了出来。</p>
+<p><code>Bactch Normalization</code>是来标准化某些层或者所有层的输入，从而<strong>固定每层输入信息的均值和方差</strong>。一般就是要让数据具有0均值和单位方差:</p>
+<script type="math/tex; mode=display">\hat x ^{(k)} = \frac{x^{(k)} - E[x^{(k)}]}{\sqrt {Var[x^{(k)}]}}</script><p><strong>公式中的均值和方差，用一个Batch的均值和方差作为对整个数据集均值和方差的估计。</strong></p>
+<blockquote>
+<p>但是，如果仅仅这么简单的做是有问题的。</p>
+</blockquote>
+<p>我们以下图常用的激活函数<code>sigmoid</code>为例，如果把数据限制到0均值单位方差，那么相当于只使用了激活函数中近似线性的部分，这显然会降低模型表达能力。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/batchnormnotes1.jpg" alt="batchnormnotes1"></p>
+<p>所以，就可以在上述的基础上，增加一个平移和缩放的变换，用来保持模型的表达能力：</p>
+<script type="math/tex; mode=display">y^{(k)} = \gamma^{(k)} \hat x^{(k)} + \beta ^{(k)}</script><h3 id="2-2-模型推理"><a href="#2-2-模型推理" class="headerlink" title="2.2 模型推理"></a>2.2 模型推理</h3><p>实际使用的时候，模型前向传输网络依然使用下列的公式进行数据的标准化：</p>
+<script type="math/tex; mode=display">\hat x = \frac{x - E[x]}{\sqrt{Var[x]+\epsilon}}</script><p><strong>注意：这里的$E[x]$和$Var[x]$不同于训练时候的值，并不是当前batch的统计结果，而是针对整个数据集的统计值。</strong></p>
+<blockquote>
+<p>但是，怎么获取呢？</p>
+</blockquote>
+<ul>
+<li>训练时，均值、方差分别是该批次内数据相应维度的均值与方差；</li>
+<li>推理时，均值、方差是基于所有批次的期望计算所得：</li>
+</ul>
+<p>为了最后在模型 infer 过程中更加准确，需要<strong>记录每一个训练的Batch的均值和方差</strong>，其实就是一个<code>无偏估计</code>：</p>
+<script type="math/tex; mode=display">E[x] \epsilon \gets E_{B}[u_B]</script><script type="math/tex; mode=display">Var[x] \epsilon \gets \frac{m}{m-1}E_B[\sigma^2_B]</script><p>大部分经验说应该把BN放在激活函数之前，这是因为：</p>
+<ul>
+<li>本身就是为了解决梯度消失/爆炸的问题；</li>
+<li>$Wx+b$具有更加一致和非稀疏的分布。</li>
+</ul>
+<p><em>但是也有人做实验表明放在激活函数后面效果更好。</em></p>
+<h2 id="3-tf实战"><a href="#3-tf实战" class="headerlink" title="3 tf实战"></a>3 tf实战</h2><p>介绍了那么多理论，那实际中如何在网络中使用BN层呢？这里将介绍一些对应的tensorflow的API以及使用的小Tips。</p>
+<h3 id="3-1-BN-的-API"><a href="#3-1-BN-的-API" class="headerlink" title="3.1 BN 的 API"></a>3.1 BN 的 API</h3><p>首先Batch Normalization在TensorFlow中有三个接口调用 (不包括slim、Keras模块中的)，分别是：</p>
+<ul>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf/layers/batch_normalization">tf.layers.batch_normalization</a></li>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf/nn/batch_normalization">tf.nn.batch_normalization</a></li>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf/compat/v1/layers/batch_normalization">tf.contrib.layers.batch_norm</a></li>
+</ul>
+<p><code>tf.layers.batch_normalization</code>和<code>tf.contrib.layers.batch_norm</code>可以用来构建待训练的神经网络模型，而<code>tf.nn.batch_normalization</code>一般只用来构建推理模型，原因是后者只定义了初始的网络结构，没有考虑训练和推理时候的参数更新问题。由于<code>tf.contrib</code>包的不稳定性，一般实际中使用最多的就是<code>tf.layers.batch_normalization</code>。</p>
+<p>首先，看一下<code>tf.layers.batch_normalization</code>接口方法的定义：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">tf.layers.batch_normalization(</span><br><span class="line">    inputs,</span><br><span class="line">    axis=-<span class="number">1</span>,</span><br><span class="line">    momentum=<span class="number">0.99</span>,</span><br><span class="line">    epsilon=<span class="number">0.001</span>,</span><br><span class="line">    center=<span class="literal">True</span>,</span><br><span class="line">    scale=<span class="literal">True</span>,</span><br><span class="line">    beta_initializer=tf.zeros_initializer(),</span><br><span class="line">    gamma_initializer=tf.ones_initializer(),</span><br><span class="line">    moving_mean_initializer=tf.zeros_initializer(),</span><br><span class="line">    moving_variance_initializer=tf.ones_initializer(),</span><br><span class="line">    beta_regularizer=<span class="literal">None</span>,</span><br><span class="line">    gamma_regularizer=<span class="literal">None</span>,</span><br><span class="line">    beta_constraint=<span class="literal">None</span>,</span><br><span class="line">    gamma_constraint=<span class="literal">None</span>,</span><br><span class="line">    training=<span class="literal">False</span>,</span><br><span class="line">    trainable=<span class="literal">True</span>,</span><br><span class="line">    name=<span class="literal">None</span>,</span><br><span class="line">    reuse=<span class="literal">None</span>,</span><br><span class="line">    renorm=<span class="literal">False</span>,</span><br><span class="line">    renorm_clipping=<span class="literal">None</span>,</span><br><span class="line">    renorm_momentum=<span class="number">0.99</span>,</span><br><span class="line">    fused=<span class="literal">None</span>,</span><br><span class="line">    virtual_batch_size=<span class="literal">None</span>,</span><br><span class="line">    adjustment=<span class="literal">None</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>其中，有几个主要参数需要了解一下：</p>
+<ul>
+<li><code>axis</code>的值取决于按照<code>input</code>的哪一个维度进行BN，例如输入为<code>channel_last format</code>，即<code>[batch_size, height, width, channel]</code>，则<code>axis</code>应该设定为4，如果为<code>channel_first format</code>，则<code>axis</code>应该设定为1.</li>
+<li><code>momentum</code>的值用在训练时，滑动平均的方式计算滑动平均值<code>moving_mean</code>和滑动方差<code>moving_variance</code>。</li>
+<li><code>center</code>为<code>True</code>时，添加位移因子<code>beta</code>到该BN层，否则不添加。添加<code>beta</code>是对BN层的变换加入位移操作。<strong>注意，<code>beta</code>一般设定为可训练参数，即trainable=True</strong>。</li>
+<li><code>scale</code>为True是，添加缩放因子<code>gamma</code>到该BN层，否则不添加。添加gamma是对BN层的变化加入缩放操作。<strong>注意，gamma一般设定为可训练参数，即trainable=True</strong>。</li>
+<li><code>training</code>表示模型当前的模式，如果为True，则模型在训练模式，否则为推理模式。<strong>要非常注意这个模式的设定!!!</strong>，这个参数默认值为False。如果在训练时采用了默认值False，则滑动均值<code>moving_mean</code>和滑动方差<code>moving_variance</code>都不会根据当前batch的数据更新，这就意味着<strong>在推理模式下，均值和方差都是其初始值，因为这两个值并没有在训练迭代过程中滑动更新</strong>。</li>
+</ul>
+<h3 id="3-2-BN-的-code"><a href="#3-2-BN-的-code" class="headerlink" title="3.2 BN 的 code"></a>3.2 BN 的 code</h3><p>TensorFlow中模型训练时的梯度计算、参数优化等<code>train_op</code>并没有依赖滑动均值<code>moving_mean</code>和滑动方差<code>moving_variance</code>，则moving_mean和moving_variance不会自动更新，只能在<code>tf.GraphKeys.GLOBAL_VARIABLES</code>中，所以<strong>必须加入负责更新这些参数的<code>update_ops</code>到依赖中</strong>，且应该在执行前向计算结束后、后向计算开始前执行update_ops，所以添加依赖的位置不能出错。在前文提到的$\beta$和$\gamma$是可训练变量，存放于<code>tf.GraphKeys.TRAINABLE_VARIABLES</code>。实际中，只需要在构建模型代码中，添加完所有BN层之后获取update_ops就不会出错!!！这是TensorFlow的图计算模式造成的编程影响，在其他深度学习框架中可能会有差别。</p>
+<p><strong>训练</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x_norm = tf.layers.batch_normalization(x, training=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</span><br><span class="line">train_op = optimizer.minimize(loss)</span><br><span class="line">train_op = tf.group([train_op, update_ops])</span><br></pre></td></tr></table></figure></p>
+<p><strong>模型保存</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sess = tf.Session()</span><br><span class="line">saver = tf.train.Saver(tf.global_variables())</span><br><span class="line">saver.save(sess, <span class="string">&quot;your_path&quot;</span>)</span><br></pre></td></tr></table></figure></p>
+<p><strong>预测</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x_norm = tf.layers.batch_normalization(x, training=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">saver = tf.train.Saver(tf.global_variables())</span><br><span class="line">saver.restore(sess, <span class="string">&quot;your_path&quot;</span>)</span><br></pre></td></tr></table></figure></p>
+<p><strong>estimator</strong><br>如果你使用的是高阶API：estimator进行训练的话，那么就比较麻烦，因为它的session没有暴露出来，你没办法直接使用，需要换个方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">model_fn_build</span>(<span class="params">init_checkpoint=<span class="literal">None</span>, lr=<span class="number">0.001</span>, model_dir=<span class="literal">None</span></span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_model_fn</span>(<span class="params">features, labels, mode, params</span>):</span><br><span class="line"></span><br><span class="line">        x = features[<span class="string">&#x27;inputs&#x27;</span>]</span><br><span class="line">        y = features[<span class="string">&#x27;labels&#x27;</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment">#####################在这里定义你自己的网络模型###################</span></span><br><span class="line">        x_norm = tf.layers.batch_normalization(x, training=mode == tf.estimator.ModeKeys.TRAIN)</span><br><span class="line">        pre = tf.layers.dense(x_norm, <span class="number">1</span>)</span><br><span class="line">        loss = tf.reduce_mean(tf.<span class="built_in">pow</span>(pre - y, <span class="number">2</span>), name=<span class="string">&#x27;loss&#x27;</span>)</span><br><span class="line">        <span class="comment">######################在这里定义你自己的网络模型###################</span></span><br><span class="line"></span><br><span class="line">        lr = params[<span class="string">&#x27;lr&#x27;</span>]</span><br><span class="line">				</span><br><span class="line">        <span class="comment">######################进入eval和predict之前，都经过这一步加载过程###################</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 加载保存的模型</span></span><br><span class="line">        <span class="comment"># 为了加载batch_normalization的参数，需要global_variables</span></span><br><span class="line">        tvars = tf.global_variables()</span><br><span class="line">        initialized_variable_names = &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> params[<span class="string">&#x27;init_checkpoint&#x27;</span>] <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">or</span> tf.train.latest_checkpoint(model_dir) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            checkpoint = params[<span class="string">&#x27;init_checkpoint&#x27;</span>] <span class="keyword">or</span> tf.train.latest_checkpoint(model_dir)</span><br><span class="line">            (assignment_map, initialized_variable_names</span><br><span class="line">             ) = get_assignment_map_from_checkpoint(tvars, checkpoint)</span><br><span class="line">            tf.train.init_from_checkpoint(checkpoint, assignment_map)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># tf.logging.info(&quot;**** Trainable Variables ****&quot;)</span></span><br><span class="line">        <span class="comment"># for var in tvars:</span></span><br><span class="line">        <span class="comment">#     init_string = &quot;&quot;</span></span><br><span class="line">        <span class="comment">#     if var.name in initialized_variable_names:</span></span><br><span class="line">        <span class="comment">#         init_string = &quot;, *INIT_FROM_CKPT*&quot;</span></span><br><span class="line">        <span class="comment">#     tf.logging.info(&quot;  name = %s, shape = %s%s&quot;, var.name, var.shape,</span></span><br><span class="line">        <span class="comment">#                     init_string)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">######################进入eval和predict之前，都经过这一步加载过程###################</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> mode == tf.estimator.ModeKeys.TRAIN:</span><br><span class="line">            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)</span><br><span class="line">            train_op = optimizer.minimize(loss)</span><br><span class="line">            train_op = tf.group([train_op, update_ops])</span><br><span class="line">            <span class="keyword">return</span> tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> mode == tf.estimator.ModeKeys.EVAL:</span><br><span class="line">            metrics = &#123;<span class="string">&quot;accuracy&quot;</span>: tf.metrics.accuracy(features[<span class="string">&#x27;label&#x27;</span>], pred)&#125;</span><br><span class="line">            <span class="keyword">return</span> tf.estimator.EstimatorSpec(mode, eval_metric_ops=metrics, loss=loss)</span><br><span class="line"></span><br><span class="line">        predictions = &#123;<span class="string">&#x27;predictions&#x27;</span>: pred&#125;</span><br><span class="line">        predictions.update(&#123;k: v <span class="keyword">for</span> k, v <span class="keyword">in</span> features.items()&#125;)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> tf.estimator.EstimatorSpec(mode, predictions=predictions)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tf.estimator.Estimator(_model_fn, model_dir=model_dir, config=config,</span><br><span class="line">                                  params=&#123;<span class="string">&quot;lr&quot;</span>: lr, <span class="string">&quot;init_checkpoint&quot;</span>: init_checkpoint&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_assignment_map_from_checkpoint</span>(<span class="params">tvars, init_checkpoint</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Compute the union of the current variables and checkpoint variables.&quot;&quot;&quot;</span></span><br><span class="line">    assignment_map = &#123;&#125;</span><br><span class="line">    initialized_variable_names = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    name_to_variable = collections.OrderedDict()</span><br><span class="line">    <span class="keyword">for</span> var <span class="keyword">in</span> tvars:</span><br><span class="line">        name = var.name</span><br><span class="line">        m = re.<span class="keyword">match</span>(<span class="string">&quot;^(.*):\\d+$&quot;</span>, name)</span><br><span class="line">        <span class="keyword">if</span> m <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            name = m.group(<span class="number">1</span>)</span><br><span class="line">        name_to_variable[name] = var</span><br><span class="line"></span><br><span class="line">    init_vars = tf.train.list_variables(init_checkpoint)</span><br><span class="line"></span><br><span class="line">    assignment_map = collections.OrderedDict()</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> init_vars:</span><br><span class="line">        (name, var) = (x[<span class="number">0</span>], x[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">not</span> <span class="keyword">in</span> name_to_variable:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        assignment_map[name] = name</span><br><span class="line">        initialized_variable_names[name] = <span class="number">1</span></span><br><span class="line">        initialized_variable_names[name + <span class="string">&quot;:0&quot;</span>] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (assignment_map, initialized_variable_names)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="3-3-一些总结"><a href="#3-3-一些总结" class="headerlink" title="3.3 一些总结"></a>3.3 一些总结</h3><p>笔者在使用中有一些对比结论：</p>
+<ul>
+<li>首先 bn 层往往放在 dense 层和 activation 层（一般 ReLU）之间，有助于加速收敛和防止过拟合；</li>
+<li>尽量不在 sigmoid 的激活层前加，可能会使得模型难以收敛；</li>
+<li>输出层之前一般不能加；</li>
+<li>training 的参数及其重要。</li>
+</ul>
+<p><strong>参考文章</strong><br><a href="https://blog.csdn.net/shuzfan/article/details/50723877">解读Batch Normalization</a><br><a href="https://blog.csdn.net/caicaiatnbu/article/details/72742293?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-10.no_search_link&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-10.no_search_link">[TensorFlow 学习笔记-05]批标准化(Bacth Normalization，BN)</a><br><a href="https://blog.csdn.net/sgyuanshi/article/details/115268969">tensorflow中batch_normalization的正确使用姿势</a><br><a href="https://www.jianshu.com/p/437fb1a5823e">Batch Normalization的正确打开方式</a><br><a href="https://arxiv.org/pdf/1502.03167.pdf">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/batchnormnotes.html">Batch Normalization 小记</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/batchnormnotes.html" title="Batch Normalization 小记">https://www.xiemingzhao.com/posts/batchnormnotes.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/batchnormnotes.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/%E6%89%B9%E6%A0%87%E5%87%86%E5%8C%96/" rel="tag"><i class="fa fa-tag"></i> 批标准化</a>
+          
+            <a href="/tags/BN/" rel="tag"><i class="fa fa-tag"></i> BN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/senalgo.html" rel="next" title="SNE 和 t-SNE 算法">
+                <i class="fa fa-chevron-left"></i> SNE 和 t-SNE 算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/popularlossfuncs.html" rel="prev" title="深度学习的常用损失函数">
+                深度学习的常用损失函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 优化原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 模型推理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-tf%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">3 tf实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-BN-%E7%9A%84-API"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 BN 的 API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-BN-%E7%9A%84-code"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 BN 的 code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 一些总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共236.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

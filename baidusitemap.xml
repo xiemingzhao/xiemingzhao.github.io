@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.xiemingzhao.com/posts/word2vec.html</loc>
+    <lastmod>2025-04-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/popularlossfuncs.html</loc>
+    <lastmod>2025-04-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/batchnormnotes.html</loc>
+    <lastmod>2025-04-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/senalgo.html</loc>
+    <lastmod>2025-04-01</lastmod>
+  </url>
+  <url>
     <loc>https://www.xiemingzhao.com/posts/faissrecall.html</loc>
-    <lastmod>2025-03-31</lastmod>
+    <lastmod>2025-04-01</lastmod>
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/consistentHash.html</loc>
