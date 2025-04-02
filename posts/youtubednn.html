@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="精排,YouTubeDNN,WCE," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 背景这是一篇推荐算法领域经典的论文，它由 YouTube 在2016年发表在 RecSys 上的文章Deep Neural Networks for YouTube Recommendations。这篇文章是诸多推荐算法工程师的必学经典，可能很多人多次重读都会有新的思考，本文也重点总结文章的核心内容与一些实战经验的思考。 2 原理首先便是其展示的系统链路示意图，这块与大多主流方案没有什么区别。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YouTubeDNN 和 WCE">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/youtubednn.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 背景这是一篇推荐算法领域经典的论文，它由 YouTube 在2016年发表在 RecSys 上的文章Deep Neural Networks for YouTube Recommendations。这篇文章是诸多推荐算法工程师的必学经典，可能很多人多次重读都会有新的思考，本文也重点总结文章的核心内容与一些实战经验的思考。 2 原理首先便是其展示的系统链路示意图，这块与大多主流方案没有什么区别。">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn3.png">
+<meta property="article:published_time" content="2021-12-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-02T16:56:52.087Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="精排">
+<meta property="article:tag" content="YouTubeDNN">
+<meta property="article:tag" content="WCE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/youtubednn.html"/>
+
+
+
+
+
+  <title>YouTubeDNN 和 WCE | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/youtubednn.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">YouTubeDNN 和 WCE</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-18T00:00:00+08:00">
+                2021-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">精排模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/youtubednn.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/youtubednn.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>这是一篇推荐算法领域经典的论文，它由 YouTube 在2016年发表在 RecSys 上的文章<a href="https://dl.acm.org/doi/pdf/10.1145/2959100.2959190">Deep Neural Networks for YouTube Recommendations</a>。<br>这篇文章是诸多推荐算法工程师的必学经典，可能很多人多次重读都会有新的思考，本文也重点总结文章的核心内容与一些实战经验的思考。</p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>首先便是其展示的系统链路示意图，这块与大多主流方案没有什么区别。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn0.png" alt="youtubednn0"></p>
+<p>论文分别介绍了在 <code>recall</code> 和 <code>ranking</code> 两个模块的方案，但可以说，recall 部分的重要性远大于 ranking。就此文章发表后的几年而言，<em>recall 往往还在工业界主流召回的候选方案中，但 ranking 的方案基本已经成为历史，很少再使用了</em>，不过其思想还是值得学习的。</p>
+<span id="more"></span>
+<h3 id="2-1-recall"><a href="#2-1-recall" class="headerlink" title="2.1 recall"></a>2.1 recall</h3><blockquote>
+<p>任务目标：预测用户下一个观看的视频（next watch），一个多分类问题。</p>
+</blockquote>
+<script type="math/tex; mode=display">P(w_t=i|U,C)=\frac{e^{v_i,u}}{\sum_{j \in V} e^{v_j,u}}</script><p>这里先上模型结构，如下图所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn1.png" alt="youtubednn1"></p>
+<p><strong>特征</strong></p>
+<ul>
+<li>用户历史看的视频序列，取 embedding 做 <code>average pooling</code>；</li>
+<li>用户历史搜索的 token 序列，也做 <code>average pooling</code>；</li>
+<li>用户的地理位置、性别、年龄等；</li>
+<li>样本年龄（后续单独介绍）。</li>
+</ul>
+<p>之后便是把所有 embedding 进行 concat 拼接，过3层 DNN 以得到 user vector 即 user embedding。</p>
+<p><strong>注意：这里只有 user 的特征输入。</strong></p>
+<blockquote>
+<p>这是召回模型的通用方法，类似于双塔模型。主要是先构建 user embedding 的网络，利于后续线上服务。而与 item 的交互，往往放在最后一个环节。</p>
+</blockquote>
+<p>可以看到，在 user vector 生成后，被分成了 <code>training</code> 和 <code>serving</code> 两个分支。</p>
+<p>先看 <code>training</code> 部分，看上去2步：</p>
+<ol>
+<li>先经过 softmax 层预估 video 的多分类概率；</li>
+<li>然后产出 video vector 供 serving 使用。</li>
+</ol>
+<p>我们假设 3 层的 DNN 后得到的 user vector 是 K 维的，而需要进行多分类的候选集有 M 个 video，那么 training 侧的结构便是：</p>
+<script type="math/tex; mode=display">output = softmax(user_{vec} \cdot W)</script><p>如果 $user_{vec}$ 是 $1 \times K$ 的，那么 $W$ 便是 $K \times M$ 的，如此输出就是 M 维的 softmax 结果。<strong>那么 W 的 M 列 K 维向量即可作为候选集 M 个 video 的 vector。</strong></p>
+<p>其实不用陌生：让我们再次联想召回的双塔模型，是不是就相当于将候选 M 个 video 先过 embedding 层，之后与user vector 做点积，这也是召回模型的经典做法。</p>
+<p>再看 <code>serving</code> 环节，也是经典的召回方案。即：</p>
+<ol>
+<li>离线模型中训练好的 video vector 保存下来；</li>
+<li>将 video vector 构建到 ANN 等向量索引库中；</li>
+<li>线上 serving 的时候，user vector 通过模型实时 infer 得到；</li>
+<li>用 user vector 和索引库进行近邻召回。</li>
+</ol>
+<p><strong>如此的优势</strong>：</p>
+<ul>
+<li>因为每次 serving 需要处理的 video 很多，其 vector 不适合实时生成；</li>
+<li>每次 serving 时 user vector 只需要 infer 一条样本，性能可控，捕捉 user 实时偏好就更重要。</li>
+</ul>
+<p><strong>样本年龄</strong><br>针对论文提到的 <code>Example Age</code> 特征，可能很多人（包括我本人），一开始对此理解是；</p>
+<blockquote>
+<p>视频上架距离 log 的时间差，比如曝光的视频已经上架 48h，那么该特征便是 48。即文中的 <code>Days Since Upload</code>。</p>
+</blockquote>
+<p>然而，结合其他观点和重读论文，应该是：</p>
+<blockquote>
+<p><code>sample log</code> 距离当前的时间作为 <code>example age</code>，比如一条曝光/点击日志 ，发生在 2h 前，在被 training 的时候，也许其 video 已经上架 48h 了，但 example age 特征的取值是前者 2。</p>
+</blockquote>
+<p>作者提到，在加入该特征后，<strong>模型能够较好地学习到视频的 freshness 程度对 popularity 的影响</strong>。体现在下图的 <code>Days Since Upload</code> 后验分布的变化，新模型比 baseline 表现得更接近真实分布。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn2.png" alt="youtubednn2"></p>
+<h3 id="2-2-ranking"><a href="#2-2-ranking" class="headerlink" title="2.2 ranking"></a>2.2 ranking</h3><blockquote>
+<p>优化目标：expected watch time，即视频期望观看时长。</p>
+</blockquote>
+<p>这里我们重点介绍一些核心，先上模型结构图：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/youtubednn3.png" alt="youtubednn3"></p>
+<p><strong>特征：</strong></p>
+<ul>
+<li><code>video embedding</code>：<ul>
+<li><code>impression video ID</code>: 当前待评估的video的embedding</li>
+<li><code>watched video IDs</code>: 用户最近观看的N个 video 的 embedding 的 average pooling</li>
+</ul>
+</li>
+<li><code>language embedding</code>:<ul>
+<li><code>user language</code>: 用户语言的 embedding</li>
+<li><code>video language</code>: 当前视频语言的 embedding</li>
+</ul>
+</li>
+<li><code>time since last watch</code>: 用户上次观看同 channel 视频距今的时间</li>
+<li><code>#previous impressions</code>: 该 video 已经被曝光给该用户的次数</li>
+</ul>
+<p>披露的特征设计非常经典且贴合实际业务，也许真实的特征体系比这要更丰富，但论文披露的更多是特征设计的思想。</p>
+<ul>
+<li><code>video embedding</code> 代表了捕捉用户历史行为序列关于当前视频的相关度；</li>
+<li><code>language</code> 非常具有 youtube 全球视频网站的特色，捕捉用户与视频语言差异。</li>
+<li>后面的2个统计值度量了一些时间因素，用户看同 <code>channel</code> 隔了多久以捕捉兴趣衰减，已经曝光的次数代表了用户忽视程度。</li>
+</ul>
+<p>此外，论文提到了一些<code>trick</code>：</p>
+<ul>
+<li>连续型特征做 <code>normalization</code>，利于模型收敛；</li>
+<li>部分统计特征进行了 <code>box-cox 变化</code>，<strong>是一种增加特征非线性输入的办法，辅助模型训练</strong>；</li>
+<li>长尾 video，其 embedding 用 0 来代替，降低长尾影响。</li>
+</ul>
+<p>模型将输入 embedding 进行 concat 后过了一个 3 层 DNN，之后类似 recall 环节，又分成了 training 和 serving 这2个分支，实际上这里是<strong>巧妙地将回归问题转分类了</strong>。</p>
+<ul>
+<li><code>training</code> 时，Weighted LR 方式，label 为是否观看，weight 是观看时长，作用在 loss 上；</li>
+<li><code>serving</code> 时，使用 $e^{wx+b}$ 作为观看时长的预估值，其中指数部分是训练时 sigmoid 的 input 部分。</li>
+</ul>
+<h2 id="3-实践经验"><a href="#3-实践经验" class="headerlink" title="3 实践经验"></a>3 实践经验</h2><p>结合王哲老师的工程10问，这里总结和补充一下个人认为比较重要的实战经验，供自己复盘和其他读者批评。</p>
+<h3 id="3-1-Recall-model-的性能问题"><a href="#3-1-Recall-model-的性能问题" class="headerlink" title="3.1 Recall model 的性能问题"></a>3.1 Recall model 的性能问题</h3><p><code>next watch</code> 的目标下，候选 video 有数百万量级，这在使用 softmax 进行多分类更低效。论文有提到这块，类似于 word2vec 的解决方案，<strong>负采样（negative sampling）或者 分层处理（hierarchical softmax）。</strong>效果是没有太大差异，一般负采样使用更广泛。</p>
+<blockquote>
+<p>其原理是：每次不用预估所有候选，而只采样一定数量（超参数）的样本作为负样本，甚至进一步可以转化成基于点积的二分类。</p>
+</blockquote>
+<h3 id="3-2-Ranking-Model-为什么选择用分类而不是回归？"><a href="#3-2-Ranking-Model-为什么选择用分类而不是回归？" class="headerlink" title="3.2 Ranking Model 为什么选择用分类而不是回归？"></a>3.2 Ranking Model 为什么选择用分类而不是回归？</h3><p>我认为在该问题上主要有2点。</p>
+<ol>
+<li>是业务目标的决策。如果是点击等目标天然满足，这里这不满足此。</li>
+<li>实际工业应用中，以时长等连续型数据作为 Label 时，因其<strong>具有严重的长尾分布特性，这会使得回归模型在拟合过程中容易欠佳</strong>。一般体现在对 Label 值过低和过高的两端样本拟合偏差，MSE、PCOC等预估统计量偏差很大。因而一般会转成分类任务来处理。<br><em>具体原因则和回归模型特性以及样本梯度分布有关系，不过多赘述。相对地，分类模型则在这方面稳健性会高一些。</em></li>
+</ol>
+<h3 id="3-3-Ranking-model-使用-weighted-LR-的原理"><a href="#3-3-Ranking-model-使用-weighted-LR-的原理" class="headerlink" title="3.3 Ranking model 使用 weighted LR 的原理"></a>3.3 Ranking model 使用 weighted LR 的原理</h3><p>我们来理解一下为什么论文中做法能生效？这里阐述一下个人的理解。</p>
+<script type="math/tex; mode=display">p = sigmoid(z)=\frac{e^z}{1 + e^{z}}</script><p>其中 z 是最后一层，即 $z = wx+b$。</p>
+<p>那么 LR 模型的交叉熵 loss 为：</p>
+<script type="math/tex; mode=display">loss = \sum -(\log{p} + \log(1-p))</script><p>那么，如果我们将 label 由“是否观看”变成 $\frac{t}{1+t}$ ，其中 t 是观看时长，那么 loss 就变成：</p>
+<script type="math/tex; mode=display">loss = \sum -(\frac{t}{1+t} \cdot \log{p} + \frac{1}{1+t} \cdot \log(1-p))</script><p>注意！这时候，$p$ 拟合的就是 $\frac{t}{1+t}$，当其不断逼近的时候，就有：</p>
+<script type="math/tex; mode=display">e^{z} \to t</script><p>故，<strong>在 serving 的时候就使用 $e^{z}=e^{wx+b}$作为观看时长 t 的预估值。</strong></p>
+<p>进一步，因大多时候 1+t 等于或接近1，那么 loss 近似等价于：</p>
+<script type="math/tex; mode=display">loss = \sum -(t \cdot \log{p} + 1 \cdot \log(1-p))</script><blockquote>
+<p>注：这里类似王哲老师提到的“概率p往往是一个很小的值”来近似上一个道理。</p>
+</blockquote>
+<p>这便是一个<strong>目标是否观看的 weighted LR 的 loss，且 weight 为观看时间 t。</strong></p>
+<p><strong>补充：</strong><br><code>Weighted LR</code> 实际上就是 <code>WCE(weighted cross entropy) Loss</code>，一般来说有两种方法：</p>
+<ul>
+<li>将正样本按照 weight 做重复 sampling；</li>
+<li>通过改变梯度的 weight 来得到 Weighted LR （论文方法）。</li>
+</ul>
+<p>但是 <code>WCE</code> 有2个缺点：</p>
+<ul>
+<li>其实假设了样本分布服从几何分布，否则可能导致效果不好；</li>
+<li>在低估时（$\hat y &lt; y$）梯度很大，高估时（$\hat y &gt; y$）梯度很小，很容易导致模型高估。</li>
+</ul>
+<h3 id="3-4-如何生成-user-和-video-的-embedding？"><a href="#3-4-如何生成-user-和-video-的-embedding？" class="headerlink" title="3.4 如何生成 user 和 video 的 embedding？"></a>3.4 如何生成 user 和 video 的 embedding？</h3><p>文中介绍用 word2vec 预训练得到。当然，我们知道，也可以使用 embedding layer 去联合训练，且往往这种实践更好，也是现如今的主流做法。</p>
+<h3 id="3-5-example-age-的处理和原因？"><a href="#3-5-example-age-的处理和原因？" class="headerlink" title="3.5 example age 的处理和原因？"></a>3.5 example age 的处理和原因？</h3><p><strong>猜想：可能是从特征维度区分开历史样本的重要度，越新的样本（不是 video）可能对模型参考价值越大。有点类似于 biasnet 的修正作用。</strong></p>
+<blockquote>
+<p>比如有一个 video（不一定新上架） 1h 前有很多正样本，且越来越少，那么模型通过此特征可能能够感知到这种热度的时序变化趋势。</p>
+</blockquote>
+<p>但，对于 youtube 而言，其模型训练应该是：</p>
+<ul>
+<li>实时（至少日内）的；</li>
+<li>批次增量的（即不会回溯更久远的样本）；</li>
+</ul>
+<p>假设样本的切分窗口为 T（比如2h），那么就一定 $0&lt;example age&lt;T$，那么问题来了：</p>
+<blockquote>
+<p>样本只能学习到该特征在（0，T）的分布，但论文图中却展示 Days Since Upload 特征的后验分布改善了。</p>
+</blockquote>
+<p>serving 的时候，虽然说通过置0来消除 example age 的bias，但实际上样本距离当下的时间又发生了变化，即 example age 信息发生了偏移。</p>
+<p><strong>总结</strong>：也许这两个特征都在模型中，且交叉效应大于边际效应。描述 video fresh 程度交给 Days Since Upload 特征，再加上描述 sample fresh 程度的 example age。能够使得前者后验预估的更准确，也能够通过后者修正历史样本的 times bias。</p>
+<h3 id="3-6-为什么对每个用户提取等数量的训练样本？"><a href="#3-6-为什么对每个用户提取等数量的训练样本？" class="headerlink" title="3.6 为什么对每个用户提取等数量的训练样本？"></a>3.6 为什么对每个用户提取等数量的训练样本？</h3><p>原文中提到“这是为了减少高度活跃用户对于loss的过度影响。”但实际上个人觉得这个方法可能不一定最适合。结合逻辑和个人经验，个人认为主要有2点：</p>
+<ul>
+<li>模型学习了一个有偏于真实分布的样本，预估会有偏差；</li>
+<li>本末倒置，使得低活的影响力反而增强，线上 ABtest 的时候，其贡献往往不足，因线上业务收益往往也是高活主导，二八法则；</li>
+</ul>
+<p>虽如此，<strong>倒不是说高活不应该抑制</strong>，对于比较异常的高活，可以针对他们样本欠采样或者加正则，而不是只有通过提高重要性更低的非高活人群的作用。</p>
+<h3 id="3-7-为什么不采取类似RNN的Sequence-model？"><a href="#3-7-为什么不采取类似RNN的Sequence-model？" class="headerlink" title="3.7 为什么不采取类似RNN的Sequence model？"></a>3.7 为什么不采取类似RNN的Sequence model？</h3><p>论文提到主要是过于依赖临近行为，使得推荐结果容易大范围趋同于最近看过的 video。<br>此外，还有一个比较重要的原因便是 serving 时候的 infer 性能问题。</p>
+<h3 id="3-8-为什么长尾的video直接用0向量代替？"><a href="#3-8-为什么长尾的video直接用0向量代替？" class="headerlink" title="3.8 为什么长尾的video直接用0向量代替？"></a>3.8 为什么长尾的video直接用0向量代替？</h3><p>把大量长尾的video截断掉，主要是为了<strong>节省online serving中宝贵的内存资源</strong>。</p>
+<p>但现在问问不会这么粗暴的使用，一般是<strong>将长尾物料进行聚类，以改善他们样本过于稀疏而带来的收敛困难问题</strong>。极端情况就是聚为1类，共享一个 embedding，类似于冷启动一样，当逐渐脱离长尾后再出场拥有独立的 embedding。</p>
+<p><strong>参考文章</strong><br><a href="https://dl.acm.org/doi/pdf/10.1145/2959100.2959190">Deep Neural Networks for YouTube Recommendations</a><br><a href="https://www.cnblogs.com/xumaomao/p/15207305.html">Weighted LR （WCE Weighted cross entropy）</a><br><a href="https://blog.csdn.net/u012328159/article/details/123986042">推荐系统（二十）谷歌YouTubeDNN</a><br><a href="https://zhuanlan.zhihu.com/p/52169807">重读Youtube深度学习推荐系统论文</a><br><a href="https://zhuanlan.zhihu.com/p/52504407">YouTube深度学习推荐系统的十大工程问题</a><br><a href="https://blog.csdn.net/weixin_46838716/article/details/126459692?spm=1001.2014.3001.5502">排序04：视频播放建模</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/youtubednn.html">YouTubeDNN 和 WCE</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/youtubednn.html" title="YouTubeDNN 和 WCE">https://www.xiemingzhao.com/posts/youtubednn.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/youtubednn.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%B2%BE%E6%8E%92/" rel="tag"><i class="fa fa-tag"></i> 精排</a>
+          
+            <a href="/tags/YouTubeDNN/" rel="tag"><i class="fa fa-tag"></i> YouTubeDNN</a>
+          
+            <a href="/tags/WCE/" rel="tag"><i class="fa fa-tag"></i> WCE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/frommmoetople.html" rel="next" title="从 MMOE 到 PLE 模型">
+                <i class="fa fa-chevron-left"></i> 从 MMOE 到 PLE 模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/biasnet.html" rel="prev" title="推荐模型中的 position bias 和 debias">
+                推荐模型中的 position bias 和 debias <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-recall"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 recall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-ranking"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 ranking</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%9E%E8%B7%B5%E7%BB%8F%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">3 实践经验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Recall-model-%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Recall model 的性能问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Ranking-Model-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E7%94%A8%E5%88%86%E7%B1%BB%E8%80%8C%E4%B8%8D%E6%98%AF%E5%9B%9E%E5%BD%92%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Ranking Model 为什么选择用分类而不是回归？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Ranking-model-%E4%BD%BF%E7%94%A8-weighted-LR-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Ranking model 使用 weighted LR 的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90-user-%E5%92%8C-video-%E7%9A%84-embedding%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 如何生成 user 和 video 的 embedding？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-example-age-%E7%9A%84%E5%A4%84%E7%90%86%E5%92%8C%E5%8E%9F%E5%9B%A0%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 example age 的处理和原因？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AF%B9%E6%AF%8F%E4%B8%AA%E7%94%A8%E6%88%B7%E6%8F%90%E5%8F%96%E7%AD%89%E6%95%B0%E9%87%8F%E7%9A%84%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC%EF%BC%9F"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 为什么对每个用户提取等数量的训练样本？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E9%87%87%E5%8F%96%E7%B1%BB%E4%BC%BCRNN%E7%9A%84Sequence-model%EF%BC%9F"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 为什么不采取类似RNN的Sequence model？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%95%BF%E5%B0%BE%E7%9A%84video%E7%9B%B4%E6%8E%A5%E7%94%A80%E5%90%91%E9%87%8F%E4%BB%A3%E6%9B%BF%EF%BC%9F"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 为什么长尾的video直接用0向量代替？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共247.7k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

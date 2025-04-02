@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="MMOE,精排," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言本文介绍的MMOE模型全称是Multi-gate Mixture-of-Experts，来自 Google 在 2018 年 KDD 上发表的论文Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts。核心目标是改善多任务学习在任务之间不太相关的时候效果不好的问题。下面有两个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MMOE 模型解析">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/mmoemodel.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言本文介绍的MMOE模型全称是Multi-gate Mixture-of-Experts，来自 Google 在 2018 年 KDD 上发表的论文Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts。核心目标是改善多任务学习在任务之间不太相关的时候效果不好的问题。下面有两个">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe2.png">
+<meta property="article:published_time" content="2021-06-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-02T16:07:31.268Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="MMOE">
+<meta property="article:tag" content="精排">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/mmoemodel.html"/>
+
+
+
+
+
+  <title>MMOE 模型解析 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/mmoemodel.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MMOE 模型解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-06T00:00:00+08:00">
+                2021-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">精排模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/mmoemodel.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/mmoemodel.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>本文介绍的<code>MMOE</code>模型全称是<code>Multi-gate Mixture-of-Experts</code>，来自 Google 在 2018 年 KDD 上发表的论文<a href="https://dl.acm.org/doi/pdf/10.1145/3219819.3220007">Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts</a>。核心目标是改善多任务学习在任务之间不太相关的时候效果不好的问题。下面有两个相关学习资源：</p>
+<ul>
+<li>视频简介的<a href="https://www.youtube.com/watch?v=Dweg47Tswxw">youtube地址</a>;</li>
+<li>一个用keras框架实现的<a href="https://github.com/drawbridge/keras-mmoe">开源地址</a>。</li>
+</ul>
+<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2 动机"></a>2 动机</h2><p>多任务学习一般是为了在训练多个相关任务的时候可以使得它们之间能够共享信息，提高学习效率和模型的泛化能力。但实际应用中往往难以如此理想化，因为<strong>任务之间往往相关性不够强</strong>，这时候就容易产生以下两个问题：</p>
+<blockquote>
+<p><code>负迁移（negative transfer）</code>：即网络表现变差<br><code>跷跷板现象（seesaw phenomenon）</code>：也就是个别任务相对于独立训练获得提升，但其他任务效果下降。</p>
+</blockquote>
+<span id="more"></span>
+<p>论文团队在实际中也做了这方面的实验，它们仿真了不同相关性的数据集，然后在他们上面测试模型的训练效果，如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe0.png" alt="mmoe0"></p>
+<p>上图中的 <code>correlation</code> 是 <code>Pearson相关性系数</code>，从中可以看出相关性越高 loss 收敛的速度越快，值越小，说明效果越好。</p>
+<p>在实际中，大多数任务也不足够相关，例如笔者自身的经验，在某电商瀑布流推荐场景，其中点击与查看价格相关性尚可（约0.48），但是收藏乃至成交等越深的行为与其相关性就越差了（&lt;0.1）。有时候也不能够直接判断任务之间的相关性，但无论如何，解决相关性不高的多任务学习本身就是一个很有实际意义的工作。</p>
+<h2 id="3-模MMOE型"><a href="#3-模MMOE型" class="headerlink" title="3 模MMOE型"></a>3 模MMOE型</h2><p>在<code>MMOE</code>模型提出来之前，也有一些相关的探索，论文作者也提到他们与<code>MMOE</code>之间的关系。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe1.png" alt="mmoe1"></p>
+<p>入上图所示，(a) 和 (b)是两个较为基础的<code>shared embedding</code>模型。</p>
+<p>图 (a) 表示的是<code>Shared-Bottom model</code>，input 层之后进入模型 shared 的 bottom 模块，一般也就是一个 DNN 结构。之后，分别进入每个任务自己的 Tower，例如图中的 Tower A 和 Tower B，得到最终每个 Task 的 output。整个过程可以简单的用下述公式来表述：</p>
+<script type="math/tex; mode=display">y^k = h^k (f(x))</script><p>其中，</p>
+<ul>
+<li>k 表示第几个目标 Task;</li>
+<li>h 表示每个 Task 各自的 Tower 网络;</li>
+<li>f 则表示地步共享的 bootom 网络。</li>
+</ul>
+<p>图 (b) 表示的是<code>MOE模型</code>，其与（a）比较显著的区别有2处：</p>
+<ul>
+<li>input 层后共享的 bootom 结构改成了多个 Experts 网络，图中是3个，并且各自参数不共享；</li>
+<li>input 层出了进入共享的 Experts 网络外，还用来生成 Task 各自的 Gate 网络，作为 Experts 进入每个 Task Tower 网络的门控权重。</li>
+</ul>
+<p>可以发现，MOE 通过 input 生成 Gate 是为了赋予每个 Experts 网络进入 Task Tower 的权重，也是一种 <code>Attention</code> 的思想。其模型结构也以简单的总结如下公式：</p>
+<script type="math/tex; mode=display">y^k = h^k(\sum_{i=1}^n g_i f_i(x))</script><script type="math/tex; mode=display">g = Softmax(W_{g}x)</script><p>其中，g 便是 Gate网络，i 表示第 i 个 Experts 网络。可以发现在 Gate 网络对 Experts 的输出进行加权求和之后，直接进入每个 Task 的 Tower 网络，所以每个 Tower 的 input 是一样的。</p>
+<p>图 (b) 表示的是<code>MMOE模型</code>，也是论文作者提出的结构。其与 <code>MOE</code> 最大的区别就是：</p>
+<blockquote>
+<p>对于每个 Task 都有用自己独享的 Gate 网络结构。</p>
+</blockquote>
+<p>如此，每个 Task 可以根据任务需要，利用自己的 Gate 网络计算每个 Experts 进入 Tower 的权重，Gate 部分可简述为下列公式：</p>
+<script type="math/tex; mode=display">Gate^k = Softmax(W_{gk}x)</script><p>在实际中，作者实验也证明相关性较高的任务 MMOE 其实效果不明显，与 MOE 相差无异。<strong>但是在相关性较差的数据上，效果就与MOE拉开一定的差异</strong>，如下图所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoe2.png" alt="mmoe2"></p>
+<p>不过这也和数据集和操作过程有一定关系，笔者在实际工作中发现<strong>两个相关问题</strong>：</p>
+<ul>
+<li>在大数据集且控制其他变量条件下，MMOE 往往很难与一般的 Shared-bootom 网络结构显著的拉开差距；</li>
+<li>在多场景建模中往往会有一定的的价值拟合不同空间的样本和目标；</li>
+<li>还有一种<code>假提升</code>情况，也就是模型收敛速度较快，但是最终水位相差无几。<br>（举例，例如在实际新模型回刷数据中，将 base model 和 MMOE 都从某一天开始刷数据，会发现在 AUC 或者 loss 等指标上，MMOE 很快并且连续一段时间始终好于 base model，然而随着数据的积累，这种 diff 逐渐较小直至最终极其微小，这一般就是新模型收敛速度快的原因，会给算法工程师一个很大幅度的<code>假提升</code>现象。）</li>
+</ul>
+<h2 id="4-Code"><a href="#4-Code" class="headerlink" title="4 Code"></a>4 Code</h2><p>MMOE 这里有两个 coding 的矩阵提速的点：</p>
+<ul>
+<li>在构建Shared-Experts网络结构的时候，Expert 网络的个数可以作为一个维度，即直接生成一个<code>三维tensor</code>：$input_dim \times expert_unit \times experts_num$</li>
+<li>Gate 网络也可以将 Task 的个数作为其一个维度来一次性生成一个三维 tensor:$input_dim \times experts_num \times tasks_num$</li>
+</ul>
+<p>以上技巧在前文提到的keras框架实现的<a href="https://github.com/drawbridge/keras-mmoe">开源地址</a>中有所体现。这里展示一个笔者自己按照图结构一个一个模块写出来的版本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> .multiTaskModel <span class="keyword">import</span> multiTaskModel</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gate</span>(<span class="params"><span class="built_in">input</span>, unit, name = <span class="string">&quot;gate&quot;</span></span>):</span><br><span class="line">    net = tf.layers.dense(inputs=<span class="built_in">input</span>, units=unit, name=<span class="string">&#x27;%s/dense&#x27;</span> % name)</span><br><span class="line">    gate = tf.nn.softmax(net, axis=<span class="number">1</span>, name=<span class="string">&#x27;%s/softmax&#x27;</span> % name)</span><br><span class="line">    <span class="keyword">return</span> gate</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">experts</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_expert, num_task, dnn_dims, name = <span class="string">&quot;experts&quot;</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>.num_expert = num_expert</span><br><span class="line">        <span class="variable language_">self</span>.num_task = num_task</span><br><span class="line">        <span class="variable language_">self</span>.dnn_dims = dnn_dims</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, <span class="built_in">input</span>, is_training</span>):</span><br><span class="line">        expert_feat_list = []</span><br><span class="line">        <span class="keyword">for</span> expert_id <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.num_expert):</span><br><span class="line">            <span class="comment"># buile expert</span></span><br><span class="line">            expert_dnn = dnn(<span class="built_in">input</span>, <span class="variable language_">self</span>.dnn_dims, is_training=is_training, usebn=<span class="literal">True</span>, activation=<span class="string">&quot;tf.nn.leaky_relu&quot;</span>,</span><br><span class="line">                             name=<span class="string">&#x27;%s/dnn%d&#x27;</span> % (<span class="variable language_">self</span>.name, expert_id))</span><br><span class="line">            expert_feat_list.append(expert_dnn)</span><br><span class="line">        <span class="comment"># staking，Bxnum_expertxdim not Bx(num_expertxdim)</span></span><br><span class="line">        experts_feat = tf.stack(expert_feat_list, axis=<span class="number">1</span>, name=<span class="string">&quot;%s/feat&quot;</span> % <span class="variable language_">self</span>.name)</span><br><span class="line"></span><br><span class="line">        experts_output_list = []</span><br><span class="line">        <span class="keyword">for</span> task_id <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.num_task):</span><br><span class="line">            <span class="comment"># build gate</span></span><br><span class="line">            gate_feat = gate(<span class="built_in">input</span>=<span class="built_in">input</span>, unit=<span class="variable language_">self</span>.num_expert, name=<span class="string">&#x27;%s/gate%d&#x27;</span> % (<span class="variable language_">self</span>.name, task_id))</span><br><span class="line">            gate_feat = tf.expand_dims(gate_feat, -<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># attention</span></span><br><span class="line">            task_input = tf.multiply(experts_feat, gate_feat, name=<span class="string">&#x27;%s/task%d/multiply&#x27;</span> % (<span class="variable language_">self</span>.name, task_id))</span><br><span class="line">            <span class="comment"># reduce dim for tower input</span></span><br><span class="line">            task_input = tf.reduce_sum(task_input, axis=<span class="number">1</span>, name=<span class="string">&#x27;%s/task%d/output&#x27;</span> % (<span class="variable language_">self</span>.name, task_id))</span><br><span class="line">            experts_output_list.append(task_input)</span><br><span class="line">        <span class="keyword">return</span> experts_output_list</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">mmoe</span>(<span class="title class_ inherited__">multiTaskModel</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, params</span>):</span><br><span class="line">        <span class="variable language_">self</span>.expertNum = <span class="number">3</span></span><br><span class="line">        <span class="variable language_">self</span>.expertDims = [<span class="number">512</span>,<span class="number">256</span>,<span class="number">128</span>]</span><br><span class="line">        <span class="built_in">super</span>(mmoe, <span class="variable language_">self</span>).__init__(params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build_graph</span>(<span class="params">self, features, mode, params</span>):</span><br><span class="line">        is_training = (mode == tf.estimator.ModeKeys.TRAIN)</span><br><span class="line">        user_feats = params[<span class="string">&#x27;feature_columns&#x27;</span>][<span class="string">&#x27;user_feats&#x27;</span>]</span><br><span class="line">        item_feats = params[<span class="string">&#x27;feature_columns&#x27;</span>][<span class="string">&#x27;item_feats&#x27;</span>]</span><br><span class="line">        partitioner = partitioned_variables.min_max_variable_partitioner(max_partitions=<span class="variable language_">self</span>.ps_num,</span><br><span class="line">                                                                         min_slice_size=<span class="number">8</span> * <span class="number">1024</span> * <span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;embedding_scope&quot;</span>, values=features.values(), partitioner=partitioner) <span class="keyword">as</span> scope:</span><br><span class="line">            user_inputs = tf.feature_column.input_layer(features, user_feats)</span><br><span class="line">            item_inputs = tf.feature_column.input_layer(features, item_feats)</span><br><span class="line">            tf.logging.info(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;user_inputs shape is %s&quot;</span> % <span class="built_in">str</span>(user_inputs.shape) + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line">            tf.logging.info(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;item_inputs shape is %s&quot;</span> % <span class="built_in">str</span>(item_inputs.shape) + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.task_type != [<span class="string">&quot;predict&quot;</span>] <span class="keyword">and</span> mode == tf.estimator.ModeKeys.PREDICT:</span><br><span class="line">                batchSize = tf.reshape(features[<span class="string">&quot;batchSize&quot;</span>], [])</span><br><span class="line">                user_inputs = tf.tile(user_inputs, [batchSize, <span class="number">1</span>])</span><br><span class="line">            embed_inputs = tf.concat([user_inputs, item_inputs], axis=<span class="number">1</span>)</span><br><span class="line">            tf.logging.info(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;embed_inputs shape is %s&quot;</span> % <span class="built_in">str</span>(embed_inputs.shape) + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">        nn_partitioner = partitioned_variables.min_max_variable_partitioner(max_partitions=<span class="variable language_">self</span>.ps_num,</span><br><span class="line">                                                                            min_slice_size=<span class="number">1</span> * <span class="number">64</span> * <span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;nn_scope&quot;</span>, partitioner=nn_partitioner) <span class="keyword">as</span> nn_scope:</span><br><span class="line">            expertsNet = experts(<span class="variable language_">self</span>.expertNum, <span class="variable language_">self</span>.lable_size, dnn_dims = <span class="variable language_">self</span>.expertDims)</span><br><span class="line">            task_input_list = expertsNet(embed_inputs, is_training=is_training)</span><br><span class="line">            tower_outputs = &#123;&#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.lable_size):</span><br><span class="line">                tower_dnn = dnn(task_input_list[i], <span class="variable language_">self</span>.dnnDims, name=<span class="string">&quot;tower_%d&quot;</span> % i, is_training=is_training)</span><br><span class="line">                tower_output = tf.layers.dense(inputs=tower_dnn, units=<span class="number">1</span>, name=<span class="string">&#x27;tower_output_%d&#x27;</span> % i,</span><br><span class="line">                                               activation=tf.nn.sigmoid)</span><br><span class="line">                tower_outputs[<span class="string">&#x27;tower_output_%d&#x27;</span> % i] = tower_output</span><br><span class="line">            <span class="variable language_">self</span>.ctr_pred = tf.reshape(tower_outputs[<span class="string">&quot;tower_output_0&quot;</span>], [-<span class="number">1</span>], name = <span class="string">&quot;ctr&quot;</span>)</span><br><span class="line">            <span class="variable language_">self</span>.cvr_pred = tf.reshape(tower_outputs[<span class="string">&quot;tower_output_1&quot;</span>], [-<span class="number">1</span>], name = <span class="string">&quot;cvr&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>参考文献</strong><br><a href="https://zhuanlan.zhihu.com/p/145288000">多任务学习之MMOE模型</a><br><a href="https://mp.weixin.qq.com/s/EuJ2BOdMqR0zyRtUcdn0kA">多任务学习模型详解：Multi-gate Mixture-of-Experts（MMoE ，Google，KDD2018）</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/mmoemodel.html">MMOE 模型解析</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/mmoemodel.html" title="MMOE 模型解析">https://www.xiemingzhao.com/posts/mmoemodel.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/mmoemodel.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MMOE/" rel="tag"><i class="fa fa-tag"></i> MMOE</a>
+          
+            <a href="/tags/%E7%B2%BE%E6%8E%92/" rel="tag"><i class="fa fa-tag"></i> 精排</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/popularlossfuncs.html" rel="next" title="深度学习的常用损失函数">
+                <i class="fa fa-chevron-left"></i> 深度学习的常用损失函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/frommmoetople.html" rel="prev" title="从 MMOE 到 PLE 模型">
+                从 MMOE 到 PLE 模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8A%A8%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">2 动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A8%A1MMOE%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">3 模MMOE型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Code"><span class="nav-number">4.</span> <span class="nav-text">4 Code</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共247.7k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

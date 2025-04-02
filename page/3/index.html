@@ -315,6 +315,856 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/XGBoostDetailAnalysis.html" itemprop="url">XGBoost原理细节详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T00:00:00+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/XGBoostDetailAnalysis.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/XGBoostDetailAnalysis.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  20
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>原文来自大神级的论文<a href="https://netman.aiops.org/~peidan/ANM2018/3.MachineLearningBasics/LectureCoverage/18.xgboost.pdf">XGBoost: A Scalable Tree Boosting System</a>，论文很全面，框架介绍很完整，但是在某些tricks上面并没有对细节做详细解说，而需要读者亲自去进行一定的推导，这使得阅读起来稍显吃力，当然基础很雄厚的大牛级别的应该不以为然，但我相信还有很多与我一样入行不久的，那么这篇博客就是你的所需。</p>
+<p><strong>这里特别感谢作者<code>meihao5</code>的博文，其分享的内容就是我一直想要整理但迟迟未进行的，它的原文可见最后面的参考文章链接里。</strong></p>
+<h2 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1 基础知识"></a>1 基础知识</h2><p><code>XGBoost</code>的成功可以总结为<strong>回归（树回归+线性回归）+提升（boosting）+优化（5个方面）牛顿法、预排序、加权分位数、稀疏矩阵识别以及缓存识别</strong>等技术来大大提高了算法的性能。下面开始介绍一些入门必须的基础知识：</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/XGBoostDetailAnalysis.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/deepfmpaper.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/deepfmpaper.html" itemprop="url">DeepFM A Factorization-Machine based Neural Network for CTR Prediction (论文解析)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-29T00:00:00+08:00">
+                2019-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
+                    <span itemprop="name">论文解析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/deepfmpaper.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/deepfmpaper.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><a href="https://arxiv.org/pdf/1703.04247.pdf">原始论文：DeepFM:A Factorization-Machine based Neural Network for CTR Prediction</a></p>
+<h2 id="DeepFM-基于神经网络的因式分解机做点击率预估"><a href="#DeepFM-基于神经网络的因式分解机做点击率预估" class="headerlink" title="DeepFM:基于神经网络的因式分解机做点击率预估"></a>DeepFM:基于神经网络的因式分解机做点击率预估</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>对于推荐系统中的最大化CTR来说，学习那些用户行为背后的复杂而精确的特征交叉项是至关重要的。尽管有很大的提升，但是方法似乎在低阶或者高阶的交差项上带有很强的偏置项，又或者会要求专业性的特征工程。在这篇文章，我们会展示可以构造出一个端到端的学习模型，特别是对于低阶和高阶的交叉项的学习。DeepFM，提出的这个模型联合了因式分解机的推荐能力和一个新的神经网络结构在特征方面的深度学习能力。相比于Google提出的最新的Wide &amp; Deep模型，DeepFM的“wide”和“deep”部分有一个共享输入层，并且除了最原始的特征不需要额外的特征工程。综合性的实验结果证明了DeepFM相比于其他的CTR模型在基础数据及和商业数据集上都有着更好的效果和效率。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/deepfmpaper.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/IntroductionofLTR.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/IntroductionofLTR.html" itemprop="url">LTR(Learning to Rank)概述</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-29T00:00:00+08:00">
+                2019-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/IntroductionofLTR.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/IntroductionofLTR.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="1-Learning-to-Rank-简介"><a href="#1-Learning-to-Rank-简介" class="headerlink" title="1 Learning to Rank 简介"></a>1 Learning to Rank 简介</h2><p><code>Learning to Rank</code> 是采用机器学习算法，通过训练模型来解决排序问题，在Information Retrieval，Natural Language Processing，Data Mining等领域有着很多应用。</p>
+<h3 id="1-1-排序问题"><a href="#1-1-排序问题" class="headerlink" title="1.1 排序问题"></a>1.1 排序问题</h3><p>如图 Fig.1 所示，在信息检索中，给定一个query，搜索引擎会召回一系列相关的Documents（通过term匹配，keyword匹配，或者semantic匹配的方法），然后便需要对这些召回的Documents进行排序，最后将Top N的Documents输出,一版可以认为是召回后的精排。而排序问题就是使用一个模型 f(q,d)来对该query下的documents进行排序，这个模型可以是人工设定一些参数的模型，也可以是用机器学习算法自动训练出来的模型。现在第二种方法越来越流行，尤其在Web Search领域，因为在Web Search 中，有很多信息可以用来确定query-doc pair的相关性，而另一方面，由于大量的搜索日志的存在，可以将用户的点击行为日志作为training data，使得通过机器学习自动得到排序模型成为可能。</p>
+<p><strong>需要注意的是，排序问题最关注的是各个Documents之间的相对顺序关系，而不是各个Documents的预测分最准确。</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/IntroductionofLTR.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/ltrindices.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/ltrindices.html" itemprop="url">LTR信息检索评价指标</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-27T00:00:00+08:00">
+                2019-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/ltrindices.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/ltrindices.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="1-RP"><a href="#1-RP" class="headerlink" title="1 RP"></a>1 RP</h2><p><code>R（recall）</code>表示召回率、查全率，指查询返回结果中相关文档占所有相关文档的比例；<code>P（precision）</code>表示准确率、精度，指查询返回结果中相关文档占所有查询结果文档的比例。</p>
+<p>假设有如下的混淆矩阵：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">—-</th>
+<th style="text-align:center">Predict P</th>
+<th style="text-align:center">Predict N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Target P</td>
+<td style="text-align:center">TP</td>
+<td style="text-align:center">FN</td>
+</tr>
+<tr>
+<td style="text-align:center">Target N</td>
+<td style="text-align:center">FP</td>
+<td style="text-align:center">TN</td>
+</tr>
+</tbody>
+</table>
+</div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/ltrindices.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/lightgbmpaper.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1531,830 +2381,11 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/xgboostpaper.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/xgboostpaper.html" itemprop="url">XGBoost A Scalable Tree Boosting System (论文解析)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-10T00:00:00+08:00">
-                2019-06-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
-                    <span itemprop="name">论文解析</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/xgboostpaper.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/xgboostpaper.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  4.2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  15
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="http://delivery.acm.org/10.1145/2940000/2939785/p785-chen.pdf?">原始论文：XGBoost: A Scalable Tree Boosting System</a></p>
-<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Tree boosting 是一个高效的并且广泛应用的机器学习方法。在本文中，我们会介绍一个可扩展的端到端的 tree boosting 系统，它叫 XGBoost，它被数据科学家广泛地应用，并且在许多机器学习挑战取得了最好的结果。对于稀疏数据我们提出了稀疏性感知算法，以及加权分位数梗概用来近似树模型学习。更重要的是，我们提供了对缓存访问模式，数据压缩和分片的见解来建立一个可扩展的提升树系统。通过综合这些看法， XGBoost 只需要使用比现有系统少得多的资源就可以扩展出超过数十亿的实例。</p>
-<p>关键词：大规模机器学习</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/xgboostpaper.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/lstmpaper.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/lstmpaper.html" itemprop="url">Understanding LSTM Networks (论文解析)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T00:00:00+08:00">
-                2019-05-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%BA%E6%96%87%E8%A7%A3%E6%9E%90/" itemprop="url" rel="index">
-                    <span itemprop="name">论文解析</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/lstmpaper.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/lstmpaper.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.3k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">原始论文：Understanding LSTM Networks</a></p>
-<h2 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a>循环神经网络</h2><p>人类并不是每时每刻都从一片空白的大脑开始他们的思考。在你阅读这篇文章时候，你都是基于自己已经拥有的对先前所见词的理解来推断当前词的真实含义。我们不会将所有的东西都全部丢弃，然后用空白的大脑进行思考。我们的思想拥有持久性。</p>
-<p>传统的神经网络并不能做到这点，看起来也像是一种巨大的弊端。例如，假设你希望对电影中的每个时间点的时间类型进行分类。传统的神经网络应该很难来处理这个问题——使用电影中先前的事件推断后续的事件。</p>
-<p>RNN 解决了这个问题。RNN 是包含循环的网络，允许信息的持久化。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/lstmpaper.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/Hexoblogbranch.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/Hexoblogbranch.html" itemprop="url">Hexo博客多设备管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-27T00:00:00+08:00">
-                2019-05-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index">
-                    <span itemprop="name">博客搭建</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/Hexoblogbranch.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/Hexoblogbranch.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.8k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客<a href="https://www.xiemingzhao.com/posts/GithubHexoNextblog">使用Github+Hexo+Next免费搭建自己的博客（最细攻略）</a>。</p>
-<h2 id="多设备管理博客"><a href="#多设备管理博客" class="headerlink" title="多设备管理博客"></a>多设备管理博客</h2><p>博客建立好之后，面临的就是维护和更新博客，但是总不能每次都带着自己的电脑吧，如果想在自己的办公电脑上也操作自己的博客呢？于是广大的IT人才们想出了构建github分支来管理自己的博客。</p>
-<h3 id="1-github-创建分支"><a href="#1-github-创建分支" class="headerlink" title="1. github 创建分支"></a>1. github 创建分支</h3><p>不管你有无看过我的另一篇博客<a href="https://www.xiemingzhao.com/posts/GithubHexoNextblog">使用Github+Hexo+Next免费搭建自己的博客（最细攻略）</a>，相信你自己博客的时候都是在yourname.github.io仓库下的master分支上创建的。既然我们是在本地上管理离线文档的，那我们就领创建一个分值，只用来存储每次更新的离线文件，相当于一个本地了。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/Hexoblogbranch.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/Hexoblogdomain.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/Hexoblogdomain.html" itemprop="url">Hexo博客绑定域名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-25T00:00:00+08:00">
-                2019-05-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index">
-                    <span itemprop="name">博客搭建</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/Hexoblogdomain.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/Hexoblogdomain.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.5k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>想要小白详细版本的Github+Hexo+Next搭建博客教程，可访问我的另一篇博客<a href="https://www.xiemingzhao.com/posts/GithubHexoNextblog">使用Github+Hexo+Next免费搭建自己的博客（最细攻略）</a>。</p>
-<h2 id="Hexo博客域名绑定"><a href="#Hexo博客域名绑定" class="headerlink" title="Hexo博客域名绑定"></a>Hexo博客域名绑定</h2><p>在我们建好了博客后，我们就可以通过<code>yourname.github.io</code>来访问你的博客，但是这个域名明显看起来不够厉害。这时候我们想的是如何将自己的博客的域名设置成像一般网址一样呢，例如我的原本的链接是<a href="www.xiemingzhao.com">xiemingzhao.github.io</a>，但是经过设置绑定后将我得博客的新域名变成了<a href="www.xiemingzhao.com">www.xiemingzhao.com</a>，并且打开网之后各个页面显示的连接也是www.xiemingzhao.com作为开头。接下来我们就开始。</p>
-<h3 id="1-域名购买"><a href="#1-域名购买" class="headerlink" title="1. 域名购买"></a>1. 域名购买</h3><p>域名这个东西当然不是免费的啦，毕竟网址这个东西还是需要有管控的。购买域名的地方有很多，本人是在<a href="https://www.aliyun.com/">阿里云https://www.aliyun.com/</a>上面购买的，原因就不多说，大品牌值得信奈。打开阿里云官网，你需要做一下两件事情：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/Hexoblogdomain.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
   </nav>
 
 
@@ -2404,7 +2435,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">53</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2415,7 +2446,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2426,7 +2457,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2513,7 +2544,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共236.8k字</span>
+  <span class="post-count">博客全站共247.7k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

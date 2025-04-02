@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="精排,PLE,CGC,MTL," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言在当下以深度学习为基调的推荐系统中，传统的单目标优化往往会带来一些不健康的生态指标变化，例如仅优化 CTR 可能会使得用户深层行为下降，往往推出一些博眼球和标题党等内容或商品。所以就催生了利用模型对 CLICK 后的各种深层行为的学习，最常用的便是 CVR（转化率），当然还有 cfr（收藏率）以及 viewtime（浏览时长）等等目标，视具体场景的业务指标而定。 为了解决上述问题，最原始的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 MMOE 到 PLE 模型">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/frommmoetople.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言在当下以深度学习为基调的推荐系统中，传统的单目标优化往往会带来一些不健康的生态指标变化，例如仅优化 CTR 可能会使得用户深层行为下降，往往推出一些博眼球和标题党等内容或商品。所以就催生了利用模型对 CLICK 后的各种深层行为的学习，最常用的便是 CVR（转化率），当然还有 cfr（收藏率）以及 viewtime（浏览时长）等等目标，视具体场景的业务指标而定。 为了解决上述问题，最原始的">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople6.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople7.png">
+<meta property="article:published_time" content="2021-06-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-02T16:08:59.762Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="精排">
+<meta property="article:tag" content="PLE">
+<meta property="article:tag" content="CGC">
+<meta property="article:tag" content="MTL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/frommmoetople.html"/>
+
+
+
+
+
+  <title>从 MMOE 到 PLE 模型 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/frommmoetople.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从 MMOE 到 PLE 模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-21T00:00:00+08:00">
+                2021-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">精排模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/frommmoetople.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/frommmoetople.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在当下以深度学习为基调的推荐系统中，传统的单目标优化往往会带来一些不健康的生态指标变化，例如仅优化 CTR 可能会使得用户深层行为下降，往往推出一些博眼球和标题党等内容或商品。所以就催生了利用模型对 CLICK 后的各种深层行为的学习，最常用的便是 CVR（转化率），当然还有 cfr（收藏率）以及 viewtime（浏览时长）等等目标，视具体场景的业务指标而定。</p>
+<p>为了解决上述问题，最原始的方法便是<code>多模型多分数融合</code>，也即对不同目标单独构建模型，线上独立打分进行融合，但是这样带来的问题便是深度行为的样本一般不足，难以使得模型学习的很好，而且独立建模成本高昂。为了进一步提效，目前主流的方法便是统一模型进行不同目标的<code>联合训练</code>，而模型内部不同任务之间存在一定信息共享。如此，</p>
+<ul>
+<li>一方面使得相关任务之间能够互相分享和补充信息，促进各任务学习能力；</li>
+<li>另一方面，梯度在反向传播的时候，能够兼顾多个任务模式，提高模型的泛化能力。</li>
+</ul>
+<span id="more"></span>
+<p>多任务学习模型有很多种，例如阿里的 ESSM 模型，谷歌的 MMOE 模型，包括本文重点介绍的 CGC 和 PLE 模型，来自由腾讯团队发表的获得 RecSys2020 最佳长论文奖得文章：<a href="https://dl.acm.org/doi/abs/10.1145/3383313.3412236">Progressive Layered Extraction (PLE): A Novel Multi-Task Learning (MTL) Model for Personalized Recommendations</a>。当然还有很多其他变种的多任务模型，而在接下来得内容将聚焦介绍模型结构得迭代变化。</p>
+<h2 id="2-目标"><a href="#2-目标" class="headerlink" title="2 目标"></a>2 目标</h2><p>实践中上述的理想目标往往会不及预期，主要原因在于, 当任务之间相关性较高的时候，能够一定程度通过信息共享来促进模型的学习效率，但不太相关时会产生<code>负迁移（negative transfer）</code>，即网络表现变差。前面提到谷歌提出的<code>MMOE</code>模型就是为了缓解负迁移现象。但，另一方面，工业实践中往往还面临一个普遍的问题，那就是<code>跷跷板现象（seesaw phenomenon）</code>。也就是在多任务联合训练中，往往部分任务能够相对于独立训练获得提升，但同时伴随着其他个别任务效果下降。</p>
+<p>本人在实际工作中也遇到了上述问题，<code>跷跷板现象</code>是比较明显的结果导向，例如 cfr（收藏率）提升了，但 ctr（点击率）下降了。而对于<code>负迁移</code>问题，比较好验证其触因，可以直接计算样本中不同任务 label 之间的相关性。以博主自己的一个实际工作场景为例：</p>
+<blockquote>
+<p>在某电商瀑布流的推荐中，样本中核心 label 有 ctr（点击）、ccr（查看细分sku）、cfr(收藏)、cvr（下单）。当然不仅限于这些，对于场景核心 label 的选取主要取决于业务目标和 label 的覆盖度。部分同学在实际中可能会认为行为之间应该具有较强的相关性，然而实际上结果可能大相径庭。如下表所示是实际样本的一个统计结果（大约一天几亿量级的数据），可以发现在渗透漏斗链路上，离 ctr 越远的行为相关性越低。</p>
+</blockquote>
+<p>本文介绍的从 MMOE 迭代到 PLE 的模型，其提出者目的正是为了缓解上述问题。PLE 模型也是被部署在了腾讯的视频推荐系统中，其线上多目标<code>分数融合</code>方式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{r}
+score = pVTR^{w_{VTR}} \times pVCR^{w_{VCR}} \times pSHR^{w_{SHR}} \times \dots \times pCMR^{w_{CMR}} \times f(video\_len)
+\end{array}</script><p>其中，公式中每一项右上角的 $w$ 都是权重超参数。video_len 表示视频的原始时长，其有一个映射函数 $f$，是一个 non-linear 函数，可取 sigmoid 或者 log 函数。模型结构如下所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople0.png" alt="mmoetople0"></p>
+<p>在这里，<code>VCR (View Completion Rate)</code>和<code>VTR (View-Through-Rate)</code>是最重要的2个指标。VCR 是指视频完成度，例如1min的视频看了0.5min，便有VCR=0.5。以此作为 Label 可以构建一个回归问题，以 MSE 作为评估指标。VTR 则是指是否是一次有效观看，这一般可以构建成一个二分类模型，AUC 作为评估目标。</p>
+<p>值得注意的是，此Label的打标签一般因业务场景不同而有所区别:</p>
+<ul>
+<li>需要通过列表主动点击到落地详情页的时候，一般 VTR 对应的 Label 就是用户是否主动点击；</li>
+<li>如果是单列自动播放的视频流的时候，就会存在视频的默认播放问题，需要进行一定的阈值截断来进行 Label 的打标签；</li>
+</ul>
+<p>如上所述，实际上两个任务的关系很复杂。以腾讯实际场景为例，VTR是播放动作和VCR的耦合结果，因为在有wifi下，部分场景有自动播放机制，播放率相对就较高，就需要设定有效播放时长的阈值。没有自动播放机制时候，相对更为简单，且播放率会较低。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople1.png" alt="mmoetople1"></p>
+<p>如上图所示，是其团队对比了一些主流 MTL 模型在 VCR 和 VTR 任务上相对单任务模型的离线对比结果。从图中可以看到，大多 MTL 模型都是一个任务好于单任务模型另一个则较差，这便是前文提到的<code>跷跷板现象（seesaw phenomenon）</code>。以<code>MMOE</code>为例，其在 VTR 上有一定收益，但是在 VCR 上几乎无收益。核心原因在于，其 Experts 是被所有任务共享，会有噪声，且他们之间没有交互，联合训练有折扣。</p>
+<p>而该团队提出的 PLE 模型在实验对比中最好，其线上实验也取得了2.23%的view-count和1.84%的阅读时长提升效果。我们可以先将其<strong>核心优化点</strong>总结成如下：</p>
+<ul>
+<li>解耦 Experts 网络，改进了模型结构；</li>
+<li>优化了多目标 loss 融合的方法，提高了训练的效率；</li>
+</ul>
+<h2 id="3-MMOE"><a href="#3-MMOE" class="headerlink" title="3 MMOE"></a>3 MMOE</h2><p>前文提到很多与<code>MMOE</code>(Multi-gate Mixture-of-Experts)模型的对比，咱们先来回顾一下该模型的结构。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople2.png" alt="mmoetople2"></p>
+<p>如上图所示，该模型实际上是在多个 Expert 基础上，对每一个任务的 Tower 都构建一个 Gate 网络。整个模型可以用数理表达式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;array&#125;&#123;l&#125; </span><br><span class="line">f^k(x)=\sum_&#123;i=1&#125;^n g^k(x)_&#123;i&#125; f_&#123;i&#125;(x)</span><br><span class="line">\\</span><br><span class="line">g^k(x)=Softmax(W_&#123;gk&#125;x)</span><br><span class="line">\end&#123;array&#125; </span><br></pre></td></tr></table></figure>
+<p>其中，$g^k$ 表示第 k 个任务中的用来控制 experts 结果的门控网络。</p>
+<p><strong>该网络的目的是使得每个 Task 通过自己独立的 Gate 网络来学习不同的 Experts 网络的组合模式</strong>。模型的 loss 一般是各个任务的 loss 加和，如果其中某个任务的 loss 占比过高，则梯度主要沿着其下降的方向更新，有可能降低其他任务的精度。</p>
+<h2 id="4-CGC"><a href="#4-CGC" class="headerlink" title="4 CGC"></a>4 CGC</h2><p>这里介绍的<code>CGC</code>（Customized Gate Control）模型是一种单层多任务网络结构，它是本文介绍的最终版本PLE模型的简单版本或者说其组成部分。下面展示的是其网络结构：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople3.png" alt="mmoetople3"></p>
+<p>如上图所示，各模块结构的含义如下：</p>
+<ul>
+<li><code>shared experts</code>：共享的专家网络组，即上图 Experts Shared 中的$E_{S,1}$等；</li>
+<li><code>task-specific expert</code>：各个任务专享的专家网络组，例如 Experts A；</li>
+<li><code>task-specific tower</code>：各个任务的输出塔，例如 Tower A；</li>
+<li><code>task-specific Gating</code>：各个任务的门控网络，例如 Tower A的入口与Experts的连接处；</li>
+</ul>
+<p>从上述结构可以看得出来，<code>shared experts</code> 会与所有任务链接，学习共享信息，而 <code>task-specific expert</code> 只会受到自己任务的影响，<code>task-specific tower</code> 则是由 <code>task-specificGating</code> 将对应的 <code>task-specific expert</code> 和 <code>shared experts</code> 组合后作为其输入的。这一过程可以表述称如下数理公式：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;array&#125;&#123;l&#125; </span><br><span class="line">y^k(x)=t^k(g^k(x))</span><br><span class="line">\\</span><br><span class="line">g^k(x)=w^k(x)S^k(x)</span><br><span class="line">\\</span><br><span class="line">w^k(x)=Softmax(W^k_g x)</span><br><span class="line">\\</span><br><span class="line">S^k(x)=[E^T_&#123;(k,1)&#125;,E^T_&#123;(k,2)&#125;,\dots ,E^T_&#123;(k,m_k)&#125;,E^T_&#123;(s,1)&#125;,E^T_&#123;(s,2)&#125;,\dots ,E^T_&#123;(s,m_s)&#125;]</span><br><span class="line">\end&#123;array&#125; </span><br></pre></td></tr></table></figure><br>其中，公式(1)表示任务k的输出结果，公式(3)表示门控网络的结构，公式(2)则表示基于门控网络将公式(4)中的专家网络组融合的过程。可以发现其与MMOE最大的区别便是不同Task之间除了共享的 <code>Shared Experts</code> 网络组之外还有各自独享的 <code>Task-specific Experts</code>，这也是接下来的 PLE 模型的核心组成模块。</p>
+<h2 id="5-PLE"><a href="#5-PLE" class="headerlink" title="5 PLE"></a>5 PLE</h2><p>基于 <code>CGC</code> 的结构，<code>PLE</code>（Progressive Layered Extraction）则是一个升级版本的结构，它扩增了 Experts 之间的交互，结构如下所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople4.png" alt="mmoetople4"></p>
+<p>可以清晰的看到，其与CGC不同的是增加了多级的 <code>Extraction Networks</code>，而每一级的<code>Extraction Networks</code> 基本与CGC一致，旨在提取更高级别的共享信息。可以发现，每层 <code>Shared Experts</code> 吸收了下层的所有网络结构信息，而任务独享的 <code>Task-specific Experts</code> 则仅从其自己对应模块和<code>Shared Experts</code>中获取共享信息。整个过程可以简化成：</p>
+<script type="math/tex; mode=display">y^k(X)=t^k(g^{k,N}(x))</script><h2 id="6-MTL-类型总结"><a href="#6-MTL-类型总结" class="headerlink" title="6 MTL 类型总结"></a>6 MTL 类型总结</h2><h3 id="6-1-Single-Level-MTL"><a href="#6-1-Single-Level-MTL" class="headerlink" title="6.1 Single-Level MTL"></a>6.1 Single-Level MTL</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople5.png" alt="mmoetople5"></p>
+<p>如上图所示，是5个经典的Single-Level MTL模型：</p>
+<ol>
+<li><p><code>Hard Parameter Sharing</code>：最常见的MTL模型，底层的模块是share的，然后共享层的输出分别进入到每个Task的Tower中。当两个Task相关性较高时，用这种结构效果一般不错，但任务相关性不高时，会存在负迁移现象，导致效果不理想。</p>
+</li>
+<li><p><code>Asymmetry Sharing</code>（不对称共享）：不同Task的底层模块有各自对应的输出，但其中部分任务的输出会被其他Task所使用，而部分任务则使用自己独有的输出。交叉共享的部分需要认为定义，变数较多。</p>
+</li>
+<li><p><code>Customized Sharing</code>（自定义共享）：不同Task的底层模块不仅有各自独立的输出，还有共享的输出。2和3这两种结构同样是论文提出的，但相对不重点。</p>
+</li>
+<li><p><code>MMOE</code>：是大家比较熟悉的经典 MTL。底层包含多个 Expert，然后基于门控机制，不同任务会对不同 Expert 的输出进行过滤。</p>
+</li>
+<li><p><code>CGC</code>：这就是本文重点介绍的一个，与 MMOE 的区别就是每个 Task 有自己独享的 Experts。</p>
+</li>
+</ol>
+<h3 id="6-2-Multi-Level-MTL"><a href="#6-2-Multi-Level-MTL" class="headerlink" title="6.2 Multi-Level MTL"></a>6.2 Multi-Level MTL</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople6.png" alt="mmoetople6"></p>
+<p>如上图所示，是4个经典的 <code>Single-Level MTL</code> 模型：</p>
+<ol>
+<li><p><code>Cross-Stitch Network</code>（”十字绣”网络）：出自论文<a href="https://arxiv.org/pdf/1604.03539.pdf">《Cross-stitch Networks for Multi-task Learning》</a>。</p>
+</li>
+<li><p><code>Sluice Network</code>（水闸网络）：出自论文《<a href="https://arxiv.org/pdf/1705.08142v1.pdf">Sluice networks: Learning what to share between loosely related tasks</a>》.</p>
+</li>
+<li><p><code>ML-MMOE</code>：前文已经有介绍。</p>
+</li>
+<li><p><code>PLE</code>：这便是本文重点介绍的对象。</p>
+</li>
+</ol>
+<h2 id="7-MTL-的-Loss-优化"><a href="#7-MTL-的-Loss-优化" class="headerlink" title="7 MTL 的 Loss 优化"></a>7 MTL 的 Loss 优化</h2><p>在传统的MTL任务中，一般设定各个任务样本空间一致，然后训练的时候将各个任务的 loss 加权求和作为模型优化的总 loss 即可：</p>
+<script type="math/tex; mode=display">L(\theta_1, \dots , \theta_K, \theta_s)=\sum_{k=1}^K w_k L_k(\theta_k, \theta_s)</script><p>但实际上，<strong>不同Task的样本空间可能是不一致的</strong>。如下图所示。例如，假设 item 的 share 按钮在详情页，那么用户必须先 click 后，才能进行  share的动作，所以 share 的样本应该是 click 的一个子集，而不能粗暴的将没有 click（自然没有share）的样本也作为 share 的负样本，如此是有偏的。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/mmoetople7.png" alt="mmoetople7"></p>
+<p>故，最终PLE在训练的时候 loss 构建如下：</p>
+<script type="math/tex; mode=display">L_k(\theta_k,\theta_s)=\frac{1}{\sum_i \delta_k^i} \sum_i \delta_k^i loss_k(\hat y_k^i (\theta_k, \theta_s),y_k^i)</script><p>其中，$\delta_k^i$是一个示性变量，表示第i个样本是否属于第k个 Task 的样本空间，实际上起到了样本  loss入场的筛选过滤作用。</p>
+<p>除此之外，该团队还从 <code>Multi-task learning</code> 对 <code>loss weight</code> 敏感的角度出发，为了兼顾静态 weight 不如动态 weight 有效，并且不用像阿里提出的帕累托最优这种复杂的方式来优化。他们最终采用人共设置初始 loss weight，但是在不同的 train step 会进行 update，具体方式如下所示：</p>
+<script type="math/tex; mode=display">w_k^{(t)}=w_{k,0} \times \gamma_k^t</script><p>其中，$w_{k,0}$是人工设置的初始 loss wight，$\gamma_k$也是权重衰减的超参数，$t$则是 training step。</p>
+<p>此优化确实较为合理，笔者在实际中也取得了效果。从数理角度理解，拆分样本空间后，预测的是每个阶段行为的条件概率，而不是联合改了，相对模式更容易学习。但是，<strong>此优化不仅限于PLE模型，实际上对任何一个MTL模型都适配的。</strong></p>
+<h2 id="8-Code"><a href="#8-Code" class="headerlink" title="8 Code"></a>8 Code</h2><p>由于本文重点讲解的是 PLE 模型，且 CGC 模型也是 PLE 的一个组成部分，所以 MMOE 和 CGC 的 code 在此就不提，咱们重点介绍一下 PLE 模型的结构模块代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .multiTaskModel <span class="keyword">import</span> multiTaskModel</span><br><span class="line"><span class="keyword">from</span> modules.experts <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gate</span>(<span class="params"><span class="built_in">input</span>, unit, name = <span class="string">&quot;gate&quot;</span></span>):</span><br><span class="line">    net = tf.layers.dense(inputs=<span class="built_in">input</span>, units=unit, name=<span class="string">&#x27;%s/dense&#x27;</span> % name)</span><br><span class="line">    gate = tf.nn.softmax(net, axis=<span class="number">1</span>, name=<span class="string">&#x27;%s/softmax&#x27;</span> % name)</span><br><span class="line">    <span class="keyword">return</span> gate</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pleLayer</span>(<span class="params">input_list, num_expert, num_task, dnn_dims, is_training, name = <span class="string">&quot;pleLayer&quot;</span></span>):</span><br><span class="line">    expert_feat_list = []</span><br><span class="line">    <span class="comment"># num_task + 1 experts</span></span><br><span class="line">    <span class="keyword">for</span> label_id <span class="keyword">in</span> <span class="built_in">range</span>(num_task + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> expert_id <span class="keyword">in</span> <span class="built_in">range</span>(num_expert):</span><br><span class="line">            <span class="comment"># buile expert</span></span><br><span class="line">            expert_dnn = dnn(input_list[label_id], dnn_dims, is_training=is_training, usebn=<span class="literal">True</span>, activation=<span class="string">&quot;tf.nn.leaky_relu&quot;</span>,</span><br><span class="line">                             name=<span class="string">&#x27;%s/label%d/dnn%d&#x27;</span> % (name, label_id, expert_id))</span><br><span class="line">            expert_feat_list.append(expert_dnn)</span><br><span class="line"></span><br><span class="line">    experts_output_list = []</span><br><span class="line">    <span class="keyword">for</span> task_id <span class="keyword">in</span> <span class="built_in">range</span>(num_task):</span><br><span class="line">        <span class="comment"># build gate, unit equals task &amp; share expert&#x27;s nums</span></span><br><span class="line">        gate_feat = gate(<span class="built_in">input</span> = input_list[task_id], unit = num_expert * <span class="number">2</span>, name = <span class="string">&#x27;%s/gate%d&#x27;</span> % (name,task_id))</span><br><span class="line">        gate_feat = tf.expand_dims(gate_feat, -<span class="number">1</span>)</span><br><span class="line">        <span class="comment"># staking，task &amp; share experts</span></span><br><span class="line">        experts_feat = tf.stack(expert_feat_list[task_id*num_expert:(task_id+<span class="number">1</span>)*num_expert] +</span><br><span class="line">                                expert_feat_list[-num_expert:], axis=<span class="number">1</span>, name=<span class="string">&quot;%s/feat&quot;</span> % name)</span><br><span class="line">        <span class="comment"># attention</span></span><br><span class="line">        task_input = tf.multiply(experts_feat, gate_feat, name = <span class="string">&#x27;%s/task%d/multiply&#x27;</span> % (name,task_id))</span><br><span class="line">        <span class="comment"># reduce dim for tower input</span></span><br><span class="line">        task_input = tf.reduce_sum(task_input, axis=<span class="number">1</span>, name = <span class="string">&#x27;%s/task%d/output&#x27;</span> % (name,task_id))</span><br><span class="line">        experts_output_list.append(task_input)</span><br><span class="line">    <span class="comment"># share expert gate</span></span><br><span class="line">    gate_feat = gate(<span class="built_in">input</span>=input_list[num_task], unit=num_expert * (num_task+<span class="number">1</span>), name=<span class="string">&#x27;%s/gateshare&#x27;</span> % (name))</span><br><span class="line">    gate_feat = tf.expand_dims(gate_feat, -<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># staking， all experts</span></span><br><span class="line">    experts_feat = tf.stack(expert_feat_list, axis=<span class="number">1</span>, name=<span class="string">&quot;%s/featshare&quot;</span> % name)</span><br><span class="line">    <span class="comment"># attention</span></span><br><span class="line">    task_input = tf.multiply(experts_feat, gate_feat, name=<span class="string">&#x27;%s/taskshare/multiply&#x27;</span> % (name))</span><br><span class="line">    <span class="comment"># reduce dim for tower input</span></span><br><span class="line">    task_input = tf.reduce_sum(task_input, axis=<span class="number">1</span>, name=<span class="string">&#x27;%s/taskshare/output&#x27;</span> % (name))</span><br><span class="line">    experts_output_list.append(task_input)</span><br><span class="line">    <span class="keyword">return</span> experts_output_list    </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ple</span>(<span class="title class_ inherited__">multiTaskModel</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, params</span>):</span><br><span class="line">        <span class="variable language_">self</span>.expertNum = <span class="number">4</span></span><br><span class="line">        <span class="variable language_">self</span>.expertDims = [<span class="number">512</span>,<span class="number">512</span>,<span class="number">512</span>]</span><br><span class="line">        <span class="variable language_">self</span>.extractLevel = <span class="number">3</span></span><br><span class="line">        <span class="built_in">super</span>(ple, <span class="variable language_">self</span>).__init__(params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build_graph</span>(<span class="params">self, features, is_training, params</span>):</span><br><span class="line">        dnn_feats = params[<span class="string">&#x27;feature_columns&#x27;</span>][<span class="string">&#x27;dnn_feats&#x27;</span>]</span><br><span class="line">        <span class="built_in">input</span> = tf.feature_column.input_layer(features, dnn_feats)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># task_input_list[-1] is share experts input</span></span><br><span class="line">        task_input_list = [<span class="built_in">input</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.lable_size + <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> level <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.extractLevel):</span><br><span class="line">            task_input_list = pleLayer(task_input_list, <span class="variable language_">self</span>.expertNum, <span class="variable language_">self</span>.lable_size, dnn_dims = <span class="variable language_">self</span>.expertDims,</span><br><span class="line">                                       is_training=is_training, name = <span class="string">&quot;pleLayer%d&quot;</span> % level)</span><br><span class="line"></span><br><span class="line">        tower_outputs = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.lable_size):</span><br><span class="line">            tower_dnn = dnn(task_input_list[i], <span class="variable language_">self</span>.dnnDims, name=<span class="string">&quot;tower_%d&quot;</span> % i, is_training=is_training)</span><br><span class="line">            tower_output = tf.layers.dense(inputs=tower_dnn, units=<span class="number">1</span>, name=<span class="string">&#x27;tower_output_%d&#x27;</span> % i,</span><br><span class="line">                                           activation=tf.nn.sigmoid)</span><br><span class="line">            tower_outputs[<span class="string">&#x27;tower_output_%d&#x27;</span> % i] = tower_output</span><br><span class="line">        <span class="variable language_">self</span>.ctr_pred = tf.reshape(tower_outputs[<span class="string">&quot;tower_output_0&quot;</span>], [-<span class="number">1</span>], name=<span class="string">&quot;ctr&quot;</span>)</span><br><span class="line">        <span class="variable language_">self</span>.cvr_pred = tf.reshape(tower_outputs[<span class="string">&quot;tower_output_1&quot;</span>], [-<span class="number">1</span>], name=<span class="string">&quot;cvr&quot;</span>)</span><br></pre></td></tr></table></figure><br>代码整体没有什么难度，基本上就按照模型结构图来实现即可。唯一需要注意便是关键聚合层的维度对齐，支持灵活控制模型各个 Experts 模块的结构调整即可。</p>
+<p><strong>参考文献</strong><br><a href="https://mp.weixin.qq.com/s?__biz=MzU2ODA0NTUyOQ==&amp;mid=2247490093&amp;idx=1&amp;sn=58cec36693c33742d7f5673246b0813f&amp;chksm=fc92a09bcbe5298db648d48fefc90e173bdb13890c600538b0152bd7bd58971da02724e063e0&amp;scene=126&amp;sessionid=1605088596&amp;key=301d1d633ed7664ead5e72db2696e63bc0cc9f81eba3c1fa7ce072479ea99f43857c7776607b03640f45fdd4c6a0989118dcd674dfc926a6fc2baa36ed8a60dde9a196fdc04f8cd521d08bfac5c0f97b344563ee9cac3cd782d65fef03e0f14c9af2bf7c11622ea04661600b67c4f51f5aece7889b00f144c7a177883642d2f4&amp;ascene=1&amp;uin=Mjg1NTU5MTQxMA==&amp;devicetype=Windows+10+x64&amp;version=6300002f&amp;lang=zh_CN&amp;exportkey=A6HrIa8MEBjQ0POQs4ps3Pk=&amp;pass_ticket=8hNub+Fu4yLIlzlFzkmkkQMUkX4moojyuksiXcSdcWti8q5+iG2QZTCpgM1wGGdz&amp;wx_header=0">腾讯 at RecSys2020最佳长论文 - 多任务学习模型PLE</a><br><a href="https://zhuanlan.zhihu.com/p/52566508">深度神经网络中的多任务学习汇总</a><br><a href="https://zhuanlan.zhihu.com/p/354055223">【论文笔记日更10】腾讯PLE模型（RecSys 2020最佳论文）</a><br><a href="https://mp.weixin.qq.com/s/1ZZvEfQUDQat6nFnF67GcQ">多目标优化（三）recsys2020最佳长论文奖PLE</a><br><a href="https://github.com/ShaoQiBNU/Google_MTL">Google多任务模型</a><br><a href="https://zhuanlan.zhihu.com/p/291406172">多目标学习在推荐系统的应用(MMOE/ESMM/PLE)</a><br><a href="https://lumingdong.cn/multi-task-learning-in-recommendation-system.html">推荐系统中的多任务学习</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/frommmoetople.html">从 MMOE 到 PLE 模型</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/frommmoetople.html" title="从 MMOE 到 PLE 模型">https://www.xiemingzhao.com/posts/frommmoetople.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/frommmoetople.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%B2%BE%E6%8E%92/" rel="tag"><i class="fa fa-tag"></i> 精排</a>
+          
+            <a href="/tags/PLE/" rel="tag"><i class="fa fa-tag"></i> PLE</a>
+          
+            <a href="/tags/CGC/" rel="tag"><i class="fa fa-tag"></i> CGC</a>
+          
+            <a href="/tags/MTL/" rel="tag"><i class="fa fa-tag"></i> MTL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/mmoemodel.html" rel="next" title="MMOE 模型解析">
+                <i class="fa fa-chevron-left"></i> MMOE 模型解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/youtubednn.html" rel="prev" title="YouTubeDNN 和 WCE">
+                YouTubeDNN 和 WCE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%9B%AE%E6%A0%87"><span class="nav-number">2.</span> <span class="nav-text">2 目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-MMOE"><span class="nav-number">3.</span> <span class="nav-text">3 MMOE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-CGC"><span class="nav-number">4.</span> <span class="nav-text">4 CGC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-PLE"><span class="nav-number">5.</span> <span class="nav-text">5 PLE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-MTL-%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">6 MTL 类型总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Single-Level-MTL"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 Single-Level MTL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Multi-Level-MTL"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 Multi-Level MTL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-MTL-%E7%9A%84-Loss-%E4%BC%98%E5%8C%96"><span class="nav-number">7.</span> <span class="nav-text">7 MTL 的 Loss 优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Code"><span class="nav-number">8.</span> <span class="nav-text">8 Code</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共247.7k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
