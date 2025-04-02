@@ -99,20 +99,20 @@
 <meta property="og:site_name" content="小火箭的博客">
 <meta property="og:description" content="1 引言在推荐系统中一个重要的任务就是 CTR 建模，其本质的思想便是预估 user 对 item 的点击率。但是实际中获取的样本往往是在一定条件（时间、机型、位置等）下的后验结果，所以使得建模的 Label 往往是夹杂了这些因素的结果。 这些影响后验结果的因素一般称为 偏置（bias）项，而去除这些偏置项的过程就称为 消偏（debias）。在这其中最重要的便是 位置偏置（position bia">
 <meta property="og:locale">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p789">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p790">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p791">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p792">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p793">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p794">
-<meta property="og:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p795">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet6.png">
 <meta property="article:published_time" content="2022-03-26T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-02T16:57:47.452Z">
+<meta property="article:modified_time" content="2025-04-02T17:11:05.137Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="精排">
 <meta property="article:tag" content="debias">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p789">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet0.png">
 
 
 
@@ -482,10 +482,10 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>周期内位置越靠前，CTR 越大；靠前效率高，用户更偏好点靠前的。</li>
 </ul>
 <span id="more"></span>
-<p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p789" alt="43804e6794a00b371f3b79e78957c6fd.png"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet0.png" alt="biasnet0"></p>
 <p>在华为的研究中也论证了用户对 position 靠前的偏好。固定 item 在不同 position 的 CTR 和不固定 item 的趋势差别较为显著。</p>
-<p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p790" alt="6cac886f326237437d94655617b76fa0.png"></p>
-<h2 id="3-Position-Debias—特征法"><a href="#3-Position-Debias—特征法" class="headerlink" title="3 Position Debias—特征法"></a>3 Position Debias—特征法</h2><p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p791" alt="fb42997d2c728c829eb605c6ec52a2b0.png"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet1.png" alt="biasnet1"></p>
+<h2 id="3-Position-Debias—特征法"><a href="#3-Position-Debias—特征法" class="headerlink" title="3 Position Debias—特征法"></a>3 Position Debias—特征法</h2><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet2.png" alt="biasnet2"></p>
 <p>比较朴素的想法，便是在特征体系中引入 position, 如上图所示。</p>
 <ul>
 <li>模型 <code>offline training</code> 的时候，把 position 作为特征输入模型，让模型学习 position 带来的后验影响。</li>
@@ -494,7 +494,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p><strong>注意：具体填什么也需要测试，不同默认值的结果差别还不小。</strong></p>
 <h2 id="4-Position-Debias—Shallow-Tower"><a href="#4-Position-Debias—Shallow-Tower" class="headerlink" title="4 Position Debias—Shallow Tower"></a>4 Position Debias—Shallow Tower</h2><p>此方法核心是：<strong>构建一个 Shallow Tower 来预估 Position Debias。</strong></p>
 <p>方法来源是 Youtube 发表在 RecSys 2019上的文章：<a href="https://daiwk.github.io/assets/youtube-multitask.pdf">Recommending What Video to Watch Next: A Multitask Ranking System</a></p>
-<p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p792" alt="0849909dcdc6c10617b2132714ebc6c8.png"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet3.png" alt="biasnet3"></p>
 <p>如上图所示，文章阐述在 <code>position debias</code> 上的做法是:</p>
 <ul>
 <li>保持原来的主模型(main model)不变</li>
@@ -506,7 +506,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>注意：文章提到在 training 的时候，<strong>position 的特征会应用 10% 的 drop-out</strong>，目的是为了防止模型过度依赖 position 特征。在 online infer 的时候，由于没有后验的 position 特征，<strong>直接丢掉 shallow tower 即可</strong>。</p>
 </blockquote>
 <p>在文章中，披露了模型训练结果提取出的 position bias，如下图所示，可以看到随之位置的增长，bias 越大。因为越靠后，用户更有可能看不到。</p>
-<p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p793" alt="f40bc1bdcc1a117d484846972ca8a386.png"> <img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p794" alt="d138747505122df1921b5d28c9b28ff5.png"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet4.png" alt="biasnet4"><br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet5.png" alt="biasnet5"></p>
 <blockquote>
 <p>实际上，bias 还可以拓展更多的特征，包括 user 和 item 侧的属性，具体如何还需依赖对业务的理解和实验。</p>
 </blockquote>
@@ -523,7 +523,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>用户看到 item 后，是否点击 item 与位置无关</li>
 </ul>
 <script type="math/tex; mode=display">p(y = 1|x, pos) = p(seen|pos) p(y = 1|x, seen)</script><p>基于上述假设，就可以建模如下：</p>
-<p><img src="evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p795" alt="fec9e337c7a2c620f2f90e3f1891f8f5.png"></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet6.png" alt="biasnet6"></p>
 <p>如上图所示，其中：</p>
 <ul>
 <li><code>ProbSeen</code>： 是预估广告被用户看到的概率</li>
