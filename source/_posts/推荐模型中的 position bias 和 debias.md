@@ -1,11 +1,11 @@
 ---
 title: 推荐模型中的 position bias 和 debias
 categories:
-- 精排模型
-- 算法总结
+  - 精排模型
+  - 算法总结
 tags:
-- debias
-- 精排
+  - debias
+  - 精排
 mathjax: true
 copyright: true
 abbrlink: biasnet
@@ -27,15 +27,15 @@ date: 2022-03-27
 
 <!--more-->
 
-![43804e6794a00b371f3b79e78957c6fd.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p789)
+![biasnet0](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet0.png)
 
 在华为的研究中也论证了用户对 position 靠前的偏好。固定 item 在不同 position 的 CTR 和不固定 item 的趋势差别较为显著。
 
-![6cac886f326237437d94655617b76fa0.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p790)
+![biasnet1](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet1.png)
 
 ## 3 Position Debias—特征法
 
-![fb42997d2c728c829eb605c6ec52a2b0.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p791)
+![biasnet2](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet2.png)
 
 比较朴素的想法，便是在特征体系中引入 position, 如上图所示。
 
@@ -50,7 +50,7 @@ date: 2022-03-27
 
 方法来源是 Youtube 发表在 RecSys 2019上的文章：[Recommending What Video to Watch Next: A Multitask Ranking System](https://daiwk.github.io/assets/youtube-multitask.pdf)
 
-![0849909dcdc6c10617b2132714ebc6c8.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p792)
+![biasnet3](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet3.png)
 
 如上图所示，文章阐述在 `position debias` 上的做法是:
 
@@ -64,7 +64,8 @@ date: 2022-03-27
 
 在文章中，披露了模型训练结果提取出的 position bias，如下图所示，可以看到随之位置的增长，bias 越大。因为越靠后，用户更有可能看不到。
 
-![f40bc1bdcc1a117d484846972ca8a386.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p793) ![d138747505122df1921b5d28c9b28ff5.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p794)
+![biasnet4](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet4.png)
+![biasnet5](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet5.png)
 
 >实际上，bias 还可以拓展更多的特征，包括 user 和 item 侧的属性，具体如何还需依赖对业务的理解和实验。
 
@@ -88,7 +89,7 @@ $$p(y = 1|x, pos) = p(seen|pos) p(y = 1|x, seen)$$
 
 基于上述假设，就可以建模如下：
 
-![fec9e337c7a2c620f2f90e3f1891f8f5.png](evernotecid://5E1922BA-4A0F-4E74-8876-BB522F7481EE/appyinxiangcom/26644553/ENResource/p795)
+![biasnet6](https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/biasnet6.png)
 
 如上图所示，其中：
 * `ProbSeen`： 是预估广告被用户看到的概率
