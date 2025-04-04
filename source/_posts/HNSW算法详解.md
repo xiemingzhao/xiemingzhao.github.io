@@ -1,5 +1,5 @@
 ---
-title: HNSW算法详解
+title: HNSW 算法详解
 date: 2020-03-12
 abbrlink: hnswAlgo
 categories:
@@ -8,7 +8,7 @@ categories:
 tags:
   - 向量检索
   - 机器学习
-  - 算法
+  - HNSW
 copyright: true
 mathjax: true
 

@@ -1,13 +1,13 @@
 ---
 title: 从 MMOE 到 PLE 模型
 categories:
-- 精排模型
-- 算法总结
+  - 精排模型
+  - 算法总结
 tags:
-- PLE
-- CGC
-- MTL
-- 精排
+  - PLE
+  - CGC
+  - MTL
+  - 精排
 mathjax: true
 copyright: true
 abbrlink: frommmoetople
@@ -67,13 +67,14 @@ $$
 
 如上图所示，该模型实际上是在多个 Expert 基础上，对每一个任务的 Tower 都构建一个 Gate 网络。整个模型可以用数理表达式：
 
-```math
-\begin{array}{l} 
+$$
+\begin{array}{l}
 f^k(x)=\sum_{i=1}^n g^k(x)_{i} f_{i}(x)
 \\
 g^k(x)=Softmax(W_{gk}x)
-\end{array} 
-```
+\end{array}
+$$
+
 其中，$g^k$ 表示第 k 个任务中的用来控制 experts 结果的门控网络。
 
 **该网络的目的是使得每个 Task 通过自己独立的 Gate 网络来学习不同的 Experts 网络的组合模式**。模型的 loss 一般是各个任务的 loss 加和，如果其中某个任务的 loss 占比过高，则梯度主要沿着其下降的方向更新，有可能降低其他任务的精度。
@@ -91,8 +92,9 @@ g^k(x)=Softmax(W_{gk}x)
 * `task-specific Gating`：各个任务的门控网络，例如 Tower A的入口与Experts的连接处；
 
 从上述结构可以看得出来，`shared experts` 会与所有任务链接，学习共享信息，而 `task-specific expert` 只会受到自己任务的影响，`task-specific tower` 则是由 `task-specificGating` 将对应的 `task-specific expert` 和 `shared experts` 组合后作为其输入的。这一过程可以表述称如下数理公式：
-```math
-\begin{array}{l} 
+
+$$
+\begin{array}{l}
 y^k(x)=t^k(g^k(x))
 \\
 g^k(x)=w^k(x)S^k(x)
@@ -100,8 +102,9 @@ g^k(x)=w^k(x)S^k(x)
 w^k(x)=Softmax(W^k_g x)
 \\
 S^k(x)=[E^T_{(k,1)},E^T_{(k,2)},\dots ,E^T_{(k,m_k)},E^T_{(s,1)},E^T_{(s,2)},\dots ,E^T_{(s,m_s)}]
-\end{array} 
-```
+\end{array}
+$$
+
 其中，公式(1)表示任务k的输出结果，公式(3)表示门控网络的结构，公式(2)则表示基于门控网络将公式(4)中的专家网络组融合的过程。可以发现其与MMOE最大的区别便是不同Task之间除了共享的 `Shared Experts` 网络组之外还有各自独享的 `Task-specific Experts`，这也是接下来的 PLE 模型的核心组成模块。
 
 ## 5 PLE

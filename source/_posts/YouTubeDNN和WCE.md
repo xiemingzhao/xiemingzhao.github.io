@@ -1,12 +1,12 @@
 ---
 title: YouTubeDNN 和 WCE
 categories:
-- 精排模型
-- 算法总结
+  - 精排模型
+  - 算法总结
 tags:
-- YouTubeDNN
-- WCE
-- 精排
+  - YouTubeDNN
+  - WCE
+  - 精排
 mathjax: true
 copyright: true
 abbrlink: youtubednn

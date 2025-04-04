@@ -3,11 +3,11 @@ title: Faiss 召回详解
 date: 2020-05-05
 abbrlink: faissrecall
 categories:
-- 学习笔记
-- 算法总结
+  - 学习笔记
+  - 算法总结
 tags:
-- Faiss
-- 召回
+  - Faiss
+  - 召回
 copyright: true
 mathjax: true
 ---
