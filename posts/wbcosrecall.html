@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="召回,wbcos," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 背景 wb 意为 weight base，wbcos 即加权式的 cos。  思想：其实就是改进的 itemcos 来计算相似度。 核心在于两点：  user+session 内的 pair 重复出现的时候如何聚合，主要就是时间衰减和类目等维度加权； user+session 间的 pair 如何聚合，主要是 session 丰富度加权；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wbcos 召回">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/wbcosrecall.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 背景 wb 意为 weight base，wbcos 即加权式的 cos。  思想：其实就是改进的 itemcos 来计算相似度。 核心在于两点：  user+session 内的 pair 重复出现的时候如何聚合，主要就是时间衰减和类目等维度加权； user+session 间的 pair 如何聚合，主要是 session 丰富度加权；">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-05-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:48:13.089Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="召回">
+<meta property="article:tag" content="wbcos">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/wbcosrecall.html"/>
+
+
+
+
+
+  <title>wbcos 召回 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/wbcosrecall.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">wbcos 召回</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-09T00:00:00+08:00">
+                2022-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">召回模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/wbcosrecall.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/wbcosrecall.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><blockquote>
+<p><code>wb</code> 意为 <code>weight base</code>，wbcos 即加权式的 cos。</p>
+</blockquote>
+<p><strong>思想：其实就是改进的 itemcos 来计算相似度。</strong></p>
+<p>核心在于两点：</p>
+<ul>
+<li>user+session 内的 pair 重复出现的时候如何聚合，主要就是时间衰减和类目等维度加权；</li>
+<li>user+session 间的 pair 如何聚合，主要是 session 丰富度加权；</li>
+</ul>
+<span id="more"></span>
+<h2 id="2-步骤"><a href="#2-步骤" class="headerlink" title="2 步骤"></a>2 步骤</h2><h3 id="step0-样本构造"><a href="#step0-样本构造" class="headerlink" title="step0: 样本构造"></a>step0: 样本构造</h3><p>将用户在 app 全场景的正行为汇总到一起，作为底表 <code>user_action_database</code>。</p>
+<p><em>注意可筛选行为数较多或者较少的，例如：正反馈item个数在[a,b]之间；以及高质量用户，例如经验：在近 n 天内有 order 的用户，以及用户当天点击数不少于 k 等等</em></p>
+<p>保留 <code>user,event,time,session,item,cate,brand</code> 等等维度。</p>
+<h3 id="step1-计算bw"><a href="#step1-计算bw" class="headerlink" title="step1: 计算bw"></a>step1: 计算<code>bw</code></h3><p>在 <code>user+session</code> 维度下，计算：</p>
+<script type="math/tex; mode=display">userBw = \frac{1}{log_2 (3 + itemNum)}</script><p>其中 <code>itemNum</code> 指的是 user 在 session 内的正反馈 item 的去重个数。</p>
+<p><strong>这里的思想很简单：即一个 user 在一个 session 维度下，看的 item 越多，理论上兴趣分布越广，则权重越小；从概率学角度理解集合元素越多，产生某 pair 对的概率越大，分得的权重也越小</strong></p>
+<h3 id="step2-计算-item-的-wb"><a href="#step2-计算-item-的-wb" class="headerlink" title="step2: 计算 item 的 wb"></a>step2: 计算 item 的 <code>wb</code></h3><p>在 user+session 维度下，计算同一 item 的出现次数 <code>itemCnt</code>，截断后作为 <code>itemWb</code>：</p>
+<script type="math/tex; mode=display">itemWb = min(m, itemCnt)</script><p><strong>注意，这里截断 m 是为了后续取 pair 对 topk 时间相近，思想就是：在找出与当前 itemA 行为最近的 itemB 的时候，后者有多次出现的话最多取 m 个（时间最近的）来构建 pair，m 具体需要根据业务数据来确定</strong></p>
+<p>同时计算类目等维度的权重系数 <code>ratio</code>，这里以类目 cate 为例。</p>
+<blockquote>
+<p>即 <code>user_id,session_id</code> 维度下，每个 item_id 对应的类目权重。每个类目的权重可以参考：</p>
+</blockquote>
+<script type="math/tex; mode=display">ratio_k = \frac{cnt(cate_k)}{\sum_i cnt(cate_i)}</script><h3 id="step3-计算-item-pair-相关参数"><a href="#step3-计算-item-pair-相关参数" class="headerlink" title="step3: 计算 item pair 相关参数"></a>step3: 计算 item pair 相关参数</h3><p>在 <code>user+session</code> 维度下，构建 item 的 pair 对，可以设置 item 不同的时候才成 pair，于是每个 pair 就有两个 item，我们记为<code>(litem, ritem)</code>。</p>
+<p>紧接着对每个pair对计算参数 <code>timeGap</code> 和 <code>matchRatio</code>。</p>
+<script type="math/tex; mode=display">timeGap = e^{- \alpha * abs(tsDiff)}</script><p>其中:</p>
+<ul>
+<li>$\alpha$ 是时间衰减的超参数，经验上可取 0.75。</li>
+<li><code>tsDiff</code> 表示的是pair对中的两个正反馈 item 的行为发生时间差，建议使用 hour 的精度。</li>
+</ul>
+<p><code>matchRatio</code>的计算需要融入先验信息，我们以简单的cate维度为例：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">matchRatio = </span><br><span class="line">case </span><br><span class="line">when 叶子类目相同 then 1</span><br><span class="line">when 二级类目相同 then 0.9</span><br><span class="line">when 一级类目相同 then 0.8</span><br><span class="line">else 0.3</span><br></pre></td></tr></table></figure><br>可以看得出来，此处是 pair 对中两个 item 的 cate 维度越相同，则先验相关性越高。此处，可以融入其他的先验信息，例如 brand，price 等。</p>
+<h3 id="step4-统计-pair-对的两种频次"><a href="#step4-统计-pair-对的两种频次" class="headerlink" title="step4: 统计 pair 对的两种频次"></a>step4: 统计 pair 对的两种频次</h3><p>首先，统计每一个pair对<code>(litem, ritem)</code>全局的频次，记为<code>pairCnt</code>，并且可以以此筛选除去总出现次数较少的 pair 对，例如<code>pairCnt&gt;=5</code>。</p>
+<p>其次，计算每一个pair对<code>(litem, ritem)</code>在全局有多少个 <code>user+session</code> 出现了，即以 <code>user+session</code> 为 key 去 groupby，来计算 <code>count(distinct user,session)</code>，我们记为 <code>pairUserSessionCnt</code>。</p>
+<blockquote>
+<p><em>这里有些 tf-idf 的思想。</em></p>
+</blockquote>
+<h3 id="step5-计算innerProduct参数。"><a href="#step5-计算innerProduct参数。" class="headerlink" title="step5: 计算innerProduct参数。"></a>step5: 计算<code>innerProduct</code>参数。</h3><p>以上三个参数的计算都是在<code>user+session+pair(litem, ritem)</code>维度之下的，我们记为<code>基准维度</code>。</p>
+<h4 id="首先，计算timeGapWeight"><a href="#首先，计算timeGapWeight" class="headerlink" title="首先，计算timeGapWeight"></a>首先，计算<code>timeGapWeight</code></h4><p>我们知道在<code>基准维度</code>下，<code>matchRatio,pairCnt,pairUserSessionCnt</code>都是一致的，但是同一 pair 对会出现多次，每个 pair 对我们在前面计算过<code>timeGap</code>。而每个 pair 对<code>(litem,ritem)</code>都有自己的<code>itemWb</code>.</p>
+<p>于是我们可以如下计算：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">k = litemWb * ritemWb;</span><br><span class="line">在基准维度下，对重复出现的 pair 对的 timeGap（记为timeGaps）取前k个，即：</span><br><span class="line">timeGaps.sort(reverse = True);</span><br><span class="line">最终，timeGapWeight = sum(timeGaps[:k])</span><br></pre></td></tr></table></figure></p>
+<h4 id="然后，我们计算innerProduct"><a href="#然后，我们计算innerProduct" class="headerlink" title="然后，我们计算innerProduct"></a>然后，我们计算<code>innerProduct</code></h4><p>这个就比较简单了，也是在去重后的<code>基准维度</code>上进行计算：</p>
+<script type="math/tex; mode=display">innerProduct = matchRatio * timeGapWeight * lratio * rratio</script><p>其中，<code>lratio</code> 和 <code>rratio</code> 分别是 step3 中计算的左右 item 的类目权重（可选）。</p>
+<p><strong>这里其实可以理解为，同一 user+session 下，多次共现的 pair 对（matchRatio一致），按照其时间间隔权重来加权，两个 ratio 是按照对应类目集中度来加权（可选）</strong>。</p>
+<p>到这里，我们应该在<code>基准维度</code>（<code>user+session+pair(litem, ritem)</code>）下获得了以下特征数据(<strong>此处已经去重了</strong>)：</p>
+<blockquote>
+<p>matchRatio: 匹配度<br>timeGapWeight: 时间间隔权重<br>innerProduct: 内积权重<br>pairCnt: 全局pair的计数<br>pairUserSessionCnt: 出现对应pair的UserSession计数<br>litemWb: pair对中左item的wb<br>ritemWb: pair对右左item的wb<br>lratio: pair对中左item的类目权重ratio<br>rratio: pair对右左item的类目权重ratio<br>userBw: user+session级别的bw</p>
+</blockquote>
+<h3 id="step6-计算pair对的三个参数"><a href="#step6-计算pair对的三个参数" class="headerlink" title="step6: 计算pair对的三个参数"></a>step6: 计算pair对的三个参数</h3><p>首先，我们基于 step5 计算 <code>pairBw</code>：</p>
+<script type="math/tex; mode=display">pairBw = innerProduct * userBw^2</script><p>接着计算 pair 对中左右 item 的加权 wb（item 对应的 userBw）：</p>
+<script type="math/tex; mode=display">leftWb = litemWb * userBw</script><script type="math/tex; mode=display">rightWb = ritemWb * userBw</script><h3 id="step7-计算itemWbLen并聚合-pair-对"><a href="#step7-计算itemWbLen并聚合-pair-对" class="headerlink" title="step7: 计算itemWbLen并聚合 pair 对"></a>step7: 计算<code>itemWbLen</code>并聚合 pair 对</h3><p>首先，我们之前通过截断<code>itemCnt</code>，作为<code>itemWb</code>，在这里我们不再需要<code>基准维度</code>，我们聚合到 pair 维度，以左 item 为 key 聚合出左右 item 的<code>itemWbLen</code>:</p>
+<script type="math/tex; mode=display">litemWbLen = \sqrt {sum(leftWb^2)}</script><script type="math/tex; mode=display">ritemWbLen = \sqrt {sum(rightWb^2)}</script><p>其次，聚合pair对。<br>我们聚合全局的 pair 对，并计算下列参数：</p>
+<script type="math/tex; mode=display">pairBwScore = sum(pairBw)</script><h3 id="step8-计算最终wbScore"><a href="#step8-计算最终wbScore" class="headerlink" title="step8: 计算最终wbScore"></a>step8: 计算最终<code>wbScore</code></h3><p>最后我们将基于pair对维度计算：</p>
+<script type="math/tex; mode=display">wbScore = \frac{pairBwScore}{litemWbLen * ritemWbLen}</script><p>其中，<code>litemWbLen</code>和<code>ritemWbLen</code>分别是 pair 对中左右 item 的<code>itemWbLen</code>值。</p>
+<h2 id="3-后记"><a href="#3-后记" class="headerlink" title="3 后记"></a>3 后记</h2><p><strong>1. 聚合</strong><br>在实际中应用的时候，往往每个分区生产一张 wbcos 分区结果表，我们可以进行多分区维度的<strong>聚合</strong>来减少方差从而提高准确度：<br>一般就是采用如下更新方式</p>
+<script type="math/tex; mode=display">wbScore = \frac{prePairBw + curPairBw}{(prelitemWbLen + curlitemWbLen) + (preritemWbLen + curritemWbLen)}</script><p>其实就是利用多窗口的数据进行指标平滑的思想。或者可以进行滑动平均，比如：</p>
+<script type="math/tex; mode=display">wbScore = \alpha * wbScore_{pre} + (1 - \alpha) * wbScore_{cur}</script><p><strong>2. 计算</strong><br>因为 i2i 召回逻辑上具有对称性，在构建 pair 时，只需要构建单向 pair 对 $(i1, i2)$ 即可。最终构建倒排时，反向 pair 对 $(i2, i1)$ 可以使用同样的相似度分，以减少计算量。</p>
+<p><strong>3. 不同行为的融合</strong><br>在操作中，如何考虑所有的正行为，除<code>clk</code>之外，例如<code>fav</code>和<code>buy</code>等。那么对于不同行为之间的 pair 对就可以采取不一样的操作。主要是 session 内合并的时候所用的权重，在计算<code>innerProduct</code>的时候，<code>timeGapWeight</code>可以在不同行为对之间使用不用的权重。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/wbcosrecall.html">wbcos 召回</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/wbcosrecall.html" title="wbcos 召回">https://www.xiemingzhao.com/posts/wbcosrecall.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/wbcosrecall.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%8F%AC%E5%9B%9E/" rel="tag"><i class="fa fa-tag"></i> 召回</a>
+          
+            <a href="/tags/wbcos/" rel="tag"><i class="fa fa-tag"></i> wbcos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/swingrecall.html" rel="next" title="Swing 召回">
+                <i class="fa fa-chevron-left"></i> Swing 召回
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/ranki2imodel.html" rel="prev" title="RankI2I 召回简述">
+                RankI2I 召回简述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">2 步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#step0-%E6%A0%B7%E6%9C%AC%E6%9E%84%E9%80%A0"><span class="nav-number">2.1.</span> <span class="nav-text">step0: 样本构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step1-%E8%AE%A1%E7%AE%97bw"><span class="nav-number">2.2.</span> <span class="nav-text">step1: 计算bw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step2-%E8%AE%A1%E7%AE%97-item-%E7%9A%84-wb"><span class="nav-number">2.3.</span> <span class="nav-text">step2: 计算 item 的 wb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step3-%E8%AE%A1%E7%AE%97-item-pair-%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">step3: 计算 item pair 相关参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step4-%E7%BB%9F%E8%AE%A1-pair-%E5%AF%B9%E7%9A%84%E4%B8%A4%E7%A7%8D%E9%A2%91%E6%AC%A1"><span class="nav-number">2.5.</span> <span class="nav-text">step4: 统计 pair 对的两种频次</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step5-%E8%AE%A1%E7%AE%97innerProduct%E5%8F%82%E6%95%B0%E3%80%82"><span class="nav-number">2.6.</span> <span class="nav-text">step5: 计算innerProduct参数。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A6%96%E5%85%88%EF%BC%8C%E8%AE%A1%E7%AE%97timeGapWeight"><span class="nav-number">2.6.1.</span> <span class="nav-text">首先，计算timeGapWeight</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%84%B6%E5%90%8E%EF%BC%8C%E6%88%91%E4%BB%AC%E8%AE%A1%E7%AE%97innerProduct"><span class="nav-number">2.6.2.</span> <span class="nav-text">然后，我们计算innerProduct</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step6-%E8%AE%A1%E7%AE%97pair%E5%AF%B9%E7%9A%84%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-number">2.7.</span> <span class="nav-text">step6: 计算pair对的三个参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step7-%E8%AE%A1%E7%AE%97itemWbLen%E5%B9%B6%E8%81%9A%E5%90%88-pair-%E5%AF%B9"><span class="nav-number">2.8.</span> <span class="nav-text">step7: 计算itemWbLen并聚合 pair 对</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step8-%E8%AE%A1%E7%AE%97%E6%9C%80%E7%BB%88wbScore"><span class="nav-number">2.9.</span> <span class="nav-text">step8: 计算最终wbScore</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%90%8E%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">3 后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共271.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

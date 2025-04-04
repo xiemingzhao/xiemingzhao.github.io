@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="召回,MIND," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言在深度学习召回算法领域，比较经典的包括了以下2大类：  基于 item2vec 模型构建在线的i2i召回； 基于 user2item 泛双塔模型构建在线的u2i召回；   当然还有2阶以上的召回，i2u2i、u2u2i等，在这里不做重点介绍，最终目的都是为了召回 item。  对于第一种，相信大家比较熟知的有从 word2vec 衍生出的item2vec、阿里的deepwalk以及FM等，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIND（多兴趣）召回模型">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/mindmodel.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言在深度学习召回算法领域，比较经典的包括了以下2大类：  基于 item2vec 模型构建在线的i2i召回； 基于 user2item 泛双塔模型构建在线的u2i召回；   当然还有2阶以上的召回，i2u2i、u2u2i等，在这里不做重点介绍，最终目的都是为了召回 item。  对于第一种，相信大家比较熟知的有从 word2vec 衍生出的item2vec、阿里的deepwalk以及FM等，">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind6.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind7.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind8.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind9.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind10.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind11.png">
+<meta property="article:published_time" content="2022-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:48:35.407Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="召回">
+<meta property="article:tag" content="MIND">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/mindmodel.html"/>
+
+
+
+
+
+  <title>MIND（多兴趣）召回模型 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/mindmodel.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MIND（多兴趣）召回模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-16T00:00:00+08:00">
+                2022-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">召回模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/mindmodel.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/mindmodel.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  27
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在深度学习召回算法领域，比较经典的包括了以下2大类：</p>
+<ul>
+<li>基于 <code>item2vec</code> 模型构建在线的i2i召回；</li>
+<li>基于 <code>user2item</code> 泛双塔模型构建在线的u2i召回；</li>
+</ul>
+<blockquote>
+<p>当然还有2阶以上的召回，<code>i2u2i</code>、<code>u2u2i</code>等，在这里不做重点介绍，最终目的都是为了召回 item。</p>
+</blockquote>
+<p>对于第一种，相信大家比较熟知的有从 <code>word2vec</code> 衍生出的<code>item2vec</code>、阿里的<code>deepwalk</code>以及<code>FM</code>等，核心方式都是离线构建出 item 的 Embedding，<strong>在online侧基于用户的行为序列，取其中的 item 作为 trigger 来进行倒排/近邻召回</strong>。</p>
+<span id="more"></span>
+<p>对于第二种，一般比较常用的有微软的 <code>DSSM</code>、<code>Airbnb</code> 的向量召回的以及 <code>YouTubeDNN</code> 模型。他们的核心原理都是构建 user 和 item 的泛化双塔结构，使得 user 和 item 侧的独立生成各自的 Embedding，之后一般进行点积计算余弦相关性来构建 logloss 的优化目标。<strong>online 侧一般基于 user 画像特征，结合 user 侧模型结构实时 infer 出 userEmbedding，并从 item 集合中进行近邻召回 TopK</strong>。</p>
+<p>本文重点介绍的就是2019年阿里团队在 CIKM 上发表的论文<a href="https://arxiv.org/pdf/1904.08030.pdf">《Multi-Interest Network with Dynamic Routing for Recommendation at Tmal》</a>中提出的 <code>MIND（多兴趣）</code>召回模型。</p>
+<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2 动机"></a>2 动机</h2><blockquote>
+<p>在 u2i 召回领域，最重要便是建立合适的用户<code>兴趣模型</code>，以构建用户兴趣的<code>有效表示</code>。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind0.png" alt="mind0"></p>
+<p>如上图所示，便是<strong>经典的电商推荐场景</strong>，在召回阶段需要快速召回数千个与用户相关的候选物品。在文章的业务场景中，每日uv量大约在10亿级别，每个 user 会与上百量级的 item 进行互动，而整个物品池在千万甚至亿级别。所以作者发现<code>用户的兴趣具有显著的多样性</code>。</p>
+<p>那么如何有效地表示这种多样的用户兴趣是最关键的问题，在此之前已有不少方案：</p>
+<ul>
+<li><code>协同过滤</code>(itemcf, usercf)召回，是通过历史交互过的物品或隐藏因子直接表示用户兴趣， 但会遇到<strong>稀疏或计算问题</strong></li>
+<li>基于<code>深度学习</code>的召回，将user表示成 dense embedding，例如 DSSM、YouTubeDNN。但是这种<code>单一embedding表示有局限性</code>，对用户兴趣<strong>多样性表示欠佳，而增加 embedding 维度又会带来计算成本，并且也无法解决信息混合的问题</strong>。</li>
+<li>基于 <code>Attention 机制</code>的兴趣表示，例如经典的 DIN 模型。但是，此结构为了有效提取与 item 的信息，需要针对每一个候选 item 应用 attention 来计算 user 的 embedding，<strong>主要应用场景是精排模块</strong>。当然，self-attention 可以避开候选 item 侧，但是其也就退化成了上一种 u2i 模型。</li>
+</ul>
+<p>为了更好的表示用户多样的兴趣，同时又尽量避开上述方法的弊端，作者提出了 MIND（多兴趣）网络模型。其<code>核心思想</code>便是：</p>
+<blockquote>
+<p><strong>基于胶囊网络的动态路由算法来将用户兴趣表示成多个向量</strong></p>
+</blockquote>
+<h2 id="3-胶囊网络与动态路由"><a href="#3-胶囊网络与动态路由" class="headerlink" title="3 胶囊网络与动态路由"></a>3 胶囊网络与动态路由</h2><p>在介绍 <code>MIND</code> 之前，我们需要介绍一下<code>胶囊网络</code>和<code>动态路由</code>这两个知识点，主要是因为它们是MIND模型作者的借鉴来源，熟悉它们有助于对MIND的理解，当然我们只捡其中最核心相关部分来详解。</p>
+<h3 id="3-1-模型起源"><a href="#3-1-模型起源" class="headerlink" title="3.1 模型起源"></a>3.1 模型起源</h3><p>胶囊网络模型是2017年大名鼎鼎的 Hinton 在文章<a href="https://arxiv.org/pdf/1710.09829.pdf">《Dynamic Routing Between Capsule》</a>中提出的。</p>
+<p>实际上，胶囊网络是为了解决CNN在图像识别上的问题。彼时，CNN识别效果很显著，其具有下面两个特性：</p>
+<ul>
+<li><code>平移不变性（translation invariance ）</code>：即不管图片的内容如何进行平移，CNN还能输出与之前一样的结果。这个性质由全局共享权值和 Pooling 共同得到的；</li>
+<li><code>平移等变性（translation equivariance）</code>：即如果你对其输入施加的变换也会同样反应在输出上。这由局部连接和权值共享决定。</li>
+</ul>
+<p>但是其依然具有与一些问题，那就是<strong>对同一个图像的旋转版本会识别错误</strong>，学术上称为不具有<code>旋转不变性</code>。所以为了缓解这一问题，常常会做<code>数据增强</code>以及<code>pooling</code>的操作去增加鲁棒程度：</p>
+<ul>
+<li><code>数据增强</code>：给图片经过旋转，裁剪，变换等操作，让CNN能学习同一张图片不同的这些形态；</li>
+<li><code>pooling</code>：使得网络减少对特征出现的原始位置的依赖；</li>
+</ul>
+<p>以上两种方式往往可以提高模型的泛化能力，但同时丢失了对位置信息的捕获能力。<strong>胶囊网络就是为了赋予模型理解图像中所发生变化的能力，从而可以更好地概括所感知的内容</strong>。</p>
+<h3 id="3-2-胶囊网络"><a href="#3-2-胶囊网络" class="headerlink" title="3.2 胶囊网络"></a>3.2 胶囊网络</h3><p>接下来重点了解一下<code>Capsule</code>（胶囊网络）的结构，我们将其与传统的神经元结构做一个对比，如下图所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind1.png" alt="mind1"></p>
+<ul>
+<li>上图左侧是标准的神经元结构，其 input 与 output 都是标量，即 <code>scalar to scalar</code> 形式；</li>
+<li>上图右侧便是一个胶囊结构，其 input 与 output 都是 vector，即 <code>vector to vector</code> 形式；</li>
+</ul>
+<p>进一步解析 <code>Capsule</code> 结构，实际上这里的是不包含路由结构的单次胶囊结构。其输入是两个 vector，即 $v_1,v_2$，经过 $W_i$ 线性映射（矩阵乘）后得到新向量 $u_1,u_2$。之后，经过一组 $c_i$ 进行加权和得到汇总向量 $s$，$c_i$ 的计算方式后面会详细介绍。最后将 $s$ 经过<code>Squashing</code>算子便得到了输出向量 $v$。整体计算过程可以汇总如下公式组：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+u_i = W_i v_i \\
+s = \sum c_i u_i \\
+v = Squashing(s) = \frac{||s||^2}{1 + ||s||^2} \frac{s}{||s||}
+\end{array}</script><p>对于<code>Squashing</code>算子，我们可以发现:</p>
+<ul>
+<li>其右边的项就是为了做 <code>norm</code>，来<strong>归一化量纲，同时保留了向量的方向</strong>。</li>
+<li>而左侧项则是根据 $s$ 的模 $||s||$ 的大小来对结果进行<strong>压缩，越大，该项约趋于1，相反则趋于0</strong>。</li>
+</ul>
+<p>如此便会有：</p>
+<blockquote>
+<p>当$||s||$比较大的时候，一般是具有大值的长向量，则有$v \approx \frac{s}{||s||}$；<br>当$||s||$比较小的时候，一般是具有小值的短向量，则有$v \approx s||s||$；</p>
+</blockquote>
+<p>为了进一步了解该函数的性质，我们基于标量构建<code>Squashing</code>算子的函数图如下。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind2.png" alt="mind2"></p>
+<p>值得注意的是，实际上$W_i$是需要学习的变量，而$c_i$并不是，其为迭代计算的超参数，重点将在下一节介绍。</p>
+<h3 id="3-3-动态路由"><a href="#3-3-动态路由" class="headerlink" title="3.3 动态路由"></a>3.3 动态路由</h3><p>基于前面的胶囊结构，动态路由实际上就是其中叠加一个迭代计算的过程，如下图所示的是原始论文对该算法的描述。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind3.png" alt="mind3"></p>
+<p>可以看到，先对每个胶囊初始化一个迭代参数$b_i$，并通过其生成权重$c_i$，在每一次迭代完成之后，更新迭代参数$b_i$。</p>
+<p>这样看不够清晰，由于其基于CNN介绍的，包括了多个 Layer。所以我们基于前一节的单层 <code>Capsule</code>（胶囊网络）转化成如下的计算公式：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+b_1^0 = 0, b_2^0 = 0 \\
+for \quad r = 1 \quad to \quad R \\
+\quad c_1^r, c_2^r = softmax(b_1^r,b_2^r) \\
+\quad s^r = c_1^r u_1 + c_2^r u_2 \\
+\quad a^r = Squashing(s^r) \\
+\quad b_i^r = b_i^{r-1} +a^r u_i
+\end{array}</script><p>我们来简要说明一下<strong>整个流程</strong>：</p>
+<ul>
+<li>先对每个 capsule 初始化一个$b_i=0$；</li>
+<li>开始R轮迭代，每轮迭代做以下步骤：<blockquote>
+<ol>
+<li>对所有的$b_i$取 softmax，如此使得权重$c_i$总和为1</li>
+<li>基于$c_i$对所有$u_i$进行加权求和得到$s$</li>
+<li>对$s$应用 Squashing 算子，得到结果向量$a$</li>
+<li>按照公式更新所有$b_i$，并开始下一轮迭代</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>可以看到，实际上权重$c_i$与 attention 中的 weights 生成机制很像，只不过在这里经过$b_i$作为迭代的中间参数，$b_i$实际上称为 <code>routing logit</code>。其初始化为0，就使得$c_i$初始值都一样，对每一个 capsule 的关注度一致，没有偏差，在后面经过学习进行迭代。</p>
+<p>我们将这一迭代过程可视化出来更助于理解。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind4.png" alt="mind4"></p>
+<p>实际上，$v_i$<strong>可以称为 Capsule 网络的 input 向量</strong>，首先通过 $W_i$ 将其线性映射为 $u_i$，在这里 $v_i,u_i$ 的维度可能不同，前者是输入维度，后者是胶囊维度。并且，<strong>这一映射过程只在迭代前进行</strong>，迭代中只会用到映射后的 $u_i$。</p>
+<p>在上图中，实际上有2个 capsule 向量，即 $u_1,u_2$，所以对应的会有 $b_1,b_2$ 两个初始参数以及其对应的迭代权重 $c_1,c_2$。<strong>他们的右上角标是指迭代的轮数 r</strong>。</p>
+<p>例如，</p>
+<ol>
+<li>r=0 的时候，$b_1^0=1,b_2^2=0$是初始化参数；</li>
+<li>然后经过 softmax 得到第1轮的 $c_1^1,c_2^1$ 权重；</li>
+<li>经过胶囊网络得到第1轮的结果向量 $a^1$；</li>
+<li>按照公式 $b_i^r = b_i^{r-1} + a^r u_i$ 便可迭代得到第2轮的 $b_1^1,b_2^1$ 参数;</li>
+<li>与是便得到更新后的第2轮的权重 $c_1^2,c_2^2$。</li>
+</ol>
+<p>以此类推，直到最后一步迭代结束将 $a^3$ 最为最终结果向量输出。</p>
+<p>既然 $b_i$ 不是学习得到的，而是迭代得到的，那么这里重点关注一下其更新公式。我们可以发现：</p>
+<blockquote>
+<p>$b_i$ 在第r轮的变化项是 $a^r u_i$，如果该内积项值很大，则说明本轮的结果向量 $a^r$ 与此 <code>capsule</code> 向量 $u_i$ 很相似，那么参数 $b_i^r$ 便会增加，下一轮的权重 $c_i$ 同样变大，那么对应的 $a$ 中包含的 $u_i$ 的成分就会更大，二者向量就更近。<strong>实际上，这个 <code>dynamic routing</code> 的过程被看成是<code>软聚类</code>（soft-clustering）</strong>。</p>
+</blockquote>
+<h3 id="3-4-有效的原因"><a href="#3-4-有效的原因" class="headerlink" title="3.4 有效的原因"></a>3.4 有效的原因</h3><p>我们还以该技术的起源CNN图像识别为例，如下图所示，CNN实际上属于左侧结果，即对于图像的旋转是不变的，前面提过主要是通过一些手段加强训练的。而我们期望能够做到右侧的等变性，即能够感知到图像的变化，但又不影响结果。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind5.png" alt="mind5"></p>
+<p>那为什么融入的 <code>Capsule</code> 网络结构就能够做到呢，我们举一个例子，如下图所示。</p>
+<ul>
+<li>左侧是一个经典的 <code>maxpooling 结构</code>，其仅仅能做到 <code>Invariance</code>（不变性），即对于位置的变化无法感知，但能够做到结果一致。</li>
+<li>右侧是一个 <code>capsule 结构</code>，首先其在结果上能够做到 <code>Invariance</code>（不变性），同时其过程中产生的 <code>capsule</code> 向量是不同的，即能够感知到图像旋转的变化，所以同时做到了 <code>Equivariance</code>（等变性）。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind6.png" alt="mind6"></p>
+<h2 id="4-MIND模型"><a href="#4-MIND模型" class="headerlink" title="4 MIND模型"></a>4 MIND模型</h2><h3 id="4-1-模型概述"><a href="#4-1-模型概述" class="headerlink" title="4.1 模型概述"></a>4.1 模型概述</h3><p>经过前面的介绍，接下来理解 MIND 模型的结构就会简单的多。我们首先将其网络架构展示出来:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind7.png" alt="mind7"></p>
+<p>整个图大部分都是比较清晰的。</p>
+<ol>
+<li>底部是输入特征的 Embedding Layer，包括：<ul>
+<li><code>用户属性特征</code>（user ID，Age，Gender等，最左侧，<code>concat 操作</code>）</li>
+<li><code>行为序列特征</code>（item ID，Brand ID，Category等，中间部分，<code>pooling 操作</code>）</li>
+<li><code>物品特征</code>（item ID，Brand ID，Category等，最右侧，<code>pooling 操作</code>）</li>
+</ul>
+</li>
+<li>用户行为序列特征会经过 <code>Multi-Interest Extractor Layer（多兴趣提取层）</code>抽取 <code>Interest Capsules</code>，即多个胶囊兴趣向量；</li>
+<li>将生成的 <code>Interest Capsules</code> 与用户属性特征 <strong>concat 到一起，经过两层 ReLU 激活函数的全连接网络</strong>；</li>
+<li>在 <code>training</code> 阶段，继续经过 <code>Label-aware Attention（标签意识注意力）</code>层，最终结合 <code>Sampled Softmax Loss</code>（负采样损失函数）即可完成训练；</li>
+<li>而在左上角表示的是 <code>Serving</code> 的时候，线上直接使用<strong>步骤3的结果（多兴趣向量）进行 TopK 的近邻召回即可</strong>。</li>
+</ol>
+<p>需要注意的是，博主在工作中发现其中<strong>步骤3容易引起很多人误解</strong>：</p>
+<blockquote>
+<p>也就是 <code>Interest Capsules</code> 抽取完之后的紧接着的两层全连接，这里<em>很容易误解成将所有的兴趣向量与用户属性全部打平concat到到一起</em>，然后经过两层FC，那结果不就是一个向量了吗？难道说这里还需要重新再把结果的长向量slice成多个Interest Capsules？<strong>答案显然NO！</strong></p>
+</blockquote>
+<p>仔细研究后文或者 code，便可以知道：<strong>这里的FC（全连接）是应用在 Interest Capsules 与用户属性特征 concat 后的最后一维上</strong>。</p>
+<p>这里列举相关变量维度可能更容易理解：</p>
+<ul>
+<li>假设 用户属性特征 <code>concat</code> 后维度是 (b, 1, n)，b 是 <code>Batch Size</code>，扩展出第二维的1是为了对齐</li>
+<li>而提取的 <code>Interest Capsules</code> 层维度为 (b, k, m), k 是胶囊个数</li>
+<li>全连接层 FC 的 Input 应该是上述二者的 concat 结果，即 (b, k, n+m)</li>
+<li>FC 层是应用在上述结果的最后一层进行线性映射，故其结果维度 (b, k, d)，d 是最终的 capsule 维度，其应该和 item 侧 的embedding pooling 结果一致，如此才能做 Attention。</li>
+</ul>
+<p>接下来我们按照论文结构，介绍其中核心部分。</p>
+<h3 id="4-2-问题定义"><a href="#4-2-问题定义" class="headerlink" title="4.2 问题定义"></a>4.2 问题定义</h3><p>这是一个召回问题，其任务目标毋庸置疑：</p>
+<blockquote>
+<p>根据用户行为和属性等特征抽取多个用户兴趣的向量表示，然后利用其从 item 池子中进行TopK的近邻召回。</p>
+</blockquote>
+<p>模型的输入在前一节已经介绍，主要是一个 <code>user&amp;item</code> 的信息三元组 $(I_u,P_u,F_i)$，其中：</p>
+<ul>
+<li>$I_u$ 代表与用户u交互过的物品集，即用户的历史行为;</li>
+<li>$P_u$ 表示用户的属性，例如性别、年龄等；</li>
+<li>$F_i$ 表示为目标物品i的一些特征，例如 item id 和 category id 等。</li>
+</ul>
+<p>基于上述，模型的<code>核心任务</code>：<br>将用户的属性$P_u$和行为特征$I_u$有效地映射成用户多兴趣 Embedding 向量集合，即</p>
+<script type="math/tex; mode=display">V_u = f_u(I_u, P_u) = (v_u^1, \dots , v_u^k) \in R^{d \times k}</script><p>其中，<strong>d 是用户最终的兴趣向量 Embedding 维度，k 表示兴趣向量的个数。</strong></p>
+<p>如此容易发现：</p>
+<blockquote>
+<p>如果 $k=1$，即只有一个兴趣向量的话，模型本身就退化成传统的召回模型结构了，例如 YouTube DNN 这样。</p>
+</blockquote>
+<p>而目标物品侧的映射方式:</p>
+<script type="math/tex; mode=display">\vec e_i = f_{item}(F_i)</script><p>其中 $\vec e<em>i \in R^{d \times 1}$，于是其维度就和兴趣向量对其了，就支持后面的 <code>Label-aware Attention</code> 操作，而 $f</em>{item}( \cdot )$ 是一个 <code>Embedding &amp; Pooling</code> 层，即<strong>目标 item 的不同属性特征过 Embedding Layer 层后直接进行 sum/avg pooling。</strong></p>
+<p>最后也是将每个兴趣向量通过内积做相似度进行 TopK 的 item 召回：</p>
+<script type="math/tex; mode=display">f_{score} (V_i, \vec e_i) = \max_{1 \le k \le K} \vec e_i \vec V_u^k</script><h3 id="4-3-Multi-Interest-Extractor-Layer（多兴趣提取层）"><a href="#4-3-Multi-Interest-Extractor-Layer（多兴趣提取层）" class="headerlink" title="4.3 Multi-Interest Extractor Layer（多兴趣提取层）"></a>4.3 Multi-Interest Extractor Layer（多兴趣提取层）</h3><h4 id="4-3-1-Dynamic-Routing-Revisit（动态路由）"><a href="#4-3-1-Dynamic-Routing-Revisit（动态路由）" class="headerlink" title="4.3.1 Dynamic Routing Revisit（动态路由）"></a>4.3.1 Dynamic Routing Revisit（动态路由）</h4><p>在胶囊网络内，不管迭代多少次，实际上可以把整个网络看成2层，一个是 input 的低阶胶囊记为 $\vec c<em>i^l \in R^{N_l \times 1}, i \in {1, \cdots , m}$，另一层便是 output 的高阶胶囊记为 $\vec c_j^h \in R^{N_h \times 1}, i \in {1, \cdots , n}$。其中 m, n 表示胶囊的个数，在 MIND 中<strong>m 那就是输入时序列的长度，n便是要抽取的兴趣向量个数</strong>，$N_l, N_h$ 表示两层胶囊的维度。 那么从低阶胶囊抽取高阶胶囊过程中的路由对数$b</em>{ij}$一般如下计算：</p>
+<script type="math/tex; mode=display">b_{ij} = (\vec c_j^h)^T S_{ij} \vec c_I^l</script><p>其中，$S<em>{ij} \in R^{N_j \times N_l}$ 是待学习的转换矩阵。接下来便可由 $b</em>{ij}$ 计算出高低阶胶囊之间的加权权重 $w<em>{ij}$（又称耦合系数），即直接对 $b</em>{ij}$ 进行 softmax 计算即可：</p>
+<script type="math/tex; mode=display">w_{ij} = \frac{\exp{b_{ij}}}{\sum_{k = 1}^m \exp{b_{ik}}}</script><p><strong>注意：这里计算的是某个低阶向量在不同胶囊之间的权重分配（总和为1），而不是某个胶囊里面不同低阶向量的权重分配</strong></p>
+<p>然后，便可以基于上述的权重来计算高阶胶囊j的中间过渡向量$\vec z_j^h$：</p>
+<script type="math/tex; mode=display">\vec z_j^h = \sum_{i=1}^m w_{ij} S_{ij} \vec c_i^l</script><p>最后，便是通过 <code>Squashing</code> 算子对中间变量进行压缩来得到结果的高阶胶囊向量 $\vec c_j^h$：</p>
+<script type="math/tex; mode=display">\vec c_j^h = Squashing(\vec z_j^h) = \frac{||\vec z_j^h||^2}{1 +||\vec z_j^h||^2 } \frac{\vec z_j^h}{||\vec z_j^h||}</script><p>上述是一次迭代的整个过程，看上去貌似与前述的胶囊网络不一样，实则不然。为了进一步促进理解，依然跟上一节一样，我们将<code>单个高阶胶囊</code>$\vec c_j^h$的2轮迭代的动态路由可视化出来，如下图所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind8.png" alt="mind8"></p>
+<p>将需要注意的是：<strong>原论文中的符号与前文和图示有些区别，且无高阶胶囊维度j</strong>：</p>
+<ul>
+<li>论文的 $w<em>{ij}$ -&gt; 图示的胶囊加权权重$c</em>{ir}$</li>
+<li>论文的低阶和高阶胶囊 $\vec c_i^l, \vec c_j^h$ -&gt; 图示的输入和输出向量 $v_i, v$</li>
+<li>论文的聚合向量 $\vec z_j^h$ -&gt; 图示的聚合向量$s$</li>
+<li>论文的转化系数 $S<em>{ij}$ -&gt; 图示的转化矩阵 $W</em>{i}$</li>
+</ul>
+<h4 id="4-3-2-B2I-Dynamic-Routing（B2I动态路由）"><a href="#4-3-2-B2I-Dynamic-Routing（B2I动态路由）" class="headerlink" title="4.3.2 B2I Dynamic Routing（B2I动态路由）"></a>4.3.2 B2I Dynamic Routing（B2I动态路由）</h4><p>MIND 的作者实际上没有使用最原始的动态路由机制，而是使用了做了些许改造的<code>B2I动态路由</code>。它和原始的路由主要有3出处区别：(<strong>本部分以原文符号为主</strong>)</p>
+<ol>
+<li><strong>共享映射矩阵</strong>。<blockquote>
+<p>即所有的$S<em>{ij}$（图中的$W</em>{i}$）使用同一个S，主要原因是：</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>input 胶囊（用户行为序列）的<strong>长度是不等的</strong>，统一映射矩阵利于减少参数提高泛化；</li>
+<li>统一的映射矩阵可将商品映射的<strong>向量统一到同一空间</strong>；</li>
+</ul>
+<ol>
+<li><strong>随机初始化陆游对数 $b_{ij}$</strong><blockquote>
+<p>由于共享了映射矩阵S，那么如果$b<em>{ij}$初始化为 0，那么 softmax 后产生的所有的加权权重 $w</em>{ij}$ 边都是相等的，之后各个兴趣胶囊在迭代中将会始终保持一致。作者实际上采用高斯分布来初始化 $b_{ij}$，<strong>这样使得每个胶囊（用户兴趣聚类中心）差异较大</strong>，从而度量多样的兴趣。实际上与<code>K-means思想</code>有点类似。</p>
+</blockquote>
+</li>
+</ol>
+<p>$b_{ij}$这一点可以从论文中的实验结果看到，使用<strong>方差更大的高斯函数来初始化routing logits</strong>效果更好:</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind9.png" alt="mind9"></p>
+<p><strong>但是，这里需要注意！！！</strong><br>上面的设计并不一定是最优的，博主在实际应用中，发现参数不共享时，$b_{ij}$ 可以初始化为 0，效果反而更好，更有利于兴趣向量差异化，与业界其他业务交流也有类似的。</p>
+<ol>
+<li><strong>动态的兴趣胶囊数量</strong><blockquote>
+<p>作者出发点是<strong>行为个数不一样的用户兴趣向量应该也有差异</strong>，行为越丰富兴趣像两个数相对给多一些，具体兴趣向量个数通过下面公式来确定。</p>
+</blockquote>
+</li>
+</ol>
+<script type="math/tex; mode=display">{K_u}' = max(1, min(K, log_{2}{(|L_u|)}))</script><h3 id="4-4-Label-aware-Attention-Layer（标签意识注意力层）"><a href="#4-4-Label-aware-Attention-Layer（标签意识注意力层）" class="headerlink" title="4.4 Label-aware Attention Layer（标签意识注意力层）"></a>4.4 Label-aware Attention Layer（标签意识注意力层）</h3><p>实际上在多兴趣提取层和标签意识注意力层之间还夹杂着两个步骤：</p>
+<ol>
+<li>将用户的属性 Embedding 分别 concat 到每一个兴趣向量上；</li>
+<li>再经过两层激活函数为 ReLU 的全连接层来对其维度；</li>
+</ol>
+<p>上述两部在前面部分已经介绍过，那么在此之后变得到了可以 feed 进入 Label-aware Attention Layer 的多兴趣向量。该层内的计算结构比较熟知，其实就是传统的 QKV 形式的 <code>Attention 结构</code>：</p>
+<script type="math/tex; mode=display">\vec v_u = Attention(\vec e_i, V_u, V_u) = V_u \quad softmax(pow(V_u^T \vec e_i, p))</script><p>其中，$\vec e_i$表示的目标商品向量，$V_u$就是用户的多兴趣向量组合，里面会有${K_u}’$个有效的兴趣向量。唯一的<strong>区别是，在做完内积操作后进行了一个幂次操作，$p$就是幂次的超参数</strong>。如此便会发现p是一个可调节的参数来调整注意力分布：</p>
+<blockquote>
+<p>当 $p \longrightarrow 0$ 时，不同兴趣胶囊的注意力权重趋于相同；<br>当 $p &gt;&gt; 0$ 时，较大注意力权重的胶囊将会拉大这个优势，极端情况 $p \longrightarrow \infty$ 时，就变成了 <code>hard-attention</code>，即只有一个兴趣胶囊会生效；</p>
+</blockquote>
+<p><strong>值得注意的是，实际应用中（本人也有同样经验），p 小会使得胶囊之间差距缩小，反之可以使得兴趣胶囊差异性增加，实际线上效果也是 <code>hard-attention</code> 模式效果最优（如下图）</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind10.png" alt="mind10"></p>
+<h3 id="4-6-离线训练和线上服务"><a href="#4-6-离线训练和线上服务" class="headerlink" title="4.6 离线训练和线上服务"></a>4.6 离线训练和线上服务</h3><p>听过前面介绍的 Label-aware Attention Layer 生成用户u的聚合兴趣向量之 $\vec v_u$ 后，用户与物品i的<code>交互的概率</code>可以如下计算：</p>
+<script type="math/tex; mode=display">Pr(i|u) = Pr(\vec e_i | \vec v_u) = \frac{exp{(\vec v_u^T \vec e_i)}}{\sum_{j \in I} exp{(\vec v_u^T \vec e_j)}}</script><p><strong>实际上就是一个对有所物品应用 softmax 算子</strong></p>
+<p>整体的<code>目标函数</code>是：</p>
+<script type="math/tex; mode=display">L = \sum_{(u,i) \in D} log{Pr(i|u)}</script><p>其中，D是训练数据包含用户物品交互的集合。</p>
+<blockquote>
+<p>这里与 word2vec 类似，由于最后一层需要对所有物品应用 softmax 算子来计算概率。而有效物品的量一般很大，所以为了简化计算就转化成 <code>SampledSoftmax</code> 的方式，即只保留正样本，通过负采样生成负样本来做 <code>binary task</code>。</p>
+</blockquote>
+<p><strong>线上 serving 的时候</strong>，去除 label-aware 层，仅需要得到一个用户多兴趣向量表示的映射 $f_{user}$ 即可。通过 feed 用户画像信息，得到多个有效的兴趣表示向量，然后分别从物品集合中近邻检索 TopN 个物品即可（总共KN个物品）。</p>
+<p>最后，作者实验了不同兴趣个数K的效果，发现<strong>最大兴趣个数K控制在5-7的时候表现较好</strong>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/recall/mind11.png" alt="mind11"></p>
+<h2 id="5-code"><a href="#5-code" class="headerlink" title="5 code"></a>5 code</h2><p>这里给出一版自己实现的模型结构，篇幅原因，这里重点展示模型核心结构部分，其他模块省略，仅供参考。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.python.ops <span class="keyword">import</span> partitioned_variables</span><br><span class="line"><span class="keyword">from</span> .recModelOpt <span class="keyword">import</span> recModelOpt</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> modules <span class="keyword">import</span> dnn, capsuleLayer</span><br><span class="line"><span class="keyword">import</span> modules.featProcessor <span class="keyword">as</span> fp</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> tf.__version__ &gt;= <span class="string">&#x27;2.0&#x27;</span>:</span><br><span class="line">    tf = tf.compat.v1</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">mindSampled</span>(<span class="title class_ inherited__">recModelOpt</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build_graph</span>(<span class="params">self, features, mode, params</span>):</span><br><span class="line">            ......</span><br><span class="line">            <span class="comment"># build high_capsules</span></span><br><span class="line">            seqFeats = tf.concat(seqFeatList, axis=<span class="number">2</span>, name=<span class="string">&quot;seqFeats&quot;</span>)</span><br><span class="line">            seqFeats = tf.layers.dense(seqFeats, units=<span class="variable language_">self</span>.high_dim, activation=tf.nn.selu, name=<span class="string">&quot;seqFeatsDim&quot;</span>)</span><br><span class="line">            capsuleNet = capsuleLayer(capsule_config=capsule_config, is_training=is_training)</span><br><span class="line">            high_capsules, num_capsules = capsuleNet(seqFeats, seqLen)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># concatenate with user features</span></span><br><span class="line">            userFeats = tf.tile(tf.expand_dims(user_inputs, axis=<span class="number">1</span>),</span><br><span class="line">                [<span class="number">1</span>, tf.shape(high_capsules)[<span class="number">1</span>], <span class="number">1</span>])</span><br><span class="line">            interest_capsule = tf.concat([high_capsules, userFeats], axis=<span class="number">2</span>, name=<span class="string">&quot;cap_concat&quot;</span>)</span><br><span class="line">            tf.logging.info(<span class="string">&quot;=&quot;</span> * <span class="number">8</span> + <span class="string">&quot;interest_capsule shape is %s&quot;</span> % <span class="built_in">str</span>(interest_capsule.shape) + <span class="string">&quot;=&quot;</span> * <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">            interest_capsule = dnn(<span class="built_in">input</span>=interest_capsule, dnnDims=<span class="variable language_">self</span>.userDnn, is_training = is_training,</span><br><span class="line">                            usebn = <span class="literal">False</span>, l2_reg = <span class="variable language_">self</span>.l2_reg, name = <span class="string">&quot;userDnn&quot;</span>)</span><br><span class="line">            <span class="comment"># cap_norm = self.norm(interest_capsule, axis = 2, name = &quot;user_norm&quot;)</span></span><br><span class="line">            <span class="comment"># item_norm = self.norm(self.item_vec, axis = 1, name = &quot;item_norm&quot;)</span></span><br><span class="line"></span><br><span class="line">            cap_att = tf.matmul(interest_capsule, tf.reshape(<span class="variable language_">self</span>.item_vec, [-<span class="number">1</span>, <span class="variable language_">self</span>.high_dim, <span class="number">1</span>]))</span><br><span class="line">            cap_att = tf.reshape(tf.<span class="built_in">pow</span>(cap_att, <span class="variable language_">self</span>.sim_pow), [-<span class="number">1</span>, <span class="variable language_">self</span>.num_interest])</span><br><span class="line">            capsules_mask = tf.sequence_mask(num_capsules, <span class="variable language_">self</span>.num_interest)</span><br><span class="line">            user_capsules = tf.multiply(interest_capsule, tf.to_float(capsules_mask[:, :, <span class="literal">None</span>]), name=<span class="string">&quot;user_capsules&quot;</span>)</span><br><span class="line">            padding = tf.ones_like(cap_att) * (-<span class="number">1e9</span>)</span><br><span class="line">            cap_att = tf.where(capsules_mask, cap_att, padding)</span><br><span class="line">            cap_att = tf.nn.softmax(cap_att, axis=<span class="number">1</span>)</span><br><span class="line">            cap_att_stop = tf.stop_gradient(cap_att)</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.hardAtt:</span><br><span class="line">                user_vec = tf.gather(tf.reshape(interest_capsule, [-<span class="number">1</span>, <span class="variable language_">self</span>.high_dim]),</span><br><span class="line">                                        tf.argmax(cap_att_stop, axis=<span class="number">1</span>, output_type=tf.int32) + tf.<span class="built_in">range</span>(</span><br><span class="line">                                        tf.shape(cap_att_stop)[<span class="number">0</span>]) * <span class="variable language_">self</span>.num_interest)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                user_vec = tf.matmul(tf.reshape(cap_att_stop, [tf.shape(cap_att_stop)[<span class="number">0</span>], <span class="number">1</span>, <span class="variable language_">self</span>.num_interest]),</span><br><span class="line">                                     interest_capsule)</span><br><span class="line">            <span class="variable language_">self</span>.user_vec = tf.reshape(user_vec, [-<span class="number">1</span>, <span class="variable language_">self</span>.high_dim], name=<span class="string">&quot;user_embed&quot;</span>)</span><br><span class="line">            <span class="variable language_">self</span>.user_emb = tf.reduce_join(</span><br><span class="line">                tf.reduce_join(tf.as_string(user_capsules), axis=-<span class="number">1</span>, separator=<span class="string">&#x27;,&#x27;</span>),</span><br><span class="line">                axis=-<span class="number">1</span>, separator=<span class="string">&#x27;|&#x27;</span>)</span><br><span class="line">            <span class="variable language_">self</span>.item_emb = tf.reduce_join(tf.as_string(<span class="variable language_">self</span>.item_vec), axis=-<span class="number">1</span>, separator=<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">            </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">capsuleLayer</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, capsule_config, is_training, name = <span class="string">&quot;capsuleNet&quot;</span></span>):</span><br><span class="line">        <span class="comment"># max_seq_len: max behaviour sequence length(history length)</span></span><br><span class="line">        <span class="variable language_">self</span>._max_seq_len = capsule_config.get(<span class="string">&quot;max_seq_len&quot;</span>, <span class="number">10</span>)</span><br><span class="line">        <span class="comment"># max_k: max high capsule number</span></span><br><span class="line">        <span class="variable language_">self</span>._num_interest = capsule_config.get(<span class="string">&quot;num_interest&quot;</span>, <span class="number">3</span>)</span><br><span class="line">        <span class="comment"># high_dim: high capsule vector dimension</span></span><br><span class="line">        <span class="variable language_">self</span>._high_dim = capsule_config.get(<span class="string">&quot;high_dim&quot;</span>, <span class="number">32</span>)</span><br><span class="line">        <span class="comment"># number of Expectation-Maximization iterations</span></span><br><span class="line">        <span class="variable language_">self</span>._num_iters = capsule_config.get(<span class="string">&quot;num_iters&quot;</span>, <span class="number">3</span>)</span><br><span class="line">        <span class="comment"># routing_logits_scale</span></span><br><span class="line">        <span class="variable language_">self</span>._routing_logits_scale = capsule_config.get(<span class="string">&quot;routing_logits_scale&quot;</span>, <span class="number">1.0</span>)</span><br><span class="line">        <span class="comment"># routing_logits_stddev</span></span><br><span class="line">        <span class="variable language_">self</span>._routing_logits_stddev = capsule_config.get(<span class="string">&quot;routing_logits_stddev&quot;</span>, <span class="number">1.0</span>)</span><br><span class="line">        <span class="variable language_">self</span>.bilinear_type = capsule_config.get(<span class="string">&quot;bilinear_type&quot;</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="variable language_">self</span>._is_training = is_training</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">squash</span>(<span class="params">self, cap_interest</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Squash cap_interest over the last dimension.&quot;&quot;&quot;</span></span><br><span class="line">        cap_norm = tf.reduce_sum(tf.square(cap_interest), axis=-<span class="number">1</span>, keep_dims=<span class="literal">True</span>)</span><br><span class="line">        scalar_factor = cap_norm / (<span class="number">1</span> + cap_norm) / tf.sqrt(cap_norm + <span class="number">1e-8</span>)</span><br><span class="line">        <span class="keyword">return</span> scalar_factor * cap_interest</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">seq_feat_high_builder</span>(<span class="params">self, seq_feat</span>):</span><br><span class="line">        <span class="keyword">with</span> tf.variable_scope(<span class="variable language_">self</span>.name + <span class="string">&#x27;/bilinear&#x27;</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>.bilinear_type == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 复用转换矩阵，后面路由对数可高斯初始化</span></span><br><span class="line">                seq_high = tf.layers.dense(seq_feat, <span class="variable language_">self</span>._high_dim, activation=<span class="literal">None</span>, bias_initializer=<span class="literal">None</span>)</span><br><span class="line">                seq_high = tf.tile(seq_high, [<span class="number">1</span>, <span class="number">1</span>, <span class="variable language_">self</span>._num_interest])</span><br><span class="line">            <span class="keyword">elif</span> <span class="variable language_">self</span>.bilinear_type == <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># seq_feat_high</span></span><br><span class="line">                seq_high = tf.layers.dense(seq_feat, <span class="variable language_">self</span>._num_interest * <span class="variable language_">self</span>._high_dim, activation=<span class="literal">None</span>,</span><br><span class="line">                                               bias_initializer=<span class="literal">None</span>)</span><br><span class="line">            <span class="keyword">elif</span> <span class="variable language_">self</span>.bilinear_type == <span class="number">2</span>:</span><br><span class="line">                <span class="comment"># seq_feat_high</span></span><br><span class="line">                seq_feat =  tf.reshape(seq_feat, [-<span class="number">1</span>, <span class="variable language_">self</span>._max_seq_len, <span class="variable language_">self</span>._high_dim])</span><br><span class="line">                seq_high = tf.layers.dense(seq_feat, <span class="variable language_">self</span>._max_seq_len * <span class="variable language_">self</span>._num_interest * <span class="variable language_">self</span>._high_dim, activation=<span class="literal">None</span>,</span><br><span class="line">                                               bias_initializer=<span class="literal">None</span>)</span><br><span class="line">                seq_high = tf.reshape(seq_high, [-<span class="number">1</span>, <span class="variable language_">self</span>._max_seq_len, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._high_dim])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 扩增一维trans矩阵</span></span><br><span class="line">                w = tf.get_variable(</span><br><span class="line">                    <span class="variable language_">self</span>.name + <span class="string">&#x27;/transWeight&#x27;</span>, shape=[<span class="number">1</span>, <span class="variable language_">self</span>._max_seq_len, <span class="variable language_">self</span>._num_interest * <span class="variable language_">self</span>._high_dim, <span class="variable language_">self</span>._high_dim],</span><br><span class="line">                    initializer=tf.random_normal_initializer())</span><br><span class="line">                <span class="comment"># [N, T, 1, C]</span></span><br><span class="line">                u = tf.expand_dims(seq_feat, axis=<span class="number">2</span>)</span><br><span class="line">                <span class="comment"># [N, T, num_caps * dim_caps]</span></span><br><span class="line">                seq_high = tf.reduce_sum(w[:, :<span class="variable language_">self</span>._max_seq_len, :, :] * u, axis=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">        seq_high = tf.reshape(seq_high, [-<span class="number">1</span>, <span class="variable language_">self</span>._max_seq_len, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._high_dim])</span><br><span class="line">        seq_high = tf.transpose(seq_high, [<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>])</span><br><span class="line">        seq_high = tf.reshape(seq_high, [-<span class="number">1</span>, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len, <span class="variable language_">self</span>._high_dim])</span><br><span class="line">        <span class="keyword">return</span> seq_high</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">routing_logits_builder</span>(<span class="params">self, batch_size</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.bilinear_type &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 非共享转换矩阵，0初始化路由对数</span></span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>._is_training:</span><br><span class="line">                <span class="comment"># training的时候全部初始化</span></span><br><span class="line">                routing_logits = tf.stop_gradient(tf.zeros([batch_size, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len]))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 否则就是预估的时候同用户需要tile</span></span><br><span class="line">                routing_logits = tf.zeros([<span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len])</span><br><span class="line">                routing_logits = tf.stop_gradient(tf.tile(routing_logits[<span class="literal">None</span>, :, :], [batch_size, <span class="number">1</span>, <span class="number">1</span>]))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="variable language_">self</span>._is_training:</span><br><span class="line">                routing_logits = tf.stop_gradient(tf.truncated_normal(</span><br><span class="line">                    [batch_size, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len],</span><br><span class="line">                    stddev=<span class="variable language_">self</span>._routing_logits_stddev))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                routing_logits = tf.constant(</span><br><span class="line">                    np.random.uniform(</span><br><span class="line">                        high=<span class="variable language_">self</span>._routing_logits_stddev,</span><br><span class="line">                        size=[<span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len]),</span><br><span class="line">                    dtype=tf.float32)</span><br><span class="line">                routing_logits = tf.stop_gradient(tf.tile(routing_logits[<span class="literal">None</span>, :, :], [batch_size, <span class="number">1</span>, <span class="number">1</span>]))</span><br><span class="line">        <span class="keyword">return</span> routing_logits</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, seq_feat, seq_lens</span>):</span><br><span class="line">        <span class="comment"># seq_feat padding</span></span><br><span class="line">        cur_batch_max_seq_len = tf.shape(seq_feat)[<span class="number">1</span>]</span><br><span class="line">        seq_feat = tf.cond(</span><br><span class="line">            tf.greater(<span class="variable language_">self</span>._max_seq_len, cur_batch_max_seq_len),</span><br><span class="line">            <span class="keyword">lambda</span>: tf.pad(tensor=seq_feat,</span><br><span class="line">                paddings=[[<span class="number">0</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="variable language_">self</span>._max_seq_len - cur_batch_max_seq_len], [<span class="number">0</span>, <span class="number">0</span>]],</span><br><span class="line">                name=<span class="string">&#x27;%s/CONSTANT&#x27;</span> % <span class="variable language_">self</span>.name),</span><br><span class="line">            <span class="keyword">lambda</span>: tf.<span class="built_in">slice</span>(seq_feat, [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [-<span class="number">1</span>, <span class="variable language_">self</span>._max_seq_len, -<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">        seq_feat_high = <span class="variable language_">self</span>.seq_feat_high_builder(seq_feat)</span><br><span class="line">        seq_feat_high_stop = tf.stop_gradient(seq_feat_high, name = <span class="string">&quot;%s/seq_feat_high_stop&quot;</span> % <span class="variable language_">self</span>.name)</span><br><span class="line"></span><br><span class="line">        batch_size = tf.shape(seq_lens)[<span class="number">0</span>]</span><br><span class="line">        routing_logits = <span class="variable language_">self</span>.routing_logits_builder(batch_size)</span><br><span class="line"></span><br><span class="line">        num_capsules = tf.maximum(</span><br><span class="line">            <span class="number">1</span>, tf.minimum(<span class="variable language_">self</span>._num_interest, tf.to_int32(tf.log(tf.to_float(seq_lens)))))</span><br><span class="line">        mask = tf.sequence_mask(seq_lens, <span class="variable language_">self</span>._max_seq_len)</span><br><span class="line">        atten_mask = tf.tile(tf.expand_dims(mask, axis=<span class="number">1</span>), [<span class="number">1</span>, <span class="variable language_">self</span>._num_interest, <span class="number">1</span>])</span><br><span class="line">        paddings = tf.zeros_like(atten_mask, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>._num_iters):</span><br><span class="line">            capsule_softmax_weight = tf.nn.softmax(routing_logits, axis=<span class="number">1</span>)</span><br><span class="line">            capsule_softmax_weight = tf.where(tf.equal(atten_mask, <span class="number">0</span>), paddings, capsule_softmax_weight)</span><br><span class="line">            capsule_softmax_weight = tf.expand_dims(capsule_softmax_weight, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> i + <span class="number">1</span> &lt; <span class="variable language_">self</span>._num_iters:</span><br><span class="line">                <span class="comment"># stop_gradient内迭代</span></span><br><span class="line">                interest_capsule = tf.matmul(capsule_softmax_weight, seq_feat_high_stop)</span><br><span class="line">                high_capsules = <span class="variable language_">self</span>.squash(interest_capsule)</span><br><span class="line">                delta_routing = tf.matmul(seq_feat_high_stop, tf.transpose(high_capsules, [<span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>]))</span><br><span class="line">                delta_routing = tf.reshape(delta_routing, [-<span class="number">1</span>, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._max_seq_len])</span><br><span class="line">                routing_logits = routing_logits + delta_routing</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                interest_capsule = tf.matmul(capsule_softmax_weight, seq_feat_high)</span><br><span class="line">                high_capsules = <span class="variable language_">self</span>.squash(interest_capsule)</span><br><span class="line">        high_capsules = tf.reshape(high_capsules, [-<span class="number">1</span>, <span class="variable language_">self</span>._num_interest, <span class="variable language_">self</span>._high_dim])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> high_capsules, num_capsules</span><br></pre></td></tr></table></figure></p>
+<p><strong>参考文献</strong><br><a href="https://www.cnblogs.com/DjangoBlog/articles/11777366.html">MIND召回介绍</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzIwODA4NTIxMQ%3D%3D&amp;chksm=9709cd40a07e445669cedc192ae1a17a40604a7701393dd04f77e1b695aba775af7e46d0293c&amp;idx=1&amp;mid=2247484660&amp;scene=21&amp;sn=90a9b07594d3f5cbfef83dfc003a4eff#wechat_redirect">浅谈胶囊网络与动态路由算法</a><br><a href="https://blog.csdn.net/wuzhongqiang/article/details/123696462">AI上推荐 之 MIND(动态路由与胶囊网络的奇光异彩)</a><br><a href="https://www.jianshu.com/p/88e5f4fc3fd7">召回阶段的多兴趣模型——MIND</a><br><a href="https://zhuanlan.zhihu.com/p/497962651">MIND模型(多兴趣)</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/mindmodel.html">MIND（多兴趣）召回模型</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/mindmodel.html" title="MIND（多兴趣）召回模型">https://www.xiemingzhao.com/posts/mindmodel.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/mindmodel.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%8F%AC%E5%9B%9E/" rel="tag"><i class="fa fa-tag"></i> 召回</a>
+          
+            <a href="/tags/MIND/" rel="tag"><i class="fa fa-tag"></i> MIND</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ranki2imodel.html" rel="next" title="RankI2I 召回简述">
+                <i class="fa fa-chevron-left"></i> RankI2I 召回简述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/pidcontrol.html" rel="prev" title="PID 调控算法">
+                PID 调控算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8A%A8%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">2 动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%83%B6%E5%9B%8A%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">3.</span> <span class="nav-text">3 胶囊网络与动态路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%A8%A1%E5%9E%8B%E8%B5%B7%E6%BA%90"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 模型起源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%83%B6%E5%9B%8A%E7%BD%91%E7%BB%9C"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 胶囊网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 动态路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%9C%89%E6%95%88%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 有效的原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-MIND%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">4 MIND模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%A8%A1%E5%9E%8B%E6%A6%82%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 模型概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 问题定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Multi-Interest-Extractor-Layer%EF%BC%88%E5%A4%9A%E5%85%B4%E8%B6%A3%E6%8F%90%E5%8F%96%E5%B1%82%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Multi-Interest Extractor Layer（多兴趣提取层）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1-Dynamic-Routing-Revisit%EF%BC%88%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%EF%BC%89"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1 Dynamic Routing Revisit（动态路由）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2-B2I-Dynamic-Routing%EF%BC%88B2I%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%EF%BC%89"><span class="nav-number">4.3.2.</span> <span class="nav-text">4.3.2 B2I Dynamic Routing（B2I动态路由）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Label-aware-Attention-Layer%EF%BC%88%E6%A0%87%E7%AD%BE%E6%84%8F%E8%AF%86%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%B1%82%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Label-aware Attention Layer（标签意识注意力层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E7%A6%BB%E7%BA%BF%E8%AE%AD%E7%BB%83%E5%92%8C%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.5.</span> <span class="nav-text">4.6 离线训练和线上服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-code"><span class="nav-number">5.</span> <span class="nav-text">5 code</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共271.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

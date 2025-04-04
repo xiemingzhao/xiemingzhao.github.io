@@ -1,15 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.xiemingzhao.com/posts/biasnet.html</loc>
-    <lastmod>2025-04-02</lastmod>
+    <loc>https://www.xiemingzhao.com/posts/transformer.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/pidcontrol.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/mindmodel.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/wbcosrecall.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/swingrecall.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/distillationmodel.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/ranki2imodel.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/expectationi2irecall.html</loc>
+    <lastmod>2025-04-04</lastmod>
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/youtubednn.html</loc>
-    <lastmod>2025-04-02</lastmod>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/faissrecall.html</loc>
+    <lastmod>2025-04-04</lastmod>
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/frommmoetople.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/popularlossfuncs.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
+    <lastmod>2025-04-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.xiemingzhao.com/posts/biasnet.html</loc>
     <lastmod>2025-04-02</lastmod>
   </url>
   <url>
@@ -21,19 +69,11 @@
     <lastmod>2025-04-01</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/popularlossfuncs.html</loc>
-    <lastmod>2025-04-01</lastmod>
-  </url>
-  <url>
     <loc>https://www.xiemingzhao.com/posts/batchnormnotes.html</loc>
     <lastmod>2025-04-01</lastmod>
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/senalgo.html</loc>
-    <lastmod>2025-04-01</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/faissrecall.html</loc>
     <lastmod>2025-04-01</lastmod>
   </url>
   <url>
@@ -46,14 +86,6 @@
   </url>
   <url>
     <loc>https://www.xiemingzhao.com/posts/XGBoostDetailAnalysis.html</loc>
-    <lastmod>2025-03-31</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/vecRetrieval.html</loc>
-    <lastmod>2025-03-31</lastmod>
-  </url>
-  <url>
-    <loc>https://www.xiemingzhao.com/posts/hnswAlgo.html</loc>
     <lastmod>2025-03-31</lastmod>
   </url>
   <url>
@@ -173,6 +205,10 @@
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
+    <loc>https://www.xiemingzhao.com/posts/2cf4a7cf.html</loc>
+    <lastmod>2025-01-12</lastmod>
+  </url>
+  <url>
     <loc>https://www.xiemingzhao.com/posts/57e6146c.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
@@ -181,19 +217,15 @@
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/2cf4a7cf.html</loc>
-    <lastmod>2025-01-12</lastmod>
-  </url>
-  <url>
     <loc>https://www.xiemingzhao.com/posts/9d49d40e.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/c3af6916.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/fc21f391.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>
-    <loc>https://www.xiemingzhao.com/posts/fc21f391.html</loc>
+    <loc>https://www.xiemingzhao.com/posts/c3af6916.html</loc>
     <lastmod>2025-01-12</lastmod>
   </url>
   <url>

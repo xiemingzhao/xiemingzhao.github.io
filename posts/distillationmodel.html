@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="蒸馏模型," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 背景目前有很多复杂的模型可以来完成不同的任务，但是部署重量级模型的集成在许多情况下并不总是可行的。有时，你的单个模型可能太大，以至于通常不可能将其部署到资源受限的环境中。这就是为什么我们一直在研究一些模型优化方法 ——量化和剪枝 2 Softmax的故事当处理一个分类问题时，使用 softmax 作为神经网络的最后一个激活单元是非常典型的用法。这是为什么呢？因为softmax函数接受一组 lo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知识蒸馏简述（Knowledge Distillation）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/distillationmodel.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 背景目前有很多复杂的模型可以来完成不同的任务，但是部署重量级模型的集成在许多情况下并不总是可行的。有时，你的单个模型可能太大，以至于通常不可能将其部署到资源受限的环境中。这就是为什么我们一直在研究一些模型优化方法 ——量化和剪枝 2 Softmax的故事当处理一个分类问题时，使用 softmax 作为神经网络的最后一个激活单元是非常典型的用法。这是为什么呢？因为softmax函数接受一组 lo">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-09-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:47:19.387Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="蒸馏模型">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/distillationmodel.html"/>
+
+
+
+
+
+  <title>知识蒸馏简述（Knowledge Distillation） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/distillationmodel.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">知识蒸馏简述（Knowledge Distillation）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-16T00:00:00+08:00">
+                2021-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/distillationmodel.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/distillationmodel.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>目前有很多复杂的模型可以来完成不同的任务，但是部署重量级模型的集成在许多情况下并不总是可行的。有时，你的单个模型可能太大，以至于通常不可能将其部署到资源受限的环境中。这就是为什么我们一直在研究一些模型优化方法 ——量化和剪枝</p>
+<h2 id="2-Softmax的故事"><a href="#2-Softmax的故事" class="headerlink" title="2 Softmax的故事"></a>2 Softmax的故事</h2><p>当处理一个分类问题时，使用 softmax 作为神经网络的最后一个激活单元是非常典型的用法。这是为什么呢？<strong>因为softmax函数接受一组 logit 为输入并输出离散类别上的概率分布</strong>。比如，手写数字识别中，神经网络可能有较高的置信度认为图像为1。不过，也有轻微的可能性认为图像为7。如果我们只处理像[1,0]这样的独热编码标签(其中1和0分别是图像为1和7的概率)，那么这些信息就无法获得。</p>
+<span id="more"></span>
+<p>人类已经很好地利用了这种相对关系。更多的例子包括，长得很像猫的狗，棕红色的，猫一样的老虎等等。正如 Hinton 等人所认为的</p>
+<blockquote>
+<p>一辆宝马被误认为是一辆垃圾车的可能性很小，但比被误认为是一个胡萝卜的可能性仍然要高很多倍。</p>
+</blockquote>
+<p>这些知识可以帮助我们在各种情况下进行极好的概括。这个思考过程帮助我们更深入地了解我们的模型对输入数据的想法。它应该与我们考虑输入数据的方式一致。</p>
+<p><strong>而模型的 softmax 信息比独热编码标签更有用，因为本身的结果就是一种分布，人类认识世界又何尝不是如此</strong>。</p>
+<h2 id="3-模型蒸馏的流程"><a href="#3-模型蒸馏的流程" class="headerlink" title="3 模型蒸馏的流程"></a>3 模型蒸馏的流程</h2><ul>
+<li>在原始数据集上训练一个复杂但效果好的大模型，将此作为 <code>teacher model</code>；</li>
+<li>基于教师模型在数据集上的预估结果 <code>soft label</code>，重新在数据集上训练一个轻量的模型，并尽量保留效果，此便是<code>student model</code>。</li>
+</ul>
+<blockquote>
+<p>最终目的是得到一个小而美的模型以便于在生产中进行部署使用。</p>
+</blockquote>
+<p>本文以一个<strong>图像分类</strong>的例子，我们可以扩展前面的思想：</p>
+<ul>
+<li>训练一个在图像数据集上表现良好的教师模型。</li>
+<li>在这里，交叉熵损失将根据数据集中的真实标签计算。</li>
+<li>在相同的数据集上训练一个较小的学生模型，但是使用来自教师模型(softmax输出)的预测作为 ground-truth 标签。</li>
+</ul>
+<p>这些 softmax 输出称为软标签 <code>soft label</code>，原始的标签即为 <code>hard label</code>。</p>
+<h2 id="4-使用soft-label的原理"><a href="#4-使用soft-label的原理" class="headerlink" title="4 使用soft label的原理"></a>4 使用soft label的原理</h2><p>在容量方面，我们的学生模型比教师模型要小。</p>
+<p>因此，如果你的数据集足够复杂，那么较小的student模型可能不太适合捕捉训练目标所需的隐藏表示。我们在软标签上训练学生模型来弥补这一点，它提供了比独热编码标签更有意义的信息。在某种意义上，我们通过暴露一些训练数据集来训练学生模型来模仿教师模型的输出。</p>
+<h2 id="5-损失函数的构建"><a href="#5-损失函数的构建" class="headerlink" title="5 损失函数的构建"></a>5 损失函数的构建</h2><blockquote>
+<p>实际中存在<code>弱概率</code>的问题是：它们没有捕捉到学生模型有效学习所需的信息。</p>
+</blockquote>
+<p>例如，如果概率分布像[0.99, 0.01]，几乎不可能传递图像具有数字7的特征的知识。</p>
+<p>Hinton 等人解决这个问题的方法是：<strong>在将原始 logits 传递给 softmax 之前，将教师模型的原始 logits 按一定的温度进行缩放</strong>。</p>
+<p>这样，就会在可用的类标签中得到更广泛的分布。然后用同样的温度用于训练学生模型。</p>
+<p>我们可以把学生模型的修正损失函数写成这个方程的形式：</p>
+<script type="math/tex; mode=display">L_{KDCE}=-\sum_i p_i \log s_i</script><p>其中，$p_i$是教师模型得到软概率分布，si的表达式为：</p>
+<script type="math/tex; mode=display">s_i=-\frac{exp(z_i/T)}{\sum_j exp(z_j/T)}</script><p>具体到代码的实现如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_kd_loss</span>(<span class="params">student_logits, teacher_logits, </span></span><br><span class="line"><span class="params">                true_labels, temperature,</span></span><br><span class="line"><span class="params">                alpha, beta</span>):</span><br><span class="line">    </span><br><span class="line">    teacher_probs = tf.nn.softmax(teacher_logits / temperature)</span><br><span class="line">    kd_loss = tf.keras.losses.categorical_crossentropy(</span><br><span class="line">        teacher_probs, student_logits / temperature, </span><br><span class="line">        from_logits=<span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> kd_loss</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-合并使用软硬标签"><a href="#6-合并使用软硬标签" class="headerlink" title="6 合并使用软硬标签"></a>6 合并使用软硬标签</h2><p>Hinton 等人还探索了在真实标签(通常是 one-hot 编码)和学生模型的预测之间使用传统交叉熵损失的想法。当训练数据集很小，并且软标签没有足够的信号供学生模型采集时，这一点尤其有用。</p>
+<p>当它与扩展的 softmax 相结合时，这种方法的工作效果明显更好，而整体损失函数成为两者之间的加权平均。</p>
+<script type="math/tex; mode=display">L=\frac{\alpha * L_{KDCE}+\beta * L_{CE}}{(\alpha + \beta)}</script><p>其中</p>
+<script type="math/tex; mode=display">L_{CE}=-\sum_i y_i \log z_i</script><p>而$y_i$和$z_i$分别就是原始的标签即<code>hard label</code>和学生模型的原始预测结果。</p>
+<p>具体代码实现可以如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_kd_loss</span>(<span class="params">student_logits, teacher_logits, </span></span><br><span class="line"><span class="params">                true_labels, temperature,</span></span><br><span class="line"><span class="params">                alpha, beta</span>):</span><br><span class="line">    teacher_probs = tf.nn.softmax(teacher_logits / temperature)</span><br><span class="line">    kd_loss = tf.keras.losses.categorical_crossentropy(</span><br><span class="line">        teacher_probs, student_logits / temperature, </span><br><span class="line">        from_logits=<span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    ce_loss = tf.keras.losses.sparse_categorical_crossentropy(</span><br><span class="line">        true_labels, student_logits, from_logits=<span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    total_loss = (alpha * kd_loss) + (beta * ce_loss)</span><br><span class="line">    <span class="keyword">return</span> total_loss / (alpha + beta)</span><br></pre></td></tr></table></figure></p>
+<p>结合起来看便可以知道一个是基于软标签训练的，而另一个就是基于原始硬标签训练的。并且在实际使用中，<strong>一般的$\alpha$取值要大于$\beta$比较好</strong>，以便更多的吸收教师模型的信息。</p>
+<h2 id="7-直接拟合软标签"><a href="#7-直接拟合软标签" class="headerlink" title="7 直接拟合软标签"></a>7 直接拟合软标签</h2><p>既然我们想学习教师模型的信息，最粗暴的做法便是以教师模型的结果<code>soft label</code>作为目标，直接进行回归。Caruana 等人便是如此，操作原始 logits，而不是 softmax 值。这个工作流程如下：</p>
+<ul>
+<li>这部分保持相同:训练一个教师模型。这里交叉熵损失将根据数据集中的真实标签计算。</li>
+<li>现在，为了训练学生模型，训练目标变成分别最小化来自教师和学生模型的原始对数之间的平均平方误差。</li>
+</ul>
+<script type="math/tex; mode=display">L_{KDMSE}=\sum_i||z_i^{\theta_student} - z_{i(teacher)}^{fixed}||^2</script><p>具体代码实现可如下所示：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mse = tf.keras.losses.MeanSquaredError()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mse_kd_loss</span>(<span class="params">teacher_logits, student_logits</span>):</span><br><span class="line">    <span class="keyword">return</span> mse(teacher_logits, student_logits)</span><br></pre></td></tr></table></figure></p>
+<p>使用这个损失函数的一个<strong>潜在缺点是它是无界的</strong>。原始 logits 可以捕获噪声，而一个小模型可能无法很好的拟合。这就是为什么为了使这个损失函数很好地适合蒸馏状态，学生模型需要更大一点。</p>
+<p>Tang 等人探索了在两个损失之间插值的想法：<strong>扩展 softmax 和 MSE 损失</strong>。数学上，它看起来是这样的：</p>
+<script type="math/tex; mode=display">L=(1-\alpha) \cdot L_{KDMSE} + \alpha \cdot L_{KDCE}</script><p>根据经验，他们发现当 $\alpha = 0$ 时，(在NLP任务上)可以获得最佳的性能。</p>
+<h2 id="8-实践中的一些经验"><a href="#8-实践中的一些经验" class="headerlink" title="8 实践中的一些经验"></a>8 实践中的一些经验</h2><h3 id="8-1-使用数据增强"><a href="#8-1-使用数据增强" class="headerlink" title="8.1 使用数据增强"></a>8.1 使用数据增强</h3><p>他们在NLP数据集上展示了这个想法，但这也适用于其他领域。为了更好地指导学生模型训练，使用数据增强会有帮助，特别是当你处理的数据较少的时候。因为我们通常保持学生模型比教师模型小得多，所以我们希望学生模型能够获得更多不同的数据，从而更好地捕捉领域知识。</p>
+<h3 id="8-2-使用未标记的数据"><a href="#8-2-使用未标记的数据" class="headerlink" title="8.2 使用未标记的数据"></a>8.2 使用未标记的数据</h3><blockquote>
+<p>在像 Noisy Student Training 和 SimCLRV2 这样的文章中，作者在训练学生模型时使用了额外的未标记数据。</p>
+</blockquote>
+<p>因此，你将使用你的 teacher 模型来生成未标记数据集上的 ground-truth 分布。这在很大程度上有助于提高模型的可泛化性。<strong>这种方法只有在你所处理的数据集中有未标记数据可用时才可行</strong>。有时，情况可能并非如此(例如，医疗保健)。也有研究数据平衡和数据过滤等技术，以缓解在训练学生模型时合并未标记数据可能出现的问题。</p>
+<h3 id="8-3-在训练教师模型时不要使用标签平滑"><a href="#8-3-在训练教师模型时不要使用标签平滑" class="headerlink" title="8.3 在训练教师模型时不要使用标签平滑"></a>8.3 在训练教师模型时不要使用标签平滑</h3><p><code>标签平滑</code>是一种技术，<strong>用来放松由模型产生的高可信度预测</strong>。它有助于减少过拟合，但不建议在训练教师模型时使用标签平滑，因为无论如何，它的 logits 是按一定的温度缩放的。因此，一般不推荐在知识蒸馏的情况下使用标签平滑。</p>
+<h3 id="8-4-使用更高的温度值"><a href="#8-4-使用更高的温度值" class="headerlink" title="8.4 使用更高的温度值"></a>8.4 使用更高的温度值</h3><p>Hinton 等人建议使用更高的温度值来 soften 教师模型预测的分布，这样软标签可以为学生模型提供更多的信息。这在处理小型数据集时特别有用。对于更大的数据集，信息可以通过训练样本的数量来获得。</p>
+<h2 id="9-代码"><a href="#9-代码" class="headerlink" title="9 代码"></a>9 代码</h2><p>具体的实现代码，可以参考<a href="https://github.com/DushyantaDhyani/kdtf">DushyantaDhyani</a>代码，是比较简洁易懂的。<br>值得注意的是：</p>
+<ol>
+<li><p>其在训练教师模型的时候使用的是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logits = tf.add(tf.matmul(fc1, <span class="variable language_">self</span>.weights[<span class="string">&#x27;out&#x27;</span>]), <span class="variable language_">self</span>.biases[<span class="string">&#x27;out&#x27;</span>]) / <span class="variable language_">self</span>.softmax_temperature</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在训练学生模型的时候，使用了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">self</span>.total_loss += tf.square(<span class="variable language_">self</span>.softmax_temperature) * <span class="variable language_">self</span>.loss_op_soft</span><br></pre></td></tr></table></figure>
+<p>并不是单独定义$\alpha$和$\beta$的。</p>
+</li>
+</ol>
+<p><strong>参考文章</strong><br><a href="https://mp.weixin.qq.com/s/IAk61KBKgOBsx9X2zINlfg">神经网络中的蒸馏技术，从Softmax开始说起</a><br><a href="https://wandb.ai/authors/knowledge-distillation/reports/Distilling-Knowledge-in-Neural-Networks--VmlldzoyMjkxODk">Distilling Knowledge in Neural Networks</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/distillationmodel.html">知识蒸馏简述（Knowledge Distillation）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/distillationmodel.html" title="知识蒸馏简述（Knowledge Distillation）">https://www.xiemingzhao.com/posts/distillationmodel.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/distillationmodel.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%92%B8%E9%A6%8F%E6%A8%A1%E5%9E%8B/" rel="tag"><i class="fa fa-tag"></i> 蒸馏模型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/frommmoetople.html" rel="next" title="从 MMOE 到 PLE 模型">
+                <i class="fa fa-chevron-left"></i> 从 MMOE 到 PLE 模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/expectationi2irecall.html" rel="prev" title="ExpectationI2I 召回">
+                ExpectationI2I 召回 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Softmax%E7%9A%84%E6%95%85%E4%BA%8B"><span class="nav-number">2.</span> <span class="nav-text">2 Softmax的故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A8%A1%E5%9E%8B%E8%92%B8%E9%A6%8F%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3 模型蒸馏的流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8soft-label%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">4 使用soft label的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E7%9A%84%E6%9E%84%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">5 损失函数的构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%90%88%E5%B9%B6%E4%BD%BF%E7%94%A8%E8%BD%AF%E7%A1%AC%E6%A0%87%E7%AD%BE"><span class="nav-number">6.</span> <span class="nav-text">6 合并使用软硬标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%9B%B4%E6%8E%A5%E6%8B%9F%E5%90%88%E8%BD%AF%E6%A0%87%E7%AD%BE"><span class="nav-number">7.</span> <span class="nav-text">7 直接拟合软标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%AE%9E%E8%B7%B5%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C"><span class="nav-number">8.</span> <span class="nav-text">8 实践中的一些经验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 使用数据增强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E4%BD%BF%E7%94%A8%E6%9C%AA%E6%A0%87%E8%AE%B0%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 使用未标记的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%9C%A8%E8%AE%AD%E7%BB%83%E6%95%99%E5%B8%88%E6%A8%A1%E5%9E%8B%E6%97%B6%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8%E6%A0%87%E7%AD%BE%E5%B9%B3%E6%BB%91"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 在训练教师模型时不要使用标签平滑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E4%BD%BF%E7%94%A8%E6%9B%B4%E9%AB%98%E7%9A%84%E6%B8%A9%E5%BA%A6%E5%80%BC"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 使用更高的温度值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E4%BB%A3%E7%A0%81"><span class="nav-number">9.</span> <span class="nav-text">9 代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共271.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

@@ -102,7 +102,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc1.png">
 <meta property="article:published_time" content="2021-04-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-01T16:44:34.707Z">
+<meta property="article:modified_time" content="2025-04-04T10:11:15.523Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="损失函数">
 <meta property="article:tag" content="loss fuction">
@@ -432,7 +432,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.9k
+                  3.6k
                 </span>
               
 
@@ -448,7 +448,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  17
+                  15
                 </span>
               
             </div>
@@ -505,16 +505,24 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>更适用于有较多离群点的数据集，但由于上述的缺点使得不利于模型的收敛。为了缓解此问题，实际中如果使用的话，往往使用后文介绍的优化版 Smooth L1 Loss。</p>
 <p>这里顺便提一个与其非常接近的 MAE，即平均绝对误差：</p>
 <script type="math/tex; mode=display">MAE = \frac{1}{n} \sum_{i=1}^n |y_i - p_i|</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">L1Loss</span>(<span class="params">y_true:<span class="built_in">list</span>,y_pred:<span class="built_in">list</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    y_pred:list，代表模型预测的一组数据</span></span><br><span class="line"><span class="string">    y_true:list，代表真实样本对应的一组数据</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    y_pred=np.array(y_pred)</span><br><span class="line">    y_true=np.array(y_true)</span><br><span class="line">    loss=np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(y_pred - y_true)) / <span class="built_in">len</span>(y_pred)</span><br><span class="line">    <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
-<h3 id="2-4-Smooth-L1损失函数"><a href="#2-4-Smooth-L1损失函数" class="headerlink" title="2.4 Smooth L1损失函数"></a>2.4 Smooth L1损失函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Smooth L1 =</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">\frac&#123;1&#125;&#123;2&#125;(Y-f(x))^2 &amp; \quad\text&#123;|Y-f(x)|&lt;1&#125; \\</span><br><span class="line">|Y-f(x)|-\frac&#123;1&#125;&#123;2&#125; &amp; \quad\text&#123;|Y-f(x)|&gt;=1&#125; &amp; </span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png" alt="lossfunc0"></p>
+<h3 id="2-4-Smooth-L1损失函数"><a href="#2-4-Smooth-L1损失函数" class="headerlink" title="2.4 Smooth L1损失函数"></a>2.4 Smooth L1损失函数</h3><script type="math/tex; mode=display">
+Smooth L1 =
+\begin{cases}
+\frac{1}{2}(Y-f(x))^2 & \quad\text{|Y-f(x)|<1} \\
+|Y-f(x)|-\frac{1}{2} & \quad\text{|Y-f(x)|>=1} &
+\end{cases}</script><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc0.png" alt="lossfunc0"></p>
 <p>该函数是由 Girshick R 在 Fast R-CNN 中提出的，<strong>主要用在目标检测中防止梯度爆炸</strong>。其实际上是一个分段函数：</p>
 <ul>
 <li>在[-1,1]，等价L2损失，解决了L1的不光滑问题；</li>
 <li>在[-1,1]区间外，是L1损失，解决了L2离群点梯度易爆炸的问题。</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">Smooth_L1_Loss</span>(<span class="params">y_true_pred,y_true</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(y_true_pred)==<span class="built_in">len</span>(y_true)</span><br><span class="line">    loss=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i_y_true_pred,i_y_true <span class="keyword">in</span> <span class="built_in">zip</span>(y_true_pred,y_true):</span><br><span class="line">        tmp = <span class="built_in">abs</span>(i_y_true-i_y_true_pred)</span><br><span class="line">        <span class="keyword">if</span> tmp&lt;<span class="number">1</span>:</span><br><span class="line">            loss+=<span class="number">0.5</span>*(tmp**<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            loss+=tmp-<span class="number">0.5</span></span><br><span class="line">     <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
-<h3 id="2-5-huber-损失函数"><a href="#2-5-huber-损失函数" class="headerlink" title="2.5 huber 损失函数"></a>2.5 huber 损失函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\left.\left.\left. Huber=\left\&#123;</span><br><span class="line">\begin&#123;array&#125;</span><br><span class="line">&#123;ll&#125;\frac&#123;1&#125;&#123;2&#125;(Y-f(x))^2 &amp; |\mathrm&#123;Y-f(x)&#125;|&lt;=\delta \\</span><br><span class="line">\delta|Y-f(x)|-\frac&#123;1&#125;&#123;2&#125;\delta^2 &amp; |\mathrm&#123;Y-f(x)&#125;|&gt;\delta</span><br><span class="line">\end&#123;array&#125;\right.\right.\right.\right.</span><br></pre></td></tr></table></figure>
-<p><code>Huber</code> 损失是 MSE 和 MAE 的结合，又称作 Smooth Mean Absolute Error Loss。</p>
+<h3 id="2-5-huber-损失函数"><a href="#2-5-huber-损失函数" class="headerlink" title="2.5 huber 损失函数"></a>2.5 huber 损失函数</h3><script type="math/tex; mode=display">
+\left.\left.\left. Huber=\left\{
+\begin{array}
+{ll}\frac{1}{2}(Y-f(x))^2 & |\mathrm{Y-f(x)}|<=\delta \\
+\delta|Y-f(x)|-\frac{1}{2}\delta^2 & |\mathrm{Y-f(x)}|>\delta
+\end{array}\right.\right.\right.\right.</script><p><code>Huber</code> 损失是 MSE 和 MAE 的结合，又称作 Smooth Mean Absolute Error Loss。</p>
 <p>它克服了L1和L2的缺点：</p>
 <ul>
 <li>不仅使损失函数具有连续的导数；</li>
@@ -540,16 +548,26 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 </ul>
 <p>如下图，聚焦参数（γ）平滑地调整易于分类的样本向下加权的速率。</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/lossfunc1.png" alt="lossfunc1"></p>
-<p>其中：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p_&#123;\mathbf&#123;t&#125;&#125;=</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">p &amp; \mathrm&#123;if~&#125;y=1 \\</span><br><span class="line">1-p &amp; \text&#123;otherwise&#125; &amp; &amp; </span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="3-交叉熵的渊源"><a href="#3-交叉熵的渊源" class="headerlink" title="3 交叉熵的渊源"></a>3 交叉熵的渊源</h2><h3 id="3-1-交叉熵与信息论"><a href="#3-1-交叉熵与信息论" class="headerlink" title="3.1 交叉熵与信息论"></a>3.1 交叉熵与信息论</h3><p>交叉熵（Cross Entropy）出自 Shannon <code>信息论</code>，主要<strong>用于度量两个概率分布间的差异性信息。</strong></p>
+<p>其中：</p>
+<script type="math/tex; mode=display">
+p_{\mathbf{t}}=
+\begin{cases}
+p & \mathrm{if~}y=1 \\
+1-p & \text{otherwise} & &
+\end{cases}</script><h2 id="3-交叉熵的渊源"><a href="#3-交叉熵的渊源" class="headerlink" title="3 交叉熵的渊源"></a>3 交叉熵的渊源</h2><h3 id="3-1-交叉熵与信息论"><a href="#3-1-交叉熵与信息论" class="headerlink" title="3.1 交叉熵与信息论"></a>3.1 交叉熵与信息论</h3><p>交叉熵（Cross Entropy）出自 Shannon <code>信息论</code>，主要<strong>用于度量两个概率分布间的差异性信息。</strong></p>
 <p>假设 p 表示真实分布，q 表示预估分布，那么 $H(p,q)$ 就称为交叉熵：</p>
 <script type="math/tex; mode=display">H(p,q) = \sum_i p_i \cdot log \frac{1}{q_i} = -\sum_i p_ilog(q_i)</script><p>要追溯它的源头，需要再回到信息论中，<code>信息量</code>的表示方式：$I(x) = -log(p(x))$<br>$x$表示一个事件，$p(x)$表示事件 x 发生的概率，$I(x)$则表示信息量。<br>根据$log$函数的性质，<strong>事件发生概率越小时，它一旦发生后的信息量就越大。</strong></p>
 <p>假设随机变量 x，有两个独立的概率分布 $P(x)$ 和 $Q(x)$，怎么度量两个分布的差异呢？</p>
 <p>使用 <code>KL 散度</code>（Kullback-Leibler (KL) divergence），又称<code>相对熵</code>。</p>
 <p>KL散度的计算公式：</p>
 <script type="math/tex; mode=display">D_{KL}(q||p) = \sum_{i = 1}^n q(x_i) log \frac{q(x_i)}{p(x_i)}</script><p>其中，n为事件的所有可能性种类，D 的值越小，表示 Q 分布和 P 分布越接近。</p>
-<p>我们简单做一下分解：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;aligned&#125;</span><br><span class="line"> &amp; \mathrm&#123;&#125; \\</span><br><span class="line">D_&#123;KL&#125;(q||p) &amp; =\sum_&#123;i=1&#125;^n q(x_&#123;i&#125;)\log q(x_&#123;i&#125;)-\sum_&#123;i=1&#125;^n q(x_&#123;i&#125;)\log p(x_&#123;i&#125;) \\</span><br><span class="line"> &amp; =-H(q(x))+H(q,p)</span><br><span class="line">\end&#123;aligned&#125;</span><br></pre></td></tr></table></figure></p>
-<p>到这里，你可能已经发现他们之间的关联了。</p>
+<p>我们简单做一下分解：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& \mathrm{} \\
+D_{KL}(q||p) & =\sum_{i=1}^n q(x_{i})\log q(x_{i})-\sum_{i=1}^n q(x_{i})\log p(x_{i}) \\
+& =-H(q(x))+H(q,p)
+\end{aligned}</script><p>到这里，你可能已经发现他们之间的关联了。</p>
 <p>在深度学习中的分类任务，我们<strong>想要度量模型预估是否准确，就可以通过度量样本的真实分布（Label）与预估分布（Predict）之间的距离来判断</strong>。我们令：</p>
 <ul>
 <li>真实分布（Label）：Q(x)</li>
@@ -560,8 +578,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <script type="math/tex; mode=display">CE = -\frac{1}{n} \sum_{i=1}^n \sum_{j = 1}^m y_{ij} log(p_{ij})</script><p>如果在<strong>二分类任务中</strong>，那么 $y_{ij}$ 就只有 0 和 1 两类，所以交叉熵可以简化为：</p>
 <script type="math/tex; mode=display">CE = -\frac{1}{n} \sum_{i=1}^n (y_i log(p_{i}) + (1 - y_i)log(1 - p_{i}))</script><p>相信你已经看出来了，这就是 <code>LogLoss</code>。</p>
 <p>我们以 Logloss 为例，接着用<strong>极大值点的方式（导数为0）来求解极大似然估计</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;aligned&#125;</span><br><span class="line"> &amp; \mathrm&#123;&#125; \\</span><br><span class="line">\sum_&#123;i=1&#125;^n (y_i \frac&#123;1&#125;&#123;p_&#123;i&#125;&#125; + (1 - y_i)\frac&#123;1&#125;&#123;p_&#123;i&#125; - 1&#125;) = 0 \\</span><br><span class="line">\sum_&#123;i=1&#125;^n (p_i - y_i) = 0 \\</span><br><span class="line">\bar p = \frac&#123;1&#125;&#123;n&#125; \sum_&#123;i=1&#125;^n y_i</span><br><span class="line">\end&#123;aligned&#125;</span><br></pre></td></tr></table></figure>
-<p>这就解释了实际应用中，对于<strong>二分类任务（比如ctr预估）模型的预估期望是等于 Label 的均值的</strong>，所以我们往往用 <code>pcoc</code> 来判断模型在局部样本上是高估还是低估。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& \mathrm{} \\
+\sum_{i=1}^n (y_i \frac{1}{p_{i}} + (1 - y_i)\frac{1}{p_{i} - 1}) = 0 \\
+\sum_{i=1}^n (p_i - y_i) = 0 \\
+\bar p = \frac{1}{n} \sum_{i=1}^n y_i
+\end{aligned}</script><p>这就解释了实际应用中，对于<strong>二分类任务（比如ctr预估）模型的预估期望是等于 Label 的均值的</strong>，所以我们往往用 <code>pcoc</code> 来判断模型在局部样本上是高估还是低估。</p>
 <h3 id="3-2-交叉熵与极大似然"><a href="#3-2-交叉熵与极大似然" class="headerlink" title="3.2 交叉熵与极大似然"></a>3.2 交叉熵与极大似然</h3><p>区别：</p>
 <ul>
 <li>交叉熵是度量分布差距的大小，越大代表越不相近；</li>
@@ -571,8 +594,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <blockquote>
 <p>最大似然估计中采样需满足假设：独立同分布实验。</p>
 </blockquote>
-<p>我们假设独立采样 n 个样本，样本分布为 q，预估分布为 p，那么就有：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;gathered&#125;</span><br><span class="line">L=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^&#123;n&#125;log\prod_&#123;j=1&#125;^&#123;m&#125;p_&#123;ij&#125;^&#123;q_&#123;ij&#125;&#125;=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^&#123;n&#125;log(p_&#123;1&#125;^&#123;q_&#123;1&#125;&#125;.p_&#123;2&#125;^&#123;q_&#123;2&#125;&#125;...p_&#123;m&#125;^&#123;q_&#123;m&#125;&#125;) \\</span><br><span class="line">=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^n(q_1log(p_1)+q_2log(p_2)+...+q_m log(p_m)) \\</span><br><span class="line">=\frac&#123;1&#125;&#123;n&#125;\sum_&#123;i=1&#125;^n\sum_&#123;j=1&#125;^m q_ilog(p_i)</span><br><span class="line">\end&#123;gathered&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以发现，实际上就是交叉熵的绝对值。</p>
+<p>我们假设独立采样 n 个样本，样本分布为 q，预估分布为 p，那么就有：</p>
+<script type="math/tex; mode=display">
+\begin{gathered}
+L=\frac{1}{n}\sum_{i=1}^{n}log\prod_{j=1}^{m}p_{ij}^{q_{ij}}=\frac{1}{n}\sum_{i=1}^{n}log(p_{1}^{q_{1}}.p_{2}^{q_{2}}...p_{m}^{q_{m}}) \\
+=\frac{1}{n}\sum_{i=1}^n(q_1log(p_1)+q_2log(p_2)+...+q_m log(p_m)) \\
+=\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m q_ilog(p_i)
+\end{gathered}</script><p>可以发现，实际上就是交叉熵的绝对值。</p>
 <h3 id="3-3-交叉熵损失的优势"><a href="#3-3-交叉熵损失的优势" class="headerlink" title="3.3 交叉熵损失的优势"></a>3.3 交叉熵损失的优势</h3><blockquote>
 <p>为什么不能使用均方差做为分类问题的损失函数？</p>
 </blockquote>
@@ -590,8 +618,18 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <p>正如上面所述，交叉上损失在梯度计算上也有优势。我们以常用的二分类任务为例，单条样本交叉熵公式为：</p>
 <script type="math/tex; mode=display">C = -(y log(p) + (1 - y)log(1-p))</script><p>其中，y 是 label，p 是深度模型输出，如果结合输出层和激活函数，就有：</p>
 <script type="math/tex; mode=display">p = \sigma{(z)} , z = w x + b</script><p>我们就可以分别推导出<strong>参数$w,b$的梯度，如下所示，可以发现非常简洁，只与$p - y$有关，即预估误差越大，梯度更新越快。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;gathered&#125;</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial p&#125; &amp;=&amp; -(y \frac&#123;1&#125;&#123;p&#125; + \frac&#123;y - 1&#125;&#123;1 - p&#125;)\\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;)\\</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial z&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial p&#125; \frac&#123;\partial p&#125;&#123;\partial z&#125; \\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;) \cdot \sigma&#x27;(z) \\</span><br><span class="line">&amp;=&amp; -(y \frac&#123;1&#125;&#123;p(1 - p)&#125; - \frac&#123;1&#125;&#123;1 - p&#125;) \cdot \sigma(z)(1 - \sigma(z)) \\</span><br><span class="line">&amp;=&amp; p - y \\</span><br><span class="line"></span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial w&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial z&#125; \frac&#123;\partial z&#125;&#123;\partial w&#125; = (p - y)x \\</span><br><span class="line">\frac&#123;\partial C&#125;&#123;\partial b&#125; &amp;=&amp; \frac&#123;\partial C&#125;&#123;\partial z&#125; \frac&#123;\partial z&#125;&#123;\partial b&#125; = (p - y) </span><br><span class="line">\end&#123;gathered&#125;</span><br></pre></td></tr></table></figure>
-<p>同样的，如果是多分类，使用 softmax 激活函数 + 交叉熵损失，也有类似的性质。虽然推导起来复杂一些，但结果也是只和$p - y$有关，这里不再赘述。</p>
+<script type="math/tex; mode=display">
+\begin{gathered}
+\frac{\partial C}{\partial p} &=& -(y \frac{1}{p} + \frac{y - 1}{1 - p})\\
+&=& -(y \frac{1}{p(1 - p)} - \frac{1}{1 - p})\\
+\frac{\partial C}{\partial z} &=& \frac{\partial C}{\partial p} \frac{\partial p}{\partial z} \\
+&=& -(y \frac{1}{p(1 - p)} - \frac{1}{1 - p}) \cdot \sigma'(z) \\
+&=& -(y \frac{1}{p(1 - p)} - \frac{1}{1 - p}) \cdot \sigma(z)(1 - \sigma(z)) \\
+&=& p - y \\
+
+\frac{\partial C}{\partial w} &=& \frac{\partial C}{\partial z} \frac{\partial z}{\partial w} = (p - y)x \\
+\frac{\partial C}{\partial b} &=& \frac{\partial C}{\partial z} \frac{\partial z}{\partial b} = (p - y)
+\end{gathered}</script><p>同样的，如果是多分类，使用 softmax 激活函数 + 交叉熵损失，也有类似的性质。虽然推导起来复杂一些，但结果也是只和$p - y$有关，这里不再赘述。</p>
 <p><strong>参考文章：</strong><br><a href="https://blog.csdn.net/light169/article/details/124602481">深度学习之损失函数</a><br><a href="https://cloud.tencent.com/developer/article/1950150">六个深度学习常用损失函数总览</a><br><a href="https://www.nowcoder.com/discuss/353148846177984512">深度学习——损失函数</a><br><a href="https://mp.weixin.qq.com/s?subscene=23&amp;__biz=MzAxOTQ2NzUxOQ==&amp;mid=2651912913&amp;idx=1&amp;sn=68f62cb548b35ec93f18027458352434&amp;chksm=8022c741b7554e57616ac8dcd80a11acd7a8a6ada181f4584c602c9f242815f5863ed96b4529&amp;scene=7&amp;key=9c1744d1bffeab4b0c8d19d08eff803bc5bf556e7dad290931316859107869eae11c8d2ef08d1c445c32f9564b88b15a7ddefa9ecba47e9f30595d3194cb93202f018216f272734d0502965e5172c528b84d6f7ee4a2970563bd1594a1ee84cb78bedc97a8d73b1f2c1c8b796374470272fd4c44a5a5badebefe79f797dd9006&amp;ascene=0&amp;uin=NzY2MzMyNDAx&amp;devicetype=Windows+10+x64&amp;version=62090538&amp;lang=zh_CN&amp;exportkey=AbDFP%2Fy90lQvupKLsin%2BqIY%3D&amp;pass_ticket=xXJHSvXALrdXBNLifG37ggdjbeqxXtSOQYVggNqQRRey1Vm1lBPWCAlvlwRUGwZW&amp;wx_header=0">监督学习中的损失函数及应用研究</a></p>
 <hr>
 
@@ -803,7 +841,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">61</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -814,7 +852,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -825,7 +863,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -928,7 +966,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共247.7k字</span>
+  <span class="post-count">博客全站共271.8k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

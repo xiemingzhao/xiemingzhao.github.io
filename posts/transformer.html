@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="Transformer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 背景算法工程师在成长道路上基本绕不开深度学习，而 Transformer 模型更是其中的经典，它在2017年的《Attention is All You Need》论文中被提出，直接掀起了 Attention 机制在深度模型中的广泛应用潮流。 在该模型中有许多奇妙的想法启发了诸多算法工程师的学习创造，为了让自己回顾复习更加方便，亦或让在学习的读者更轻松地理解，便写了这篇文章。形式上，在参考诸多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer 解析">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/transformer.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 背景算法工程师在成长道路上基本绕不开深度学习，而 Transformer 模型更是其中的经典，它在2017年的《Attention is All You Need》论文中被提出，直接掀起了 Attention 机制在深度模型中的广泛应用潮流。 在该模型中有许多奇妙的想法启发了诸多算法工程师的学习创造，为了让自己回顾复习更加方便，亦或让在学习的读者更轻松地理解，便写了这篇文章。形式上，在参考诸多">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer6.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer7.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer8.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer9.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer10.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer11.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer12.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer13.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer14.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer15.gif">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer16.png">
+<meta property="article:published_time" content="2022-07-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:49:14.082Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/transformer.html"/>
+
+
+
+
+
+  <title>Transformer 解析 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/transformer.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Transformer 解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-24T00:00:00+08:00">
+                2022-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/transformer.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/transformer.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  29
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>算法工程师在成长道路上基本绕不开深度学习，而 <code>Transformer</code> 模型更是其中的经典，它在2017年的<a href="https://arxiv.org/abs/1706.03762">《Attention is All You Need》</a>论文中被提出，直接掀起了 <code>Attention</code> 机制在深度模型中的广泛应用潮流。</p>
+<p>在该模型中有许多奇妙的想法启发了诸多算法工程师的学习创造，为了让自己回顾复习更加方便，亦或让在学习的读者更轻松地理解，便写了这篇文章。形式上，在参考诸多优秀文章和博客后，这里还是采用结构与代码并行阐述的模式。</p>
+<span id="more"></span>
+<h2 id="2-Transformer-概述"><a href="#2-Transformer-概述" class="headerlink" title="2 Transformer 概述"></a>2 Transformer 概述</h2><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer0.png" alt="transformer0"></p>
+<p>如上图所示的是论文中对 Transformer 模型的结构概述，自己初学时对此图有些难以理解。回过头来看，实际上作者默认读者是一个对深度学习较为熟悉的，所以隐去了部分细节信息，仅将最核心的建模思想绘制了出来。</p>
+<p>在这里，我想再降低一下门槛，提高复习和阅读的舒适度。需要指出的是，论文提出该模型是基于<strong>nlp 中翻译任务</strong>的，所以是一个 <code>seq2seq</code> 的结构，如下图所示。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer1.png" alt="transformer1"></p>
+<p>图中表明了输入的句子经过多个编码器 <code>encoder</code> 后再经过多个解码器 <code>decoder</code> 得到最后的预估结果。那么重点就在于以下四个部分：</p>
+<ul>
+<li>input</li>
+<li>encoder</li>
+<li>decoder</li>
+<li>output</li>
+</ul>
+<p>结合上述的模型图，将这四个部分详细展示的话可以表示成如下结构。实际上此图与论文中的结构图如出一辙，但是相对更易于理解一些。下面将基于此结构，结合 <a href="https://github.com/Kyubyong/transformer.git">Kyubyong</a> 的 tf 实现代码，详细分析每个模块。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer2.png" alt="transformer2"></p>
+<h2 id="3-模块解析"><a href="#3-模块解析" class="headerlink" title="3 模块解析"></a>3 模块解析</h2><h3 id="3-1-Input"><a href="#3-1-Input" class="headerlink" title="3.1 Input"></a>3.1 Input</h3><p>模型核心的入口便是 <code>train</code> 方法模块，如下所示，在 <code>input</code> 有的情况下，前馈网络是比较清晰简洁的，只有 <code>encode</code> 和 <code>decode</code>，与模型结构图一致。其余的代码便是主要用来构建训练 <code>loss</code> 和优化器 <code>opt</code> 的。需要注意的是 <code>encode</code> 模块并不完全等价于模型结构图中的 <code>encoder</code>，后者是前者中的一部分。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, xs, ys</span>):</span><br><span class="line">   <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">   Returns</span></span><br><span class="line"><span class="string">   loss: scalar.</span></span><br><span class="line"><span class="string">   train_op: training operation</span></span><br><span class="line"><span class="string">   global_step: scalar.</span></span><br><span class="line"><span class="string">   summaries: training summary node</span></span><br><span class="line"><span class="string">   &#x27;&#x27;&#x27;</span></span><br><span class="line">   <span class="comment"># forward 前向</span></span><br><span class="line">   memory, sents1, src_masks = <span class="variable language_">self</span>.encode(xs)    <span class="comment"># 编码</span></span><br><span class="line">   logits, preds, y, sents2 = <span class="variable language_">self</span>.decode(ys, memory, src_masks)    <span class="comment"># 解码</span></span><br><span class="line"> </span><br><span class="line">   <span class="comment"># train scheme</span></span><br><span class="line">   y_ = label_smoothing(tf.one_hot(y, depth=<span class="variable language_">self</span>.hp.vocab_size))    <span class="comment"># 平滑标签</span></span><br><span class="line">   ce = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_)    <span class="comment"># softmax分类</span></span><br><span class="line">   nonpadding = tf.to_float(tf.not_equal(y, <span class="variable language_">self</span>.token2idx[<span class="string">&quot;&lt;pad&gt;&quot;</span>]))  <span class="comment"># 0: &lt;pad&gt;</span></span><br><span class="line">   loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + <span class="number">1e-7</span>)</span><br><span class="line"></span><br><span class="line">   global_step = tf.train.get_or_create_global_step()</span><br><span class="line">   lr = noam_scheme(<span class="variable language_">self</span>.hp.lr, global_step, <span class="variable language_">self</span>.hp.warmup_steps)</span><br><span class="line">   optimizer = tf.train.AdamOptimizer(lr)</span><br><span class="line">   train_op = optimizer.minimize(loss, global_step=global_step)</span><br><span class="line"></span><br><span class="line">   tf.summary.scalar(<span class="string">&#x27;lr&#x27;</span>, lr)</span><br><span class="line">   tf.summary.scalar(<span class="string">&quot;loss&quot;</span>, loss)</span><br><span class="line">   tf.summary.scalar(<span class="string">&quot;global_step&quot;</span>, global_step)</span><br><span class="line"></span><br><span class="line">   summaries = tf.summary.merge_all()</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> loss, train_op, global_step, summaries</span><br></pre></td></tr></table></figure></p>
+<p>进一步的，我们深入 <code>encode</code> 去看 <code>input</code> 在进入 <code>encoder</code> 前的一些预处理，如下代码所示。可以看到输入 <code>xs</code> 实际上包含三个部分：</p>
+<ul>
+<li><code>x</code>: 被补全的句子映射的 tokenid 序列</li>
+<li><code>seqlens</code>: 句子的长度</li>
+<li><code>sents</code>: 原始句子</li>
+</ul>
+<p>首先根据 <code>tokenid</code> 是否为0构建了 <code>src_masks</code> 源句掩码，接着将输入 <code>x</code> 进行词向量嵌入。</p>
+<blockquote>
+<p>这里需要注意，code 中作者将词向量进行了缩放，系数是 $d_{model}^{0.5}$。而这一部分原始论文中是没有提及的。</p>
+</blockquote>
+<p>之后，还进行了两步处理：</p>
+<ul>
+<li>加上 positional_encoding：为了融入位置信息；</li>
+<li>接一层 dropout：为了防止过拟合。</li>
+</ul>
+<p>到此，输入的预处理便结束了，之后就如模型结构图所示，开始进入多个 <code>encoder</code> 进行编码了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">self, xs, training=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Returns</span></span><br><span class="line"><span class="string">    memory: encoder outputs. (N, T1, d_model)</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;encoder&quot;</span>, reuse=tf.AUTO_REUSE):</span><br><span class="line">        x, seqlens, sents1 = xs    <span class="comment"># 被补全的句子，句子长度，原句</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># src_masks 源句掩码</span></span><br><span class="line">        src_masks = tf.math.equal(x, <span class="number">0</span>) <span class="comment"># (N, T1) 掩码，标记补全位置</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># embedding 嵌入</span></span><br><span class="line">        enc = tf.nn.embedding_lookup(<span class="variable language_">self</span>.embeddings, x) <span class="comment"># (N, T1, d_model)    # 词嵌入 Input Embedding</span></span><br><span class="line">        enc *= <span class="variable language_">self</span>.hp.d_model**<span class="number">0.5</span> <span class="comment"># scale 对enc缩放，但是原论文中没有发现相关内容</span></span><br><span class="line"> </span><br><span class="line">        enc += positional_encoding(enc, <span class="variable language_">self</span>.hp.maxlen1)    <span class="comment"># 位置嵌入</span></span><br><span class="line">        enc = tf.layers.dropout(enc, <span class="variable language_">self</span>.hp.dropout_rate, training=training)     <span class="comment">#Dropout 防止过拟合</span></span><br><span class="line">        <span class="comment"># 截止现在输入已被嵌入完毕</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">## Blocks Encoder 块</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.hp.num_blocks):    <span class="comment"># 设定的Encoder块</span></span><br><span class="line">            <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;num_blocks_&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i), reuse=tf.AUTO_REUSE):    <span class="comment">#当前是第几个Encoder块</span></span><br><span class="line">                <span class="comment"># self-attention    多头注意力机制</span></span><br><span class="line">                enc = multihead_attention(queries=enc,</span><br><span class="line">                                          keys=enc,</span><br><span class="line">                                          values=enc,</span><br><span class="line">                                          key_masks=src_masks,</span><br><span class="line">                                          num_heads=<span class="variable language_">self</span>.hp.num_heads,</span><br><span class="line">                                          dropout_rate=<span class="variable language_">self</span>.hp.dropout_rate,</span><br><span class="line">                                          training=training,</span><br><span class="line">                                          causality=<span class="literal">False</span>)    <span class="comment"># 多头注意力机制</span></span><br><span class="line">                <span class="comment"># feed forward    前向传播</span></span><br><span class="line">                enc = ff(enc, num_units=[<span class="variable language_">self</span>.hp.d_ff, <span class="variable language_">self</span>.hp.d_model])</span><br><span class="line">    memory = enc <span class="comment"># 记住当前进度</span></span><br><span class="line">    <span class="keyword">return</span> memory, sents1, src_masks</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-Positional-encoding"><a href="#3-2-Positional-encoding" class="headerlink" title="3.2 Positional encoding"></a>3.2 Positional encoding</h3><p>前面提到为了融入位置信息，引入了 <code>positional_encoding</code> 的模块。而位置编码的需求：</p>
+<ol>
+<li>需要体现同一个单词在不同位置的区别；</li>
+<li>需要体现一定的先后次序关系；</li>
+<li>并且在一定范围内的编码差异不应该依赖于文本长度，具有一定不变性。</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer3.png" alt="transformer3"></p>
+<p>官方的做法是：</p>
+<script type="math/tex; mode=display">PE_{(pos, 2i)} = sin(pos/10000^{2i/d_{model}})</script><script type="math/tex; mode=display">PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d_{model}})</script><p>其中：</p>
+<ul>
+<li><code>pos</code> 是指词在句中的位置;</li>
+<li><code>i</code> 是指位置嵌入 emb 的位置序号。</li>
+</ul>
+<p>整个模块的代码如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">positional_encoding</span>(<span class="params">inputs,</span></span><br><span class="line"><span class="params">                        maxlen,</span></span><br><span class="line"><span class="params">                        masking=<span class="literal">True</span>,</span></span><br><span class="line"><span class="params">                        scope=<span class="string">&quot;positional_encoding&quot;</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Sinusoidal Positional_Encoding. See 3.5</span></span><br><span class="line"><span class="string">    inputs: 3d tensor. (N, T, E)</span></span><br><span class="line"><span class="string">    maxlen: scalar. Must be &gt;= T</span></span><br><span class="line"><span class="string">    masking: Boolean. If True, padding positions are set to zeros.</span></span><br><span class="line"><span class="string">    scope: Optional scope for `variable_scope`.</span></span><br><span class="line"><span class="string">    returns</span></span><br><span class="line"><span class="string">    3d tensor that has the same shape as inputs.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"> </span><br><span class="line">    E = inputs.get_shape().as_list()[-<span class="number">1</span>] <span class="comment"># static 获取此向量维度 d_model</span></span><br><span class="line">    N, T = tf.shape(inputs)[<span class="number">0</span>], tf.shape(inputs)[<span class="number">1</span>] <span class="comment"># dynamic N为batch_size，T为最长句子长度</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(scope, reuse=tf.AUTO_REUSE):</span><br><span class="line">        <span class="comment"># position indices    位置索引</span></span><br><span class="line">        position_ind = tf.tile(tf.expand_dims(tf.<span class="built_in">range</span>(T), <span class="number">0</span>), [N, <span class="number">1</span>]) <span class="comment"># (N, T) 对张量进行扩展 1,T → N,T</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># First part of the PE function: sin and cos argument 位置嵌入方法</span></span><br><span class="line">        position_enc = np.array([</span><br><span class="line">            [pos / np.power(<span class="number">10000</span>, (i-i%<span class="number">2</span>)/E) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(E)]</span><br><span class="line">            <span class="keyword">for</span> pos <span class="keyword">in</span> <span class="built_in">range</span>(maxlen)])</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># Second part, apply the cosine to even columns and sin to odds.  不同位置 使用sin和cos方法</span></span><br><span class="line">        position_enc[:, <span class="number">0</span>::<span class="number">2</span>] = np.sin(position_enc[:, <span class="number">0</span>::<span class="number">2</span>])  <span class="comment"># dim 2i</span></span><br><span class="line">        position_enc[:, <span class="number">1</span>::<span class="number">2</span>] = np.cos(position_enc[:, <span class="number">1</span>::<span class="number">2</span>])  <span class="comment"># dim 2i+1</span></span><br><span class="line">        position_enc = tf.convert_to_tensor(position_enc, tf.float32) <span class="comment"># (maxlen, E)</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># lookup</span></span><br><span class="line">        outputs = tf.nn.embedding_lookup(position_enc, position_ind)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># masks</span></span><br><span class="line">        <span class="keyword">if</span> masking:    <span class="comment"># 是否需要掩码</span></span><br><span class="line">            outputs = tf.where(tf.equal(inputs, <span class="number">0</span>), inputs, outputs) </span><br><span class="line">        <span class="comment"># inputs中值为0的地方（为True的地方）保持值不变，其余元素替换为outputs结果。因为0的地方就是掩码的地方，不需要有所谓的位置嵌入。</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> tf.to_float(outputs)</span><br></pre></td></tr></table></figure>
+<p>论文中对该嵌入方法生成的 <code>embdding</code> 进行了可视化，如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer4.png" alt="transformer4"></p>
+<p>为何如此设计呢？从公式看，<code>sin &amp; cos</code> 的交替使用只是为了使编码更丰富，在哪些维度上使用 sin，哪些使用 cos，不是很重要，都是模型可以调整适应的。而论文给的解释是：</p>
+<blockquote>
+<p>对任意确定的偏移 k，$PE<em>{pos+k}$ 可以表示为 $PE</em>{pos}$ 的函数。</p>
+</blockquote>
+<p>推导的结果是:</p>
+<script type="math/tex; mode=display">PE(pos + k, 2i) = PE(pos, 2i) * constant^k_{2i + 1} + constant^k_i * PE(pos, 2i + 1)</script><p>需要指出的是：</p>
+<ol>
+<li>这个函数形式很可能是基于经验得到的，并且应该有不少可以替代的方法；</li>
+<li>谷歌后期的作品 <code>BERT</code> 已经换用位置嵌入(positional embedding)来学习了。</li>
+</ol>
+<h3 id="3-3-Multi-Head-Attention"><a href="#3-3-Multi-Head-Attention" class="headerlink" title="3.3 Multi Head Attention"></a>3.3 Multi Head Attention</h3><h4 id="3-3-1-机制概述"><a href="#3-3-1-机制概述" class="headerlink" title="3.3.1 机制概述"></a>3.3.1 机制概述</h4><p>多头注意力机制是 <code>Transformer</code> 的核心，且这里的 <code>Attention</code> 被称为 <code>self-attention</code>，是为了区别另一种 <code>target-attention</code>。名字不是特别重要，重点是理解逻辑和实现。这里先抛出对此的看法：<strong>模型在理解句中某个词的时候，需要结合上下文，而 <code>Multihead Attention</code> 便是用来从不同角度度量句中单个词与上下文各个词之间关联性的机制。</strong></p>
+<p>文字可能没有图片直观，这里以一个可视化的例子来呈现：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer5.png" alt="transformer5"></p>
+<p>如上图所示，当模型想要理解句子 “The animal didn’t cross the street because it was too tired” 中 it 含义的时候，attention 机制可以计算上下文中各个词与它的相关性，图中颜色的深浅便代表相关性大小。</p>
+<p>所以，<code>Multihead Attention</code> 模块的任务就是<strong>将原本独立的词向量（维度d_k）经过一系列的计算过程，最终映射到一组新的向量(维度d_v)，新向量包含了上下文、位置等有助于词义理解的信息</strong>。</p>
+<h4 id="3-3-2-Q、K、V变换"><a href="#3-3-2-Q、K、V变换" class="headerlink" title="3.3.2 Q、K、V变换"></a>3.3.2 Q、K、V变换</h4><p>模型 <code>Multihead Attention</code> 模块的输入是 embedding 后的一串词向量，而 Attention 机制中原始是对 Query 计算与 Key 的 Weight 后，叠加 Value 计算加权和，所以需要 $Query,Key,Value$ 三个矩阵。</p>
+<p>作者便基于 Input 矩阵，通过矩阵变换来生成 Q、K、V，如下图所示，<strong>由于 Query 和 Key、Value 来源于同一个Input</strong>，故这种机制也称为 <code>self-attention</code>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer6.png" alt="transformer6"></p>
+<p>如上图所示，假设 Input 是“Thinking Matchines”句子，只有2个词向量。假设每个词映射为图中的 $1 \times 4$ 的词向量，当我们使用图中所示的3个变换矩阵 $W^Q,W^K,W^V$ 来对 Input 进行变换 (即 $W \times X$) 后，便可以得到变换后的$Q,K,V$矩阵，即每个词向量转换成图中维度为 $1 \times 3$ 的 $q,k,v$。</p>
+<p><strong>注意：这些新向量的维度比输入词向量的维度要小（原文 nlp 任务是 512–&gt;64，图中 case 是4-&gt;3），并不是必须要小的，是为了让多头 attention 的计算更稳定。</strong></p>
+<p>对应的 code 如下所示，其中有一个 <code>Split and concat</code> 模块，这一块本节未提及，是模型中 <code>multi-head</code> 机制的体现，在后文将会详细介绍。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">multihead_attention</span>(<span class="params">queries, keys, values, key_masks,</span></span><br><span class="line"><span class="params">                        num_heads=<span class="number">8</span>, </span></span><br><span class="line"><span class="params">                        dropout_rate=<span class="number">0</span>,</span></span><br><span class="line"><span class="params">                        training=<span class="literal">True</span>,</span></span><br><span class="line"><span class="params">                        causality=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">                        scope=<span class="string">&quot;multihead_attention&quot;</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Applies multihead attention. See 3.2.2</span></span><br><span class="line"><span class="string">    queries: A 3d tensor with shape of [N, T_q, d_model].</span></span><br><span class="line"><span class="string">    keys: A 3d tensor with shape of [N, T_k, d_model].</span></span><br><span class="line"><span class="string">    values: A 3d tensor with shape of [N, T_k, d_model].</span></span><br><span class="line"><span class="string">    key_masks: A 2d tensor with shape of [N, key_seqlen]</span></span><br><span class="line"><span class="string">    num_heads: An int. Number of heads.</span></span><br><span class="line"><span class="string">    dropout_rate: A floating point number.</span></span><br><span class="line"><span class="string">    training: Boolean. Controller of mechanism for dropout.</span></span><br><span class="line"><span class="string">    causality: Boolean. If true, units that reference the future are masked.</span></span><br><span class="line"><span class="string">    scope: Optional scope for `variable_scope`.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    Returns</span></span><br><span class="line"><span class="string">      A 3d tensor with shape of (N, T_q, C)  </span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    d_model = queries.get_shape().as_list()[-<span class="number">1</span>]    <span class="comment"># 获取词向量长度</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(scope, reuse=tf.AUTO_REUSE):</span><br><span class="line">        <span class="comment"># Linear projections    # 通过权重矩阵得出Q,K,V矩阵</span></span><br><span class="line">        Q = tf.layers.dense(queries, d_model, use_bias=<span class="literal">True</span>) <span class="comment"># (N, T_q, d_model)</span></span><br><span class="line">        K = tf.layers.dense(keys, d_model, use_bias=<span class="literal">True</span>) <span class="comment"># (N, T_k, d_model)</span></span><br><span class="line">        V = tf.layers.dense(values, d_model, use_bias=<span class="literal">True</span>) <span class="comment"># (N, T_k, d_model)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Split and concat    针对最后一个维度划分为多头，词向量长度512 → 每个头64</span></span><br><span class="line">        Q_ = tf.concat(tf.split(Q, num_heads, axis=<span class="number">2</span>), axis=<span class="number">0</span>) <span class="comment"># (h*N, T_q, d_model/h)</span></span><br><span class="line">        K_ = tf.concat(tf.split(K, num_heads, axis=<span class="number">2</span>), axis=<span class="number">0</span>) <span class="comment"># (h*N, T_k, d_model/h)</span></span><br><span class="line">        V_ = tf.concat(tf.split(V, num_heads, axis=<span class="number">2</span>), axis=<span class="number">0</span>) <span class="comment"># (h*N, T_k, d_model/h)</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># Attention 计算自注意力</span></span><br><span class="line">        outputs = scaled_dot_product_attention(Q_, K_, V_, key_masks, causality, dropout_rate, training)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># Restore shape 合并多头</span></span><br><span class="line">        outputs = tf.concat(tf.split(outputs, num_heads, axis=<span class="number">0</span>), axis=<span class="number">2</span> ) <span class="comment"># (N, T_q, d_model)</span></span><br><span class="line">              </span><br><span class="line">        <span class="comment"># Residual connection 残差链接</span></span><br><span class="line">        outputs += queries </span><br><span class="line">              </span><br><span class="line">        <span class="comment"># Layer Normalize </span></span><br><span class="line">        outputs = ln(outputs)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> outputs</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-3-Attention"><a href="#3-3-3-Attention" class="headerlink" title="3.3.3 Attention"></a>3.3.3 Attention</h4><p>在文中的全称是 <code>scaled_dot_product_attention</code>（缩放的点积注意力机制），这也是 <code>Transformer</code> 的计算核心。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer7.png" alt="transformer7"></p>
+<p>如上图所示，是 Attention 机制的一个计算过程示例。输入有2个词向量($x_1,x_2$)，分别映射成了对应的$q,k,v$向量。</p>
+<p>作为 <code>scaled_dot_product_attention</code> 的输入后需要经过如下几步：</p>
+<ol>
+<li>计算每组 q, k 的点积，即图中的 Score；</li>
+<li>对点积 Score 进行缩放（scaled），即图中的“除以8“，8由$\sqrt{d_k}$计算得到；</li>
+<li>基于每个词维度，对其下所有的 scaled Score 计算 Softmax 得到对应的权重 Weight；</li>
+<li>用3中的权重对所有向量 $v_i$ 做加权求和，得到最终的 Sum 向量作为 output。</li>
+</ol>
+<p>这里需要注意，在第 2 步中对点积的结果 Score 做了 scaled 的原因：</p>
+<blockquote>
+<p>作者提到，这样梯度会更稳定。然后加上softmax操作，归一化分值使得全为正数且加和为1。</p>
+</blockquote>
+<p>后半部分比较好理解，前半部分的原因可从如下角度考虑：假设 Q 和 K 的均值为0，方差为1，它们的矩阵乘积将有均值为0，方差为 $d_k$。因此，$d_k$ 的平方根被用于缩放（而非其他数值）后，因为，<strong>乘积的结果就变成了 0 均值和单位方差，这样会获得一个更平缓的 softmax，也即梯度更稳定不容易出现梯度消失</strong>。</p>
+<p>以上是单个词向量在 Attention 中的计算过程，自然的，多个词向量可以叠加后进行矩阵运算，如下所示。实际上，就是将原来的单词向量$x_i$ ($1 \times d_k$)　堆叠到一起 $X$($N \times d_k$) 进行计算。</p>
+<p>输入 $X$ 到 $Q,K,V$ 的矩阵变换过程：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer8.png" alt="transformer8"></p>
+<p>基于$Q,K,V$的 Attention 计算过程：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer9.png" alt="transformer9"></p>
+<h4 id="3-3-4-Multi-head"><a href="#3-3-4-Multi-head" class="headerlink" title="3.3.4 Multi-head"></a>3.3.4 Multi-head</h4><p>截止上述基本上就是 <code>self-attention</code> 的计算流程了，那么 <code>Multi Attention</code> 中的 <code>multi</code> 就体现在本节的 <code>Multi-head</code> 环节。</p>
+<p>我们先看做法：</p>
+<blockquote>
+<p>使用多组 $W^Q,W^K,W^V$ 矩阵进行变换后进行 Attention 机制的计算，如此便可以得到多组输出向量 $Z$，整个流程如下所示。</p>
+</blockquote>
+<p>基于多组 $W^Q,W^K,W^V$ 矩阵映射成多组 $Q,K,V$：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer10.png" alt="transformer10"></p>
+<p>经过 Attention 多组 $Q,K,V$ 得到多个输出矩阵$Z$：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer11.png" alt="transformer11"></p>
+<p>多个输出矩阵$Z$进行 concat 后再线性变换成等嵌入维度($d_k$)的最终输出矩阵$Z$：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer12.png" alt="transformer12"></p>
+<h4 id="3-3-5-Attention-机制总结"><a href="#3-3-5-Attention-机制总结" class="headerlink" title="3.3.5 Attention 机制总结"></a>3.3.5 Attention 机制总结</h4><p>这里直接看整体流程图：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer13.png" alt="transformer13"></p>
+<p>如上图所示，是一个从左往右的计算流程：</p>
+<ol>
+<li>输入的句子，这里 case 是”Thinking Machines”;</li>
+<li>词嵌入，将词嵌入为 embedding， 其中 R 表示非第 0 个 encoder 的 input 不需要词嵌入，而是上一个 encoder 的 ouput；</li>
+<li>生成多组变换权重矩阵；</li>
+<li>基于多组权重矩阵（多头）变换映射，得到多组 Q,K,V；</li>
+<li>多组 Q,K,V 经过 Attention 后得到多个输出 z，将他们 concat 后进行线性变换得到最终的输出矩阵 Z。</li>
+</ol>
+<blockquote>
+<p>至于为什么要用 Multi Head Attention ？作者提到：</p>
+</blockquote>
+<ol>
+<li>多头机制扩展了模型集中于不同位置的能力。</li>
+<li>多头机制赋予 attention 多种子表达方式。</li>
+</ol>
+<p>该模块的 code 如下所示，其中还有 <code>mask</code> 和 <code>dropout</code> 模块，前者是为了去除输入中 <code>padding</code> 的影响，后者则是为了提高模型稳健性。后者不过多介绍，mask 的 code 也附在了下方。</p>
+<p><strong>方法就是使用一个很小的值，对指定位置进行覆盖填充</strong>。在之后计算 softmax 时，由于我们填充的值很小，所以计算出的概率也会很小，基本就忽略了。</p>
+<p><strong>值得留意的是</strong>：</p>
+<ul>
+<li><code>type in (&quot;k&quot;, &quot;key&quot;, &quot;keys&quot;)</code>:  是 <code>padding mask</code>，因此全零的部分我们让 attention 的权重为一个很小的值 -4.2949673e+09。</li>
+<li><code>type in (&quot;q&quot;, &quot;query&quot;, &quot;queries&quot;)</code>:  类似的，<code>query 序列</code>最后面也有可能是一堆 padding，不过对 queries 做 padding mask 不需要把 padding 加上一个很小的值，只要将其置零就行，因为 outputs 是先 key mask，再经过 softmax，再进行 query mask的。</li>
+<li><code>type in (&quot;f&quot;, &quot;future&quot;, &quot;right&quot;)</code>:  是我们在做 <code>decoder</code> 的 self attention 时要用到的 <code>sequence mask</code>，也就是说在每一步，第 i 个 token 关注到的 attention 只有可能是在第 i 个单词之前的单词，因为它按理来说，看不到后面的单词, 作者用一个下三角矩阵来完成这个操作。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scaled_dot_product_attention</span>(<span class="params">Q, K, V, key_masks,</span></span><br><span class="line"><span class="params">                                 causality=<span class="literal">False</span>, dropout_rate=<span class="number">0.</span>,</span></span><br><span class="line"><span class="params">                                 training=<span class="literal">True</span>,</span></span><br><span class="line"><span class="params">                                 scope=<span class="string">&quot;scaled_dot_product_attention&quot;</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;See 3.2.1.</span></span><br><span class="line"><span class="string">    Q: Packed queries. 3d tensor. [N, T_q, d_k].</span></span><br><span class="line"><span class="string">    K: Packed keys. 3d tensor. [N, T_k, d_k].</span></span><br><span class="line"><span class="string">    V: Packed values. 3d tensor. [N, T_k, d_v].</span></span><br><span class="line"><span class="string">    key_masks: A 2d tensor with shape of [N, key_seqlen]</span></span><br><span class="line"><span class="string">    causality: If True, applies masking for future blinding</span></span><br><span class="line"><span class="string">    dropout_rate: A floating point number of [0, 1].</span></span><br><span class="line"><span class="string">    training: boolean for controlling droput</span></span><br><span class="line"><span class="string">    scope: Optional scope for `variable_scope`.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(scope, reuse=tf.AUTO_REUSE):</span><br><span class="line">        d_k = Q.get_shape().as_list()[-<span class="number">1</span>]</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># dot product</span></span><br><span class="line">        outputs = tf.matmul(Q, tf.transpose(K, [<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>]))  <span class="comment"># (N, T_q, T_k)</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># scale</span></span><br><span class="line">        outputs /= d_k ** <span class="number">0.5</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># key masking</span></span><br><span class="line">        outputs = mask(outputs, key_masks=key_masks, <span class="built_in">type</span>=<span class="string">&quot;key&quot;</span>)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># causality or future blinding masking</span></span><br><span class="line">        <span class="keyword">if</span> causality:</span><br><span class="line">            outputs = mask(outputs, <span class="built_in">type</span>=<span class="string">&quot;future&quot;</span>)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># softmax</span></span><br><span class="line">        outputs = tf.nn.softmax(outputs)</span><br><span class="line">        attention = tf.transpose(outputs, [<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">        tf.summary.image(<span class="string">&quot;attention&quot;</span>, tf.expand_dims(attention[:<span class="number">1</span>], -<span class="number">1</span>))</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># # query masking</span></span><br><span class="line">        <span class="comment"># outputs = mask(outputs, Q, K, type=&quot;query&quot;)</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment"># dropout</span></span><br><span class="line">        outputs = tf.layers.dropout(outputs, rate=dropout_rate, training=training)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># weighted sum (context vectors)</span></span><br><span class="line">        outputs = tf.matmul(outputs, V)  <span class="comment"># (N, T_q, d_v)</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> outputs</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mask</span>(<span class="params">inputs, key_masks=<span class="literal">None</span>, <span class="built_in">type</span>=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Masks paddings on keys or queries to inputs</span></span><br><span class="line"><span class="string">    inputs: 3d tensor. (h*N, T_q, T_k)</span></span><br><span class="line"><span class="string">    key_masks: 3d tensor. (N, 1, T_k)</span></span><br><span class="line"><span class="string">    type: string. &quot;key&quot; | &quot;future&quot; </span></span><br><span class="line"><span class="string">    e.g.,</span></span><br><span class="line"><span class="string">    &gt;&gt; inputs = tf.zeros([2, 2, 3], dtype=tf.float32)</span></span><br><span class="line"><span class="string">    &gt;&gt; key_masks = tf.constant([[0., 0., 1.],</span></span><br><span class="line"><span class="string">                                [0., 1., 1.]])</span></span><br><span class="line"><span class="string">    &gt;&gt; mask(inputs, key_masks=key_masks, type=&quot;key&quot;)</span></span><br><span class="line"><span class="string">    array([[[ 0.0000000e+00,  0.0000000e+00, -4.2949673e+09],</span></span><br><span class="line"><span class="string">        [ 0.0000000e+00,  0.0000000e+00, -4.2949673e+09]],</span></span><br><span class="line"><span class="string">       [[ 0.0000000e+00, -4.2949673e+09, -4.2949673e+09],</span></span><br><span class="line"><span class="string">        [ 0.0000000e+00, -4.2949673e+09, -4.2949673e+09]],</span></span><br><span class="line"><span class="string">       [[ 0.0000000e+00,  0.0000000e+00, -4.2949673e+09],</span></span><br><span class="line"><span class="string">        [ 0.0000000e+00,  0.0000000e+00, -4.2949673e+09]],</span></span><br><span class="line"><span class="string">       [[ 0.0000000e+00, -4.2949673e+09, -4.2949673e+09],</span></span><br><span class="line"><span class="string">        [ 0.0000000e+00, -4.2949673e+09, -4.2949673e+09]]], dtype=float32)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    padding_num = -<span class="number">2</span> ** <span class="number">32</span> + <span class="number">1</span> <span class="comment">#足够小的负数，保证被填充的位置进入softmax之后概率接近0</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span> <span class="keyword">in</span> (<span class="string">&quot;k&quot;</span>, <span class="string">&quot;key&quot;</span>, <span class="string">&quot;keys&quot;</span>): <span class="comment"># padding mask</span></span><br><span class="line">        key_masks = tf.to_float(key_masks)</span><br><span class="line">        key_masks = tf.tile(key_masks, [tf.shape(inputs)[<span class="number">0</span>] // tf.shape(key_masks)[<span class="number">0</span>], <span class="number">1</span>]) <span class="comment"># (h*N, seqlen)</span></span><br><span class="line">        key_masks = tf.expand_dims(key_masks, <span class="number">1</span>)  <span class="comment"># (h*N, 1, seqlen)</span></span><br><span class="line">        outputs = inputs + key_masks * padding_num</span><br><span class="line">    <span class="comment"># elif type in (&quot;q&quot;, &quot;query&quot;, &quot;queries&quot;):</span></span><br><span class="line">    <span class="comment">#     # Generate masks</span></span><br><span class="line">    <span class="comment">#     masks = tf.sign(tf.reduce_sum(tf.abs(queries), axis=-1))  # (N, T_q)</span></span><br><span class="line">    <span class="comment">#     masks = tf.expand_dims(masks, -1)  # (N, T_q, 1)</span></span><br><span class="line">    <span class="comment">#     masks = tf.tile(masks, [1, 1, tf.shape(keys)[1]])  # (N, T_q, T_k)</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#     # Apply masks to inputs</span></span><br><span class="line">    <span class="comment">#     outputs = inputs*masks</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">type</span> <span class="keyword">in</span> (<span class="string">&quot;f&quot;</span>, <span class="string">&quot;future&quot;</span>, <span class="string">&quot;right&quot;</span>):    <span class="comment"># future mask</span></span><br><span class="line">        diag_vals = tf.ones_like(inputs[<span class="number">0</span>, :, :])  <span class="comment"># (T_q, T_k)    </span></span><br><span class="line">        tril = tf.linalg.LinearOperatorLowerTriangular(diag_vals).to_dense()  <span class="comment"># (T_q, T_k)    # 上三角皆为0</span></span><br><span class="line">        future_masks = tf.tile(tf.expand_dims(tril, <span class="number">0</span>), [tf.shape(inputs)[<span class="number">0</span>], <span class="number">1</span>, <span class="number">1</span>])  <span class="comment"># (N, T_q, T_k)    # N batch size</span></span><br><span class="line"> </span><br><span class="line">        paddings = tf.ones_like(future_masks) * padding_num</span><br><span class="line">        outputs = tf.where(tf.equal(future_masks, <span class="number">0</span>), paddings, inputs)     <span class="comment"># 上三角中用padding值代替 </span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Check if you entered type correctly!&quot;</span>)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> outputs</span><br></pre></td></tr></table></figure>
+<h3 id="3-4-Add-amp-Norm"><a href="#3-4-Add-amp-Norm" class="headerlink" title="3.4 Add &amp; Norm"></a>3.4 Add &amp; Norm</h3><p>在 <code>multihead_attention</code> 模块的代码中有以下2行代码，这边对应着模型结构图 <code>encoder</code> 中的 <code>Add &amp; Norm</code> 模块，如下图所示。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Residual connection</span></span><br><span class="line">outputs += queries </span><br><span class="line"></span><br><span class="line"><span class="comment"># Layer Normalize </span></span><br><span class="line">outputs = ln(outputs)</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer14.png" alt="transformer14"></p>
+<p>其中 <code>Add</code> 是类似残差的操作，但与残差不同的是，不是用输入减去输出，而是用输入加上输出。</p>
+<p>而对于 <code>Norm</code>，这里则用的是 <code>Layer Norm</code>，其代码如后文所示。不论是哪一种实际上都是对输入的分布进行调整，调整的通常方式是：</p>
+<script type="math/tex; mode=display">Norm(x_i) = \alpha \times \frac{x_i - u}{\sqrt{\sigma^2_L + \epsilon}} + \beta</script><p>其中，不同的 Norm 方法便对应着不同的 $u,\sigma$ 计算方式。</p>
+<p>这里之所以使用 <code>Layer Norm</code> 而不是 <code>Batch Norm</code> 的原因是：</p>
+<ol>
+<li>BN 比较依赖 BatchSize，偏小不适合，过大耗费 GPU 显存；</li>
+<li>BN 需要 batch 内 features 的维度一致；</li>
+<li>BN 只在训练的时候用，inference 的时候不会用到，因为 inference 的输入不是批量输入；</li>
+<li>每条样本的 token 是同一类型特征，LN 擅长处理，与其他样本不关联，通信成本更少；</li>
+<li>embedding 和 layer size 大，且长度不统一，LN 可以处理且保持分布稳定。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">ln</span>(<span class="params">inputs, epsilon = <span class="number">1e-8</span>, scope=<span class="string">&quot;ln&quot;</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Applies layer normalization. See https://arxiv.org/abs/1607.06450.</span></span><br><span class="line"><span class="string">    inputs: A tensor with 2 or more dimensions, where the first dimension has `batch_size`.</span></span><br><span class="line"><span class="string">    epsilon: A floating number. A very small number for preventing ZeroDivision Error.</span></span><br><span class="line"><span class="string">    scope: Optional scope for `variable_scope`.</span></span><br><span class="line"><span class="string">      </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">      A tensor with the same shape and data dtype as `inputs`.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(scope, reuse=tf.AUTO_REUSE):</span><br><span class="line">        inputs_shape = inputs.get_shape()    <span class="comment"># 输入形状</span></span><br><span class="line">        params_shape = inputs_shape[-<span class="number">1</span>:]    <span class="comment"># </span></span><br><span class="line">    </span><br><span class="line">        mean, variance = tf.nn.moments(inputs, [-<span class="number">1</span>], keep_dims=<span class="literal">True</span>)    <span class="comment"># 求均值和方差</span></span><br><span class="line">        beta= tf.get_variable(<span class="string">&quot;beta&quot;</span>, params_shape, initializer=tf.zeros_initializer())</span><br><span class="line">        gamma = tf.get_variable(<span class="string">&quot;gamma&quot;</span>, params_shape, initializer=tf.ones_initializer())</span><br><span class="line">        normalized = (inputs - mean) / ( (variance + epsilon) ** (<span class="number">.5</span>) )</span><br><span class="line">        outputs = gamma * normalized + beta</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> outputs</span><br></pre></td></tr></table></figure>
+<h3 id="3-5-Feed-Forward"><a href="#3-5-Feed-Forward" class="headerlink" title="3.5 Feed Forward"></a>3.5 Feed Forward</h3><p>承接上述，encoder 中只剩下最后一个环节了，也就是 <code>ff</code> 层（Feed Forward），对比模型图，实际上 <code>ff</code> 后还有一层 <code>Add &amp; Norm</code>，但是一般将其二者合并在一个模块中，统称为 <code>ff</code> 层。</p>
+<p>该模块的 code 如下所示，相对比较清晰，2 层 dense 网络后紧接一个 <code>Residual connection</code> 即将输入直接相加，最后再过一层 <code>Layer Normalization</code> 即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">ff</span>(<span class="params">inputs, num_units, scope=<span class="string">&quot;positionwise_feedforward&quot;</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;position-wise feed forward net. See 3.3</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    inputs: A 3d tensor with shape of [N, T, C].</span></span><br><span class="line"><span class="string">    num_units: A list of two integers.  </span></span><br><span class="line"><span class="string">                num_units[0]=d_ff: 隐藏层大小（2048）</span></span><br><span class="line"><span class="string">                num_units[1]=d_model: 词向量长度（512）</span></span><br><span class="line"><span class="string">    scope: Optional scope for `variable_scope`.</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">      A 3d tensor with the same shape and dtype as inputs</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(scope, reuse=tf.AUTO_REUSE):</span><br><span class="line">        <span class="comment"># Inner layer</span></span><br><span class="line">        outputs = tf.layers.dense(inputs, num_units[<span class="number">0</span>], activation=tf.nn.relu)</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># Outer layer </span></span><br><span class="line">        outputs = tf.layers.dense(outputs, num_units[<span class="number">1</span>])</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># Residual connection</span></span><br><span class="line">        outputs += inputs</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Layer Normalize</span></span><br><span class="line">        outputs = ln(outputs)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> outputs</span><br></pre></td></tr></table></figure>
+<h3 id="3-6-decoder"><a href="#3-6-decoder" class="headerlink" title="3.6 decoder"></a>3.6 decoder</h3><p>截止上述是完成了模型的 encoder 模块，本节重点介绍 decoder 模块，其在应用形式上与 encoder 略有不同，整体结构如前文模型结构图中已有展示，容易发现有几个特殊之处：</p>
+<ol>
+<li>输入是经过 <code>Sequence Mask</code> 的，也就是掩去未出现的词；</li>
+<li>每个 decoder 有 2 个 <code>multihead_attention</code> 层；</li>
+<li>首层 <code>multihead_attention</code> 的 $Q,K,V$都是来源输入向量，第二层输入中的 $K,V$ 则是来自 encoder 模块的输出作为 memory 来输入。</li>
+</ol>
+<p>整个 decoder 侧的工作原理可以如下动画展示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer15.gif" alt="transformer15"></p>
+<p>其中在最后一层 <code>Linear+Softmax</code> 后是怎么得到单词的，想必了解 nlp 的同学也不会陌生，一般就是转化为对应词表大小的概率分布，取最大的位置词即可，如下图所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/deepmodel/transformer16.png" alt="transformer16"></p>
+<p>整个 decode 的 code 如下所示，可以清晰的看到 decoder 前的处理与 encoder 几乎一致，唯独 mask 模块走的是 <code>Sequence Mask</code>，在前面的 mask 代码有涉及。每个 decoder 中的 2 层 <code>multihead_attention</code> 的输入差异也比较清晰，重点就是将 encode 模块的输出应用在每个 decoder 的第二层 <code>multihead_attention</code> 中。输出的时候，实际上利用了 <code>softmax</code> 的单调性，直接使用 <code>tf.argmax</code> 来获取最大值位置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">self, ys, memory, src_masks, training=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    memory: encoder outputs. (N, T1, d_model)</span></span><br><span class="line"><span class="string">    src_masks: (N, T1)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns</span></span><br><span class="line"><span class="string">    logits: (N, T2, V). float32.</span></span><br><span class="line"><span class="string">    y_hat: (N, T2). int32</span></span><br><span class="line"><span class="string">    y: (N, T2). int32</span></span><br><span class="line"><span class="string">    sents2: (N,). string.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;decoder&quot;</span>, reuse=tf.AUTO_REUSE):</span><br><span class="line">        decoder_inputs, y, seqlens, sents2 = ys</span><br><span class="line"></span><br><span class="line">        <span class="comment"># tgt_masks</span></span><br><span class="line">        tgt_masks = tf.math.equal(decoder_inputs, <span class="number">0</span>)  <span class="comment"># (N, T2)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># embedding</span></span><br><span class="line">        dec = tf.nn.embedding_lookup(<span class="variable language_">self</span>.embeddings, decoder_inputs)  <span class="comment"># (N, T2, d_model)</span></span><br><span class="line">        dec *= <span class="variable language_">self</span>.hp.d_model ** <span class="number">0.5</span>  <span class="comment"># scale</span></span><br><span class="line"></span><br><span class="line">        dec += positional_encoding(dec, <span class="variable language_">self</span>.hp.maxlen2)</span><br><span class="line">        dec = tf.layers.dropout(dec, <span class="variable language_">self</span>.hp.dropout_rate, training=training)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Blocks</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="variable language_">self</span>.hp.num_blocks):</span><br><span class="line">            <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;num_blocks_&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i), reuse=tf.AUTO_REUSE):</span><br><span class="line">                <span class="comment"># Masked self-attention (Note that causality is True at this time)</span></span><br><span class="line">                dec = multihead_attention(queries=dec,</span><br><span class="line">                                          keys=dec,</span><br><span class="line">                                          values=dec,</span><br><span class="line">                                          key_masks=tgt_masks,</span><br><span class="line">                                          num_heads=<span class="variable language_">self</span>.hp.num_heads,</span><br><span class="line">                                          dropout_rate=<span class="variable language_">self</span>.hp.dropout_rate,</span><br><span class="line">                                          training=training,</span><br><span class="line">                                          causality=<span class="literal">True</span>,</span><br><span class="line">                                          scope=<span class="string">&quot;self_attention&quot;</span>)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Vanilla attention</span></span><br><span class="line">                dec = multihead_attention(queries=dec,</span><br><span class="line">                                          keys=memory,</span><br><span class="line">                                          values=memory,</span><br><span class="line">                                          key_masks=src_masks,</span><br><span class="line">                                          num_heads=<span class="variable language_">self</span>.hp.num_heads,</span><br><span class="line">                                          dropout_rate=<span class="variable language_">self</span>.hp.dropout_rate,</span><br><span class="line">                                          training=training,</span><br><span class="line">                                          causality=<span class="literal">False</span>,</span><br><span class="line">                                          scope=<span class="string">&quot;vanilla_attention&quot;</span>)</span><br><span class="line">                <span class="comment">### Feed Forward</span></span><br><span class="line">                dec = ff(dec, num_units=[<span class="variable language_">self</span>.hp.d_ff, <span class="variable language_">self</span>.hp.d_model])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Final linear projection (embedding weights are shared)</span></span><br><span class="line">    weights = tf.transpose(<span class="variable language_">self</span>.embeddings) <span class="comment"># (d_model, vocab_size)</span></span><br><span class="line">    logits = tf.einsum(<span class="string">&#x27;ntd,dk-&gt;ntk&#x27;</span>, dec, weights) <span class="comment"># (N, T2, vocab_size)</span></span><br><span class="line">    y_hat = tf.to_int32(tf.argmax(logits, axis=-<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> logits, y_hat, y, sents2</span><br></pre></td></tr></table></figure>
+<h3 id="3-7-特殊模块"><a href="#3-7-特殊模块" class="headerlink" title="3.7 特殊模块"></a>3.7 特殊模块</h3><h4 id="3-7-1-label-smoothing"><a href="#3-7-1-label-smoothing" class="headerlink" title="3.7.1 label_smoothing"></a>3.7.1 label_smoothing</h4><p>如前文提到的 <code>train</code> 模块代码，在 decode 后，紧接的便是 <code>label_smoothing</code> 模块。其作用就是：</p>
+<blockquote>
+<p>平滑一下标签值，比如 <code>ground truth</code> 标签是 1 的，改到 0.9333，本来是 0 的，他改到 0.0333，这是一个比较经典的平滑技术了。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">label_smoothing</span>(<span class="params">inputs, epsilon=<span class="number">0.1</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Applies label smoothing. See 5.4 and https://arxiv.org/abs/1512.00567.</span></span><br><span class="line"><span class="string">    inputs: 3d tensor. [N, T, V], where V is the number of vocabulary.</span></span><br><span class="line"><span class="string">    epsilon: Smoothing rate.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    For example,</span></span><br><span class="line"><span class="string">    </span></span><br></pre></td></tr></table></figure>
+<pre><code>import tensorflow as tf
+inputs = tf.convert_to_tensor([[[0, 0, 1], 
+   [0, 1, 0],
+   [1, 0, 0]],
+
+  [[1, 0, 0],
+   [1, 0, 0],
+   [0, 1, 0]]], tf.float32)
+
+outputs = label_smoothing(inputs)
+
+with tf.Session() as sess:
+    print(sess.run([outputs]))
+
+&gt;&gt;
+[array([[[ 0.03333334,  0.03333334,  0.93333334],
+    [ 0.03333334,  0.93333334,  0.03333334],
+    [ 0.93333334,  0.03333334,  0.03333334]],
+
+   [[ 0.93333334,  0.03333334,  0.03333334],
+    [ 0.93333334,  0.03333334,  0.03333334],
+    [ 0.03333334,  0.93333334,  0.03333334]]], dtype=float32)]   
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">V = inputs.get_shape().as_list()[-1] # number of channels</span><br><span class="line">return ((1-epsilon) * inputs) + (epsilon / V)</span><br></pre></td></tr></table></figure>
+</code></pre><h4 id="3-7-2-noam-scheme"><a href="#3-7-2-noam-scheme" class="headerlink" title="3.7.2 noam_scheme"></a>3.7.2 noam_scheme</h4><p>在模型的学习了上，作者使用了 <code>noam_scheme</code> 这样一个机制来处理。代码如后文所示，使用的学习率递减公式为：</p>
+<script type="math/tex; mode=display">Lr = init_lr * warm_step^{0.5} * min(s * warm_step^{-1.5}, s^{-0.5})</script><p>其中，$init_lr$ 是指<code>初始学习率</code>，$warm_step$ 是<code>指预热步数</code>，而 $s$ 则是代表全局步数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">noam_scheme</span>(<span class="params">init_lr, global_step, warmup_steps=<span class="number">4000.</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Noam scheme learning rate decay</span></span><br><span class="line"><span class="string">    init_lr: initial learning rate. scalar.</span></span><br><span class="line"><span class="string">    global_step: scalar.</span></span><br><span class="line"><span class="string">    warmup_steps: scalar. During warmup_steps, learning rate increases</span></span><br><span class="line"><span class="string">        until it reaches init_lr.</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    step = tf.cast(global_step + <span class="number">1</span>, dtype=tf.float32)</span><br><span class="line">    <span class="keyword">return</span> init_lr * warmup_steps ** <span class="number">0.5</span> * tf.minimum(step * warmup_steps ** -<span class="number">1.5</span>, step ** -<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="3-8-其他"><a href="#3-8-其他" class="headerlink" title="3.8 其他"></a>3.8 其他</h3><h4 id="3-8-1-项目运行"><a href="#3-8-1-项目运行" class="headerlink" title="3.8.1 项目运行"></a>3.8.1 项目运行</h4><p>该项目运行需要 <code>sentencepiece</code>，其安装的时候留意是否关了 VPN，否则安装会失败，然后可以使用如下代码直接安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install sentencepiece</span><br></pre></td></tr></table></figure>
+<h4 id="3-8-2-uitls模块"><a href="#3-8-2-uitls模块" class="headerlink" title="3.8.2 uitls模块"></a>3.8.2 uitls模块</h4><p><code>Transformer</code> 项目中 utils 模块是训练中使用到的工具算子集合，这里简单较少一下各个算子的作用。</p>
+<ul>
+<li><code>calc_num_batches</code>: 计算样本的 num_batch，就是 total_num/batch_size 取整，再加1；</li>
+<li><code>convert_idx_to_token_tensor</code>: 将 int32 转为字符串张量（string tensor）;</li>
+<li><code>postprocess</code>: 做翻译后的处理，输入一个是翻译的预测列表，还有一个是 id2token 的表，就是用查表的方式把数字序列转化成字符序列，从而形成一句可以理解的话。(如果做中文数据这个就要改一下了，中文不适用BPE等word piece算法)。</li>
+<li><code>save_hparams</code>: 保存超参数。</li>
+<li><code>load_hparams</code>: 加载超参数并覆写parser对象。</li>
+<li><code>save_variable_specs</code>: 保存一些变量的信息，包括变量名，shape，总参数量等等。</li>
+<li><code>get_hypotheses</code>: 得到预测序列。这个方法就是结合前面的 postprocess 方法，来生成 num_samples 个数的有意义的自然语言输出。</li>
+<li><code>calc_bleu</code>: 计算BLEU值。</li>
+</ul>
+<h4 id="3-8-3-data-load模块"><a href="#3-8-3-data-load模块" class="headerlink" title="3.8.3 data_load模块"></a>3.8.3 data_load模块</h4><p>在数据加载中有不少预处理环节，我们重点介绍一下相关算子。</p>
+<ul>
+<li><code>load_vocab</code>: 加载词汇表。参数  vocab_fpath表示词文件的地址，会返回两个字典，一个是 id-&gt;token，一个是 token-&gt;id；</li>
+<li><code>load_data</code>: 加载数据。加载源语和目标语数据，筛除过长的数据，注意是筛除，也就是长度超过maxlen的数据直接丢掉了，没加载进去。</li>
+<li><code>encode</code>: 将字符串转化为数字，这里具体方法是输入的是一个字符序列，然后根据空格切分，然后如果是源语言，则每一句话后面加上“&lt;/s&gt;”，如果是目标语言，则在每一句话前面加上“<S>”，后面加上“&lt;/s&gt;”，然后再转化成数字序列。如果是中文，这里很显然要改。</li>
+<li><code>generator_fn</code>: 生成训练和评估集数据。对于每一个sent1，sent2（源句子，目标句子），sent1经过前面的encode函数转化成x，sent2经过前面的encode函数转化成y之后，decoder的输入decoder_input是y[:-1]，预期输出y是y[1:]。</li>
+<li><code>input_fn</code>: 生成Batch数据。</li>
+<li><code>get_batch</code>: 获取batch数据。</li>
+</ul>
+<p><strong>参考文章</strong><br><a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a><br><a href="https://github.com/Kyubyong/transformer">transformer 源码</a><br><a href="https://zhuanlan.zhihu.com/p/149634836">Transformer和Bert相关知识解</a><br><a href="https://blog.csdn.net/nocml/article/details/110920221">Transformer(二)—论文理解：transformer 结构详解</a><br><a href="https://blog.csdn.net/caroline_wendy/article/details/109337216">Python - 安装sentencepiece异常</a><br><a href="https://blog.csdn.net/yujianmin1990/article/details/85221271">The Illustrated Transformer【译】</a><br><a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a><br><a href="https://blog.csdn.net/u012759262/article/details/103999959?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-4.control&amp;dist_request_id=58280678-ea4e-4d7f-a2c2-38bd90ab3bda&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-4.control">Attention专场——（2）Self-Attention 代码解析</a><br><a href="https://www.zhihu.com/question/347678607">如何理解Transformer论文中的positional encoding，和三角函数有什么关系？</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/transformer.html">Transformer 解析</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/transformer.html" title="Transformer 解析">https://www.xiemingzhao.com/posts/transformer.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/transformer.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Transformer/" rel="tag"><i class="fa fa-tag"></i> Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/pidcontrol.html" rel="next" title="PID 调控算法">
+                <i class="fa fa-chevron-left"></i> PID 调控算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Transformer-%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">2 Transformer 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">3 模块解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Input"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Positional-encoding"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Positional encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Multi-Head-Attention"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Multi Head Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-%E6%9C%BA%E5%88%B6%E6%A6%82%E8%BF%B0"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1 机制概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-Q%E3%80%81K%E3%80%81V%E5%8F%98%E6%8D%A2"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.3.2 Q、K、V变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-3-Attention"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.3.3 Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-4-Multi-head"><span class="nav-number">3.3.4.</span> <span class="nav-text">3.3.4 Multi-head</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-5-Attention-%E6%9C%BA%E5%88%B6%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.5.</span> <span class="nav-text">3.3.5 Attention 机制总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Add-amp-Norm"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Add &amp; Norm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Feed-Forward"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 Feed Forward</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-decoder"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 decoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E7%89%B9%E6%AE%8A%E6%A8%A1%E5%9D%97"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 特殊模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-1-label-smoothing"><span class="nav-number">3.7.1.</span> <span class="nav-text">3.7.1 label_smoothing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-2-noam-scheme"><span class="nav-number">3.7.2.</span> <span class="nav-text">3.7.2 noam_scheme</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E5%85%B6%E4%BB%96"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 其他</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-8-1-%E9%A1%B9%E7%9B%AE%E8%BF%90%E8%A1%8C"><span class="nav-number">3.8.1.</span> <span class="nav-text">3.8.1 项目运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-8-2-uitls%E6%A8%A1%E5%9D%97"><span class="nav-number">3.8.2.</span> <span class="nav-text">3.8.2 uitls模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-8-3-data-load%E6%A8%A1%E5%9D%97"><span class="nav-number">3.8.3.</span> <span class="nav-text">3.8.3 data_load模块</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共271.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="召回,ExpectationI2I," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1 引言在推荐的发展历史中，Amazon 在 ItemCF 上进行了不少的探索。2003年，其在 IEEE INTERNET COMPUTING 发表的《http:&#x2F;&#x2F;Amazon.com Recommendations: Item-to-Item Collaborative Filtering》一文中提出了 ItemCF 推荐算法，引起了不小的波澜。其主要优势是：  简单可扩展； 可解释性强；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ExpectationI2I 召回">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/expectationi2irecall.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="1 引言在推荐的发展历史中，Amazon 在 ItemCF 上进行了不少的探索。2003年，其在 IEEE INTERNET COMPUTING 发表的《http:&#x2F;&#x2F;Amazon.com Recommendations: Item-to-Item Collaborative Filtering》一文中提出了 ItemCF 推荐算法，引起了不小的波澜。其主要优势是：  简单可扩展； 可解释性强；">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-11-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:45:38.301Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="召回">
+<meta property="article:tag" content="ExpectationI2I">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/expectationi2irecall.html"/>
+
+
+
+
+
+  <title>ExpectationI2I 召回 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/expectationi2irecall.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ExpectationI2I 召回</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-28T00:00:00+08:00">
+                2021-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">召回模型</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/expectationi2irecall.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/expectationi2irecall.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在推荐的发展历史中，Amazon 在 ItemCF 上进行了不少的探索。2003年，其在 IEEE INTERNET COMPUTING 发表的<a href="https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf">《http://Amazon.com Recommendations: Item-to-Item Collaborative Filtering》</a>一文中提出了 ItemCF 推荐算法，引起了不小的波澜。其<code>主要优势是</code>：</p>
+<ul>
+<li>简单可扩展；</li>
+<li>可解释性强；</li>
+<li>实时性高；</li>
+</ul>
+<p>在早期，ItemCF/UserCF 往往被用于推荐主算法，在当下一般作为召回算法。<strong>UserCF 适用于用户数的变化频率小于物品数的变化频率的场景，ItemCF 则相反。当今的互联网环境下确实是更适合 ItemCF 发挥。</strong></p>
+<p>而本文就是为了介绍其新提出的一种改进的 ItemCF 算法 <code>ExpectationI2I</code>，当然有的地方名字可能不一样。这是由 Amazon 在 2017 年的 IEEE INTERNET COMPUTING 上发表的文章<a href="https://assets.amazon.science/76/9e/7eac89c14a838746e91dde0a5e9f/two-decades-of-recommender-systems-at-amazon.pdf">《Two Decades of Recommender Systems at Amazon.com》</a>中介绍的。</p>
+<span id="more"></span>
+<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2 动机"></a>2 动机</h2><p>主要是在如何定义物品的相关性上，有一定的改进空间。对于两个物品X和Y，在购买了X的用户中，假设有$N_{xy}$购买了Y。那在这里面，实际上有两部分组成：</p>
+<ul>
+<li>一个是因为X和Y<code>相关</code>，而产生的<code>关联购物</code>；</li>
+<li>另一个则是X和Y<code>不相关</code>，仅仅是<code>随机性导致的共同购物</code>。</li>
+</ul>
+<p>所以，我们<strong>核心目标就是要度量其中关联购物的那一部分</strong>。在2003及之前的文章中，其大多使用下面的方法：</p>
+<blockquote>
+<p>首先假设购买X的user有同概率P(Y)购买Y，且 <strong>P(Y)=购买Y的uv/所有购买的uv</strong> 。那么X和Y的共同购买人数 $N<em>{xy}$ 的期望$E</em>{xy}$ = 购买X的uv * P(Y)。</p>
+</blockquote>
+<p>这里在理解上，个人认为<strong>有两点需要注意</strong>：</p>
+<ol>
+<li>$N_{xy}$ 实际上可以在实际中观测到，也<strong>就是X和Y的共同购买uv数，但是包含随机性共同购物</strong>；</li>
+<li>上面实际上不仅假设了购买同概率，还同时默认一个假设：<strong>购买了X的用户群购买Y的概率与全局分布一致</strong>。</li>
+</ol>
+<p>而当出现很多购买两很大的用户时，就容易增加随机性共同购物，从而拉高了预估的结果。故，本文<strong>最核心是：如何度量$N_{xy}$中因随机性而产生的共同购物次数</strong>。那么剔除这一部分就可以得到因X和Y相关性而产生的<code>关联购物</code>次数，这便可以更有效的度量物品之间的相关性。</p>
+<h2 id="3-算法原理"><a href="#3-算法原理" class="headerlink" title="3 算法原理"></a>3 算法原理</h2><p>为了计算购买X的用户会因随机性购买Y的期望$E_{xy}$，我们记：</p>
+<ul>
+<li>对于任意购买了X的用户c，|c|=其购买总次数-购买了X的次数；</li>
+<li>P(Y)=全部用户购买Y的次数/全部用户的全部购买次数；</li>
+<li>那么对于该用户c，在其除X外的|c|次购买中，有购买 Y 的概率$P_{xy} = 1-(1-P(Y))^{|c|}$</li>
+</ul>
+<p>所以$E<em>{xy}$就可以通过对所有购买了X的用户的$P</em>{xy}$求和来得到:</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+E_{XY} &=& \sum_{c \in X} [1 - (1-P(Y))^{|c|}] = \sum_{c \in X} [1 - \sum_{k=0}^{|c|} C_{|c|}^{k} (-P_Y)^k] \\
+&=& \sum_{c \in X}[1 - [1 + \sum_{k=1}^{|c|} C_{|c|}^{k} (-P_Y^k)]] = \sum_{c \in X} \sum_{k=1}^{|c|} (-1)^{k+1} C_{|c|}^{k}P_Y^k \\
+&=& \sum_{c \in X} \sum_{k=1}^{\infty} (-1)^{k+1} C_{|c|}^{k}P_Y^k \quad (since \ C_{|c|}^{k} = 0 \ for \ k>|c| ) \\
+&=& \sum_{k=1}^{\infty} \sum_{c \in X} (-1)^{k+1} C_{|c|}^{k}P_Y^k \quad (Fubini's \ theorem) \\
+&=& \sum_{k=1}^{\infty} \alpha_{k}(X) P_Y^k \quad where \ \alpha_k(X) = \sum_{c \in X}(-1)^{k+1} C_{|c|}^{k}
+\end{array}</script><p>作者提到一些<strong>计算技巧</strong>：</p>
+<ul>
+<li>即实际中$P_Y$一般比较小，所以可以设置一个k的上限 <code>max_k</code> 作为求和多项式的最多项，也即做了<strong>级数求和的近似</strong>。</li>
+<li>另一方面，为了降低复杂度，$P<em>Y$和$\alpha</em>{k}{X}$的各组合项可以提前计算好，降低阶乘重复计算的复杂度。</li>
+</ul>
+<p>到这里，我们已经得到了购买X的用户随机购买Y的一个估计$E<em>{xy}$，据此可以判断真实中观测到的$N</em>{xy}$与随机估计的高低。所以，我们如果用同时购买的uv去除随机性的共同购买次数，得到的便是一个X和Y的关联性购买次数估计值。此便可以作为度量与X相关的商品Y的相关度，实际上作者还认为实际应用中有下面三种估计公式可选：</p>
+<ol>
+<li>$N<em>{xy}-E</em>{xy}$，<strong>会偏向于更流行的Y</strong>;</li>
+<li>$(N<em>{xy}-E</em>{xy})/E_{xy}$，<strong>会使得低销量的物品很容易获得高分数</strong>;</li>
+<li>$(N<em>{xy}-E</em>{xy})/sqrt(E_{xy})$，<strong>在高曝光商品和低销量商品之间找到平衡，需要动态调整</strong>。</li>
+</ol>
+<h2 id="4-实际应用"><a href="#4-实际应用" class="headerlink" title="4 实际应用"></a>4 实际应用</h2><p>在实际应用中，往往没有那么简单。首先我们介绍一下，该算法如何基于实际用户行为来计算，然后笔者将抛出一些问题和自己的优化建议。</p>
+<script type="math/tex; mode=display">\sum_{c \in X} \sum_{k=1}^{|c|} (-1)^{k+1} C_{|c|}^{k}P_Y^k</script><p>现实一般基于上述公式来计算比较方便，原因是先处理好每个 <code>user x item</code> 的统计量，然后按照 user 聚合即可。</p>
+<p><code>step1</code><br>构建所有行为（点击收藏等）的表，保留行为数量在合理区间 [n1,n2] 内的 user，保留 session 数量 &gt;m1 的 item_id<br>t1: user_id,item_id,time,session_id</p>
+<p><code>step2</code><br>基于t1自join生成记录 session 内行为 pair 对表<br>t2: user_id,session_id,left_item_id,left_time,right_item_id,right_time,time_delta</p>
+<p><code>step3</code><br>基于t2统计全局 pair 对数,session 去重 pair 对数统计表,计算 $N_{xy}$，<br>t3: left_item_id,right_item_id,cnt,user_session_cnt</p>
+<p><code>step4</code><br>基于 expect_all_user_action 统计 user_id,item_id 共现的 session_id 次数<br>t4: user_id,item_id,sessioncnt</p>
+<p><code>step5:</code><br>这一步最重要，<strong>我们需要计算 user x item 的|c|，下面记为 parm_c</strong>。记录 user_id,item_id 的统计参数<br>t5: user_id,item_id,clk_pv,clk_pv_all,parm_c(clk_pv_all-clk_pv)</p>
+<p><strong>为了降低计算复杂度，这里的 parm_c 可以做上限截断</strong>。有了 parm<em>c 后就可以计算 $\sum</em>{k=1}^{|c|} (-1)^{k+1} C_{|c|}^{k}P_Y^k$。</p>
+<p><code>step6:</code><br>基于t5对 user 进行聚合，统计 item<em>id 维度的参数<br>t6: item_id,clk_cnt,clk_all,clk_prob,parm_c_list<br>**其中 clk_prob 便是$P_Y$，即一个物品在全局被随机点击的概率。parm_c_list 则是将物品在所有的 user 上的 parm_c汇总到一起，为了后面来计算 $E</em>{xy}$。**</p>
+<p><code>step7:</code><br>基于t6构建 item pair，来拼接 $N<em>{xy}$，并计算最重要的 $E</em>{xy}$<br>t7: left<em>item_id,right_item_id,Nxy,left_parm_c_list,right_clk_prob,Exy<br>其中，$E</em>{xy}$ 可以通过 left_parm_c_list,right_clk_prob 来计算。例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.special <span class="keyword">import</span> comb</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ExpectScore</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">evaluate</span>(<span class="params">self, parm_c_list, clk_prob</span>):</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">get_exy</span>(<span class="params">parm_c, clk_prob</span>):</span><br><span class="line">            ans = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(parm_c):</span><br><span class="line">                ans += <span class="built_in">pow</span>(-<span class="number">1</span>, (k + <span class="number">1</span>)%<span class="number">2</span>) * <span class="built_in">pow</span>(prob_num,i) * comb(parm_c, i)</span><br><span class="line">                <span class="keyword">if</span> s_tmp[<span class="built_in">str</span>(i)+<span class="string">&#x27;.0&#x27;</span>] == <span class="number">0</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">sum</span>(<span class="built_in">list</span>(res_t.values()))</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            res = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> parm_c <span class="keyword">in</span> parm_c_list.split(<span class="string">&#x27;,&#x27;</span>):</span><br><span class="line">                res += get_exy(parm_c, clk_prob)</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">sum</span>(res)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.0000</span></span><br></pre></td></tr></table></figure></p>
+<p><code>step8:</code><br>已经拿到了最重要的两个统计项$N<em>{xy},E</em>{xy}$，计算最终结果分，并对每个 left_item_id 的所有 right_item_id 降序排列截断构建倒排即可。<br>t8: left_item_id,right_item_id, sc, rank<br>其中，</p>
+<ul>
+<li>sc 就是前述融合分数公式来计算得到的;</li>
+<li>rank 便是按照sc降序排列得到的排名。</li>
+</ul>
+<p>实际上，如果计算中由于 parm<em>c 的上限截取的比较大，那么在计算$E</em>{xy}$中会频繁的遇到较大值的排列组合$C_{|c|}^{k}$的计算，有可能速度会比较慢。而在全局|c|的上限固定的情况下，我们可以利用<strong>空间换时间来优化</strong>这个：</p>
+<blockquote>
+<ul>
+<li>因为|c|的上限固定，会使得$C<em>{|c|}^{k}$的计算比较高频重复，所以可以提前遍历全部有效k(即k&lt;=｜c|)的$C</em>{|c|}^{k}$结果；</li>
+<li>然后，将表t5中的 parm<em>c 替换成存储各拆分项$C</em>{|c|}^{k}$的结果，在表t6中的 parm_c_list 也类似存储各个 user 的 parm_c 对应的各个拆分项；</li>
+<li>最后，在表t7的$E<em>{xy}$计算环节，就不用计算排列组合项$$C</em>{|c|}^{k}$$，只需要将存好的<code>comb(parm_c, i)</code>项带入进行计算即可。</li>
+</ul>
+</blockquote>
+<h2 id="5-问题与思考"><a href="#5-问题与思考" class="headerlink" title="5 问题与思考"></a>5 问题与思考</h2><p>实际上，如前文所述，这种算法不喜欢 user 行为覆盖过多的物品，<strong>高活用户对其不友好</strong>。而像 item2vec 或者 wbcos 这种对此就不敏感，因为基于 user 行为序列内构建样本 pair 对的。</p>
+<p>在前面，介绍了 <code>ExpectationI2I</code> 算法的原理，实际构建方式，以及优化计算复杂度的方案。然而，实际应用中往往还存不少 badcase，我们需要对一些环节做一些精细的优化，这里列出部分问题和方案的思考，供备忘和参考。</p>
+<p><strong>1. 有效行为数据的筛选逻辑</strong><br>部分行为过少或过多的极端用户会影响算法稳定性，所以在应用中我们也提到了n1,n2以及m1等边界超参数。这些参数的具体选值需要根据具体场景数据分布来确定，整体目标就是剔除不稳健的用户行为数据。</p>
+<p><strong>2. 类目的信息，例如不同类目的惩罚或者加权；</strong><br>在构建的pair对上计算各统计项的时候，需要考虑类目相关度的一个影响，比如同类目是否进行加权，异类目是否进行降权，或者直接根据类目分布来进行权重调整，目的就是为了降低行为中偶然性类目的搭便车情况，降低算法的badcase率。</p>
+<p><strong>3. 融合分公式的调整；</strong><br>在算法原理模块，已经介绍了论文作者提出的三种公式及其特性。在实际应用中，往往还需要进行一定的调整，否则很容易出现一些badcase。例如一种改进公式$\frac{N<em>{xy}-E</em>{xy}}{1 + \sqrt{E_{xy}}}$，总之还是以实际线上实验数据为准。</p>
+<p><strong>4. 天级别数据的增量融合；</strong><br>在应用次算法的时候，往往面临一个行为数据时间窗口的选取，一次性选择太多，计算量会过大，选择太少数据会不准确。那么，一般可以采用每日增量更新。有两种方式：</p>
+<ul>
+<li>增量更新$N<em>{xy},E</em>{xy}$两个统计项，分别赋予历史值和增量值合适的权重；</li>
+<li>增量直接更新表t8中最终的分数sc，然后构建新的排序。</li>
+</ul>
+<p><strong>参考文献</strong><br><a href="https://zhuanlan.zhihu.com/p/27656480">【翻译+批注】亚马逊推荐二十年</a><br><a href="https://www.jianshu.com/p/248209fd1038">【论文阅读】Two Decades of Recommender Systems at Amazon.com</a><br><a href="https://assets.amazon.science/76/9e/7eac89c14a838746e91dde0a5e9f/two-decades-of-recommender-systems-at-amazon.pdf">Two Decades of Recommender Systems at Amazon.com</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/expectationi2irecall.html">ExpectationI2I 召回</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/expectationi2irecall.html" title="ExpectationI2I 召回">https://www.xiemingzhao.com/posts/expectationi2irecall.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/expectationi2irecall.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%8F%AC%E5%9B%9E/" rel="tag"><i class="fa fa-tag"></i> 召回</a>
+          
+            <a href="/tags/ExpectationI2I/" rel="tag"><i class="fa fa-tag"></i> ExpectationI2I</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/distillationmodel.html" rel="next" title="知识蒸馏简述（Knowledge Distillation）">
+                <i class="fa fa-chevron-left"></i> 知识蒸馏简述（Knowledge Distillation）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/youtubednn.html" rel="prev" title="YouTubeDNN 和 WCE">
+                YouTubeDNN 和 WCE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8A%A8%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">2 动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">3 算法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">4 实际应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%97%AE%E9%A2%98%E4%B8%8E%E6%80%9D%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">5 问题与思考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共271.8k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
