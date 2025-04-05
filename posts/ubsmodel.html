@@ -117,7 +117,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel15.png">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel16.png">
 <meta property="article:published_time" content="2024-12-20T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-05T17:25:47.267Z">
+<meta property="article:modified_time" content="2025-04-05T17:35:50.233Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="精排">
 <meta property="article:tag" content="序列建模">
@@ -504,6 +504,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <h2 id="1-DIN"><a href="#1-DIN" class="headerlink" title="1 DIN"></a>1 DIN</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>论文：<a href="https://arxiv.org/abs/1706.06978">DIN: Deep Interest Network for Click-Through Rate Prediction</a><br>来源：2018，阿里</p>
 <p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel0.png" alt="ubsmodel0"></p>
 <p><strong>思想：为了序列建模的更精准，通过 DIN 的 Attention 结构来替换 Base Model 的 Sum-Pooling 结构。</strong></p>
+<span id="more"></span>
 <h3 id="1-2-方案"><a href="#1-2-方案" class="headerlink" title="1.2 方案"></a>1.2 方案</h3><h4 id="1-2-1-DIN-的序列检索结构"><a href="#1-2-1-DIN-的序列检索结构" class="headerlink" title="1.2.1 DIN 的序列检索结构"></a>1.2.1 DIN 的序列检索结构</h4><p>历史行为中的不同物品对候选物品影响应该是有差异的，<code>Attention</code> 结构正是想打破 <code>Sum-Pooling</code> 的这种缺点。即在 <code>Sum-Pooling</code> 前，基于 <code>Activation Unit</code> （图右上）算出 <code>Weight</code>，然后做 <code>Weighted-Pooling</code>。</p>
 <p>值得注意的是，<code>Activation Unit</code> 中的 <code>Out Product</code> 部分，在实践中往往如下处理（供参考），主要是为了增加非线性：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.concat([query, seq, query - seq, query * seq])</span><br></pre></td></tr></table></figure></p>
 <h4 id="1-2-2-Dice-替代-PReLU"><a href="#1-2-2-Dice-替代-PReLU" class="headerlink" title="1.2.2 Dice 替代 PReLU"></a>1.2.2 Dice 替代 PReLU</h4><p><code>PReLU</code> 激活函数更容易出现参数更新缓慢甚至梯度消失的问题，论文使用更具泛化性的 <code>Dice</code> 激活函数。其二者的公式和函数图像如下所示：</p>
