@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="精排,序列建模,DIN,DIEN,BST,DSIN,MIMN,SIM,ETA,SDIM,TWIN,TWIN-V2," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="引言在互联网应用的精排模型中，往往在特征工程、样本构建、Loss 设计、模型结构等方向进行迭代优化。其中，涉及特征与结构的用户行为序列建模是近几年的热点之一。 序列建模一般有2大方向：  检索的序列更长； 建模的更精准。  下面梳理近几年的经典序列建模方案，基本也是围绕上述 2 大方向进行不断优化的。 1 DIN1.1 概述论文：DIN: Deep Interest Network for Cli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精排序列建模经典方案综述">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/ubsmodel.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="引言在互联网应用的精排模型中，往往在特征工程、样本构建、Loss 设计、模型结构等方向进行迭代优化。其中，涉及特征与结构的用户行为序列建模是近几年的热点之一。 序列建模一般有2大方向：  检索的序列更长； 建模的更精准。  下面梳理近几年的经典序列建模方案，基本也是围绕上述 2 大方向进行不断优化的。 1 DIN1.1 概述论文：DIN: Deep Interest Network for Cli">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel0.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel1.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel2.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel3.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel4.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel5.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel6.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel7.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel8.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel9.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel10.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel11.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel12.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel13.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel14.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel15.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel16.png">
+<meta property="article:published_time" content="2024-12-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-05T17:25:47.267Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="精排">
+<meta property="article:tag" content="序列建模">
+<meta property="article:tag" content="DIN">
+<meta property="article:tag" content="DIEN">
+<meta property="article:tag" content="BST">
+<meta property="article:tag" content="DSIN">
+<meta property="article:tag" content="MIMN">
+<meta property="article:tag" content="SIM">
+<meta property="article:tag" content="ETA">
+<meta property="article:tag" content="SDIM">
+<meta property="article:tag" content="TWIN">
+<meta property="article:tag" content="TWIN-V2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/ubsmodel.html"/>
+
+
+
+
+
+  <title>精排序列建模经典方案综述 | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/ubsmodel.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">精排序列建模经典方案综述</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-21T00:00:00+08:00">
+                2024-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">精排模型</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/ubsmodel.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/ubsmodel.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  8.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  35
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在互联网应用的精排模型中，往往在<code>特征工程</code>、<code>样本构建</code>、<code>Loss 设计</code>、<code>模型结构</code>等方向进行迭代优化。其中，涉及特征与结构的<strong>用户行为序列建模</strong>是近几年的热点之一。</p>
+<p>序列建模一般有2大方向：</p>
+<ul>
+<li>检索的序列更长；</li>
+<li>建模的更精准。</li>
+</ul>
+<p>下面梳理近几年的经典序列建模方案，基本也是围绕上述 2 大方向进行不断优化的。</p>
+<h2 id="1-DIN"><a href="#1-DIN" class="headerlink" title="1 DIN"></a>1 DIN</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>论文：<a href="https://arxiv.org/abs/1706.06978">DIN: Deep Interest Network for Click-Through Rate Prediction</a><br>来源：2018，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel0.png" alt="ubsmodel0"></p>
+<p><strong>思想：为了序列建模的更精准，通过 DIN 的 Attention 结构来替换 Base Model 的 Sum-Pooling 结构。</strong></p>
+<h3 id="1-2-方案"><a href="#1-2-方案" class="headerlink" title="1.2 方案"></a>1.2 方案</h3><h4 id="1-2-1-DIN-的序列检索结构"><a href="#1-2-1-DIN-的序列检索结构" class="headerlink" title="1.2.1 DIN 的序列检索结构"></a>1.2.1 DIN 的序列检索结构</h4><p>历史行为中的不同物品对候选物品影响应该是有差异的，<code>Attention</code> 结构正是想打破 <code>Sum-Pooling</code> 的这种缺点。即在 <code>Sum-Pooling</code> 前，基于 <code>Activation Unit</code> （图右上）算出 <code>Weight</code>，然后做 <code>Weighted-Pooling</code>。</p>
+<p>值得注意的是，<code>Activation Unit</code> 中的 <code>Out Product</code> 部分，在实践中往往如下处理（供参考），主要是为了增加非线性：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.concat([query, seq, query - seq, query * seq])</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-2-Dice-替代-PReLU"><a href="#1-2-2-Dice-替代-PReLU" class="headerlink" title="1.2.2 Dice 替代 PReLU"></a>1.2.2 Dice 替代 PReLU</h4><p><code>PReLU</code> 激活函数更容易出现参数更新缓慢甚至梯度消失的问题，论文使用更具泛化性的 <code>Dice</code> 激活函数。其二者的公式和函数图像如下所示：</p>
+<p><code>PReLU</code>：</p>
+<script type="math/tex; mode=display">f(s)= \begin{cases} s & \mathrm{if~}s>0 \\ \alpha s & \mathrm{if~}s\leq0. & \end{cases}=p(s) \cdot s+(1-p(s))\cdot\alpha s</script><p>其中， $p(s)=I(s &lt; 0)$ 为指示函数</p>
+<p><code>Dice</code>：</p>
+<script type="math/tex; mode=display">f(s)=p(s) \cdot s+(1-p(s)) \cdot \alpha s,p(s)=\frac{1}{1+e^{-\frac{s-E[s]}{\sqrt{Var[s]+\epsilon}}}}</script><p>其中，$\epsilon$一般取$10^{-8}$。可以发现：</p>
+<ul>
+<li><code>Dice</code> 是 <code>PReLu</code> 的推广，当 E[s] = 0，Var[s]=0 时，Dice 退化为 PReLU;</li>
+<li>其核心思想是根据输入数据的分布自适应地调整校正。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel1.png" alt="ubsmodel1"></p>
+<h4 id="1-2-3-GAUC-替代-AUC"><a href="#1-2-3-GAUC-替代-AUC" class="headerlink" title="1.2.3 GAUC 替代 AUC"></a>1.2.3 GAUC 替代 AUC</h4><p><code>AUC</code> 代表模型对样本整体的排序能力，不区分用户类型，比如高低活。</p>
+<p>而实际线上应用的时候，不同用户之间是不需要对比的，<strong>更重要的是：同一个用户下，不同 item 能否区分准确。</strong></p>
+<p>故论文提出了 <code>GAUC</code>：</p>
+<script type="math/tex; mode=display">\mathrm{GAUC}=\frac{\sum_{i=1}^n\#impression_i\times\mathrm{AUC}_i}{\sum_{i=1}^n\#impression_i}</script><p>其中，$n$ 表示 User 的数量。</p>
+<blockquote>
+<p>实际中，建议 AUC 和 GAUC 结合一起判断，且后者一般要求 user 级别正负样本兼有。</p>
+</blockquote>
+<h4 id="1-2-4-Mini-batch-Aware-Regularization"><a href="#1-2-4-Mini-batch-Aware-Regularization" class="headerlink" title="1.2.4 Mini-batch Aware Regularization"></a>1.2.4 Mini-batch Aware Regularization</h4><p>是一种 <code>Adaptive</code> 的正则化方法。行为物品的参数空间大，使得模型容易过拟合，但传统的 L2 正则会对所有参数应用，效率低。<br>故论文提出了 <code>Mini-batch Aware Regularization</code> 方案：</p>
+<script type="math/tex; mode=display">\begin{aligned}
+&
+L_{2}\left(w\right)=\left|\left|w\right|\right|^{2}=\sum_{j=1}^{K}\left|\left|w_{j}\right|\right|^{2}=\sum_{\left(x,y\right)\in S}\sum_{j=1}^{K}\frac{I\left(x_{j}\neq0\right)}{n_{j}}\left|\left|w_{j}\right|\right|^{2} \\
+&
+=\sum_{j=1}^{K}\sum_{m=1}^{B}\sum_{(x,y)\in B_{m}}\frac{I(x_{j}\neq0)}{n_{j}}||w_{j}||^{2} \\
+&
+=\sum_{j=1}^{K}\sum_{m=1}^{B}\frac{max_{(x,y)\in B_{m}}[I(x_{j}\neq0)]}{n_{j}}\left|\left|w_{j}\right|\right|^{2}
+\end{aligned}</script><p>其中，</p>
+<ul>
+<li>K：特征空间的维度；</li>
+<li>S：全局样本；</li>
+<li>B：mini-batch 的个数；</li>
+<li>$x_j$：每个样本第 j 个特征值；</li>
+<li>$I(x_j \ne 0)$：mini-batch 内，第 j 个特征值均为0的时候该值为0，否则为1；</li>
+<li>$n_j$：样本中第 j 个特征出现的次数。</li>
+</ul>
+<p>最后一步，<strong>将所有的 $w_j$ 相加转为了只加最大（非0）的一次</strong>，如此高频（更重要）的特征正则权重就会变小，衰减慢一些。</p>
+<h3 id="1-3-小记："><a href="#1-3-小记：" class="headerlink" title="1.3 小记："></a>1.3 小记：</h3><ul>
+<li>DIN 优化了序列中不同 item 的权重、激活函数、正则方案以及评估指标；</li>
+<li>但没有考虑序列先后关系、兴趣变化，且一般仅适用于短序列（论文中 14 天，序列长平均 35）。</li>
+</ul>
+<h2 id="2-DIEN"><a href="#2-DIEN" class="headerlink" title="2 DIEN"></a>2 DIEN</h2><h3 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/1809.03672">Deep Interest Evolution Network</a><br>来源：2019，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel2.png" alt="ubsmodel2"></p>
+<p><strong>思想：引入 GRU 构建抽取兴趣层，使用 AUGRU 结构来做兴趣演化层，意在改善 DIN 没有考虑的行为先后关系和兴趣演变过程。</strong></p>
+<h3 id="2-2-方案"><a href="#2-2-方案" class="headerlink" title="2.2 方案"></a>2.2 方案</h3><h4 id="2-2-1-兴趣提取层（Interest-Extractor-Layer）"><a href="#2-2-1-兴趣提取层（Interest-Extractor-Layer）" class="headerlink" title="2.2.1 兴趣提取层（Interest Extractor Layer）"></a>2.2.1 兴趣提取层（Interest Extractor Layer）</h4><p>实际中，行为序列可能比较长（14天平均30+），用户兴趣也在不断变迁。所以使用 <code>GRU</code> 来对用户行为之间的依赖进行建模。</p>
+<p>选择 GRU 的原因是：</p>
+<ul>
+<li>克服了 RNN 的梯度消失问题；</li>
+<li>速度比 LSTM 快。</li>
+</ul>
+<p>结合模型图，GRU 的结构如下所示：</p>
+<script type="math/tex; mode=display">\begin{aligned}
+& \mathbf{u}_{t}=\sigma(W^{u}\mathbf{i}_{t}+U^{u}\mathbf{h}_{t-1}+\mathbf{b}^{u}), \\
+& \mathbf{r}_{t}=\sigma(W^{r}\mathbf{i}_{t}+U^{r}\mathbf{h}_{t-1}+\mathbf{b}^{r}), \\
+& \tilde{\mathbf{h}}_{t}=\mathrm{tanh}(W^{h}\mathbf{i}_{t}+\mathbf{r}_{t}\circ U^{h}\mathbf{h}_{t-1}+\mathbf{b}^{h}), \\
+& \mathbf{h}_{t}=(\mathbf{1}-\mathbf{u}_{t})\circ\mathbf{h}_{t-1}+\mathbf{u}_{t}\circ\tilde{\mathbf{h}}_{t}
+\end{aligned}</script><p>其中，</p>
+<ul>
+<li>$\sigma$是 simoid 激活函数；</li>
+<li>$\circ$是元素乘；</li>
+<li>$W^u,W^r,W^h \in \mathbb{R}^{n_H \times n_I}$，$U^z,U^r,U^h \in n_H \times n_H$，$n_H,n_I$分别是隐层和输入层的 size；</li>
+<li>$i_t = e_b[t]$是序列中第 t 个物品的 embedding，也是 GRU 的输入。</li>
+</ul>
+<h4 id="2-2-2-辅助-Loss"><a href="#2-2-2-辅助-Loss" class="headerlink" title="2.2.2 辅助 Loss"></a>2.2.2 辅助 Loss</h4><p>使用辅助 Loss 想要解决的问题：</p>
+<ul>
+<li>GRU 只能学习行为间的依赖，不能有效地学习用户兴趣；</li>
+<li>$L_{target}$ 只包含最终的目标信息，GRU 的隐层没有有效地监督信息；</li>
+<li>辅助 item embedding 的学习更有效的信息。</li>
+</ul>
+<p>具体做法（结合上图）：用户 $i$ 的序列为 $b$，$t$ 时刻的$e_b^i[t]$对应的隐层状态为$h_t$，给其找一个正样本和一个负样本来构建辅助 Loss。</p>
+<p><code>正样本</code>：点击序列的下一个 item，记为$e_b^i[t+1]$；<br><code>负样本</code>：除正样本$e_b^i[t+1]$之外的随机采样，记为$\hat e_b^i[t+1]$。</p>
+<p>则辅助 Loss 为：</p>
+<script type="math/tex; mode=display">L_{aux}= - \frac{1}{N}(\sum_{i=1}^N\sum_{t} \log \sigma {(h_t^i,e_b^i[t+1])} + \log (1 - \sigma{(h_t^i,\hat e_b^i[t+1]))})</script><p>故整体 Loss 为：</p>
+<script type="math/tex; mode=display">L=L_{target}+α \ast L_{aux}</script><h4 id="2-2-3-兴趣演进层（Interset-Evolving-Layer）"><a href="#2-2-3-兴趣演进层（Interset-Evolving-Layer）" class="headerlink" title="2.2.3 兴趣演进层（Interset Evolving Layer）"></a>2.2.3 兴趣演进层（Interset Evolving Layer）</h4><p>该层是对 <code>target item</code> 相关的兴趣演化进行建模，使用的是带注意力更新门的 <code>GRU</code>，称为 <code>AUGRU</code>，即通过使用兴趣状态和 target item 计算得到的注意力权重。计算方式如下：</p>
+<script type="math/tex; mode=display">a_t = \frac{\exp{(h_t \cdot W \cdot e_a)}}{\sum_{j = 1}^T \exp{(h_j \cdot W \cdot e_a)}}</script><p>其中，$e_a$ 是 target Ad 的 embedding。</p>
+<p>针对此注意力，作者有 3 种用法：</p>
+<ol>
+<li><code>AIGRU</code>（GRU with attentional input）<br>直接与 Interset Evolving Layer 的输入相乘，即$i_t’ = h_t \asrt a_t$。</li>
+<li><code>AGRU</code>（Attention based GRU）<br>替换 GRU 种的更新门，即 $h<em>t’ = (1 - a_t) \ast h</em>{t-1}’ + a_t \ast \tilde h_t’$。</li>
+<li><code>AUGRU</code>（GRU with attentional update gate）<script type="math/tex; mode=display">\begin{aligned}
+& \tilde{\mathbf{u}}_{t}=a_{t}*\mathbf{u}_{t}, \\
+& \mathbf{h}_{t}=(1-\tilde{\mathbf{u}}_{t})\circ\mathbf{h}_{t-1}+\tilde{\mathbf{u}}_{t}\circ\tilde{\mathbf{h}}_{t}
+\end{aligned}</script></li>
+</ol>
+<p>这里我们将公式各项表示跟前述的 GRU 做了对齐利于理解，实际上就是构建了 $\tilde{\mathbf{u}}<em>{t}$ 来代替 $\mathbf{u}</em>{t}$。</p>
+<h3 id="2-3-小记"><a href="#2-3-小记" class="headerlink" title="2.3 小记"></a>2.3 小记</h3><ul>
+<li><code>GRU</code> 和 <code>AUGRU</code> 增加了模型的复杂度，一定程度能够提高对兴趣的学习，辅助 Loss 的作用不可忽视；</li>
+<li>结构复杂带来的算力瓶颈是一大要害，作者提到作者提到了 GPU 优化、并行化、模型压缩等缓解方式，整体依然只能扛住 30-50 长度的序列；</li>
+<li>作者有提过，DIN 的 Attention 在序列变长（&gt;100）后容易出现信息淹没，此处 GRU 也做了不少优化；</li>
+<li>该模型叠加了不少复杂结构，是否真的有效用，这可能需要以具体场景中的时间为准。</li>
+</ul>
+<h2 id="3-BST"><a href="#3-BST" class="headerlink" title="3 BST"></a>3 BST</h2><h3 id="3-1-概述"><a href="#3-1-概述" class="headerlink" title="3.1 概述"></a>3.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/1905.06874">Behavior Sequence Transformer for E-commerce Recommendation in Alibaba</a><br>来源：2019，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel3.png" alt="ubsmodel3"></p>
+<p><strong>思想：将当时比较火热的 Transformer 种的 Multi-head Self-attention 结构应用在用户行为序列建模中。</strong></p>
+<h3 id="3-2-方案"><a href="#3-2-方案" class="headerlink" title="3.2 方案"></a>3.2 方案</h3><p><code>Transformer</code> 模型的细节这里不过多介绍，其 <code>Encoder</code> 中的每个 <code>Layer</code> 一般由 4 个子层构成，如上图右上。作者核心就是应用了这一部分。简单阐述为下面2块：</p>
+<ul>
+<li>将用户序列和 target item 看作整个 sequence 作为 Transformer Layer 的输入；</li>
+<li>引入时序位置信息。</li>
+</ul>
+<p>其中，时序位置信息构建如下：</p>
+<script type="math/tex; mode=display">pos(v_i) = t(v_t) - t(v_i)</script><p>实际上就是序列中每个点击行为距离 targte item 的时间差。</p>
+<h3 id="3-3-小记"><a href="#3-3-小记" class="headerlink" title="3.3 小记"></a>3.3 小记</h3><p>客观上，这篇文章或多或少引起了一些<em>争议：是不是为了蹭 Transformer 热度，水分大不大。</em></p>
+<p>至于到底如何，每个算法工程师可能都有自己的见解。这里我们罗列一些相对比较重要的疑问，供思考和讨论：</p>
+<ol>
+<li>Transformer 后做 concat 入模，是否合适？</li>
+<li>为了做到上述1，限制了序列长度为20，是否具有效性？</li>
+<li>时序位置信息的引入，在单位、分桶等处理细节上没有披露。</li>
+<li>为何选择将 target item 并入一起做 Multi-head Self-attention，而没有做 Target Attention？</li>
+</ol>
+<h2 id="4-DSIN"><a href="#4-DSIN" class="headerlink" title="4 DSIN"></a>4 DSIN</h2><h3 id="4-1-概述"><a href="#4-1-概述" class="headerlink" title="4.1 概述"></a>4.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/1905.06482">Deep Session Interest Network for Click-Through Rate Prediction</a><br>来源：2019，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel4.png" alt="ubsmodel4"></p>
+<p><strong>思想：用户在不同的 session 中行为差异明显，这是 DIEN 等没有考虑的，DSIN 中将序列分成多个 session 来处理。</strong></p>
+<h3 id="4-2-方案"><a href="#4-2-方案" class="headerlink" title="4.2 方案"></a>4.2 方案</h3><p><strong><code>DSIN</code> 网络结构分为四层</strong></p>
+<h4 id="4-2-1-Session划分层（Session-Division-Layer）"><a href="#4-2-1-Session划分层（Session-Division-Layer）" class="headerlink" title="4.2.1 Session划分层（Session Division Layer）"></a>4.2.1 Session划分层（Session Division Layer）</h4><p>Session 的划分方法：用户在行为序列中，超过半小时间隔处作为 Session 的切分点。</p>
+<h4 id="4-2-2-Session兴趣抽取层（Session-Interest-Extractor-Layer）"><a href="#4-2-2-Session兴趣抽取层（Session-Interest-Extractor-Layer）" class="headerlink" title="4.2.2 Session兴趣抽取层（Session Interest Extractor Layer）"></a>4.2.2 Session兴趣抽取层（Session Interest Extractor Layer）</h4><p>引入 <code>bias encoding</code>，如下所示：</p>
+<script type="math/tex; mode=display">\mathbf{BE}_{(k,t,c)} = \mathbf{w}_k^K + \mathbf{w}_t^T + \mathbf{w}_c^C</script><p>其中，</p>
+<ul>
+<li>$\mathbf{w}^K \in \mathbb{R} ^{K}$ 是 session 的 bias；</li>
+<li>$\mathbf{w}^T \in \mathbb{R} ^{T}$ 是 session 内行为位置的 bias；</li>
+<li>$\mathbf{w}^C \in \mathbb{R} ^{d_{model}}$ 是行为序列 item 的 embedding 每个元素的 bias。</li>
+</ul>
+<p>最终的序列 embedding 为：</p>
+<script type="math/tex; mode=display">\mathbf{Q} = \mathbf{Q} +\mathbf{BE}</script><p><strong>注意：虽然$\mathbf{BE}$维度是$K \times T \times d<em>{model}$，但实际上参数个数为$K + T + d</em>{model}$。</strong></p>
+<p>最后针对用户序列应用 Multi-head Self-attention 来抽取兴趣，该结构不再赘述，输出记为 $\mathbf{I}$。</p>
+<h4 id="4-2-3-Session兴趣交互层（Session-Interest-Interacting-Layer）"><a href="#4-2-3-Session兴趣交互层（Session-Interest-Interacting-Layer）" class="headerlink" title="4.2.3 Session兴趣交互层（Session Interest Interacting Layer）"></a>4.2.3 Session兴趣交互层（Session Interest Interacting Layer）</h4><p>对用户 Session 的兴趣迁移进行建模，作者使用了 <code>Bi-LSTM</code> 结构，该层的最终隐层状态是前后向隐层状态的融合：</p>
+<script type="math/tex; mode=display">\mathbf{H}_t=\overrightarrow{\mathbf{h}_{ft}} \oplus \overleftarrow{\mathbf{h}_{bt}}</script><p>其中，$\overrightarrow{\mathbf{h}<em>{ft}}$ 和 $\overleftarrow{\mathbf{h}</em>{bt}}$ 分别是前向和后向的 LSTM 隐层输出状态。而 $\oplus$ 文中没有明确解释，但我们结合模型图符号惯例以及 Bi-LSTM 的原理，很容易理解其应该是 <code>concat</code>。</p>
+<h4 id="4-2-4-Session兴趣激活层（Session-Interest-Activating-Layer）"><a href="#4-2-4-Session兴趣激活层（Session-Interest-Activating-Layer）" class="headerlink" title="4.2.4 Session兴趣激活层（Session Interest Activating Layer）"></a>4.2.4 Session兴趣激活层（Session Interest Activating Layer）</h4><p>该层主要就是通过 2 个 <code>Activation Unit</code> 结构来抽取和 target Itemv相关的 Session 兴趣 embedding。可以看到，图中 <code>Activation Unit</code> 是一个经典的 <code>Target Attention</code> 结构。</p>
+<p>黄色的部分（更浅层）：</p>
+<script type="math/tex; mode=display">\begin{aligned}
+& a_k^{I}=\frac{\exp(\mathbf{I}_{k}\mathbf{W}^{I}\mathbf{X}^{I}))}{\sum_{k}^{K}\exp(\mathbf{I}_{k}\mathbf{W}^{I}\mathbf{X}^{I})} \\
+& \mathbf{U}^{I}=\sum_k^Ka_k^I\mathbf{I}_k
+\end{aligned}</script><p>其中，$\mathbf{X}^{I}$ 就是 Query 部分，来自图左侧的 Item Filed 构建的 Embedding，$\mathbf{W}^{I}$是转换矩阵。<br>而对于蓝色部分（更深层），则就是把$\mathbf{X}^{I}$、$\mathbf{W}^{I}$换成对应的深层参数$\mathbf{X}^{H}$、$\mathbf{W}^{H}$，其余计算保持不变。</p>
+<h3 id="4-3-小记"><a href="#4-3-小记" class="headerlink" title="4.3 小记"></a>4.3 小记</h3><p><code>DSIN</code> 本身也是循着提升序列检索精度的方向：</p>
+<ul>
+<li>将序列拆分成不同的 Session 提供了一定的先验信息；</li>
+<li>使用 <code>MHTA</code>、 <code>Bi-LSTM</code> 以及 <code>Target Attention</code> 一系列操作，具体有无效用，见仁见智，以具体的时间结果为准。</li>
+</ul>
+<h2 id="5-MIMN"><a href="#5-MIMN" class="headerlink" title="5 MIMN"></a>5 MIMN</h2><h3 id="5-1-概述"><a href="#5-1-概述" class="headerlink" title="5.1 概述"></a>5.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/1905.09248">Practice on Long Sequential User Behavior Modeling for Click-Through Rate Prediction</a><br>来源：2019，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel5.png" alt="ubsmodel5"></p>
+<p><strong>思想：基于 DIEN 和 DSIN 的优势，MIMN 构建独立的 UIC 模块来更新用户兴趣 embedding，更新只依赖行为 event，不依赖 request。</strong></p>
+<h3 id="5-2-方案"><a href="#5-2-方案" class="headerlink" title="5.2 方案"></a>5.2 方案</h3><h4 id="5-2-1-挑战"><a href="#5-2-1-挑战" class="headerlink" title="5.2.1 挑战"></a>5.2.1 挑战</h4><ul>
+<li>序列建模中使用的用户行为序列越长，收益越大。（这点相信大多数场景经验都满足）</li>
+<li>直接扩增序列会带来显著的 存储问题 和 性能问题。（论文披露：序列150-1k时，存储1T-6T，QPS=500时性能14ms-200m，要求&lt;30ms）</li>
+</ul>
+<p>核心解决思路如下图：</p>
+<ul>
+<li>不存储用户原始的行为序列，只存储用户的兴趣 embedding；</li>
+<li>用户的兴趣 embedding 是可迭代更新的，并且其只依赖用户行为的 event，独立于 Server，在 request 时直接获取可降低 RT。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel6.png" alt="ubsmodel6"></p>
+<h4 id="5-2-2-神经元图灵机（Neural-Turing-Machine）"><a href="#5-2-2-神经元图灵机（Neural-Turing-Machine）" class="headerlink" title="5.2.2 神经元图灵机（Neural Turing Machine）"></a>5.2.2 神经元图灵机（Neural Turing Machine）</h4><p>使用记忆参数 $\mathbf{M<em>t}$来存储序列信息，且有 $m$ 个槽位（slot），$\left {\mathbf{M_t}(i) \right } |</em>{i=1}^m$。</p>
+<p>其更新和读取主要由下面2部分构成。</p>
+<p><strong>1. 记忆读取（Memory Read）</strong><br>控制器生成一个寻址的 <code>key</code> 为 $k_t$，针对所有的 <code>memory slot</code> 计算权重：</p>
+<script type="math/tex; mode=display">\mathbf{w}_t^r(i)=\frac{\exp(K(\mathbf{k}_t,\mathbf{M}_t(i)))}{\sum_j^m\exp(K(\mathbf{k}_t,\mathbf{M}_t(j)))},for \ i=1,2,...m</script><p>其中，</p>
+<script type="math/tex; mode=display">K\left(\mathbf{k}_t,\mathbf{M}_t(i)\right)=\frac{\mathbf{k}_t^T\mathbf{M}_t(i)}{\|\mathbf{k}_t\|\|\mathbf{M}_t(i)\|}</script><p>最后输出为：</p>
+<script type="math/tex; mode=display">\mathbf{r}_t=\sum_i^mw_t^r(i)\mathbf{M}_t(i)</script><p><strong>2. 记忆写入（memory write）</strong><br>首先控制器也会类似 <code>Memory Read</code> 生成一个 $\mathbf{w_t^w}$，此外还会生成加和向量项$\mathbf{a_t}$和衰减向量项$\mathbf{e_t}$。记忆矩阵$\mathbf{M_t}$的更新如下：</p>
+<script type="math/tex; mode=display">\mathbf{M_t=(1-E_t)\odot M_{t-1}+A_t}</script><p>其中，</p>
+<ul>
+<li>$\mathbf{E_t} = \mathbf{w}_t^w \otimes \mathbf{e}_t$；</li>
+<li>$\mathbf{A}<em>{\mathbf{t}}=\mathbf{w}</em>{t}^{\mathbf{w}} \otimes \mathbf{a}_{t}$；</li>
+<li>$\odot$，$\otimes$ 分别表示向量内积和外积。</li>
+</ul>
+<h4 id="5-2-3-内存利用率正则（Memory-utilization-regularization）"><a href="#5-2-3-内存利用率正则（Memory-utilization-regularization）" class="headerlink" title="5.2.3 内存利用率正则（Memory utilization regularization）"></a>5.2.3 内存利用率正则（Memory utilization regularization）</h4><p>原始的 <code>NTM</code> 往往有<strong>内存利用不均衡问题，文章的解决方案是：根据不同记忆槽位的写入权重的方差来进行正则。</strong></p>
+<script type="math/tex; mode=display">\mathbf{g}_t=\sum_{c=1}^t\mathbf{w}_c^{\tilde{w}}</script><p>如上所示是截止时间步$t$的累积更新权重，其中$\mathbf{w}_c^{\tilde{w}}$如下构建：</p>
+<script type="math/tex; mode=display">\begin{aligned}&P_t= softmax(W_g \mathbf{g}_t) \\ & \mathbf{w}_t^{\tilde{w}}=\mathbf{w}_t^wP_t\end{aligned}</script><p>其中，$\mathbf{w}_t^w$是上述提到的原始写入权重，$P_t$是转换矩阵，$W_g$是由下列正则 Loss 学习得到：</p>
+<script type="math/tex; mode=display">\begin{aligned}&\mathbf{w}^{\tilde{w}}=\sum_{t=1}^T\mathbf{w}_t^{\tilde{w}},\\&\mathbf{L}_{reg}=\lambda\sum_{i=1}^m\left(\mathbf{w}^{\tilde{w}}(i)-\frac{1}{m}\sum_{i=1}^m\mathbf{w}^{\tilde{w}}(i)\right)^2\end{aligned}</script><h4 id="5-2-4-记忆感知单元（Memory-Induction-Unit）"><a href="#5-2-4-记忆感知单元（Memory-Induction-Unit）" class="headerlink" title="5.2.4 记忆感知单元（Memory Induction Unit）"></a>5.2.4 记忆感知单元（Memory Induction Unit）</h4><p><code>NTM</code> 的 memory 一般是存储<code>原始信息</code>的，而 MIMN 的此模块的设计是<strong>为了捕捉高阶信息</strong>。如下图，<code>UBS</code> 会被分成多个 <code>Channel</code>，即 slot，假设 $m$ 个。<br>那么在第$\mathbf{t}$时间步的时候，会从 m 个 channel 中根据$\mathbf{w}_t^r(i)$选择 topK 个 channel，对于其中的每一个 channel i 按照下述更新：</p>
+<script type="math/tex; mode=display">\mathrm{S}_t(i)=\mathrm{GRU}(\mathrm{S}_{t-1}(i),\mathrm{M}_t(i),e_t)</script><p>其中，</p>
+<ul>
+<li>$\mathrm{M}_t(i)$是 NTM 的第 i 个 memory slot；</li>
+<li>$e_t$表示新增行为 item 的 embedding。</li>
+</ul>
+<p><strong>需要注意：不同 channel 的 GRU 参数是共享的。</strong><br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel7.png" alt="ubsmodel7"></p>
+<h3 id="5-3-小记"><a href="#5-3-小记" class="headerlink" title="5.3 小记"></a>5.3 小记</h3><ul>
+<li>开篇的存储问题降到了 2.7T，性能压力降到了 19ms；</li>
+<li>但模块上的独立，在效果上是否会有一定的折损，不同场景可能有一定差异；</li>
+<li>普适度上也有一定限制，作者提到2点：行为数据较丰富；行为 event 量 &lt; 模型 request 量（否则 UIC 起不到缓解性能的作用）。</li>
+</ul>
+<p>此外，其团队提到由于资源占用、迭代受限，该框架不久后就放弃了这条路线。</p>
+<h2 id="6-SIM"><a href="#6-SIM" class="headerlink" title="6 SIM"></a>6 SIM</h2><h3 id="6-1-概述"><a href="#6-1-概述" class="headerlink" title="6.1 概述"></a>6.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/2006.05639">Search-based User Interest Modeling with Lifelong Sequential Behavior Data for Click-Through Rate Prediction</a><br>来源：2020，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel8.png" alt="ubsmodel8"></p>
+<p><strong>思想：为了处理更长的行为序列，构建 GSU（泛检索）+ESU（精检索）两阶段的框架，是一个非常有实战价值的做法。</strong></p>
+<h3 id="6-2-方案"><a href="#6-2-方案" class="headerlink" title="6.2 方案"></a>6.2 方案</h3><h4 id="6-2-1-挑战"><a href="#6-2-1-挑战" class="headerlink" title="6.2.1 挑战"></a>6.2.1 挑战</h4><ul>
+<li>序列越长效果越好，尤其是用户行为活跃度高时，长序列就更重要；</li>
+<li>MIMN 处理的序列超过 1k 时效果变差，缺少和 target item 的交互。</li>
+</ul>
+<p>作者提出了 <code>GSU</code>（General Search Unit） + <code>ESU</code>（Exact Search Unit） 的方案，如上模型图所示，可以说开辟了序列建模又一新范式。</p>
+<h4 id="6-2-2-一阶段-GSU（General-Search-Unit，通用搜索单元）"><a href="#6-2-2-一阶段-GSU（General-Search-Unit，通用搜索单元）" class="headerlink" title="6.2.2 一阶段 GSU（General Search Unit，通用搜索单元）"></a>6.2.2 一阶段 GSU（General Search Unit，通用搜索单元）</h4><p>该阶段很明显是要从行为序列中粗筛 topK 个与 target item 相关的 candidate item，作者在这里介绍了2种方法，<code>hard-seach</code> 和 <code>soft search</code>。</p>
+<script type="math/tex; mode=display">r_i=\begin{cases}Sign(C_i=C_a)&hard-search\\(W_b\mathbf{e}_i)\odot(W_a\mathbf{e}_a)^T&soft-search&\end{cases}</script><p><strong>1. hard-seach</strong><br>顾名思义，相对比较粗糙但直接有效，<strong>即行为序列中与 target item 具有同类目的就可以作为 candidate item（如模型图中上所示）。</strong></p>
+<blockquote>
+<p>这里有一个点：类目也是一种泛指，具体用几级类目？能不能用其他维度？都需要根据实际场景来选择。</p>
+</blockquote>
+<p><strong>但经验上，选择的维度一定要在业务场景中举足轻重，当然也可以是多个</strong>。比如电商的根类目、叶子类目、品牌，内容社区的话题、语言等。</p>
+<p><strong>2. soft-search</strong></p>
+<p>上述 hard 方式虽然简单直接，<em>但依赖检索类目的质量，相关性无法保障。</em></p>
+<p><strong>一个朴素的想法便是：使用 target item 的 embedding 去检索序列中 item emebdding 距离近的 topK。</strong></p>
+<p>如上公式所示，</p>
+<ul>
+<li>$W_b,W_a$ 均是<code>变换矩阵</code>；</li>
+<li>$e_a,e_i$ 分别是 target item 和 candidate item 的 embedding；</li>
+<li>$\odot$ 表示<code>内积</code>。</li>
+</ul>
+<p>需要注意，作者提出因短期兴趣和长期兴趣分布有差异，故它们的 item embedding 不能 <code>share</code>，<strong>针对 <code>soft-search</code> 模块单独构建了一个网络来辅助学习</strong>，如上图左所示。</p>
+<h4 id="6-2-3-二阶段-ESU（Exact-Search-Unit，精准搜索单元）"><a href="#6-2-3-二阶段-ESU（Exact-Search-Unit，精准搜索单元）" class="headerlink" title="6.2.3 二阶段 ESU（Exact Search Unit，精准搜索单元）"></a>6.2.3 二阶段 ESU（Exact Search Unit，精准搜索单元）</h4><p>经过 <code>GSU</code>，序列长度一般下降一个量级以上，该阶段能够应用相对比较复杂的序列建模结构，如模型图右所示。</p>
+<ul>
+<li>短序列使用的是 <code>DEIN</code> 结构；</li>
+<li>长序列经过 <code>GSU</code> 检索的 topK 则使用 <code>Multi-head Attention</code> 结构。</li>
+</ul>
+<p>最后则是将两个阶段进行联合 training (soft-search 的时候)：</p>
+<script type="math/tex; mode=display">Loss=\alpha Loss_{GSU} + \beta Loss_{ESU}</script><h3 id="6-3-小记"><a href="#6-3-小记" class="headerlink" title="6.3 小记"></a>6.3 小记</h3><ul>
+<li>文章使用 180 天数据构建长期序列，最长 54000，比 MIMN 提升 54 倍，性能增加 5ms；</li>
+<li>在 GSU 部分，hard-search 方案几乎没有性能问题，针对 soft-search 文章提到可以使用 MIPS 指令集优化等加速；</li>
+<li>该方案思路新颖，实践效果佳，也为业界开启了 GSU+ESU 的迭代方向。</li>
+</ul>
+<h2 id="7-ETA"><a href="#7-ETA" class="headerlink" title="7 ETA"></a>7 ETA</h2><h3 id="7-1-概述"><a href="#7-1-概述" class="headerlink" title="7.1 概述"></a>7.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/2108.04468">End-to-End User Behavior Retrieval in Click-Through RatePrediction Model</a><br>来源：2021，阿里</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel9.png" alt="ubsmodel9"></p>
+<p><strong>思想：用 LSH 来加速 GSU 环节，并将 GSU 融入到 ESU 环节，构建端到端，相对两阶段来增加检索一致性。</strong></p>
+<h3 id="7-2-方案"><a href="#7-2-方案" class="headerlink" title="7.2 方案"></a>7.2 方案</h3><h4 id="7-2-1-SimHash"><a href="#7-2-1-SimHash" class="headerlink" title="7.2.1 SimHash"></a>7.2.1 SimHash</h4><p>这个是 <code>ETA</code> 在 <code>GSU</code> 加速的核心，<code>SimHash</code> 是<strong>一种局部敏感哈希(LSH)方法，能够近似的计算向量间的相似度</strong>，说白了就是为了改善向量内积检索的速度。</p>
+<p>文章通过伪代码和向量旋转来解释 <code>SimHash</code> 的原理，我们这里直接讲实操可能更利于理解。假设 $\mathbf{e} \in \mathbb{R^{n \times d}}$表示行为序列的 item embedding，$n,d$ 是序列长度和 embedding size。</p>
+<p>那么，<code>SimHash</code> 步骤如下：</p>
+<ul>
+<li>固定一个随机生成的 Hash 矩阵 $\mathbf{H} \in \mathbb{R}^{d \times m}$，其中 m 是超参数，代表 <code>Hash 编码后的维度</code>；</li>
+<li>对于每个$e_k$，按照如下方式构建 SimHash 的编码 $sig_k \in \mathbb{R}^{1 \times m}$：</li>
+</ul>
+<script type="math/tex; mode=display">temp_k[i] =\sum_{j=1}^{d}\mathrm{sgn}(e_{k}[j]*H[j][i])</script><script type="math/tex; mode=display">sig_{k}[i] = 1 \ if \ temp_k[i] < 0 \ else \ 0</script><blockquote>
+<p>相当于所有的 $d$ 维的 item embedding 都经过 $\mathbf{H} \in \mathbb{R}^{d \times m}$ 编码成了 $m$ 维的二进制向量了。</p>
+</blockquote>
+<h4 id="7-2-2-模型"><a href="#7-2-2-模型" class="headerlink" title="7.2.2 模型"></a>7.2.2 模型</h4><p>如上模型图所示:</p>
+<ul>
+<li>针对每个 target item（$e_t$），对其进行 SimHash 编码成<code>二进制向量</code>$h_t$；</li>
+<li>对用户行为序列中的 candidate item（$e<em>{k+1}$）也进行同样的 SimHash 编码成二进制向量$h</em>{k+1}$；</li>
+<li>基于上述，使用<code>汉明距离</code>来检索与 target item 最近的 topK 个candidate item，完成 GSU 部分；</li>
+<li>将上述 topK 个 item 作为 ESU 的输入，构建 <code>Multi-head Target Attention</code>，其余雷同。</li>
+</ul>
+<p><strong>需要注意的是：</strong></p>
+<ul>
+<li><code>Offline Training</code> 时，ETA 中的 SimHash、GSU、ESU 这整个过程是一个 End-to-End 的，即每一 step，除了 Hash 映射不变外，其他参数都在 update；</li>
+<li><code>Online Serving</code> 时，因为不管是 target 还是 candidate item，它们的 embeding 和 Hash Matrix 都是不变的，故可以提前计算它们的 <code>SimHash Sig</code>，线上直接 lookup 即可使用。</li>
+</ul>
+<h3 id="7-3-小记"><a href="#7-3-小记" class="headerlink" title="7.3 小记"></a>7.3 小记</h3><ul>
+<li>文章提到 ETA 效果优于 SIM，且 SimHash 检索后 Attention 和直接全序列 Attention 在 AUC 只差 0.1%；</li>
+<li>也提到 ETA 性能相比于 dot-product 更优（32ms-19ms），因为将检索依赖的 embedding 转换成了更低维的二进制向量，使得检索时速度增加；</li>
+<li>加速 GSU、提高 GSU 和 ESU 环节的一致性，确实是沿着两阶段方向的一个重点迭代思路，当然这种改善具体提升多少还依赖实践情况。</li>
+</ul>
+<h2 id="8-SDIM"><a href="#8-SDIM" class="headerlink" title="8 SDIM"></a>8 SDIM</h2><h3 id="8-1-概述"><a href="#8-1-概述" class="headerlink" title="8.1 概述"></a>8.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/2205.10249">Sampling Is All You Need on Modeling Long-Term User Behaviors for CTR Prediction</a><br>来源：2022，美团</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel10.png" alt="ubsmodel10"></p>
+<p><strong>思路：结合 SIM 和 ETA 的优势，提出使用 Hash Transform 和 Sample-Based Attention 来替换 <code>GSU+ESU</code> 的框架（如模型图右侧所示），直接构建 <code>End-to-End</code> 模型。</strong></p>
+<h3 id="8-2-方案"><a href="#8-2-方案" class="headerlink" title="8.2 方案"></a>8.2 方案</h3><h4 id="8-2-1-挑战"><a href="#8-2-1-挑战" class="headerlink" title="8.2.1 挑战"></a>8.2.1 挑战</h4><ul>
+<li>GSU 的存在，使得检索 topK 可能会存在信息堵塞的情况，比如相似 item 占位太多；</li>
+<li>既然 SimHash 已经应用到了 GSU 部分，有没有可能打通 ESU 部分构建 End-to-End。</li>
+</ul>
+<p>作者的解决方案的<strong>关键点是：既然 target item 和 candidate item 都可以通过 SimHash 来编码，并且还可以计算近似的相似度，如果基于此还能获取到 embedidng 就完成了全局 Attention 的替换。</strong></p>
+<p><code>SDIM</code> 模型的全称是 Sampling-based Deep Interest Modeling。</p>
+<p>如模型图左上所示，实际上是通过2步：</p>
+<ul>
+<li>将 UBS 进行 Hashing 后编码成<code>签名映射表</code>；</li>
+<li>将 target item 也进行 Hashing 编码成签名，去上述映射表直接检索聚合成最终的 <code>Attention Embedding</code>。</li>
+</ul>
+<h4 id="8-2-2-Multi-Round-Hash"><a href="#8-2-2-Multi-Round-Hash" class="headerlink" title="8.2.2 Multi-Round Hash"></a>8.2.2 Multi-Round Hash</h4><p>这里的思路与 ETA 极其相似，但为了打通 ESU 部分，做了一些改进。</p>
+<p>针对 UBS 中任一 item 的 embedding 记为 $x$，先构建基础的 <code>SimHash 编码</code>，这一步与 ETA 一致：</p>
+<script type="math/tex; mode=display">h(\mathbf{x},\mathbf{R})=\mathrm{sign}(\mathbf{R}\mathbf{x})</script><p>其中，</p>
+<ul>
+<li>$\mathbf{R} \in \mathbb{R}^{m \times d}$是 <code>Hash 矩阵</code>，<strong>m 是 Hash 编码后的维度，d 是 item embedding size</strong>；</li>
+<li>$h(\mathbf{x},\mathbf{R}) \in \mathbb{R}^{m}$是 Hash 编码结果，<code>m 维</code>。</li>
+</ul>
+<p>假设 UBS 长度为 T，我们就可以得到 T 个 m 维的 Hash Code。如下模型图左下，$T=4,\ m = 4$。</p>
+<p>给定超参数 $\tau$，代表需要将 <code>Hash Code</code> 分组的宽度，如下图中 $\tau=2$，则每个 item 的 <code>Hash Code</code> 可以被分成 2 组，图中黄色和绿色部分。</p>
+<p>然后我们将每个 item 同组的 Hash Code 聚合成一张 <code>Hash SigSignature Table</code>，其中：</p>
+<ul>
+<li><code>sig.</code> 存储的是该组<code>去重的 Hash Code</code>；</li>
+<li><code>value</code> 存储的是对应的 <code>norm embedding</code>，它是由相同 sig. 对应的 item embedding 进行归一化（norm）得到。</li>
+</ul>
+<p>可以看到，这里的<strong>思想是基于 <code>Hash Code</code> ，将局部位置相似的 item embedding 聚合作为局部信息的表征，实际上是一种聚类的思想，容易联想到向量检索算法中的 PQ（乘积量化）。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel11.png" alt="ubsmodel11"></p>
+<h4 id="8-2-3-Hash-Based-Sampling"><a href="#8-2-3-Hash-Based-Sampling" class="headerlink" title="8.2.3 Hash-Based Sampling"></a>8.2.3 Hash-Based Sampling</h4><p>有了上述的基础，这里就比较明朗了：</p>
+<ul>
+<li>首先针对 target item 也行同样的 Hash 编码并按照 $\tau$ 宽度进行分组<br>（理论上组数应该与前述的 Hash SigSignature Table 个数一样。）</li>
+<li>将每一组的 <code>sig.</code> 作为 <code>key</code> 去对应的 <code>Hash SigSignature Table</code> 中查询 <code>value</code>，作为结果 <code>embedding</code>；</li>
+<li>将所有查到的 <code>value</code> 进行 pooling，得到最终 <code>Target Attention</code> 的结果 <code>Embedding</code>。</li>
+</ul>
+<p>至此，完成了对 <code>GSU+ESU</code> 的替换，是一种 End-to-End 的对长序列进行 Target Attention 建模的结构。</p>
+<h3 id="8-3-小记"><a href="#8-3-小记" class="headerlink" title="8.3 小记"></a>8.3 小记</h3><p>实际上，个人直观的思路是直接用 SimHash 后的汉明距离倒数作为 Attention Weight 来计算，但作者没有选择，可能存在的原因：</p>
+<ul>
+<li>汉明距离作为召回可能尚可，作为 weight 可能噪声大，序的分辨度也许不高；</li>
+<li>相似度计算简单了，但需要处理的长度依然太长。</li>
+</ul>
+<p>回到 <code>SDIM</code>，作者提到：</p>
+<ul>
+<li>效果上，对比 ETA 由 AUC+0.6%-1%；</li>
+<li>性能上，较 ETA 快 3 倍。</li>
+<li>如下图所示，<code>SDIM</code> 与传统的 Target Attention 的结果对比，相似度很高。</li>
+<li>参数 m 越大效果越好，但过大性价比不高；</li>
+<li>参数$\tau$的增大，AUC 先增后减。<em>因为：太小，分组太多，泛化不够；太大，分组太少，组内区分度不够</em>。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel12.png" alt="ubsmodel12"></p>
+<h2 id="9-TWIN"><a href="#9-TWIN" class="headerlink" title="9 TWIN"></a>9 TWIN</h2><h3 id="9-1-概述"><a href="#9-1-概述" class="headerlink" title="9.1 概述"></a>9.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/2302.02352">TWIN: TWo-stage Interest Network for Lifelong User Behavior Modeling in CTR</a><br>来源：2023，快手</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel13.png" alt="ubsmodel13"></p>
+<p><strong>思想：ESU 是 Target Attention，GSU 的检索方式越对齐一致性越好。将 GSU 的 Target Attention 计算进行拆分，固有属性部分做缓存后 Lookup，交叉部分降维后作 Bias。</strong></p>
+<h3 id="9-2-方案"><a href="#9-2-方案" class="headerlink" title="9.2 方案"></a>9.2 方案</h3><h4 id="9-2-1-挑战"><a href="#9-2-1-挑战" class="headerlink" title="9.2.1 挑战"></a>9.2.1 挑战</h4><blockquote>
+<p>ESU 和 GSU 往往存在一致性问题： GSU 和 ESU 在序列 Item 与 Target Item 的相似计算方式上不一样, 从而导致 GSU 检索的 topK 往往与 ESU 有差异。（如下图）</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel14.png" alt="ubsmodel14"></p>
+<p><strong>诸如 ETA、SDIM 都是通过使用其他近似算法来优化 GSU 过程</strong>，使得 GSU 可以处理更长序列，同时逼近 Target Attention。但，上述近似算法始终与 <code>MHTA</code> 算法有一定差异，<strong><code>TWIN</code> 则是通过将 Attention 进行拆解，将 GSU 的 Target Attention 部分更进一步的逼近于 <code>MHTA</code>。</strong></p>
+<h4 id="9-2-2-Behavior-Feature-Splits-and-Linear-Projection"><a href="#9-2-2-Behavior-Feature-Splits-and-Linear-Projection" class="headerlink" title="9.2.2 Behavior Feature Splits and Linear Projection"></a>9.2.2 Behavior Feature Splits and Linear Projection</h4><p>序列特征的分解与线性映射，是为了提升 Attention 模块性能。因 Multi-Head Target Attention（MHTA）的<strong>主要耗时在于两部分：序列信息做线性映射、内积加权和。</strong></p>
+<p>序列特征可以分为：</p>
+<ul>
+<li><code>固有特征</code>（如标题、作者、视频ID等）；</li>
+<li><code>交互特征</code>（如点击时间、观看时长等）。</li>
+</ul>
+<p>其中，</p>
+<ul>
+<li><code>固有特征</code>独立于 user，包括其行为序列，可以提前计算存储下来，线上直接 lookup 即可。</li>
+<li><code>交叉特征</code>不能使用缓存方案，与 user 行为序列有关，但每个 user 最多只看每个 item 一次。</li>
+</ul>
+<p>基于上述特性，我们<strong>将交叉特征线性映射为 1 维。</strong></p>
+<p>假设 UBS 为$[s_1,s_2,…,s_L]$ ，对应的<code>特征矩阵</code>为 $K$。则$K$可以拆分为两部分，如下：</p>
+<script type="math/tex; mode=display">K\triangleq[K_h,K_c]\in R^{L\times(H+C)}</script><p>其中 $K_h \in R^{L \times H}$ 是<code>固有特征</code>， $K_c \in R^{L \times C}$ 是则是<code>交互特征</code>部分。</p>
+<p>如上所述， $K_h$ 可以提前离线计算并缓存供线上 Lookup 使用。<br>对于<code>交互特征</code> $K_c$，假设有$J$个，每个 8 维，文章提到可将其均映射为 1 维，如下所示：</p>
+<script type="math/tex; mode=display">K_{c}W^{c}\triangleq[K_{c,1}W_{1}^{c},\ldots,K_{c,J}W_{J}^{c}</script><p>其中 $K_{c,j} \in R^{L \times 8}$ 为第 $j$ 个<code>交互特征</code>，$W_j^c \in R^8$ 则是对应的<code>权重参数</code>。</p>
+<h4 id="9-2-3-Target-Attention-in-TWIN"><a href="#9-2-3-Target-Attention-in-TWIN" class="headerlink" title="9.2.3 Target Attention in TWIN"></a>9.2.3 Target Attention in TWIN</h4><p>上述的操作主要都是为了提速，当然在 Attention 部分也做了适配改造。</p>
+<ul>
+<li><code>Q、K</code> 的固有属性部分直接 Lookup <code>缓存</code>得到；</li>
+<li>降维后的交叉特征部分则作为 <code>Bias</code> 项；</li>
+<li>Target Item 仅与固有特征做内积（<em>快手曝光频控一次，故 Target Item 没有交叉特征</em>）。</li>
+</ul>
+<script type="math/tex; mode=display">\alpha = \frac{(K_h W^h)(q^T W^q)^T}{\sqrt{d_k}}+(K_c W^c) \beta</script><p>则，<strong>这里的 $\alpha$ 实际上就是 Target Attention 的内积结果</strong>。</p>
+<ul>
+<li>GSU 阶段用这个对序列 Item 做粗筛 Top100；</li>
+<li>ESU 阶段对这 Top100 再做一次简化的 Target Attention。</li>
+</ul>
+<p>如下所示：</p>
+<script type="math/tex; mode=display">Attention(q^{T} W^{q},K_{h} W^{h},K_{c} W^{c},K W^{v})=Softmax(\alpha)^{T}K W^{v}</script><p><strong>注意：ESU 的$\alpha$实际上是重新计算的，不是 GSU 中的。</strong></p>
+<p>文章提到，实际业务中使用 <code>MHTA</code>，且 head 数为 4，所以最终如下：</p>
+<script type="math/tex; mode=display">TWIN=Concat(\mathrm{head}_1,...,\mathrm{head}_4)W^o</script><script type="math/tex; mode=display">\mathrm{head}_a=\mathrm{Attention}(\mathbf{q}^\top W_a^q,K_hW_a^h,K_cW_a^c,KW_a^v),a\in\{1,...,4\}</script><p>其中，$W^o$是 head 之间的权重，也是模型学习得到。</p>
+<h3 id="9-3-小记"><a href="#9-3-小记" class="headerlink" title="9.3 小记"></a>9.3 小记</h3><p><code>TWIN</code> 的有效性主要得益于 3 点：</p>
+<ol>
+<li>作者将序列特征 拆分成了 固有属性 和 交互特征，分别使用缓存（命中率99.3%）和降维分而治之；</li>
+<li>基于上述，对 Target Attention 做了简化；</li>
+<li>业务上，Target Item 与 UBS 没有交互提供了上述可拆分的支持。</li>
+</ol>
+<p><code>TWIN</code> 进一步提高了 GSU 和 ESU 部分的一致性（如下图所示），GSU 也用上了 Target Attention，且能够支持 $10^5$的序列。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel15.png" alt="ubsmodel15"></p>
+<p><strong>但这里有一个问题：如果 GSU 能够做到 Target Attention 为什么不统一成全局 ESU，还要保留 GSU 来粗筛 top100 来给 ESU？</strong></p>
+<p>实际上，这有 2 个原因：</p>
+<ol>
+<li>Q、K 做了简化，V 的 Project、 Weight Pooling 以及 bp 都是很耗时的过程，且 100 后的$\alpha$往往都很小信息量不大，所以截取 top100 还是很具有性价比的；</li>
+<li>虽然 GSU 和 ESU 的 Attention 结构一样，但分数上依然存在些许差异。因为 GSU 是离线计算，其参数更新速度没有 ESU 部分快。故 ESU 部分重新计算$\alpha$，性能可支持、实时性更高、准确度更好。</li>
+</ol>
+<h2 id="10-TWIN-V2"><a href="#10-TWIN-V2" class="headerlink" title="10 TWIN-V2"></a>10 TWIN-V2</h2><h3 id="10-1-概述"><a href="#10-1-概述" class="headerlink" title="10.1 概述"></a>10.1 概述</h3><p>论文：<a href="https://arxiv.org/pdf/2407.16357v2">TWIN V2: Scaling Ultra-Long User Behavior Sequence Modeling for Enhanced CTR Prediction at Kuaishou</a><br>来源：2024，快手</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/algorithm/rankmodel/ubsmodel16.png" alt="ubsmodel16"></p>
+<p><strong>思想：为了使得 TWIN 可以支持到10^6量级，TWIN-V2 基于层次聚类，对 UBS 中的 Item 做聚类后得到簇序列，从而将序列量级从 Item 元素的$10^6$量级降到簇元素下的$10^5$量级，之后再应用 TWIN 即可。</strong></p>
+<h3 id="10-2-方案"><a href="#10-2-方案" class="headerlink" title="10.2 方案"></a>10.2 方案</h3><h4 id="10-2-1-Hierarchical-Clustering"><a href="#10-2-1-Hierarchical-Clustering" class="headerlink" title="10.2.1 Hierarchical Clustering"></a>10.2.1 Hierarchical Clustering</h4><p>Item 数量太多，则将 Item 聚类成<code>簇</code>，变成<code>簇序列</code>，量级下来后，以簇为 <code>新 Item</code>支持完成 <code>TWIN</code> 模型。</p>
+<p><code>Item 分层</code>：对 UBS 的各个 Item $v_j$，根据<code>完播率</code>$p_j=playing \ timevideo \ duration$分成 <code>M 组</code>(文章中M=5)，可以使用<code>等宽分组</code>。这里实际上是对用户偏好进行了显式分层。</p>
+<p><code>Item 聚类成簇</code>：这里文章给了算法的伪代码，这里简述要点。</p>
+<ul>
+<li>逐个处理 M 组序列，分别对其进行聚类；</li>
+<li>每个簇内部最多包含 $\gamma$个 Item，如某组序列的 Item 总数少于此，整体作为一簇；</li>
+<li>数量够的，计算需要的聚类数 $\delta \leftarrow \lfloor |V|^{0.3} \rfloor$；</li>
+<li>根据 Item 的 Embedding，将该组内的 Item 进行 Kmeans 聚类，聚类数为上述 $\delta$。</li>
+</ul>
+<p>最终将原始 UBS 的 Item 序列即 $S=[s<em>1,s_2,\cdots,s_T]$转化成了<code>簇序列</code>，即$C=[c</em>{1},c<em>{2},\cdots,c</em>{\hat{T}}]$。</p>
+<p>此外，文章提到：</p>
+<ul>
+<li>层次聚类 2 周完整更新一次，毕竟是全生命周期的，计算量大；</li>
+<li>Embedding Server 来源 GSU 的固有属性, 每隔15分钟进行同步；</li>
+<li>实践中簇的内部大小$\gamma=20$，而最终的簇个数平均为 10，相当于将序列量级下降1级。</li>
+</ul>
+<h4 id="10-2-2-Extracting-Cluster-Representation"><a href="#10-2-2-Extracting-Cluster-Representation" class="headerlink" title="10.2.2 Extracting Cluster Representation"></a>10.2.2 Extracting Cluster Representation</h4><p>在得到各个簇之后，需要构建<code>簇的表征</code>，否则下游的模型无法使用。逻辑上也是将簇内 Item 两种类型的特征单独分开处理。</p>
+<p><code>连续型特征</code>，<strong>取簇内各 Item 的均值</strong>:</p>
+<script type="math/tex; mode=display">\mathbf{c}_{1:N_2}^{(i)}=\frac{1}{|c_i|}\sum_{v\in c_i}\mathbf{x}_{1:N_2}^{(v)}</script><p>但<code>分类型特征</code>，均值就没意义了。文中提到<strong>从簇中选取一个代表性的 Item 来表示，筛选方案是：与聚类中心的距离最小的</strong>。</p>
+<script type="math/tex; mode=display">v=\arg\min_{v\in c_{i}}\|\mathrm{k}_{v}-\mathrm{k}_{\mathrm{centroid}}\|_{2}^{2}</script><p>最后将分类型和连续型特征 <code>concat</code> 即可作为簇的 Embedding 了。</p>
+<h4 id="10-2-3-Cluster-aware-Target-Attention"><a href="#10-2-3-Cluster-aware-Target-Attention" class="headerlink" title="10.2.3 Cluster-aware Target Attention"></a>10.2.3 Cluster-aware Target Attention</h4><blockquote>
+<p>原始序列从$S$已经下降一个量级到$C$了，并且对应的 Embedding 也具备，可以直接应用 TWIN 模型了。</p>
+</blockquote>
+<script type="math/tex; mode=display">\alpha=\frac{(\mathrm{K}_h\mathrm{W}^h)(\mathrm{q}^\top\mathrm{W}^q)^\top}{\sqrt{d}_k}+(\mathrm{K}_c\mathrm{W}^c)\beta</script><p>注意力分数依然按照上述计算，但文章提到，这时候的元素已经不再是 Item 了，<strong>如果不同的类簇有相同的 Score，那么簇内 Item 数更多的理论上更置信。</strong></p>
+<p>故，对注意力分做了矫正：</p>
+<script type="math/tex; mode=display">\alpha^{\prime}=\alpha+\ln\mathbf{n}</script><p>其中$\mathbf{n}$是簇内 Item 的数量。在 GSU 和 ESU 环节均使用$\alpha^{\prime}$来计算注意力分，其余环节与 TWIN 保持一致。</p>
+<h3 id="10-3-小记"><a href="#10-3-小记" class="headerlink" title="10.3 小记"></a>10.3 小记</h3><p>为了支撑更大的量级，在 TWIN-V2 中，选择<strong>将问题转化为 TWIN 能处理的量级，方法就是对原始的 Item 进行分层聚类，从而将原始的 Item 序列转化为低一个量级的聚类簇序列。</strong></p>
+<p>文章在实验部分提到效果较为显著，<strong>但聚类本身容易带来信息丢失</strong>，尤其是下面2个环节：</p>
+<ul>
+<li>$M,\gamma,\delta$的超参数选择；</li>
+<li>簇的类型特征的表征。</li>
+</ul>
+<p>故，该方法的实际效用如何，还需要以具体场景的实践结果为准。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>除了上述提到的一系列文章外，业内当然还有不少其他方面的研究成果。笔者没有再进一步整理，一方面考虑到篇幅过大，另一方面也是个人判断方案的普适性。</p>
+<p>上述展开的一系列成果比较契合序列建模迭代的 2 大方向且成果往往也在多个场景实践落地，更具参考价值。</p>
+<p>当然，这里也附上部分近年的相关文章供参考：<br><a href="https://arxiv.org/pdf/2311.10764">DGIN</a>（2024，美团）<br><a href="https://dl.acm.org/doi/pdf/10.1145/3589335.3648308">ASIF</a>（2024，蚂蚁）<br><a href="https://dl.acm.org/doi/pdf/10.1145/3589335.3648301">SUM</a>（2024，META）<br><a href="https://arxiv.org/pdf/2110.11337">LURM</a>（2023，阿里）<br><a href="https://arxiv.org/pdf/2312.06424">LCN</a>（2024，腾讯）<br><a href="https://arxiv.org/pdf/2402.02842">Trinity</a>（2024，字节）</p>
+<p><strong>参考文章：</strong></p>
+<p><a href="https://zhuanlan.zhihu.com/p/4544607237">抖音/阿里/美团/微信/快手长序列兴趣建模经典方案探索</a><br><a href="https://zhuanlan.zhihu.com/p/699924066">一文梳理近年推荐长序列兴趣建模经典方案</a><br><a href="https://mp.weixin.qq.com/s/RQ1iBs8ftvNR0_xB7X8Erg">阿里妈妈点击率预估中的长期兴趣建模</a><br><a href="https://zhuanlan.zhihu.com/p/433135805">推荐系统——精排篇【3】</a><br><a href="https://zhuanlan.zhihu.com/p/51623339">推荐系统中的注意力机制——阿里深度兴趣网络（DIN）</a><br><a href="https://zhuanlan.zhihu.com/p/50758485">详解阿里之Deep Interest Evolution Network(AAAI 2019)</a><br><a href="https://zhuanlan.zhihu.com/p/78544498">简析阿里 BST: 当用户行为序列邂逅Transformer</a><br><a href="https://zhuanlan.zhihu.com/p/89700141">DSIN（Deep Session Interest Network ）分享</a><br><a href="https://zhuanlan.zhihu.com/p/94432395">阿里妈妈长期用户历史行为建模——MIMN模型详解</a><br><a href="https://zhuanlan.zhihu.com/p/154401513">[SIM论文] 超长兴趣建模视角CTR预估：Search-based Interest Model</a><br><a href="https://zhuanlan.zhihu.com/p/444065581">阿里ETA(End-to-End Target Attention)模型</a><br><a href="https://zhuanlan.zhihu.com/p/525604184">【论文解读|CIKM’2022】基于采样的超长序列建模算法 SDIM</a><br><a href="https://zhuanlan.zhihu.com/p/606047328">快手终身序列建模方案—TWIN</a><br><a href="https://zhuanlan.zhihu.com/p/699725252">精排最终也是样本的艺术</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/ubsmodel.html">精排序列建模经典方案综述</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/ubsmodel.html" title="精排序列建模经典方案综述">https://www.xiemingzhao.com/posts/ubsmodel.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/ubsmodel.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%B2%BE%E6%8E%92/" rel="tag"><i class="fa fa-tag"></i> 精排</a>
+          
+            <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag"><i class="fa fa-tag"></i> 序列建模</a>
+          
+            <a href="/tags/DIN/" rel="tag"><i class="fa fa-tag"></i> DIN</a>
+          
+            <a href="/tags/DIEN/" rel="tag"><i class="fa fa-tag"></i> DIEN</a>
+          
+            <a href="/tags/BST/" rel="tag"><i class="fa fa-tag"></i> BST</a>
+          
+            <a href="/tags/DSIN/" rel="tag"><i class="fa fa-tag"></i> DSIN</a>
+          
+            <a href="/tags/MIMN/" rel="tag"><i class="fa fa-tag"></i> MIMN</a>
+          
+            <a href="/tags/SIM/" rel="tag"><i class="fa fa-tag"></i> SIM</a>
+          
+            <a href="/tags/ETA/" rel="tag"><i class="fa fa-tag"></i> ETA</a>
+          
+            <a href="/tags/SDIM/" rel="tag"><i class="fa fa-tag"></i> SDIM</a>
+          
+            <a href="/tags/TWIN/" rel="tag"><i class="fa fa-tag"></i> TWIN</a>
+          
+            <a href="/tags/TWIN-V2/" rel="tag"><i class="fa fa-tag"></i> TWIN-V2</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/listwisererank.html" rel="next" title="Listwise 在重排的应用">
+                <i class="fa fa-chevron-left"></i> Listwise 在重排的应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-DIN"><span class="nav-number">2.</span> <span class="nav-text">1 DIN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%96%B9%E6%A1%88"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-DIN-%E7%9A%84%E5%BA%8F%E5%88%97%E6%A3%80%E7%B4%A2%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.1.</span> <span class="nav-text">1.2.1 DIN 的序列检索结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-Dice-%E6%9B%BF%E4%BB%A3-PReLU"><span class="nav-number">2.2.2.</span> <span class="nav-text">1.2.2 Dice 替代 PReLU</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-GAUC-%E6%9B%BF%E4%BB%A3-AUC"><span class="nav-number">2.2.3.</span> <span class="nav-text">1.2.3 GAUC 替代 AUC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-4-Mini-batch-Aware-Regularization"><span class="nav-number">2.2.4.</span> <span class="nav-text">1.2.4 Mini-batch Aware Regularization</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%B0%8F%E8%AE%B0%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 小记：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-DIEN"><span class="nav-number">3.</span> <span class="nav-text">2 DIEN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E5%85%B4%E8%B6%A3%E6%8F%90%E5%8F%96%E5%B1%82%EF%BC%88Interest-Extractor-Layer%EF%BC%89"><span class="nav-number">3.2.1.</span> <span class="nav-text">2.2.1 兴趣提取层（Interest Extractor Layer）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E8%BE%85%E5%8A%A9-Loss"><span class="nav-number">3.2.2.</span> <span class="nav-text">2.2.2 辅助 Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-%E5%85%B4%E8%B6%A3%E6%BC%94%E8%BF%9B%E5%B1%82%EF%BC%88Interset-Evolving-Layer%EF%BC%89"><span class="nav-number">3.2.3.</span> <span class="nav-text">2.2.3 兴趣演进层（Interset Evolving Layer）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-BST"><span class="nav-number">4.</span> <span class="nav-text">3 BST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%96%B9%E6%A1%88"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-DSIN"><span class="nav-number">5.</span> <span class="nav-text">4 DSIN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%96%B9%E6%A1%88"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-Session%E5%88%92%E5%88%86%E5%B1%82%EF%BC%88Session-Division-Layer%EF%BC%89"><span class="nav-number">5.2.1.</span> <span class="nav-text">4.2.1 Session划分层（Session Division Layer）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-Session%E5%85%B4%E8%B6%A3%E6%8A%BD%E5%8F%96%E5%B1%82%EF%BC%88Session-Interest-Extractor-Layer%EF%BC%89"><span class="nav-number">5.2.2.</span> <span class="nav-text">4.2.2 Session兴趣抽取层（Session Interest Extractor Layer）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-3-Session%E5%85%B4%E8%B6%A3%E4%BA%A4%E4%BA%92%E5%B1%82%EF%BC%88Session-Interest-Interacting-Layer%EF%BC%89"><span class="nav-number">5.2.3.</span> <span class="nav-text">4.2.3 Session兴趣交互层（Session Interest Interacting Layer）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-4-Session%E5%85%B4%E8%B6%A3%E6%BF%80%E6%B4%BB%E5%B1%82%EF%BC%88Session-Interest-Activating-Layer%EF%BC%89"><span class="nav-number">5.2.4.</span> <span class="nav-text">4.2.4 Session兴趣激活层（Session Interest Activating Layer）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-MIMN"><span class="nav-number">6.</span> <span class="nav-text">5 MIMN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%96%B9%E6%A1%88"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-%E6%8C%91%E6%88%98"><span class="nav-number">6.2.1.</span> <span class="nav-text">5.2.1 挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-%E7%A5%9E%E7%BB%8F%E5%85%83%E5%9B%BE%E7%81%B5%E6%9C%BA%EF%BC%88Neural-Turing-Machine%EF%BC%89"><span class="nav-number">6.2.2.</span> <span class="nav-text">5.2.2 神经元图灵机（Neural Turing Machine）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-3-%E5%86%85%E5%AD%98%E5%88%A9%E7%94%A8%E7%8E%87%E6%AD%A3%E5%88%99%EF%BC%88Memory-utilization-regularization%EF%BC%89"><span class="nav-number">6.2.3.</span> <span class="nav-text">5.2.3 内存利用率正则（Memory utilization regularization）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-4-%E8%AE%B0%E5%BF%86%E6%84%9F%E7%9F%A5%E5%8D%95%E5%85%83%EF%BC%88Memory-Induction-Unit%EF%BC%89"><span class="nav-number">6.2.4.</span> <span class="nav-text">5.2.4 记忆感知单元（Memory Induction Unit）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-SIM"><span class="nav-number">7.</span> <span class="nav-text">6 SIM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%96%B9%E6%A1%88"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-1-%E6%8C%91%E6%88%98"><span class="nav-number">7.2.1.</span> <span class="nav-text">6.2.1 挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-2-%E4%B8%80%E9%98%B6%E6%AE%B5-GSU%EF%BC%88General-Search-Unit%EF%BC%8C%E9%80%9A%E7%94%A8%E6%90%9C%E7%B4%A2%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-number">7.2.2.</span> <span class="nav-text">6.2.2 一阶段 GSU（General Search Unit，通用搜索单元）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-3-%E4%BA%8C%E9%98%B6%E6%AE%B5-ESU%EF%BC%88Exact-Search-Unit%EF%BC%8C%E7%B2%BE%E5%87%86%E6%90%9C%E7%B4%A2%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-number">7.2.3.</span> <span class="nav-text">6.2.3 二阶段 ESU（Exact Search Unit，精准搜索单元）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-ETA"><span class="nav-number">8.</span> <span class="nav-text">7 ETA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E6%96%B9%E6%A1%88"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-1-SimHash"><span class="nav-number">8.2.1.</span> <span class="nav-text">7.2.1 SimHash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-2-%E6%A8%A1%E5%9E%8B"><span class="nav-number">8.2.2.</span> <span class="nav-text">7.2.2 模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-SDIM"><span class="nav-number">9.</span> <span class="nav-text">8 SDIM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E6%96%B9%E6%A1%88"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-1-%E6%8C%91%E6%88%98"><span class="nav-number">9.2.1.</span> <span class="nav-text">8.2.1 挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-2-Multi-Round-Hash"><span class="nav-number">9.2.2.</span> <span class="nav-text">8.2.2 Multi-Round Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-3-Hash-Based-Sampling"><span class="nav-number">9.2.3.</span> <span class="nav-text">8.2.3 Hash-Based Sampling</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-TWIN"><span class="nav-number">10.</span> <span class="nav-text">9 TWIN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E6%96%B9%E6%A1%88"><span class="nav-number">10.2.</span> <span class="nav-text">9.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-1-%E6%8C%91%E6%88%98"><span class="nav-number">10.2.1.</span> <span class="nav-text">9.2.1 挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-2-Behavior-Feature-Splits-and-Linear-Projection"><span class="nav-number">10.2.2.</span> <span class="nav-text">9.2.2 Behavior Feature Splits and Linear Projection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-3-Target-Attention-in-TWIN"><span class="nav-number">10.2.3.</span> <span class="nav-text">9.2.3 Target Attention in TWIN</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">10.3.</span> <span class="nav-text">9.3 小记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-TWIN-V2"><span class="nav-number">11.</span> <span class="nav-text">10 TWIN-V2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%96%B9%E6%A1%88"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-1-Hierarchical-Clustering"><span class="nav-number">11.2.1.</span> <span class="nav-text">10.2.1 Hierarchical Clustering</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-2-Extracting-Cluster-Representation"><span class="nav-number">11.2.2.</span> <span class="nav-text">10.2.2 Extracting Cluster Representation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-3-Cluster-aware-Target-Attention"><span class="nav-number">11.2.3.</span> <span class="nav-text">10.2.3 Cluster-aware Target Attention</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E5%B0%8F%E8%AE%B0"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 小记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">11.4.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共285.6k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

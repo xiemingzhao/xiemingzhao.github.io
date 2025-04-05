@@ -1,3 +1,5 @@
+https://www.xiemingzhao.com/posts/ubsmodel.html
+https://www.xiemingzhao.com/posts/listwisererank.html
 https://www.xiemingzhao.com/posts/transformer.html
 https://www.xiemingzhao.com/posts/pidcontrol.html
 https://www.xiemingzhao.com/posts/mindmodel.html
@@ -6,5 +8,3 @@ https://www.xiemingzhao.com/posts/wbcosrecall.html
 https://www.xiemingzhao.com/posts/swingrecall.html
 https://www.xiemingzhao.com/posts/biasnet.html
 https://www.xiemingzhao.com/posts/youtubednn.html
-https://www.xiemingzhao.com/posts/expectationi2irecall.html
-https://www.xiemingzhao.com/posts/distillationmodel.html
