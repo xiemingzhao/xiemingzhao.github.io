@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="add some blogs">
+    <list default="true" id="7880121f-990a-4a3f-b5d7-0036f8bd656d" name="Default Changelist" comment="fix lock json">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（01-04）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（01-04）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（05-10）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（05-10）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（11-16）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（11-16）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（17-21）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（17-21）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（22-29）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（22-29）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（30-34）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（30-34）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（35-39）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（35-39）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（40-45）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（40-45）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（46-51）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（46-51）.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（52-55）.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/深入浅出计算机组成原理（52-55）.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +150,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "MavenSettings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -173,7 +183,7 @@
       <workItem from="1740844671901" duration="46706000" />
       <workItem from="1743927717699" duration="2421000" />
       <workItem from="1744128651575" duration="46000" />
-      <workItem from="1744128739776" duration="3052000" />
+      <workItem from="1744128739776" duration="3847000" />
     </task>
     <task id="LOCAL-00001" summary="add &lt;more&gt;">
       <created>1636693291369</created>
@@ -284,7 +294,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744130819804</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="fix lock json">
+      <option name="closed" value="true" />
+      <created>1744131857763</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1744131857763</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -357,7 +375,8 @@
     <MESSAGE value="add blogs" />
     <MESSAGE value="add more" />
     <MESSAGE value="add some blogs" />
-    <option name="LAST_COMMIT_MESSAGE" value="add some blogs" />
+    <MESSAGE value="fix lock json" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix lock json" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/themes/next/source/lib/font-awesome/css/font-awesome.css">
