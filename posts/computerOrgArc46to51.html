@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="计算机原理,存储与I/O系统," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  46 | SSD硬盘（上）SSD 的读写原理没有寻道，随机读写快。缺点：耐用性（重复擦写）差。 SLC、MLC、TLC 和 QLC一个电容，有无电压代表0、1，即1bit信息。这种方式为 SLC（Single-Level Cell） 颗粒。与 CPU Cache 类似，存储有限。 如果一个单元存储超过1bit呢？ 于是发明了 MLC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出计算机组成原理——原理篇：存储与I&#x2F;O系统（46-51）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc46to51.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  46 | SSD硬盘（上）SSD 的读写原理没有寻道，随机读写快。缺点：耐用性（重复擦写）差。 SLC、MLC、TLC 和 QLC一个电容，有无电压代表0、1，即1bit信息。这种方式为 SLC（Single-Level Cell） 颗粒。与 CPU Cache 类似，存储有限。 如果一个单元存储超过1bit呢？ 于是发明了 MLC">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac47p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac48p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac50p01.jpg">
+<meta property="article:published_time" content="2021-08-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-08T16:44:30.839Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="计算机原理">
+<meta property="article:tag" content="存储与I&#x2F;O系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/computerOrgArc46to51.html"/>
+
+
+
+
+
+  <title>深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc46to51.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-18T00:00:00+08:00">
+                2021-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc46to51.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc46to51.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="46-SSD硬盘（上）"><a href="#46-SSD硬盘（上）" class="headerlink" title="46 | SSD硬盘（上）"></a>46 | SSD硬盘（上）</h2><h3 id="SSD-的读写原理"><a href="#SSD-的读写原理" class="headerlink" title="SSD 的读写原理"></a>SSD 的读写原理</h3><p><strong>没有寻道，随机读写快。</strong><br>缺点：耐用性（重复擦写）差。</p>
+<h3 id="SLC、MLC、TLC-和-QLC"><a href="#SLC、MLC、TLC-和-QLC" class="headerlink" title="SLC、MLC、TLC 和 QLC"></a>SLC、MLC、TLC 和 QLC</h3><p>一个电容，有无电压代表0、1，即1bit信息。这种方式为 <code>SLC</code>（Single-Level Cell） 颗粒。与 CPU Cache 类似，存储有限。</p>
+<p><strong>如果一个单元存储超过1bit呢？</strong></p>
+<p>于是发明了 <code>MLC</code>（Multi-Level Cell）、<code>TLC</code>（Triple-Level Cell）以及 <code>QLC</code>（Quad-Level Cell），分别可以存储2、3、4bit。</p>
+<p>因为有一个<code>电压计</code>，<strong>可以通过不同的电压值表示不同的bit</strong>。比如，15个不同的电压位，加0电压总共16个值则可以表示4bit。但对电压精度要求很高，会导致充放电慢。</p>
+<h3 id="P-E-擦写问题"><a href="#P-E-擦写问题" class="headerlink" title="P/E 擦写问题"></a>P/E 擦写问题</h3><p>SSD 由多个<code>裸片</code>（Die）叠在一起组成，每个如下所示。</p>
+<ul>
+<li>一个裸片会分成多个<code>平面</code>（Plane），容量约GB级；</li>
+<li>一个平面会分很多<code>块</code>（Block），容量约MB级；</li>
+<li>一个块分多个<code>页</code>（Page），容量约4KB。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p01.jpg" alt=""></p>
+<p>SSD 写入叫 <code>Program</code>，不是复写来完成，需要先<code>擦除</code>（Erase）。单位是一个页（Page），擦除是按照块（Block）来进行。<strong>硬盘寿命是每个块的可擦除的次数，物理材料原因。</strong></p>
+<blockquote>
+<p>SLC 一般在10万次，MLC约1万次，TLC和QLC约几千次。</p>
+</blockquote>
+<h3 id="SSD-读写的生命周期"><a href="#SSD-读写的生命周期" class="headerlink" title="SSD 读写的生命周期"></a>SSD 读写的生命周期</h3><p>下图是SSD硬盘读写的流程：</p>
+<ul>
+<li>绿色：有效数据；</li>
+<li>红色：已删除数据；</li>
+<li>白色：无数据。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p02.jpg" alt=""></p>
+<p>因为<strong>写入最小单位是页，擦除最小单位是块</strong>，数据一多容易出现红色空洞占的地方也会越来越多，因为绿色页的存在，整块不能擦除，白色页就越来越少。</p>
+<p>所以需要<code>磁盘碎片整理</code>，如下图所示，即把有效的零散的绿色数据集中搬移到新空间，然后擦除原来的块，就可以空出容量了。</p>
+<blockquote>
+<p>厂商为了“磁盘碎片整理”，往往有一些预留空间（Over Provisioning），一般在7%-15%。</p>
+</blockquote>
+<hr>
+<h2 id="47-SSD硬盘（下）"><a href="#47-SSD硬盘（下）" class="headerlink" title="47 | SSD硬盘（下）"></a>47 | SSD硬盘（下）</h2><p>作为系统盘的时候，大多部分只读不写。擦除会反复发生在其他用来存放数据的地方，容易变成坏块，即容量变小了。</p>
+<h3 id="磨损均衡、TRIM-和写入放大效应"><a href="#磨损均衡、TRIM-和写入放大效应" class="headerlink" title="磨损均衡、TRIM 和写入放大效应"></a>磨损均衡、TRIM 和写入放大效应</h3><h4 id="FTL-和磨损均衡"><a href="#FTL-和磨损均衡" class="headerlink" title="FTL 和磨损均衡"></a>FTL 和磨损均衡</h4><p>为了减少坏块，我们尽量平摊擦除到每个块上，即<code>磨损均衡</code>（Wear-Leveling）。实现方式就是<code>FTL</code> 这个<code>闪存转换层</code>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac47p01.jpg" alt=""></p>
+<p>与内存管理类似，在 FTL 里面，存放了<code>逻辑块地址</code>（Logical Block Address，简称 LBA）到<code>物理块地址</code>（Physical Block Address，简称 PBA）的映射。系统都是访问前者，实际操作是后者。</p>
+<blockquote>
+<p>FTL 能够记录物理块被擦写的次数。如果某块被擦写的次数多了，可以将它挪到一个擦写次数少的物理块上。</p>
+</blockquote>
+<h4 id="TRIM-指令的支持"><a href="#TRIM-指令的支持" class="headerlink" title="TRIM 指令的支持"></a>TRIM 指令的支持</h4><p>操作系统的逻辑层和 SSD 的逻辑层里的块状态，是不匹配的。</p>
+<p>因操作系统删除数据的时候，是把对应的 inode 里面的元信息清理掉，<strong>物理层面仅标记成可写入，没有实际擦除</strong>。所以日常的文件删除，都只是一个操作系统层面的逻辑删除，有被恢复的可能。</p>
+<p>为了磨损均衡，很多时候在都在搬运很多已经删除了的数据。解法是 TRIM 命令，在文件被删除的时候，让操作系统去通知 SSD 硬盘，对应的逻辑块已经标记成已删除了。</p>
+<h4 id="写入放大"><a href="#写入放大" class="headerlink" title="写入放大"></a>写入放大</h4><p>SSD 硬盘容易越用越慢。</p>
+<blockquote>
+<p>空间被占用多了之后，空白不足，需要经常进行整理，于是变慢。</p>
+</blockquote>
+<p><strong>写入放大 = 实际的闪存写入的数据量 / 系统通过 FTL 写入的数据量，该值越大（说明为了完成操作多了很多整理），性能越差。</strong></p>
+<h3 id="AeroSpike"><a href="#AeroSpike" class="headerlink" title="AeroSpike"></a>AeroSpike</h3><p>SSD 虽然有劣势，但可以充分利用其优势，比如 <code>AeroSpike</code>。</p>
+<blockquote>
+<p>AeroSpike 这个专门针对 SSD 硬盘特性设计的 Key-Value 数据库（键值对数据库）</p>
+</blockquote>
+<p>利用SSD物理特性:</p>
+<ul>
+<li>不通过操作系统，直接操作 SSD 中的块和页；</li>
+<li>写入的时候尽可能写较大的数据块，一般128KB；</li>
+<li>读取的时候可以读512 字节（Bytes）这样的小数据。</li>
+</ul>
+<p>AeroSpike 需要响应时间短，所以写入放大严重，优化：</p>
+<ul>
+<li>持续地进行磁盘碎片整理。（块碎片&gt;50%）</li>
+<li>建议只用到容量最大额的50%。（降低写放大）</li>
+</ul>
+<hr>
+<h2 id="48-DMA-Kafka-快速原因"><a href="#48-DMA-Kafka-快速原因" class="headerlink" title="48 | DMA: Kafka 快速原因"></a>48 | DMA: Kafka 快速原因</h2><p>CPU 的主频 2GHz 意味每秒20亿次操作，诸如大文件复制等操作，CPU 大部分时间都空闲等待。<code>DMA</code> 技术，<code>直接内存访问</code>（Direct Memory Access）来减少 CPU 等待的时间。</p>
+<h3 id="理解-DMA，一个协处理器"><a href="#理解-DMA，一个协处理器" class="headerlink" title="理解 DMA，一个协处理器"></a>理解 DMA，一个协处理器</h3><p>主板上一块芯片，在内存和 I/O 设备的数据传输时，不通过 CPU 控制，直接通过 <code>DMA 控制器</code>（DMA Controller，简称 DMAC），也是协处理器。</p>
+<p>DMAC 使用价值：</p>
+<ul>
+<li>传输的数据极大、速度快，减少 CPU 依赖；</li>
+<li>传输的数据极小、速度慢，等数据到齐再发送，减少 CPU 忙等待。</li>
+</ul>
+<p>DMAC 也是一个特殊的 I/O 设备，链接总线进行传输。总线上设备分<code>主设备</code>、<code>从设备</code>。<br>只有主设备可以主动发起数据传输，如 CPU。I/O 设备只能发送控制信号，告知 CPU 有数据要传，再由 CPU 拉数。<br><strong>DMAC 既是一个主设备（对于IO设备），又是一个从设备（对于CPU）。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac48p01.jpg" alt=""></p>
+<p>DMAC 进行数据传输的过程（硬盘加载数据为例）:</p>
+<ol>
+<li>CPU 向 DMAC 发起请求，即修改其配置寄存器；</li>
+<li>提供给 DMAC 的信息：<ul>
+<li>源地址的初始值（硬盘IO地址）以及传输时候的地址增减方式（是否大往小地址传）；</li>
+<li>目标地址初始值（目的地地址）和传输时候的地址增减方式；</li>
+<li>要传输的数据长度。</li>
+</ul>
+</li>
+<li>设置后，DMAC 变为空闲（Idle）；</li>
+<li>硬盘向 DMAC 发起数据传输请求；</li>
+<li>DMAC 响应；</li>
+<li>DMAC 向硬盘接口发起总线读请求并读取；</li>
+<li>DMAC 向内存发起总线写请求并写入；</li>
+<li>反复上述6、7，直到指定长度数据传输完成，回到第 3 步空闲。</li>
+</ol>
+<blockquote>
+<p>因显示器、网卡、硬盘对于数据传输的需求都不一样，所以各个设备里面都有自己的 DMAC 芯片了。</p>
+</blockquote>
+<h3 id="Kafka-的实现原理"><a href="#Kafka-的实现原理" class="headerlink" title="Kafka 的实现原理"></a>Kafka 的实现原理</h3><p><strong>Kafka 项目是通过利用 DMA 的方式实现了非常大的性能提升</strong>，是目前实时数据传输管道的标准解决方案。</p>
+<p>Kafka 两种常见海量数据传输：</p>
+<ul>
+<li>从网络中接收数据并落盘；</li>
+<li>从本地磁盘读取并通过网络发送出去。</li>
+</ul>
+<p>从本地磁盘读取并通过网络发送出去，<strong>这个过程数据一共发生四次传输</strong>，2次 DMA 传输，2次 CPU 控制传输。</p>
+<p>整个过程：</p>
+<ol>
+<li>从硬盘读到系统内核缓冲区，DMA 搬运；</li>
+<li>内核缓冲区复制到内存，CPU 搬运；</li>
+<li>从内存写到操作系统的 Socket 缓冲区，CPU 搬运；</li>
+<li>从 Socket 缓冲区写到网卡缓冲区，DMA 搬运。</li>
+</ol>
+<p><strong>在 Kafka 中，则只有上述的 1、4 步骤</strong>。数据绕过内存，直接通过 Channel，写入到对应的网络设备里。并且，对于 Socket 的操作，也不是写入到 Socket 的 Buffer 里面，而是直接根据描述符（Descriptor）写入到网卡的缓冲区里面。</p>
+<blockquote>
+<p>没有在内存层面去“复制（Copy）”数据，所以也称上述方法是<code>零拷贝</code>（Zero-Copy）。</p>
+</blockquote>
+<p><em>传输同样数据的时间，可以缩减为原来的 1/3</em></p>
+<hr>
+<h2 id="49-数据完整性（上）"><a href="#49-数据完整性（上）" class="headerlink" title="49 | 数据完整性（上）"></a>49 | 数据完整性（上）</h2><h3 id="单比特翻转"><a href="#单比特翻转" class="headerlink" title="单比特翻转"></a>单比特翻转</h3><p>作者举例遇到的硬件错误，由于定制的硬件没有使用 ECC 内存，内存中出现了<code>单比特翻转</code>（Single-Bit Flip）。</p>
+<p>一个 ASCII 码二进制表示是 0010 0100，可能是 0011 0100 在第4位发生单比特反转变来的。随机，不可复现，而 <code>ECC</code> 内存的全称是 <code>Error-Correcting Code memory</code>，中文名字叫作<code>纠错内存</code>。</p>
+<h3 id="奇偶校验和校验位"><a href="#奇偶校验和校验位" class="headerlink" title="奇偶校验和校验位"></a>奇偶校验和校验位</h3><p>奇偶校验，即内存里面的 N 位比特当成是一组，1 的个数是奇数还是偶数，并记录在<code>校验码位</code>。</p>
+<blockquote>
+<p>如，101010111，前8位数数据位，最后一位就是校验码位</p>
+</blockquote>
+<p>该算法速度快，并且能判断内存数据是否出错。缺陷：</p>
+<ol>
+<li>只能解决遇到奇数个的错误；</li>
+<li>只能发现错误，不能纠正错误。</li>
+</ol>
+<p>ECC 内存所使用的解决方案，既可以发现，也可以纠错。2个版本：</p>
+<ul>
+<li>纠错码（Error Correcting Code），发现并纠正；</li>
+<li>纠删码（Erasure Code），不能纠正时，直接删除。</li>
+</ul>
+<hr>
+<h2 id="50-数据完整性（下）"><a href="#50-数据完整性（下）" class="headerlink" title="50 | 数据完整性（下）"></a>50 | 数据完整性（下）</h2><p>纠错码，需要既能判断是否有错，还要找出错误位置。</p>
+<h3 id="海明码"><a href="#海明码" class="headerlink" title="海明码"></a>海明码</h3><p><code>海明码</code>（Hamming Code）是最知名的纠错码，上世纪四十年代发明，沿用至今。</p>
+<p>最基础的是 7-4 海明码，即 7bit 数据位，4bit 校验位。因为，4bit 可以表示 16 个数，假设全部正确状态占用一个数，那么剩余 15 个数可以用来纠正 15 中单比特反转错误。</p>
+<blockquote>
+<p>这里需要注意，如果纠错位少一位，变成3bit，就只能表达7个校验位，而校验位本身也会出现错误，所以7-4实际上有11种单比特反转错误。</p>
+<p>数据位有 K 位，校验位有 N 位，需要<strong>满足 K + N + 1 &lt;= 2^N</strong></p>
+</blockquote>
+<p><strong>一个简单的理解：数据位+纠错位总共有 K+N 位，那么就有 K+N 种单比特错误位置，外加1个全部正确状态，故 N 位的校验位需要能够表达至少 K + N + 1 个数值，于是有了上述关系。</strong></p>
+<h3 id="海明码的纠错原理"><a href="#海明码的纠错原理" class="headerlink" title="海明码的纠错原理"></a>海明码的纠错原理</h3><p>校验位数的原理清楚了，那么怎么构建校验位不同数值对应的错误位映射关系呢？</p>
+<p>这里直接以7-4海明码为例：</p>
+<ol>
+<li>在 11 位中<strong>将 $2^k$ 位作为校验位</strong>，即 1、2、4、8 位，记为 p1-p4；</li>
+<li>剩下的 7 位作为数据位，记为 d1-d7，来存储有效信息；</li>
+<li>我们需要将数据位分组到每个校验位上，<strong>分组方式是根据二进制各个位置的1值</strong>：</li>
+</ol>
+<p>如下图，如：</p>
+<ul>
+<li>针对位置1的校验位p1，分到该组的数据位就是二进制下第0位为1的所有，包括1（自身）、3、5、7、9、11；</li>
+<li>针对位置4的校验位p3，分到该组的数据位就是二进制下第2位为1的所有，包括4（自身）、5、6、7；</li>
+</ul>
+<ol>
+<li>分好组了，校验位的值可以根据组内位置奇偶校验法得到。</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac50p01.jpg" alt=""></p>
+<p>任何一个数据码出错了，就至少会有对应的两个或者三个校验码对不上，这样我们就能反过来找到是哪一个数据码出错了。</p>
+<p><strong>实际上找出错位方式很简单，即校验位按照 p4-p1 排列二进制的数值。</strong></p>
+<blockquote>
+<p>首先校验位需要按照 p4-p1 的方式来排列成二进制；比如 11 位中，第 3 位bit（即d1）反转了，那么对应上述表格，p1、p2校验位会为 1，即 0011，刚好是第 3 位。再比如第 7 位，那么就是 0111，刚好是7。</p>
+</blockquote>
+<p><em>这里很像一道 coding 问题：1000 瓶药水只有 1 瓶有毒，有 10 个试验用的小白鼠，如何定位有毒的那瓶？</em></p>
+<p>解法：</p>
+<ol>
+<li>10 个小白鼠作为 10 个 bit 位，可以表示 0 到 $2^{10}-1$，能够涵盖 1000；</li>
+<li>1000 瓶药水按照顺序编码，编码对应 bit 位为 1 的药水要给对应位置的小白鼠喝；</li>
+<li>死亡的小白鼠，将对应 bit 位置为 1，那么 10 个 bit 位对应的值就是第几瓶药水有毒。</li>
+</ol>
+<h3 id="海明距离"><a href="#海明距离" class="headerlink" title="海明距离"></a>海明距离</h3><p>对于两个二进制表示的数据，他们之间有差异的位数，我们称之为海明距离。</p>
+<hr>
+<h2 id="51-分布式计算"><a href="#51-分布式计算" class="headerlink" title="51 | 分布式计算"></a>51 | 分布式计算</h2><p>数据中心里一台计算机一般不够，面临3个问题：</p>
+<ol>
+<li>垂直扩展和水平扩展的选择问题；</li>
+<li>如何保持高可用性（High Availability）；</li>
+<li>一致性问题（Consistency）。</li>
+</ol>
+<h3 id="从硬件升级到水平扩展"><a href="#从硬件升级到水平扩展" class="headerlink" title="从硬件升级到水平扩展"></a>从硬件升级到水平扩展</h3><p>假设采买了一台云服务器：1 个 CPU 核心、3.75G 内存以及一块 10G 的 SSD 系统盘。</p>
+<p>当请求增长，性能不足时需要增加资源：</p>
+<ul>
+<li><code>垂直扩展</code>（Scale Up）：换成 2 个 CPU 核心、7.5G 内存；</li>
+<li><code>水平扩展</code>（Scale Out）：买 2 台 1 个 CPU 核心、3.75G 内存。</li>
+</ul>
+<p>垂直扩展总有上限，因为物理机的原因。水平扩展，则需要软件层面改造，进入分布式，需要<code>负载均衡</code>。</p>
+<blockquote>
+<p>分布式，即通过<code>消息传递</code>（Message Passing）而不是<code>共享内存</code>（Shared Memory）的方式，让多台不同的计算机协作起来共同完成任务</p>
+</blockquote>
+<h3 id="理解高可用性和单点故障"><a href="#理解高可用性和单点故障" class="headerlink" title="理解高可用性和单点故障"></a>理解高可用性和单点故障</h3><p><strong>系统的可用性（Avaiability）：系统可以正常服务的时间占比。</strong></p>
+<blockquote>
+<p>如可用性是99.99%，则表示服务计划外的宕机时间&lt;=4.32分钟/月。</p>
+</blockquote>
+<p>水平扩展具有天然的优势，因为负载均衡能够通过<code>健康检测</code>（Health Check）发现坏掉的服务器，自动把其上的流量切换到其他正常服务器上，即<code>故障转移</code>（Failover）。</p>
+<p>单点故障问题（Single Point of Failure，SPOF）：任何一台服务器出错了，整个系统就没法用了。</p>
+<p><strong>解决单点故障问题就是移除单点</strong>，通过水平扩展，使得单台服务器挂了不影响其他正常使用。</p>
+<p>但是，单点可能存在多处，比如虽然服务器水平扩展了，但物理机在一个机房，交换机容易成为单点。这时候就需要<code>异地多活</code>的系统设计和部署。即，服务器分地区采购后部署服务，很多公司都会采用。</p>
+<p>故障转移（Failover）机制的生效，需要服务进行<code>健康监测</code>（Health Check），即每隔很短时间检查一次各服务器是否正常运行，如果有，则将流量转移到其他正常机器。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/computerOrgArc46to51.html">深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/computerOrgArc46to51.html" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51）">https://www.xiemingzhao.com/posts/computerOrgArc46to51.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/computerOrgArc46to51.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 计算机原理</a>
+          
+            <a href="/tags/%E5%AD%98%E5%82%A8%E4%B8%8EI-O%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 存储与I/O系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/computerOrgArc40to45.html" rel="next" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）">
+                <i class="fa fa-chevron-left"></i> 深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/computerOrgArc52to55.html" rel="prev" title="深入浅出计算机组成原理——应用篇（52-55）">
+                深入浅出计算机组成原理——应用篇（52-55） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#46-SSD%E7%A1%AC%E7%9B%98%EF%BC%88%E4%B8%8A%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">46 | SSD硬盘（上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSD-%E7%9A%84%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">SSD 的读写原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLC%E3%80%81MLC%E3%80%81TLC-%E5%92%8C-QLC"><span class="nav-number">1.2.</span> <span class="nav-text">SLC、MLC、TLC 和 QLC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#P-E-%E6%93%A6%E5%86%99%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">P&#x2F;E 擦写问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSD-%E8%AF%BB%E5%86%99%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.4.</span> <span class="nav-text">SSD 读写的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#47-SSD%E7%A1%AC%E7%9B%98%EF%BC%88%E4%B8%8B%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">47 | SSD硬盘（下）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%A8%E6%8D%9F%E5%9D%87%E8%A1%A1%E3%80%81TRIM-%E5%92%8C%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7%E6%95%88%E5%BA%94"><span class="nav-number">2.1.</span> <span class="nav-text">磨损均衡、TRIM 和写入放大效应</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FTL-%E5%92%8C%E7%A3%A8%E6%8D%9F%E5%9D%87%E8%A1%A1"><span class="nav-number">2.1.1.</span> <span class="nav-text">FTL 和磨损均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TRIM-%E6%8C%87%E4%BB%A4%E7%9A%84%E6%94%AF%E6%8C%81"><span class="nav-number">2.1.2.</span> <span class="nav-text">TRIM 指令的支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7"><span class="nav-number">2.1.3.</span> <span class="nav-text">写入放大</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AeroSpike"><span class="nav-number">2.2.</span> <span class="nav-text">AeroSpike</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#48-DMA-Kafka-%E5%BF%AB%E9%80%9F%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.</span> <span class="nav-text">48 | DMA: Kafka 快速原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3-DMA%EF%BC%8C%E4%B8%80%E4%B8%AA%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">理解 DMA，一个协处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">Kafka 的实现原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#49-%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7%EF%BC%88%E4%B8%8A%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">49 | 数据完整性（上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%AF%94%E7%89%B9%E7%BF%BB%E8%BD%AC"><span class="nav-number">4.1.</span> <span class="nav-text">单比特翻转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C%E5%92%8C%E6%A0%A1%E9%AA%8C%E4%BD%8D"><span class="nav-number">4.2.</span> <span class="nav-text">奇偶校验和校验位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#50-%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7%EF%BC%88%E4%B8%8B%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">50 | 数据完整性（下）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E6%98%8E%E7%A0%81"><span class="nav-number">5.1.</span> <span class="nav-text">海明码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E6%98%8E%E7%A0%81%E7%9A%84%E7%BA%A0%E9%94%99%E5%8E%9F%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">海明码的纠错原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E6%98%8E%E8%B7%9D%E7%A6%BB"><span class="nav-number">5.3.</span> <span class="nav-text">海明距离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#51-%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="nav-number">6.</span> <span class="nav-text">51 | 分布式计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%A1%AC%E4%BB%B6%E5%8D%87%E7%BA%A7%E5%88%B0%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95"><span class="nav-number">6.1.</span> <span class="nav-text">从硬件升级到水平扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E5%92%8C%E5%8D%95%E7%82%B9%E6%95%85%E9%9A%9C"><span class="nav-number">6.2.</span> <span class="nav-text">理解高可用性和单点故障</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共314.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

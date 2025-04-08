@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="计算机原理,处理器," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。  CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。   如上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出计算机组成原理——原理篇：处理器（22-29）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。  CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。   如上">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p01.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p03.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p03.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac24p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac25p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p03.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac29p01.jpg">
+<meta property="article:published_time" content="2021-07-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-08T16:34:44.076Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="计算机原理">
+<meta property="article:tag" content="处理器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html"/>
+
+
+
+
+
+  <title>深入浅出计算机组成原理——原理篇：处理器（22-29） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出计算机组成原理——原理篇：处理器（22-29）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-28T00:00:00+08:00">
+                2021-07-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc22to29.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc22to29.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="22-冒险和预测（一）"><a href="#22-冒险和预测（一）" class="headerlink" title="22 | 冒险和预测（一）"></a>22 | 冒险和预测（一）</h2><p>流水线设计需要解决的<code>三大冒险</code>：</p>
+<ul>
+<li>结构冒险（Structural Hazard）；</li>
+<li>数据冒险（Data Hazard）；</li>
+<li>控制冒险（Control Hazard）</li>
+</ul>
+<h3 id="结构冒险"><a href="#结构冒险" class="headerlink" title="结构冒险"></a>结构冒险</h3><p><strong>本质上是一个硬件层面的资源竞争问题。</strong></p>
+<blockquote>
+<p>CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p01.png" alt=""></p>
+<p>如上图所示就是内存读取的结构冒险。因为内存只有一个地址译码器的作为地址输入，在一个时钟周期里面只能读取一条数据。</p>
+<p>一个<strong>直观的方案：内存分成两部分（存放指令的程序内存和存放数据的数据内存），各有各的地址译码器</strong>。这称为<a href="https://en.wikipedia.org/wiki/Harvard_architecture">哈佛架构</a>（Harvard Architecture）。有弊端：没法动态分配内存了。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p02.jpg" alt=""></p>
+<p>然而，现在都是冯·诺依曼体系结构，其参考上述，在 CPU 内部加了高速缓存部分，主要是为了缓解访问内存速度过慢于 CPU。但在这里把高速缓存分成了<code>指令缓存</code>（Instruction Cache）和<code>数据缓存</code>（Data Cache）两部分。CPU 并不会直接读取主内存。它会从主内存把指令和数据加载到高速缓存中，这样后续的访问都是访问高速缓存。<strong>解法的本质都是增加资源。</strong></p>
+<h3 id="数据冒险"><a href="#数据冒险" class="headerlink" title="数据冒险"></a>数据冒险</h3><p>三大类：</p>
+<ul>
+<li><code>先写后读</code>（Read After Write，RAW）——数据依赖；</li>
+<li><code>先读后写</code>（Write After Read，WAR）——反依赖；</li>
+<li><code>写后再写</code>（Write After Write，WAW）——输出依赖。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RAW</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="type">int</span> b = <span class="number">2</span>;</span><br><span class="line">  a = a + <span class="number">2</span>;</span><br><span class="line">  b = a + <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WAR</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="type">int</span> b = <span class="number">2</span>;</span><br><span class="line">  a = b + a;</span><br><span class="line">  b = a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WAW</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  a = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="通过流水线停顿解决数据冒险"><a href="#通过流水线停顿解决数据冒险" class="headerlink" title="通过流水线停顿解决数据冒险"></a>通过流水线停顿解决数据冒险</h3><p>冲突：</p>
+<ul>
+<li>流水线架构的核心是在前一个指令还没有结束的时候，后面的指令就要开始执行。</li>
+<li>但，对于同一个寄存器或者内存地址的操作，都有明确强制的顺序要求。</li>
+</ul>
+<p>解法： <code>流水线停顿</code>（Pipeline Stall），或者叫<code>流水线冒泡</code>（Pipeline Bubbling）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p03.jpg" alt=""></p>
+<p>在执行后面的操作步骤前面，插入一个 NOP 操作，也就是执行一个其实什么都不干的操作。</p>
+<hr>
+<h2 id="23-冒险和预测（二）"><a href="#23-冒险和预测（二）" class="headerlink" title="23 | 冒险和预测（二）"></a>23 | 冒险和预测（二）</h2><p>前面两种冒险的解决方案可以归纳为“加资源”和“加时间”。这里介绍一个更有效的方案：<code>操作数前推</code>。</p>
+<h3 id="NOP-操作和指令对齐"><a href="#NOP-操作和指令对齐" class="headerlink" title="NOP 操作和指令对齐"></a>NOP 操作和指令对齐</h3><p>五级流水线：“取指令（IF）- 指令译码（ID）- 指令执行（EX）- 内存访问（MEM）- 数据写回（WB） ”。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p01.jpg" alt=""></p>
+<p>但并不是所有的指令都需要完全的5级流水线，如上表，STORE 和 ADD/SUB 就分别不需要 WB 和 MEM 操作</p>
+<p>但是我们并不能跳过对应的阶段直接执行下一阶段，否则容易出现结构冒险，例如 LOAD 指令和 ADD 先后执行的时候，WB 是在统一时钟周期，所以需要针对确实的阶段进行插入 NOP。</p>
+<h3 id="操作数前推"><a href="#操作数前推" class="headerlink" title="操作数前推"></a>操作数前推</h3><p>插入过多的 NOP 操作，带来的坏处就是浪费了CPU的资源。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add $t0, $s2,$s1</span><br><span class="line">add $s2, $s1,$t0</span><br></pre></td></tr></table></figure>
+<p>上述2行 code 的流水线如下，后者依赖前者计算结果。为了流水线对齐和结构依赖，多了4个 NOP 的操作。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p02.jpg" alt=""></p>
+<p>实际上，第二条指令未必要等待第一条指令写回完成。可将第一条指令的执行结果直接传输给第二条指令的执行阶段。如下图所示，就叫作<code>操作数前推</code>（Operand Forwarding），或者<code>操作数旁路</code>（Operand Bypassing）。</p>
+<blockquote>
+<p>它的实现是 CPU 的硬件里面，再单独拉一根信号传输的线路出来，使得 ALU 的计算结果能够重新回到 ALU 的输入里。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p03.jpg" alt=""></p>
+<hr>
+<h2 id="24-冒险和预测（三）"><a href="#24-冒险和预测（三）" class="headerlink" title="24 | 冒险和预测（三）"></a>24 | 冒险和预测（三）</h2><h3 id="填上空闲的-NOP"><a href="#填上空闲的-NOP" class="headerlink" title="填上空闲的 NOP"></a>填上空闲的 NOP</h3><p><strong>流水线停顿的时候，对应的电路闲着，可以先完成后面指令的执行阶段。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = b + c</span><br><span class="line">d = a * e</span><br><span class="line">x = y * z</span><br></pre></td></tr></table></figure>
+<p>如上，后面的指令不依赖前面的，那就不用等，可以先执行。这就是<code>乱序执行</code>（Out-of-Order Execution，OoOE）</p>
+<h3 id="CPU-里的“线程池”"><a href="#CPU-里的“线程池”" class="headerlink" title="CPU 里的“线程池”"></a>CPU 里的“线程池”</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac24p01.jpg" alt=""></p>
+<p>乱序执行的流水线不同于历史的5级流水线，如上图：</p>
+<ol>
+<li>取指令和指令译码没有变化；</li>
+<li>译码后，不直接执行，先分发到<code>保留站</code>（Reservation Stations）；</li>
+<li>这些指令等待依赖的数据，等到后才交到 ALU 执行；；</li>
+<li>结果也不直接写回寄存器，先存在<code>重排缓冲区</code>（Re-Order Buffer，ROB）；</li>
+<li>CPU 按照取指令的顺序，对结果重新排序，从前往后依赖提交完成；</li>
+<li>结果数据也不直接写内存，先写入<code>存储缓冲区</code>(Store Buffer)后再写。</li>
+</ol>
+<blockquote>
+<p><strong>即使执行乱序，但最终结果会排序，确保写入内存和寄存器是有序的</strong></p>
+</blockquote>
+<hr>
+<h2 id="25-冒险和预测（四）"><a href="#25-冒险和预测（四）" class="headerlink" title="25 | 冒险和预测（四）"></a>25 | 冒险和预测（四）</h2><p>所有的流水线停顿都从指令执行开始，但取指令和指令译码不需要任何停顿。当然，<strong>这有一个前提：所有的指令代码都是顺序加载执行的。</strong></p>
+<p>但是，遇到条件分支时就不成立：</p>
+<blockquote>
+<p>要等 jmp 指令执行完成，去更新了 PC 寄存器之后，才能判断是否执行下一条指令，还是跳转到另外内存地址，去取别的指令。</p>
+</blockquote>
+<p>上述提到的就是<code>控制冒险</code>。</p>
+<h3 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h3><h4 id="缩短分支延迟"><a href="#缩短分支延迟" class="headerlink" title="缩短分支延迟"></a>缩短分支延迟</h4><p>可以将条件判断、地址跳转，<strong>都提前到指令译码阶段进行</strong>。CPU 里面设计对应的旁路，在指令译码阶段，就提供对应的判断比较的电路，节省等待时间。<br>但并不能彻底解决问题，跳转指令的比较结果，仍然要在指令执行的时候才能知道。</p>
+<h4 id="分支预测-1"><a href="#分支预测-1" class="headerlink" title="分支预测"></a>分支预测</h4><p>让 CPU 预测下一跳执行指令，无非 2 选 1，最朴素的就是<strong>假装分支不发生</strong>，即<code>静态预测</code>技术。统计学角度，约50%正确率。</p>
+<h4 id="动态分支预测"><a href="#动态分支预测" class="headerlink" title="动态分支预测"></a>动态分支预测</h4><p>上面一种属实太随机，实际上可以<strong>根据之前条件跳转的比较结果来预测</strong>。</p>
+<p>类似于天气预报，如果始终选择跟上次状态一样，便是<code>一级分支预测</code>（One Level Branch Prediction），或者叫 <code>1 比特饱和计数</code>（1-bit saturating counter）。</p>
+<p>进一步提升，我们引入一个<code>状态机</code>（State Machine）如下图，4 个状态，所以需要 2 个比特来记录。这样这整个策略，就可以叫作 <code>2 比特饱和计数</code>，或者叫<code>双模态预测器</code>（Bimodal Predictor）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac25p01.jpg" alt=""></p>
+<h3 id="循环嵌套的改变会影响性能"><a href="#循环嵌套的改变会影响性能" class="headerlink" title="循环嵌套的改变会影响性能"></a>循环嵌套的改变会影响性能</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class BranchPrediction &#123;</span><br><span class="line">    public static void main(String args[]) &#123;        </span><br><span class="line">        long start = System.currentTimeMillis();</span><br><span class="line">        for (int i = 0; i &lt; 100; i++) &#123;</span><br><span class="line">            for (int j = 0; j &lt;1000; j ++) &#123;</span><br><span class="line">                for (int k = 0; k &lt; 10000; k++) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        long end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(&quot;Time spent is &quot; + (end - start));</span><br><span class="line">                </span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        for (int i = 0; i &lt; 10000; i++) &#123;</span><br><span class="line">            for (int j = 0; j &lt;1000; j ++) &#123;</span><br><span class="line">                for (int k = 0; k &lt; 100; k++) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(&quot;Time spent is &quot; + (end - start) + &quot;ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上述2种嵌套循环代码，性能差异很大，主要是因为：</p>
+<ol>
+<li>每次循环需要 cmp 和 jle 指令，后者就需要分支预测；</li>
+<li>最内层只有最后一次会预测错（跳到外层），故外层循环次数越多，整体预测错的越多。</li>
+</ol>
+<hr>
+<h2 id="26-Superscalar-和-VLIW"><a href="#26-Superscalar-和-VLIW" class="headerlink" title="26 | Superscalar 和 VLIW"></a>26 | Superscalar 和 VLIW</h2><p>程序的 CPU 执行时间 = 指令数 × CPI × Clock Cycle Time</p>
+<p>CPI 的倒数，即 IPC（Instruction Per Clock），也就是一个时钟周期里面能够执行的指令数，代表了 CPU 的<code>吞吐率</code>。</p>
+<p><strong>最佳情况下，IPC 也只能到 1</strong></p>
+<p>即一个时钟周期也只能执行完取一条指令，但有办法突破。</p>
+<h3 id="多发射与超标量"><a href="#多发射与超标量" class="headerlink" title="多发射与超标量"></a>多发射与超标量</h3><p>乱序执行的时候，你会看到，其实指令的执行阶段，是由很多个功能单元（FU）并行（Parallel）进行的。</p>
+<p><em>取指令（IF）和指令译码（ID）部分并不是并行进行的。如何实现并行？</em></p>
+<p>其实只要我们把取指令和指令译码，也一样通过增加硬件的方式。一次性从内存里面取出多条指令，然后分发给多个并行的指令译码器，进行译码，然后对应交给不同的功能单元去处理。</p>
+<p>这种 CPU 设计，我们叫作<code>多发射</code>（Mulitple Issue）和<code>超标量</code>（Superscalar）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p01.jpg" alt=""></p>
+<p>如此，流水线就会有所变化，</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p02.jpg" alt=""></p>
+<h3 id="Intel-失败的超长指令字"><a href="#Intel-失败的超长指令字" class="headerlink" title="Intel 失败的超长指令字"></a>Intel 失败的超长指令字</h3><p>乱序执行和超标量在硬件层面实现都很复杂，因为要解决依赖冲突问题，所以需要考虑放到软件里面做。</p>
+<p>通过编译器来优化指令数，一个 CPU 设计叫作<code>超长指令字设计</code>（Very Long Instruction Word，VLIW）。即 IA-64 架构的安腾（Itanium）处理器，使用<code>显式并发指令运算</code>（Explicitly Parallel Instruction Computer）。</p>
+<p>在超长指令字架构里，将检测指令的前后依赖关系由 CPU 硬件电路转到了编译器。</p>
+<blockquote>
+<p>让编译器把没有依赖关系的代码位置进行交换。然后，再把多条连续的指令打包成一个指令包，安腾是3.</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p03.jpg" alt=""></p>
+<p>其失败的重要原因——<strong>向前兼容</strong>：</p>
+<ol>
+<li>与x86指令集不同，x86的程序全部要重新编译；</li>
+<li>想要提升并行度，需要增加指令包里的指令数量，就需要重新编译。</li>
+</ol>
+<blockquote>
+<p>在 Intel 的 x86 的 CPU 里，从 Pentium 时代，第一次开始引入超标量技术，整个 CPU 的性能上了一个台阶。依赖于在硬件层面，能够检测到对应的指令的先后依赖关系，解决“冒险”问题。所以，它也使得 CPU 的电路变得更复杂了。</p>
+</blockquote>
+<hr>
+<h2 id="27-SIMD：加速矩阵乘法"><a href="#27-SIMD：加速矩阵乘法" class="headerlink" title="27 | SIMD：加速矩阵乘法"></a>27 | SIMD：加速矩阵乘法</h2><h3 id="超线程"><a href="#超线程" class="headerlink" title="超线程"></a>超线程</h3><p>2002 年底，Intel 在的 3.06GHz 主频的 Pentium 4 CPU 上，第一次引入了<code>超线程</code>（Hyper-Threading）技术。</p>
+<p><strong>朴素思想：找一些没有依赖完全独立的指令来并行运算</strong>。不同的程序貌似天然符合该要求。</p>
+<p>看上去没有什么技术，但实际上我们并没有真正地做到指令的并行运行：</p>
+<blockquote>
+<p>在同一时间点上，一个物理的 CPU 核心只会运行一个线程的指令。</p>
+</blockquote>
+<p>超线程的 CPU，其实是把一个物理层面 CPU 核心，“伪装”成两个逻辑层面的 CPU 核心。硬件上增加很多电路，<strong>使得一个 CPU 维护两个不同线程的指令的状态信息</strong>。其中会有双份的 PC 寄存器、指令寄存器乃至条件码寄存器，不过指令译码器还是 ALU等其他组件没有双份。超线程技术一般也被叫作<code>同时多线程</code>（Simultaneous Multi-Threading，简称 SMT）技术。</p>
+<h3 id="SIMD"><a href="#SIMD" class="headerlink" title="SIMD"></a>SIMD</h3><p>SIMD，中文叫作<code>单指令多数据流</code>（Single Instruction Multiple Data）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> timeit</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = np.array(<span class="built_in">range</span>(<span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>timeit.timeit(<span class="string">&quot;[i + 1 for i in a]&quot;</span>, setup=<span class="string">&quot;from __main__ import a&quot;</span>, number=<span class="number">1000000</span>)</span><br><span class="line"><span class="number">32.82800309999993</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>timeit.timeit(<span class="string">&quot;np.add(1, b)&quot;</span>, setup=<span class="string">&quot;from __main__ import np, b&quot;</span>, number=<span class="number">1000000</span>)</span><br><span class="line"><span class="number">0.9787889999997788</span></span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>上述两种计算法，性能差30多倍，主要因为：<br><strong>NumPy 直接用到了 SIMD 指令，能够并行进行向量的操作。</strong></p>
+<p><code>SIMD</code> 在获取数据和执行指令的时候，都做到了并行。且在从内存里面读取数据的时候，SIMD 是一次性读取多个数据。</p>
+<p>正是 SIMD 技术的出现，使得我们在 Pentium 时代的个人 PC，开始有了多媒体运算的能力。</p>
+<hr>
+<h2 id="28-异常和中断"><a href="#28-异常和中断" class="headerlink" title="28 | 异常和中断"></a>28 | 异常和中断</h2><h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>这里不是指 Exception 这种“软件异常”，而是和硬件、系统相关的“硬件异常”。</p>
+<p>比如，除以 0，溢出，CPU 运行程序时收到键盘输入信号等。计算机会为每一种可能会发生的异常，分配一个异常代码（Exception Number）。</p>
+<blockquote>
+<p>这些异常代码里，I/O 发出的信号的异常代码，是由操作系统来分配的，也就是由软件来设定的。而像加法溢出这样的异常代码，则是由 CPU 预先分配好的，也就是由硬件来分配的。</p>
+</blockquote>
+<p>内存中有一个<code>异常表</code>（Exception Table），也叫作<code>中断向量表</code>（Interrupt Vector Table），存放的是不同的异常代码对应的异常处理程序（Exception Handler）所在的地址。</p>
+<h3 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h3><ul>
+<li>中断（Interrupt）：程序员执行时被打断，一般来自 I/O 设备。</li>
+<li>陷阱（Trap）：程序员“故意“主动触发的异常，类似断点。</li>
+<li>故障（Fault）：陷阱是我们开发程序的时候刻意触发的异常，而故障通常不是。</li>
+<li>中止（Abort）：CPU 遇到故障无法恢复时需要终止。</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>原因</th>
+<th>示例</th>
+<th>触发时机</th>
+<th>处理后操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中断</td>
+<td>I/O设备信号</td>
+<td>用户键盘输入</td>
+<td>异步</td>
+<td>下一条指令</td>
+</tr>
+<tr>
+<td>陷阱</td>
+<td>程序刻意触发</td>
+<td>程序进行系统调用</td>
+<td>同步</td>
+<td>下一条指令</td>
+</tr>
+<tr>
+<td>故障</td>
+<td>程序执行出错</td>
+<td>程序加载的缺页错误</td>
+<td>同步</td>
+<td>当前指令</td>
+</tr>
+<tr>
+<td>终止</td>
+<td>故障无法恢复</td>
+<td>ECC内存校验失败</td>
+<td>同步</td>
+<td>退出程序</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>异步：中断异常的信号来自系统外部，而不是在程序自己执行的过程中；</li>
+<li>同步：在程序执行的过程中发生的。</li>
+</ul>
+<p><strong>处理流程：保存现场、异常代码查询、异常处理程序调用“</strong></p>
+<h3 id="异常的处理"><a href="#异常的处理" class="headerlink" title="异常的处理"></a>异常的处理</h3><p>切换到异常处理程序，像两个不同的独立进程之间在 CPU 层面的切换，所以这个过程我们称之为<code>上下文切换</code>（Context Switch）。</p>
+<p>难点：</p>
+<ol>
+<li>异常情况往往发生在程序正常执行的预期之外；</li>
+<li>像陷阱类，涉及程序指令在用户态和内核态之间的切换；</li>
+<li>像故障类，在异常处理程序执行完成之后。</li>
+</ol>
+<hr>
+<h2 id="29-CISC和RISC指令集"><a href="#29-CISC和RISC指令集" class="headerlink" title="29 | CISC和RISC指令集"></a>29 | CISC和RISC指令集</h2><p>CPU 的指令集可分：</p>
+<ul>
+<li><code>复杂指令集</code>（Complex Instruction Set Computing，简称 <code>CISC</code>），机器码是固定长度;</li>
+<li><code>精简指令集</code>（Reduced Instruction Set Computing，简称 <code>RISC</code>），机器码是可变长度。</li>
+</ul>
+<h3 id="CISC-VS-RISC"><a href="#CISC-VS-RISC" class="headerlink" title="CISC VS RISC"></a>CISC VS RISC</h3><p>CISC 的挑战：</p>
+<ul>
+<li>在硬件层，支持更多的复杂指令，电路更复杂，设计更困难，散热和功耗更高。</li>
+<li>在软件层，因为指令更多，编译器的优化更困难。</li>
+</ul>
+<p>最早只有 CISC，70年代末，大卫·帕特森（David Patterson）发现<strong>在 CPU 运行的程序里，80% 的时间都是在使用 20% 的简单指令</strong>。于是提出了 RISC。</p>
+<ul>
+<li>CISC 的架构，通过<strong>优化指令数</strong>，来减少 CPU 的执行时间。</li>
+<li>RISC 的架构，在<strong>优化 CPI</strong>，指令简单，需要的时钟周期就比较少。</li>
+</ul>
+<h3 id="微指令架构"><a href="#微指令架构" class="headerlink" title="微指令架构"></a>微指令架构</h3><p>指令集的<strong>向前兼容性</strong>，即历史程序是否废弃，是 Intel 想要放弃 x86 重点要考虑的问题。</p>
+<blockquote>
+<p>x86 下的 64 位的指令集 x86-64，并不是 Intel 发明的，而是 AMD 发明的。</p>
+</blockquote>
+<p>Intel 在微指令架构的 CPU 里面，译码器会把一条机器码，“翻译”成好几条“微指令”，使之变成了固定长度的 RISC 风格的了。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac29p01.jpg" alt=""></p>
+<p>如上，指令译码器变复杂，性能又有浪费。但因为“二八现象”的存在，<strong>对于这种有着很强局部性的问题，常见的解决方案就是使用缓存</strong>。<br>于是，Intel 加了一层 <code>L0 Cache</code> 来保存 CISC 翻译成 RISC 的微指令。不仅优化了性能，因为译码器的晶体管开关动作变少了，还减少了功耗。</p>
+<p>由于 Intel 本身在 CPU 层面做的大量优化，比如乱序执行、分支预测等。故 x86 的 CPU 始终在功耗上还是要远远超过 RISC 架构的 ARM，所以最终在智能手机崛起替代 PC 的时代，落在了 ARM 后面。</p>
+<h3 id="ARM-和-RISC-V"><a href="#ARM-和-RISC-V" class="headerlink" title="ARM 和 RISC-V"></a>ARM 和 RISC-V</h3><p>ARM 能够在移动端战胜 Intel，并不是因为 RISC 架构。</p>
+<p>CISC 和 RISC 的分界已经没有那么明显了。Intel 和 AMD 的 CPU 也都是采用译码成 RISC 风格的微指令来运行。而 ARM 的芯片，一条指令同样需要多个时钟周期，有乱序执行和多发射。</p>
+<p><strong>核心差异是</strong>：</p>
+<ul>
+<li>功耗优先的设计<br>一个 4 核的 Intel i7 的 CPU，设计的功率就是 130W。而 ARM A8 的单个核心的 CPU，设计功率只有 2W。</li>
+<li>低价。<br>ARM 只是进行 CPU 设计，然后产权授权出去。尽管出货量远大于 Intel，但是收入和利润却比不上 Intel。</li>
+</ul>
+<p>图灵奖的得主大卫·帕特森教授从伯克利退休之后，成了 RISC-V 国际开源实验室的负责人，开始推动 RISC-V 这个开源 CPU 的开发。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/computerOrgArc22to29.html">深入浅出计算机组成原理——原理篇：处理器（22-29）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/computerOrgArc22to29.html" title="深入浅出计算机组成原理——原理篇：处理器（22-29）">https://www.xiemingzhao.com/posts/computerOrgArc22to29.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 计算机原理</a>
+          
+            <a href="/tags/%E5%A4%84%E7%90%86%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 处理器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/computerOrgArc17to21.html" rel="next" title="深入浅出计算机组成原理——原理篇：处理器（17-21）">
+                <i class="fa fa-chevron-left"></i> 深入浅出计算机组成原理——原理篇：处理器（17-21）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/computerOrgArc30to34.html" rel="prev" title="深入浅出计算机组成原理——原理篇：处理器（30-34）">
+                深入浅出计算机组成原理——原理篇：处理器（30-34） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#22-%E5%86%92%E9%99%A9%E5%92%8C%E9%A2%84%E6%B5%8B%EF%BC%88%E4%B8%80%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">22 | 冒险和预测（一）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%86%92%E9%99%A9"><span class="nav-number">1.1.</span> <span class="nav-text">结构冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%86%92%E9%99%A9"><span class="nav-number">1.2.</span> <span class="nav-text">数据冒险</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%81%9C%E9%A1%BF%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E5%86%92%E9%99%A9"><span class="nav-number">1.3.</span> <span class="nav-text">通过流水线停顿解决数据冒险</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23-%E5%86%92%E9%99%A9%E5%92%8C%E9%A2%84%E6%B5%8B%EF%BC%88%E4%BA%8C%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">23 | 冒险和预测（二）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NOP-%E6%93%8D%E4%BD%9C%E5%92%8C%E6%8C%87%E4%BB%A4%E5%AF%B9%E9%BD%90"><span class="nav-number">2.1.</span> <span class="nav-text">NOP 操作和指令对齐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E5%89%8D%E6%8E%A8"><span class="nav-number">2.2.</span> <span class="nav-text">操作数前推</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24-%E5%86%92%E9%99%A9%E5%92%8C%E9%A2%84%E6%B5%8B%EF%BC%88%E4%B8%89%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">24 | 冒险和预测（三）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A1%AB%E4%B8%8A%E7%A9%BA%E9%97%B2%E7%9A%84-NOP"><span class="nav-number">3.1.</span> <span class="nav-text">填上空闲的 NOP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-%E9%87%8C%E7%9A%84%E2%80%9C%E7%BA%BF%E7%A8%8B%E6%B1%A0%E2%80%9D"><span class="nav-number">3.2.</span> <span class="nav-text">CPU 里的“线程池”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25-%E5%86%92%E9%99%A9%E5%92%8C%E9%A2%84%E6%B5%8B%EF%BC%88%E5%9B%9B%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">25 | 冒险和预测（四）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="nav-number">4.1.</span> <span class="nav-text">分支预测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%A9%E7%9F%AD%E5%88%86%E6%94%AF%E5%BB%B6%E8%BF%9F"><span class="nav-number">4.1.1.</span> <span class="nav-text">缩短分支延迟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B-1"><span class="nav-number">4.1.2.</span> <span class="nav-text">分支预测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="nav-number">4.1.3.</span> <span class="nav-text">动态分支预测</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%B5%8C%E5%A5%97%E7%9A%84%E6%94%B9%E5%8F%98%E4%BC%9A%E5%BD%B1%E5%93%8D%E6%80%A7%E8%83%BD"><span class="nav-number">4.2.</span> <span class="nav-text">循环嵌套的改变会影响性能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#26-Superscalar-%E5%92%8C-VLIW"><span class="nav-number">5.</span> <span class="nav-text">26 | Superscalar 和 VLIW</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%8F%91%E5%B0%84%E4%B8%8E%E8%B6%85%E6%A0%87%E9%87%8F"><span class="nav-number">5.1.</span> <span class="nav-text">多发射与超标量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Intel-%E5%A4%B1%E8%B4%A5%E7%9A%84%E8%B6%85%E9%95%BF%E6%8C%87%E4%BB%A4%E5%AD%97"><span class="nav-number">5.2.</span> <span class="nav-text">Intel 失败的超长指令字</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#27-SIMD%EF%BC%9A%E5%8A%A0%E9%80%9F%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">27 | SIMD：加速矩阵乘法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E7%BA%BF%E7%A8%8B"><span class="nav-number">6.1.</span> <span class="nav-text">超线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SIMD"><span class="nav-number">6.2.</span> <span class="nav-text">SIMD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#28-%E5%BC%82%E5%B8%B8%E5%92%8C%E4%B8%AD%E6%96%AD"><span class="nav-number">7.</span> <span class="nav-text">28 | 异常和中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8"><span class="nav-number">7.1.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">7.2.</span> <span class="nav-text">异常的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">7.3.</span> <span class="nav-text">异常的处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#29-CISC%E5%92%8CRISC%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="nav-number">8.</span> <span class="nav-text">29 | CISC和RISC指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CISC-VS-RISC"><span class="nav-number">8.1.</span> <span class="nav-text">CISC VS RISC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E6%8C%87%E4%BB%A4%E6%9E%B6%E6%9E%84"><span class="nav-number">8.2.</span> <span class="nav-text">微指令架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-%E5%92%8C-RISC-V"><span class="nav-number">8.3.</span> <span class="nav-text">ARM 和 RISC-V</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共314.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

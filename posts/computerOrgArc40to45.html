@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="计算机原理,存储与I/O系统," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  40 | 理解内存（上）虚拟内存地址究竟是怎么转换成物理内存地址? 简单页表页表（Page Table）：虚拟内存里面的页，到物理内存里面的页的一一映射。 一个内存地址分成页号（Directory）和偏移量（Offset）。  一页内存在物理层面是连续的，一般大小是 4K 字节（4KB），需要 20 位的高位，12 位的低位。  内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出计算机组成原理——原理篇：存储与I&#x2F;O系统（40-45）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc40to45.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  40 | 理解内存（上）虚拟内存地址究竟是怎么转换成物理内存地址? 简单页表页表（Page Table）：虚拟内存里面的页，到物理内存里面的页的一一映射。 一个内存地址分成页号（Directory）和偏移量（Offset）。  一页内存在物理层面是连续的，一般大小是 4K 字节（4KB），需要 20 位的高位，12 位的低位。  内">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac40p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac43p01.jpg">
+<meta property="article:published_time" content="2021-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-08T16:44:30.848Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="计算机原理">
+<meta property="article:tag" content="存储与I&#x2F;O系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac40p01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/computerOrgArc40to45.html"/>
+
+
+
+
+
+  <title>深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc40to45.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-12T00:00:00+08:00">
+                2021-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc40to45.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc40to45.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="40-理解内存（上）"><a href="#40-理解内存（上）" class="headerlink" title="40 | 理解内存（上）"></a>40 | 理解内存（上）</h2><p><strong>虚拟内存地址究竟是怎么转换成物理内存地址?</strong></p>
+<h3 id="简单页表"><a href="#简单页表" class="headerlink" title="简单页表"></a>简单页表</h3><p><code>页表</code>（Page Table）：虚拟内存里面的页，到物理内存里面的页的一一映射。</p>
+<p>一个内存地址分成<code>页号</code>（Directory）和<code>偏移量</code>（Offset）。</p>
+<blockquote>
+<p>一页内存在物理层面是连续的，一般大小是 4K 字节（4KB），需要 20 位的高位，12 位的低位。</p>
+</blockquote>
+<p><strong>内存地址转换步骤</strong>：</p>
+<ol>
+<li>虚拟内存地址，切分成页号、偏移量；</li>
+<li>从页表，查询对应的物理页号；</li>
+<li>物理页号+偏移量，就是物理内存地址。</li>
+</ol>
+<p><strong>页表空间</strong>：</p>
+<blockquote>
+<p>32位地址，高位有20，需要记录$2^{20}$个物理页号的映射，数组形势，一个页号4字节，总计大约4MB。看上去不多，但如每个进程有一份，就很大了。</p>
+</blockquote>
+<h3 id="多级页表"><a href="#多级页表" class="headerlink" title="多级页表"></a>多级页表</h3><p><strong>只需要去存用到的页之间的映射关系。</strong></p>
+<p>虚拟内存占用的地址空间，通常是两段连续的空间，<code>多级页表</code>（Multi-Level Page Table）适用这类。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac40p01.jpg" alt=""></p>
+<p>如上图，一个4级多级页表：</p>
+<ol>
+<li>页号部分（20位）拆成4段（每段5位），对应各级页表索引；</li>
+<li>每级索引对应的是下一级页表的位置；</li>
+<li>最后的1级页表，继续用“页号 + 偏移量”来获取物理内存地址。</li>
+</ol>
+<blockquote>
+<p>因为实际的虚拟内存空间通常是连续的，所以需要的 2、3 级页表很少。</p>
+</blockquote>
+<p>看下空间大小：</p>
+<ul>
+<li>每段索引5bit，1 级页表有$2^5=32$个条目映射，每个条目 4 字节（32bits=4Bytes），该 1 级页表总计 128 字节；</li>
+<li>每个 1 级索引表映射 32 个 4KB 内存快，即 128Kb；</li>
+<li>那么每个填满的2级索引表，对应 32 个 1 级索引表，总计 4MB 内存映射。</li>
+</ul>
+<p>需要存的映射少了，空间节省了，但查询次数多了，一个典型的时间换空间的方案。</p>
+<hr>
+<h2 id="41-理解内存（下）"><a href="#41-理解内存（下）" class="headerlink" title="41 | 理解内存（下）"></a>41 | 理解内存（下）</h2><ul>
+<li><code>地址转换</code>是很高频，怎么解性能问题？</li>
+<li>数据、指令都在内存，怎么解内存安全问题？</li>
+</ul>
+<h3 id="加速地址转换：TLB"><a href="#加速地址转换：TLB" class="headerlink" title="加速地址转换：TLB"></a>加速地址转换：TLB</h3><p>内存访问其实比 Cache 要慢，简单的内存转换，1次变4次。<strong>解法：加缓存。</strong></p>
+<blockquote>
+<p>这块缓存芯片我们称之为 TLB，全称是<code>地址变换高速缓冲</code>（Translation-Lookaside Buffer）。</p>
+</blockquote>
+<p>和 CPU 里的高速缓存类似，用脏标记来实现“写回”等缓存管理策略。为了性能，整个内存转换过程也要由硬件来执行，封装为内存管理单元（MMU，Memory Management Unit）芯片</p>
+<h3 id="安全性与内存保护"><a href="#安全性与内存保护" class="headerlink" title="安全性与内存保护"></a>安全性与内存保护</h3><h4 id="可执行空间保护"><a href="#可执行空间保护" class="headerlink" title="可执行空间保护"></a>可执行空间保护</h4><p>一个进程使用的内存，指令部分设置成“可执行”的，数据等其他部分不给予“可执行”的权限。</p>
+<h4 id="地址空间布局随机化"><a href="#地址空间布局随机化" class="headerlink" title="地址空间布局随机化"></a>地址空间布局随机化</h4><p><strong>核心问题</strong>：其他的人、进程、程序，会去修改掉特定进程的指令、数据，然后，让当前进程去执行这些指令和数据，造成破坏。</p>
+<p>原进程内存空间是固定，容易获取指令位置。地址空间布局随机化之后，无法猜到指令的内存地址，随意修改只会让程序 crash 掉，不会执行危险代码。</p>
+<p>一个经典的随机性应用：<br>用户名称+密码通过hash保护，但泄露太多加密的，容易通过彩虹表等方式推测结果。于是，在hash的时候全部加上<code>盐值</code>（Salt），即使猜出来也无法使用。</p>
+<hr>
+<h2 id="42-总线"><a href="#42-总线" class="headerlink" title="42 | 总线"></a>42 | 总线</h2><p>CPU 和内存、以及外部输入输出设备的通信，计算机是怎么完成的？</p>
+<h3 id="降低复杂性"><a href="#降低复杂性" class="headerlink" title="降低复杂性"></a>降低复杂性</h3><p>假设计算机有 N 个不同的设备需要通信，并且是单独链接，那么复杂度就是 $N^2$。</p>
+<p>优化的方案：不用单独通信，都是用一条公用线路，即<code>总线</code>。</p>
+<p>总线，就是一组线路，英文是 BUS，设计模式是<code>事件总线</code>。<br>事件总线：</p>
+<ul>
+<li>发布者：各模块触发对应的事件，并把事件对象发送到总线上；</li>
+<li>监听者：各模块也注册到总线上，去监听事件，并根据对象类型或内容来决定是否要处理或者响应。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p01.jpg" alt=""></p>
+<h3 id="理解总线"><a href="#理解总线" class="headerlink" title="理解总线"></a>理解总线</h3><p><code>双独立总线</code>（Dual Independent Bus，缩写为 DIB）：</p>
+<ul>
+<li>快速的<code>本地总线</code>（Local Bus）；</li>
+<li>较慢的<code>前端总线</code>（Front-side Bus）。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p02.jpg" alt=""></p>
+<p>CPU链接前端总线，即系统总线，与 I/O 桥接器相连，分别连接内存总线和 I/O 总线。</p>
+<p>总线通常有三类线路：</p>
+<ul>
+<li><code>数据线</code>（Data Bus），传输数据；</li>
+<li><code>地址线</code>（Address Bus），数据传输的位置，是内存的某个位置，还是某 I/O 设备。</li>
+<li><code>控制线</code>（Control Bus），用来控制对于总线的访问。</li>
+</ul>
+<hr>
+<h2 id="43-输入输出设备"><a href="#43-输入输出设备" class="headerlink" title="43 | 输入输出设备"></a>43 | 输入输出设备</h2><h3 id="接口和设备"><a href="#接口和设备" class="headerlink" title="接口和设备"></a>接口和设备</h3><p>输入输出设备一般2个部分：</p>
+<ul>
+<li>接口（Interface）；</li>
+<li>实际的 I/O 设备（Actual I/O Device）。</li>
+</ul>
+<p>三类寄存器（在设备的接口电路上）：</p>
+<ul>
+<li>状态寄存器（Status Register）；</li>
+<li>命令寄存器（Command Register）；</li>
+<li>数据寄存器（Data Register）。</li>
+</ul>
+<h3 id="控制-I-O-设备"><a href="#控制-I-O-设备" class="headerlink" title="控制 I/O 设备"></a>控制 I/O 设备</h3><p>设备接口上除了3类寄存器，还有控制电路来控制实际硬件。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac43p01.jpg" alt=""></p>
+<ol>
+<li>数据寄存器（Data Register）。<blockquote>
+<p>CPU 向 I/O 设备写入需要传输的数据。实际上还有数据缓冲区。</p>
+</blockquote>
+</li>
+<li>命令寄存器（Command Register）。<blockquote>
+<p>CPU 发送打印命令给打印机。控制电路两个动作：状态寄存器把状态设置成 not-ready；操作打印机进行打印。</p>
+</blockquote>
+</li>
+<li>状态寄存器（Status Register）。<blockquote>
+<p>告诉 CPU 设备已在工作，其他数据和命令不能执行。直到完成，重新 ready 状态。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="信号和地址"><a href="#信号和地址" class="headerlink" title="信号和地址"></a>信号和地址</h3><p>CPU 往总线上发送的命令具体是什么，才能和 I/O 接口上的设备通信呢？</p>
+<p>答案是<code>机器指令</code>。但 MIPS 并没有专门的 I/O 指令，实际上是使用<code>内存地址</code>。</p>
+<blockquote>
+<p>主内存会映射 I/O 设备的内存地址。CPU 通信时，往这些地址发送数据即可。这种叫内存映射 IO（Memory-Mapped I/O，简称 MMIO）。</p>
+</blockquote>
+<p>Intel CPU 既支持 MMIO，还可以通过特定的指令，来支持端口映射 I/O（Port-Mapped I/O，简称 PMIO）。核心的区别，PMIO 里面访问的设备地址，不再是在内存地址空间里面，而是一个专门的端口（Port）。</p>
+<hr>
+<h2 id="44-理解IO-WAIT"><a href="#44-理解IO-WAIT" class="headerlink" title="44 | 理解IO_WAIT"></a>44 | 理解IO_WAIT</h2><p>并不是所有问题都能靠利用内存或者 CPU Cache 做一层缓存来解决。硬盘使用还是很多的，尤其是大数据场景，那么硬盘的 I/O 性能就很重要。</p>
+<h3 id="IO-性能、顺序访问和随机访问"><a href="#IO-性能、顺序访问和随机访问" class="headerlink" title="IO 性能、顺序访问和随机访问"></a>IO 性能、顺序访问和随机访问</h3><p>硬盘厂商的性能报告：</p>
+<ul>
+<li>响应时间；</li>
+<li>数据传输率。</li>
+</ul>
+<p>硬盘：</p>
+<ul>
+<li>HDD：机械硬盘，SATA 3.0 接口。</li>
+<li>SSD：固态硬盘，SATA 3.0 &amp; PCI Express 接口。</li>
+</ul>
+<p>SATA 3.0，带宽 6Gb/s，“b”是bit，则约768MB/s（$6 \times 1024 / 8 = 768$）。但日常约 200 MS/s。<br>SSD 大约 500 MB/s，如果换成 PCI Express 约 2 GB/s。</p>
+<p>响应时间，HDD 约十毫秒左右，SSD 约几十微妙，差异更大。但，无论哪个，貌似性能还可以，与实际经验不符合。</p>
+<p><strong>在顺序读写和随机读写的情况下，硬盘的性能是完全不同的</strong></p>
+<p><code>IOPS</code>：每秒输入输出操作的次数，去随机读取磁盘上某一个 4KB 大小的数据，一秒之内可以读取到多少数据。</p>
+<p>SSD，随机读写约 40MB/s，即1万次 4KB 数据，即 IOPS。写入的话约90MB/s，IOPS 约2万。<br>而HDD，IOPS 大约为100。</p>
+<h3 id="定位-IO-WAIT"><a href="#定位-IO-WAIT" class="headerlink" title="定位 IO_WAIT"></a>定位 IO_WAIT</h3><p>CPU 的主频通常在 2GHz 以上，也就是每秒可以做 20 亿次操作。即使一条读写指令，需要很多个时钟周期，硬盘完全跟不上。</p>
+<p><strong>通过 top 和 iostat 这些命令，一起来看看 CPU 到底有没有在等待 io 操作。</strong></p>
+<p>top 去看服务的负载，也就是 load average。也可以看 CPU 是否在等待 IO 操作完成。</p>
+<blockquote>
+<p>以 %CPU 开头的行，有一个叫作 wa 的指标，这个指标就代表着 iowait</p>
+</blockquote>
+<p>如果 iostat 很大，可以通过 <code>iostat</code> 查看实际硬盘读写。</p>
+<blockquote>
+<p>其中， tps 指标，其实就对应着我们上面所说的硬盘的 IOPS 性能。而 kB_read/s 和 kB_wrtn/s 指标，就对应着我们的数据传输率的指标</p>
+</blockquote>
+<p>用<code>iotop</code>命令找哪一个进程是这些 I/O 读写的来源。</p>
+<blockquote>
+<p>通过<code>stress -i 2</code>，模拟两个进程往硬盘写数据。top 的输出里面，CPU 就有大量的 sy 和 wa。通过 iostat，里面的 tps 很快就到了 4 万左右。iotop， I/O 占用都来自于 stress 产生的两个进程了。</p>
+</blockquote>
+<hr>
+<h2 id="45-机械硬盘"><a href="#45-机械硬盘" class="headerlink" title="45 | 机械硬盘"></a>45 | 机械硬盘</h2><h3 id="拆解机械硬盘"><a href="#拆解机械硬盘" class="headerlink" title="拆解机械硬盘"></a>拆解机械硬盘</h3><p>前面提过，机械硬盘 IOPS 大约100，这个的原理是什么？</p>
+<p><strong>机械硬盘三个组成部分：盘面、磁头和悬臂。</strong></p>
+<p><code>盘面</code>（Disk Platter）：实际存储数据的，跟光盘类似，铝、玻璃或者陶瓷制成，上有磁性涂层来存储数据。中间有转轴控制转速，RPM（Rotations Per Minute）一般为7200，每秒则120转。</p>
+<p><code>磁头</code>（Drive Head）：从盘面读取数据传输给电路，一个硬盘会有多个堆叠的磁盘，每个磁盘正反面都会各有一个磁头。</p>
+<p><code>悬臂</code>（Actutor Arm）：链接磁头，用来定位磁头到磁道的。</p>
+<p>磁盘会切分不同半径的同心环作为<code>磁道</code>，每个磁道会分成多个<code>扇区</code>，上下不同磁盘但平行的扇区称为一个<code>柱面</code>。所以读取的数据的时候，悬臂需要控制磁头，移动到对应的磁道上，并且盘面需要转转道对应位置，如此磁头才能读取到指定的扇区/柱面。</p>
+<p>硬盘上的随机访问：</p>
+<ul>
+<li><code>平均延时</code>（Average Latency）：盘面旋转，把几何扇区对准悬臂位置的时间。<blockquote>
+<p>7200转/min 硬盘，即 240半圈/s，寻找指定扇区平均需要半圈距离，即 1s / 240 = 4.17ms。</p>
+</blockquote>
+</li>
+<li><code>平均寻道时间</code>（Average Seek Time）：盘面旋转，悬臂定位到扇区的的时间。<blockquote>
+<p>一般在 4-10ms</p>
+</blockquote>
+</li>
+</ul>
+<p>综上，随机访问时间约8-14ms，对应的 IOPS 为 125-70.</p>
+<h3 id="Partial-Stroking"><a href="#Partial-Stroking" class="headerlink" title="Partial Stroking"></a>Partial Stroking</h3><p>提升 HDD 硬盘效率的一个办法就是提高转速，这是很多厂商历史做的事情。</p>
+<p>还有一种，<strong>空间换时间</strong>的方法，来提高硬盘的IOPS，就是 <code>Partial Stroking</code> 或者 <code>Short Stroking</code>。</p>
+<p>一般硬盘的寻道时间都比平均延时要长，如果消除这部分，可以有效提高 IOPS。那就是磁头仅仅用最外道的磁道，或者只用1/4磁道。</p>
+<p>不过这是当年互联网蓬勃发展时，工程师们想要改善性能问题的有偿解法。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/computerOrgArc40to45.html">深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/computerOrgArc40to45.html" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）">https://www.xiemingzhao.com/posts/computerOrgArc40to45.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/computerOrgArc40to45.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 计算机原理</a>
+          
+            <a href="/tags/%E5%AD%98%E5%82%A8%E4%B8%8EI-O%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 存储与I/O系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/computerOrgArc35to39.html" rel="next" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）">
+                <i class="fa fa-chevron-left"></i> 深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/computerOrgArc46to51.html" rel="prev" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51）">
+                深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#40-%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%EF%BC%88%E4%B8%8A%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">40 | 理解内存（上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E9%A1%B5%E8%A1%A8"><span class="nav-number">1.1.</span> <span class="nav-text">简单页表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8"><span class="nav-number">1.2.</span> <span class="nav-text">多级页表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#41-%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%EF%BC%88%E4%B8%8B%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">41 | 理解内存（下）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%EF%BC%9ATLB"><span class="nav-number">2.1.</span> <span class="nav-text">加速地址转换：TLB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%E4%B8%8E%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4"><span class="nav-number">2.2.</span> <span class="nav-text">安全性与内存保护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A9%BA%E9%97%B4%E4%BF%9D%E6%8A%A4"><span class="nav-number">2.2.1.</span> <span class="nav-text">可执行空间保护</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E5%B8%83%E5%B1%80%E9%9A%8F%E6%9C%BA%E5%8C%96"><span class="nav-number">2.2.2.</span> <span class="nav-text">地址空间布局随机化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#42-%E6%80%BB%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">42 | 总线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%8D%E4%BD%8E%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">降低复杂性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%80%BB%E7%BA%BF"><span class="nav-number">3.2.</span> <span class="nav-text">理解总线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#43-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="nav-number">4.</span> <span class="nav-text">43 | 输入输出设备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E5%92%8C%E8%AE%BE%E5%A4%87"><span class="nav-number">4.1.</span> <span class="nav-text">接口和设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6-I-O-%E8%AE%BE%E5%A4%87"><span class="nav-number">4.2.</span> <span class="nav-text">控制 I&#x2F;O 设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E5%92%8C%E5%9C%B0%E5%9D%80"><span class="nav-number">4.3.</span> <span class="nav-text">信号和地址</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#44-%E7%90%86%E8%A7%A3IO-WAIT"><span class="nav-number">5.</span> <span class="nav-text">44 | 理解IO_WAIT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IO-%E6%80%A7%E8%83%BD%E3%80%81%E9%A1%BA%E5%BA%8F%E8%AE%BF%E9%97%AE%E5%92%8C%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE"><span class="nav-number">5.1.</span> <span class="nav-text">IO 性能、顺序访问和随机访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D-IO-WAIT"><span class="nav-number">5.2.</span> <span class="nav-text">定位 IO_WAIT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#45-%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98"><span class="nav-number">6.</span> <span class="nav-text">45 | 机械硬盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E8%A7%A3%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98"><span class="nav-number">6.1.</span> <span class="nav-text">拆解机械硬盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partial-Stroking"><span class="nav-number">6.2.</span> <span class="nav-text">Partial Stroking</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共314.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

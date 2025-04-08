@@ -728,7 +728,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/frommmoetople.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc52to55.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -747,7 +747,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/posts/frommmoetople.html" itemprop="url">从 MMOE 到 PLE 模型</a></h1>
+                <a class="post-title-link" href="/posts/computerOrgArc52to55.html" itemprop="url">深入浅出计算机组成原理——应用篇（52-55）</a></h1>
         
 
         <div class="post-meta">
@@ -759,8 +759,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-21T00:00:00+08:00">
-                2021-06-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-21T00:00:00+08:00">
+                2021-08-21
               </time>
             
 
@@ -782,8 +782,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">精排模型</span>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
                   </a>
                 </span>
 
@@ -793,8 +793,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
                   </a>
                 </span>
 
@@ -811,8 +811,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/frommmoetople.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/frommmoetople.html" itemprop="commentCount"></span>
+                <a href="/posts/computerOrgArc52to55.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc52to55.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -836,220 +836,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.9k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  15
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在当下以深度学习为基调的推荐系统中，传统的单目标优化往往会带来一些不健康的生态指标变化，例如仅优化 CTR 可能会使得用户深层行为下降，往往推出一些博眼球和标题党等内容或商品。所以就催生了利用模型对 CLICK 后的各种深层行为的学习，最常用的便是 CVR（转化率），当然还有 cfr（收藏率）以及 viewtime（浏览时长）等等目标，视具体场景的业务指标而定。</p>
-<p>为了解决上述问题，最原始的方法便是<code>多模型多分数融合</code>，也即对不同目标单独构建模型，线上独立打分进行融合，但是这样带来的问题便是深度行为的样本一般不足，难以使得模型学习的很好，而且独立建模成本高昂。为了进一步提效，目前主流的方法便是统一模型进行不同目标的<code>联合训练</code>，而模型内部不同任务之间存在一定信息共享。如此，</p>
-<ul>
-<li>一方面使得相关任务之间能够互相分享和补充信息，促进各任务学习能力；</li>
-<li>另一方面，梯度在反向传播的时候，能够兼顾多个任务模式，提高模型的泛化能力。</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/frommmoetople.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/mmoemodel.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/mmoemodel.html" itemprop="url">MMOE 模型解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-06T00:00:00+08:00">
-                2021-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">精排模型</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/mmoemodel.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/mmoemodel.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.9k
+                  2.2k
                 </span>
               
 
@@ -1087,1079 +874,104 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>本文介绍的<code>MMOE</code>模型全称是<code>Multi-gate Mixture-of-Experts</code>，来自 Google 在 2018 年 KDD 上发表的论文<a href="https://dl.acm.org/doi/pdf/10.1145/3219819.3220007">Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts</a>。核心目标是改善多任务学习在任务之间不太相关的时候效果不好的问题。下面有两个相关学习资源：</p>
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="52-设计大型DMP系统（上）"><a href="#52-设计大型DMP系统（上）" class="headerlink" title="52 | 设计大型DMP系统（上）"></a>52 | 设计大型DMP系统（上）</h2><h3 id="DMP：数据管理平台"><a href="#DMP：数据管理平台" class="headerlink" title="DMP：数据管理平台"></a>DMP：数据管理平台</h3><p><code>DMP</code> 系统的全称叫作<code>数据管理平台</code>（Data Management Platform），在搜索、推荐、广告领域使用很广。</p>
+<p>DMP 可以简单地看成是一个键 - 值对（Key-Value）数据库，用来存储画像信息。期望的性能：</p>
 <ul>
-<li>视频简介的<a href="https://www.youtube.com/watch?v=Dweg47Tswxw">youtube地址</a>;</li>
-<li>一个用keras框架实现的<a href="https://github.com/drawbridge/keras-mmoe">开源地址</a>。</li>
+<li>低响应时间（Low Response Time）；</li>
+<li>高可用性（High Availability）；</li>
+<li>高并发（High Concurrency）；</li>
+<li>海量数据（Big Data）；</li>
+<li>可负担的成本（Affordable Cost）</li>
 </ul>
-<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2 动机"></a>2 动机</h2><p>多任务学习一般是为了在训练多个相关任务的时候可以使得它们之间能够共享信息，提高学习效率和模型的泛化能力。但实际应用中往往难以如此理想化，因为<strong>任务之间往往相关性不够强</strong>，这时候就容易产生以下两个问题：</p>
-<blockquote>
-<p><code>负迁移（negative transfer）</code>：即网络表现变差<br><code>跷跷板现象（seesaw phenomenon）</code>：也就是个别任务相对于独立训练获得提升，但其他任务效果下降。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac52p01.jpg" alt=""></p>
+<p>如上图，为了维持 DMP 的运转，上游需要不断的采集数据更新其中信息：</p>
+<ul>
+<li>采集埋点日志，通过数据管道（Data Pipeline）落入数据仓库（Data Warehouse），挖掘和抽取画像更新到 DMP 中；</li>
+<li>通过实时数据处理模块（Realtime Data Processing），进行实时的清洗和聚合，更新一些实时画像。</li>
+</ul>
+<h3 id="MongoDB-的例子"><a href="#MongoDB-的例子" class="headerlink" title="MongoDB 的例子"></a>MongoDB 的例子</h3><blockquote>
+<p>MongoDB 的设计宣传：不需要预设数据 Schema，访问速度很快，还能够无限水平扩展。</p>
 </blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/mmoemodel.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/popularlossfuncs.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/popularlossfuncs.html" itemprop="url">深度学习的常用损失函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-23T00:00:00+08:00">
-                2021-04-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/popularlossfuncs.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/popularlossfuncs.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.6k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  15
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>在深度学习中，<code>损失函数</code>（Loss Function）至关重要，它决定着深度模型的训练学习的方式，其设计的恰当与否，往往会影响到最终模型的有效性。<br>虽然在很多通用型任务上，业内逐渐形成使用惯例，（如点击率建模，默认都用对数损失，logloss），但对损失函数的认识越清楚，会有助于算法工程师在面临新任务时，在模型设计上事半功倍。</p>
-<h2 id="2-常用损失函数"><a href="#2-常用损失函数" class="headerlink" title="2 常用损失函数"></a>2 常用损失函数</h2><blockquote>
-<p>损失函数的任务是：针对一个样本，度量模型的预估值 logit 即$\hat y$和对应真实 Label 即$y$之间的差异。</p>
-</blockquote>
-<p>不同的损失函数有不同的含义，主要是模型学习逼近样本分布的方式。所以它是一个非负实值函数，主要<strong>特点为：恒非负；误差越小，函数值越小；收敛快。</strong></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/popularlossfuncs.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/batchnormnotes.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/batchnormnotes.html" itemprop="url">Batch Normalization 小记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-05T00:00:00+08:00">
-                2021-04-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/batchnormnotes.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/batchnormnotes.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.6k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  10
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>如果你是一个玩深度学习的算法工程师，那么相信你对批标准化（<code>Batch Normalization</code>）一定不陌生。在实际训练深度模型中，<strong>BN 往往用来加速模型收敛或者缓解梯度消失/爆炸的问题</strong>。笔者在实际使用过程中也有一定的收获和思考，收获是不同的使用姿势确实能够带来不一样的效果。思考就是，虽然大致知道BN的原理和公式，但是创建 BN 这个方法的出发点和一些边界问题的思考始终萦绕在周围。在此做一个汇总整理，旨在帮助和我一样有此困惑的朋友们。</p>
-<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><h3 id="2-1-优化原理"><a href="#2-1-优化原理" class="headerlink" title="2.1 优化原理"></a>2.1 优化原理</h3><p>训练网络深度的加深可能会带来梯度迭代上的<code>梯度消失</code>（Gradient Vanishing)或者<code>梯度爆炸</code>(Gradient Explore)问题。这两个问题的产生原理这里不做赘述，一般都是由于网络层数过深，梯度链式传导带来的结果。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/batchnormnotes.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/senalgo.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/senalgo.html" itemprop="url">SNE 和 t-SNE 算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-04T00:00:00+08:00">
-                2021-03-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/senalgo.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/senalgo.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.6k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  14
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>实际研究中有很多的<code>降维算法</code>，例如经典的线性降维算法<code>PCA</code>，相信很多人都比较熟悉了。而在这里，我们要介绍的是一个经典的降维算法<code>t-SNE</code>，它往往用来对高维数据做非线性降维来进行可视化分析。参考了不少大牛的文章，加上一些自己的思考，从一个小白的角度来总结一下该算法的原理和使用姿势。</p>
-<h3 id="1-1-维数灾难"><a href="#1-1-维数灾难" class="headerlink" title="1.1 维数灾难"></a>1.1 维数灾难</h3><p><code>维数灾难</code>（curse of dimensionality）：描述的是高维空间中若干迥异于低维空间、甚至反直觉的现象。</p>
-<p>在这里我们要阐述两个理论：</p>
+<p>有人说只用它就够了，实际上很难有如此完美的情况，看下不同环节的性能取舍：<br><code>KV存取</code>：响应快、高并发、写多读少（全随机）；<br><code>数据管道</code>：高吞吐量、响应时间松、顺序读写。<br><code>数据仓库</code>：读取量巨大，很重的离线抽取和分析需求。</p>
+<p>MongoDB 缺陷：</p>
+<ul>
+<li>没有针对 SSD 优化，高并发读取差；</li>
+<li>顺序写入和吞吐率差；</li>
+<li>没有 Schema，元信息占用空间大。</li>
+</ul>
+<p>相对可行的方案：<br><code>KV 数据库</code>：SSD + AeroSpike；（高并发、成本可控）<br><code>数据管道</code>：HDD + Kafka；（充分利用 Zero-Copy 和 顺序读写）<br><code>数据仓库</code>：HDD + Hive 等 Schema 数据库。（序列化存储）</p>
+<hr>
+<h2 id="53-设计大型DMP系统（下）"><a href="#53-设计大型DMP系统（下）" class="headerlink" title="53 | 设计大型DMP系统（下）"></a>53 | 设计大型DMP系统（下）</h2><h3 id="关系型数据库"><a href="#关系型数据库" class="headerlink" title="关系型数据库"></a>关系型数据库</h3><p>传统关系型数据库，为了避免读取的时候过多的扫描，往往给数据的行号加一个索引，这个映射关系可以让行号直接从硬盘的某个位置去读。索引不仅可以索引行号，还可以索引某个字段。但，写入数据时还要更新的索引。最终还要落到 HDD 硬盘的话，就很难做到高并发了。</p>
+<p>DMP 的 KV 数据库主要是随机查询，数据管道的需求主要是写入和顺序读取就好了。因此<strong>就会面临大量的随机写入和随机读取的挑战。</strong></p>
+<h3 id="Cassandra：顺序写和随机读"><a href="#Cassandra：顺序写和随机读" class="headerlink" title="Cassandra：顺序写和随机读"></a>Cassandra：顺序写和随机读</h3><h4 id="Cassandra-的数据模型"><a href="#Cassandra-的数据模型" class="headerlink" title="Cassandra 的数据模型"></a>Cassandra 的数据模型</h4><p>它是一个分布式 KV 数据库，键一般称为 <code>Row Key</code>，一个 16-36 字节的字符串。每个 Key 对应的 Value 是一个 Hash 表，可用键值对存入需要的数据。</p>
+<p>有严格的 Schema，提前定义好列（Column），常一起用的聚合为<code>列族</code>（Column Family）。<strong>既保持了不需要严格的 Schema 这样的灵活性，也保留了可以把常常一起使用的数据存放在一起的空间局部性。</strong></p>
+<h4 id="Cassandra-的写操作"><a href="#Cassandra-的写操作" class="headerlink" title="Cassandra 的写操作"></a>Cassandra 的写操作</h4><p>简单概述为<strong>不随机写，只顺序写</strong>。过程是两个动作：</p>
+<ul>
+<li>往磁盘上写入一条提交日志（Commit Log）；</li>
+<li>直接在内存的数据结构上去更新数据。</li>
+</ul>
+<p>优势：</p>
+<ul>
+<li>都是顺序写（Sequential Write），可最大化吞吐量；</li>
+<li>内存的数据量或条目超过限额，会 dump 到硬盘上，也顺序写；</li>
+<li>Dump 同时，会根据 row key 来生成索引文件，用于快速查询；</li>
+<li>当 Dump 的文件过多，Cassandra 会在后台进行文件的对比合并。</li>
+</ul>
+<h4 id="Cassandra-的读操作"><a href="#Cassandra-的读操作" class="headerlink" title="Cassandra 的读操作"></a>Cassandra 的读操作</h4><p><strong>先从内存查，再从硬盘读，合并成最终结果。</strong></p>
 <ol>
-<li>高维空间中数据样本极其稀疏。<br>如下图所示，高维数据降维到低维空间将发生“拥挤问题（Crowding Problem）。</li>
+<li>在内存会有 Cache，Cache 里面找不到，我们才会去请求硬盘里面的数据。</li>
+<li>硬盘可能 Dump 了不同时间点的快照，所以按照时间从新的往旧的里面找。</li>
+<li>为了避免查找过多 Dump 文件，会为每一个 Dump 的文件里面所有 Row Key 生成一个 BloomFilter 放进内存；</li>
+<li>所以，不在内存，但是在 BloomFilter 中的时候，才会请求硬盘了。</li>
 </ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/senalgo.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/word2vec.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/word2vec.html" itemprop="url">word2vec 详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-13T00:00:00+08:00">
-                2020-12-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/word2vec.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/word2vec.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.8k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  14
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>很多算法工程师认为 Embedding 技术是机器学习中最迷人的一种思想，在过去的近10年中，该技术在各个深度学习领域大放异彩。已经逐步进化到了近几年基于 BERT 和 GPT2 等模型的语境化嵌入。本文重点基于原始论文<a href="https://arxiv.org/pdf/1301.3781v3.pdf">Efficient Estimation of Word Representations in Vector Space</a>，整理 word2vec 相关技术的基础原理和应用经验，旨在利于自己回溯巩固和他人参考学习。</p>
-<p>首先 Embedding 的思想是如何来的呢？我们知道计算机底层只能识别数字，并基于其进行逻辑等计算。而世间大多的实体或概念都不是以数据形式存在的，如何让计算机能够记住甚至理解是一件很难的事情。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/word2vec.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/activefunc.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小火箭的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/posts/activefunc.html" itemprop="url">深度学习中的激活函数们</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T00:00:00+08:00">
-                2020-06-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/posts/activefunc.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/activefunc.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.7k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>本文参考多方资料总结了一下当前在深度模型中常遇到的几种激活函数。</p>
-<p>在神经网络中，激活函数主要有两个用途：</p>
+<h3 id="利用-SSD-的优势"><a href="#利用-SSD-的优势" class="headerlink" title="利用 SSD 的优势"></a>利用 SSD 的优势</h3><p>Cassandra 的特点：</p>
 <ul>
-<li>引入非线性</li>
-<li>充分组合特征</li>
+<li>没有任何的随机写请求，无论是 Commit Log 还是 Dump；</li>
+<li>会优先从内存读，这相当于 LRU 的缓存机制；</li>
+<li>BloomFilter，<strong>把本来因为 Dump 文件带来的需要多次读硬盘的问题，简化成多次内存读和一次硬盘读。</strong></li>
 </ul>
-<p>其中<strong>非线性</strong>激活函数允许网络复制复杂的非线性行为。正如绝大多数神经网络借助某种形式的梯度下降进行优化，激活函数需要是<strong>可微分</strong>（或者至少是几乎完全可微分的）。此外，复杂的激活函数也许产生一些梯度消失或爆炸的问题。因此，神经网络倾向于部署若干个特定的激活函数（identity、sigmoid、ReLU 及其变体）。<br>因此，神经网络中激励函数的作用通俗上讲就是将多个线性输入转换为非线性的关系。如果不使用激励函数的话，神经网络的每层都只是做线性变换，即使是多层输入叠加后也还是线性变换。通过激励函数引入非线性因素后，使神经网络的表达能力更强了。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/activefunc.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+<p>顺序读写下，HDD 硬盘的吞吐率还是很不错的：</p>
+<blockquote>
+<p>每秒写入 100MB 数据，如果一条 1KB，那么 10 万的 WPS（Writes per seconds）对于 DMP 也不错。</p>
+</blockquote>
+<p>但 DMP 的数据访问分布，<strong>往往缺少局部性的</strong>，随机读避免不了。HDD 硬盘在这块较差，全都放内存，成本在 HDD 硬盘 100 倍以上。<strong>相比较，用 SSD 硬盘，我们可以用 1/10 的成本获得和内存同样的 QPS。</strong></p>
+<hr>
+<h2 id="54-理解Disruptor（上）"><a href="#54-理解Disruptor（上）" class="headerlink" title="54 | 理解Disruptor（上）"></a>54 | 理解Disruptor（上）</h2><p>作者在最后2节主要以开源项目 Disruptor 为例，介绍如何利用 CPU 和高速缓存的硬件特性。Disruptor 是由一家专门做高频交易的公司 LMAX 开源出来的。</p>
+<h3 id="Padding-Cache-Line"><a href="#Padding-Cache-Line" class="headerlink" title="Padding Cache Line"></a>Padding Cache Line</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">RingBufferPad</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="type">long</span> p1, p2, p3, p4, p5, p6, p7;</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">RingBufferFields</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">RingBufferPad</span></span><br><span class="line">&#123;</span><br><span class="line">    ......    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">long</span> indexMask;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Object[] entries;</span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">int</span> bufferSize;</span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">final</span> Sequencer sequencer;</span><br><span class="line">    ......    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">RingBuffer</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">RingBufferFields</span>&lt;E&gt; <span class="keyword">implements</span> <span class="title class_">Cursored</span>, EventSequencer&lt;E&gt;, EventSink&lt;E&gt;</span><br><span class="line">&#123;</span><br><span class="line">    ......    </span><br><span class="line">    <span class="keyword">protected</span> <span class="type">long</span> p1, p2, p3, p4, p5, p6, p7;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看上面一段代码，Disruptor 分别在 RingBufferPad 和 RingBuffer 类里面都定义了 p1-p7 这样 7 个 long 变量。看上去很突兀，实际上这 14 个变量没有任何实际的用途，<strong>只是缓存行填充（Padding Cache Line），以发挥 CPU 高速缓存（CPU Cache）。</strong></p>
+<p>我们知道，<strong>高速缓存的写回和加载，都是以整个 Cache Line 作为单位的</strong>。比如，64 位 Intel CPU，缓存行通常是 64 个字节（Bytes），即 8 个 long 类型的数据。</p>
+<p>我想读者你大概已经猜到了。在 RingBufferFields 里 final 定义了一系列真正要使用的变量，我们期望他们一直在 CPU Cache 里。<strong>而高速缓存在写回和加载的时候，还会关联到这个数据前后定义的其他变量，以满足 64 个字节的 Cache Line 大小</strong>。而系统会有其他程序在使用，为了保证数据的同步更新，常量的缓存也就失效了，会频繁的读写，降低这里的速度。</p>
+<blockquote>
+<p>但是，当我们按照上述前后各新增 7 个 long 数据后，如下图所示。<strong>无论加载其中哪个 final 变量，对应的 Cache Line 都只包含这批 final 变量和定义的 pad 变量。所以，只要被频繁地读取访问，就不会再被换出 Cache 了。</strong></p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac54p01.jpg" alt=""></p>
+<h3 id="使用-RingBuffer"><a href="#使用-RingBuffer" class="headerlink" title="使用 RingBuffer"></a>使用 RingBuffer</h3><p>Disruptor 整个框架，其实就是一个高速的<strong>生产者 - 消费者模型</strong>（Producer-Consumer）下的队列。</p>
+<p>队列的实现，最合适的是链表，例如 java 中的 LinkedBlockingQueue。但在 Disruptor 里面用的是 RingBuffer 的数据结构，其底层是一个固定长度数组。</p>
+<p><strong>数据存在空间局部性</strong>，即连续多个元素会一并加载到 CPU Cache 里面来，访问遍历的速度会更快。反观链表也不具备这个优势特性。</p>
+<hr>
+<h2 id="55-理解Disruptor（下）"><a href="#55-理解Disruptor（下）" class="headerlink" title="55 | 理解Disruptor（下）"></a>55 | 理解Disruptor（下）</h2><h3 id="缓慢的锁"><a href="#缓慢的锁" class="headerlink" title="缓慢的锁"></a>缓慢的锁</h3><p>上节提到的通过 RingBuffer 实现一个队列实际上是无锁的。</p>
+<p>先回到 java 的 LinkedBlockingQueue，它是依赖锁的。其需要锁的原因是：</p>
+<ol>
+<li>可能会有多个生产者在队列尾加任务、多个消费者在消费队列头；</li>
+<li>哪怕生产者、消费者均只有1个时，后者也会比前者快来防止任务积压，从而大多时候二者指向队列同一个节点产生锁竞争；</li>
+</ol>
+<p>所以，为了解决此问题，jvm 中实现了加锁机制，没有拿到锁的线程会挂起等待。</p>
+<p>按照下面代码测试有无锁的性能差了几十倍。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xuwenhao.perf.jmm;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicLong;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LockBenchmark</span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">runIncrement</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">counter</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">500000000L</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">while</span> (counter &lt; max) &#123;</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;Time spent is &quot;</span> + (end-start) + <span class="string">&quot;ms without lock&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">runIncrementWithLock</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">        <span class="type">long</span> <span class="variable">counter</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">500000000L</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">while</span> (counter &lt; max) &#123;</span><br><span class="line">            <span class="keyword">if</span> (lock.tryLock())&#123;</span><br><span class="line">                counter++;</span><br><span class="line">                lock.unlock();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">&quot;Time spent is &quot;</span> + (end-start) + <span class="string">&quot;ms with lock&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        runIncrement();</span><br><span class="line">        runIncrementWithLock();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="无锁的-RingBuffer"><a href="#无锁的-RingBuffer" class="headerlink" title="无锁的 RingBuffer"></a>无锁的 RingBuffer</h3><p>Disruptor 是通过用 CPU 硬件支持的指令（CAS，Compare And Swap，比换和交换）来实现无锁。</p>
+<p>如下图所示，</p>
+<ol>
+<li>创建了一个 Sequence 对象，用来指向当前的 RingBuffer 的头和尾，通过一个序号；</li>
+<li><strong>对比序号的方式</strong>：当生产者添加时，它会把当前的序号，加上新数据的数量，然后和消费者位置对比，防止覆盖掉还没消费的数据。</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac55p01.jpg" alt=""></p>
+<hr>
+
+          
         
       
     </div>
@@ -2214,7 +1026,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/cuckooFilter.html">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc46to51.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -2233,7 +1045,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/posts/cuckooFilter.html" itemprop="url">布谷鸟过滤器(Cuckcoo Filter)</a></h1>
+                <a class="post-title-link" href="/posts/computerOrgArc46to51.html" itemprop="url">深入浅出计算机组成原理——原理篇：存储与I/O系统（46-51）</a></h1>
         
 
         <div class="post-meta">
@@ -2245,8 +1057,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-29T00:00:00+08:00">
-                2020-05-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-18T00:00:00+08:00">
+                2021-08-18
               </time>
             
 
@@ -2279,8 +1091,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">算法总结</span>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
                   </a>
                 </span>
 
@@ -2297,8 +1109,8 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/posts/cuckooFilter.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/cuckooFilter.html" itemprop="commentCount"></span>
+                <a href="/posts/computerOrgArc46to51.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc46to51.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2322,7 +1134,769 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.1k
+                  3.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="46-SSD硬盘（上）"><a href="#46-SSD硬盘（上）" class="headerlink" title="46 | SSD硬盘（上）"></a>46 | SSD硬盘（上）</h2><h3 id="SSD-的读写原理"><a href="#SSD-的读写原理" class="headerlink" title="SSD 的读写原理"></a>SSD 的读写原理</h3><p><strong>没有寻道，随机读写快。</strong><br>缺点：耐用性（重复擦写）差。</p>
+<h3 id="SLC、MLC、TLC-和-QLC"><a href="#SLC、MLC、TLC-和-QLC" class="headerlink" title="SLC、MLC、TLC 和 QLC"></a>SLC、MLC、TLC 和 QLC</h3><p>一个电容，有无电压代表0、1，即1bit信息。这种方式为 <code>SLC</code>（Single-Level Cell） 颗粒。与 CPU Cache 类似，存储有限。</p>
+<p><strong>如果一个单元存储超过1bit呢？</strong></p>
+<p>于是发明了 <code>MLC</code>（Multi-Level Cell）、<code>TLC</code>（Triple-Level Cell）以及 <code>QLC</code>（Quad-Level Cell），分别可以存储2、3、4bit。</p>
+<p>因为有一个<code>电压计</code>，<strong>可以通过不同的电压值表示不同的bit</strong>。比如，15个不同的电压位，加0电压总共16个值则可以表示4bit。但对电压精度要求很高，会导致充放电慢。</p>
+<h3 id="P-E-擦写问题"><a href="#P-E-擦写问题" class="headerlink" title="P/E 擦写问题"></a>P/E 擦写问题</h3><p>SSD 由多个<code>裸片</code>（Die）叠在一起组成，每个如下所示。</p>
+<ul>
+<li>一个裸片会分成多个<code>平面</code>（Plane），容量约GB级；</li>
+<li>一个平面会分很多<code>块</code>（Block），容量约MB级；</li>
+<li>一个块分多个<code>页</code>（Page），容量约4KB。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p01.jpg" alt=""></p>
+<p>SSD 写入叫 <code>Program</code>，不是复写来完成，需要先<code>擦除</code>（Erase）。单位是一个页（Page），擦除是按照块（Block）来进行。<strong>硬盘寿命是每个块的可擦除的次数，物理材料原因。</strong></p>
+<blockquote>
+<p>SLC 一般在10万次，MLC约1万次，TLC和QLC约几千次。</p>
+</blockquote>
+<h3 id="SSD-读写的生命周期"><a href="#SSD-读写的生命周期" class="headerlink" title="SSD 读写的生命周期"></a>SSD 读写的生命周期</h3><p>下图是SSD硬盘读写的流程：</p>
+<ul>
+<li>绿色：有效数据；</li>
+<li>红色：已删除数据；</li>
+<li>白色：无数据。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac46p02.jpg" alt=""></p>
+<p>因为<strong>写入最小单位是页，擦除最小单位是块</strong>，数据一多容易出现红色空洞占的地方也会越来越多，因为绿色页的存在，整块不能擦除，白色页就越来越少。</p>
+<p>所以需要<code>磁盘碎片整理</code>，如下图所示，即把有效的零散的绿色数据集中搬移到新空间，然后擦除原来的块，就可以空出容量了。</p>
+<blockquote>
+<p>厂商为了“磁盘碎片整理”，往往有一些预留空间（Over Provisioning），一般在7%-15%。</p>
+</blockquote>
+<hr>
+<h2 id="47-SSD硬盘（下）"><a href="#47-SSD硬盘（下）" class="headerlink" title="47 | SSD硬盘（下）"></a>47 | SSD硬盘（下）</h2><p>作为系统盘的时候，大多部分只读不写。擦除会反复发生在其他用来存放数据的地方，容易变成坏块，即容量变小了。</p>
+<h3 id="磨损均衡、TRIM-和写入放大效应"><a href="#磨损均衡、TRIM-和写入放大效应" class="headerlink" title="磨损均衡、TRIM 和写入放大效应"></a>磨损均衡、TRIM 和写入放大效应</h3><h4 id="FTL-和磨损均衡"><a href="#FTL-和磨损均衡" class="headerlink" title="FTL 和磨损均衡"></a>FTL 和磨损均衡</h4><p>为了减少坏块，我们尽量平摊擦除到每个块上，即<code>磨损均衡</code>（Wear-Leveling）。实现方式就是<code>FTL</code> 这个<code>闪存转换层</code>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac47p01.jpg" alt=""></p>
+<p>与内存管理类似，在 FTL 里面，存放了<code>逻辑块地址</code>（Logical Block Address，简称 LBA）到<code>物理块地址</code>（Physical Block Address，简称 PBA）的映射。系统都是访问前者，实际操作是后者。</p>
+<blockquote>
+<p>FTL 能够记录物理块被擦写的次数。如果某块被擦写的次数多了，可以将它挪到一个擦写次数少的物理块上。</p>
+</blockquote>
+<h4 id="TRIM-指令的支持"><a href="#TRIM-指令的支持" class="headerlink" title="TRIM 指令的支持"></a>TRIM 指令的支持</h4><p>操作系统的逻辑层和 SSD 的逻辑层里的块状态，是不匹配的。</p>
+<p>因操作系统删除数据的时候，是把对应的 inode 里面的元信息清理掉，<strong>物理层面仅标记成可写入，没有实际擦除</strong>。所以日常的文件删除，都只是一个操作系统层面的逻辑删除，有被恢复的可能。</p>
+<p>为了磨损均衡，很多时候在都在搬运很多已经删除了的数据。解法是 TRIM 命令，在文件被删除的时候，让操作系统去通知 SSD 硬盘，对应的逻辑块已经标记成已删除了。</p>
+<h4 id="写入放大"><a href="#写入放大" class="headerlink" title="写入放大"></a>写入放大</h4><p>SSD 硬盘容易越用越慢。</p>
+<blockquote>
+<p>空间被占用多了之后，空白不足，需要经常进行整理，于是变慢。</p>
+</blockquote>
+<p><strong>写入放大 = 实际的闪存写入的数据量 / 系统通过 FTL 写入的数据量，该值越大（说明为了完成操作多了很多整理），性能越差。</strong></p>
+<h3 id="AeroSpike"><a href="#AeroSpike" class="headerlink" title="AeroSpike"></a>AeroSpike</h3><p>SSD 虽然有劣势，但可以充分利用其优势，比如 <code>AeroSpike</code>。</p>
+<blockquote>
+<p>AeroSpike 这个专门针对 SSD 硬盘特性设计的 Key-Value 数据库（键值对数据库）</p>
+</blockquote>
+<p>利用SSD物理特性:</p>
+<ul>
+<li>不通过操作系统，直接操作 SSD 中的块和页；</li>
+<li>写入的时候尽可能写较大的数据块，一般128KB；</li>
+<li>读取的时候可以读512 字节（Bytes）这样的小数据。</li>
+</ul>
+<p>AeroSpike 需要响应时间短，所以写入放大严重，优化：</p>
+<ul>
+<li>持续地进行磁盘碎片整理。（块碎片&gt;50%）</li>
+<li>建议只用到容量最大额的50%。（降低写放大）</li>
+</ul>
+<hr>
+<h2 id="48-DMA-Kafka-快速原因"><a href="#48-DMA-Kafka-快速原因" class="headerlink" title="48 | DMA: Kafka 快速原因"></a>48 | DMA: Kafka 快速原因</h2><p>CPU 的主频 2GHz 意味每秒20亿次操作，诸如大文件复制等操作，CPU 大部分时间都空闲等待。<code>DMA</code> 技术，<code>直接内存访问</code>（Direct Memory Access）来减少 CPU 等待的时间。</p>
+<h3 id="理解-DMA，一个协处理器"><a href="#理解-DMA，一个协处理器" class="headerlink" title="理解 DMA，一个协处理器"></a>理解 DMA，一个协处理器</h3><p>主板上一块芯片，在内存和 I/O 设备的数据传输时，不通过 CPU 控制，直接通过 <code>DMA 控制器</code>（DMA Controller，简称 DMAC），也是协处理器。</p>
+<p>DMAC 使用价值：</p>
+<ul>
+<li>传输的数据极大、速度快，减少 CPU 依赖；</li>
+<li>传输的数据极小、速度慢，等数据到齐再发送，减少 CPU 忙等待。</li>
+</ul>
+<p>DMAC 也是一个特殊的 I/O 设备，链接总线进行传输。总线上设备分<code>主设备</code>、<code>从设备</code>。<br>只有主设备可以主动发起数据传输，如 CPU。I/O 设备只能发送控制信号，告知 CPU 有数据要传，再由 CPU 拉数。<br><strong>DMAC 既是一个主设备（对于IO设备），又是一个从设备（对于CPU）。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac48p01.jpg" alt=""></p>
+<p>DMAC 进行数据传输的过程（硬盘加载数据为例）:</p>
+<ol>
+<li>CPU 向 DMAC 发起请求，即修改其配置寄存器；</li>
+<li>提供给 DMAC 的信息：<ul>
+<li>源地址的初始值（硬盘IO地址）以及传输时候的地址增减方式（是否大往小地址传）；</li>
+<li>目标地址初始值（目的地地址）和传输时候的地址增减方式；</li>
+<li>要传输的数据长度。</li>
+</ul>
+</li>
+<li>设置后，DMAC 变为空闲（Idle）；</li>
+<li>硬盘向 DMAC 发起数据传输请求；</li>
+<li>DMAC 响应；</li>
+<li>DMAC 向硬盘接口发起总线读请求并读取；</li>
+<li>DMAC 向内存发起总线写请求并写入；</li>
+<li>反复上述6、7，直到指定长度数据传输完成，回到第 3 步空闲。</li>
+</ol>
+<blockquote>
+<p>因显示器、网卡、硬盘对于数据传输的需求都不一样，所以各个设备里面都有自己的 DMAC 芯片了。</p>
+</blockquote>
+<h3 id="Kafka-的实现原理"><a href="#Kafka-的实现原理" class="headerlink" title="Kafka 的实现原理"></a>Kafka 的实现原理</h3><p><strong>Kafka 项目是通过利用 DMA 的方式实现了非常大的性能提升</strong>，是目前实时数据传输管道的标准解决方案。</p>
+<p>Kafka 两种常见海量数据传输：</p>
+<ul>
+<li>从网络中接收数据并落盘；</li>
+<li>从本地磁盘读取并通过网络发送出去。</li>
+</ul>
+<p>从本地磁盘读取并通过网络发送出去，<strong>这个过程数据一共发生四次传输</strong>，2次 DMA 传输，2次 CPU 控制传输。</p>
+<p>整个过程：</p>
+<ol>
+<li>从硬盘读到系统内核缓冲区，DMA 搬运；</li>
+<li>内核缓冲区复制到内存，CPU 搬运；</li>
+<li>从内存写到操作系统的 Socket 缓冲区，CPU 搬运；</li>
+<li>从 Socket 缓冲区写到网卡缓冲区，DMA 搬运。</li>
+</ol>
+<p><strong>在 Kafka 中，则只有上述的 1、4 步骤</strong>。数据绕过内存，直接通过 Channel，写入到对应的网络设备里。并且，对于 Socket 的操作，也不是写入到 Socket 的 Buffer 里面，而是直接根据描述符（Descriptor）写入到网卡的缓冲区里面。</p>
+<blockquote>
+<p>没有在内存层面去“复制（Copy）”数据，所以也称上述方法是<code>零拷贝</code>（Zero-Copy）。</p>
+</blockquote>
+<p><em>传输同样数据的时间，可以缩减为原来的 1/3</em></p>
+<hr>
+<h2 id="49-数据完整性（上）"><a href="#49-数据完整性（上）" class="headerlink" title="49 | 数据完整性（上）"></a>49 | 数据完整性（上）</h2><h3 id="单比特翻转"><a href="#单比特翻转" class="headerlink" title="单比特翻转"></a>单比特翻转</h3><p>作者举例遇到的硬件错误，由于定制的硬件没有使用 ECC 内存，内存中出现了<code>单比特翻转</code>（Single-Bit Flip）。</p>
+<p>一个 ASCII 码二进制表示是 0010 0100，可能是 0011 0100 在第4位发生单比特反转变来的。随机，不可复现，而 <code>ECC</code> 内存的全称是 <code>Error-Correcting Code memory</code>，中文名字叫作<code>纠错内存</code>。</p>
+<h3 id="奇偶校验和校验位"><a href="#奇偶校验和校验位" class="headerlink" title="奇偶校验和校验位"></a>奇偶校验和校验位</h3><p>奇偶校验，即内存里面的 N 位比特当成是一组，1 的个数是奇数还是偶数，并记录在<code>校验码位</code>。</p>
+<blockquote>
+<p>如，101010111，前8位数数据位，最后一位就是校验码位</p>
+</blockquote>
+<p>该算法速度快，并且能判断内存数据是否出错。缺陷：</p>
+<ol>
+<li>只能解决遇到奇数个的错误；</li>
+<li>只能发现错误，不能纠正错误。</li>
+</ol>
+<p>ECC 内存所使用的解决方案，既可以发现，也可以纠错。2个版本：</p>
+<ul>
+<li>纠错码（Error Correcting Code），发现并纠正；</li>
+<li>纠删码（Erasure Code），不能纠正时，直接删除。</li>
+</ul>
+<hr>
+<h2 id="50-数据完整性（下）"><a href="#50-数据完整性（下）" class="headerlink" title="50 | 数据完整性（下）"></a>50 | 数据完整性（下）</h2><p>纠错码，需要既能判断是否有错，还要找出错误位置。</p>
+<h3 id="海明码"><a href="#海明码" class="headerlink" title="海明码"></a>海明码</h3><p><code>海明码</code>（Hamming Code）是最知名的纠错码，上世纪四十年代发明，沿用至今。</p>
+<p>最基础的是 7-4 海明码，即 7bit 数据位，4bit 校验位。因为，4bit 可以表示 16 个数，假设全部正确状态占用一个数，那么剩余 15 个数可以用来纠正 15 中单比特反转错误。</p>
+<blockquote>
+<p>这里需要注意，如果纠错位少一位，变成3bit，就只能表达7个校验位，而校验位本身也会出现错误，所以7-4实际上有11种单比特反转错误。</p>
+<p>数据位有 K 位，校验位有 N 位，需要<strong>满足 K + N + 1 &lt;= 2^N</strong></p>
+</blockquote>
+<p><strong>一个简单的理解：数据位+纠错位总共有 K+N 位，那么就有 K+N 种单比特错误位置，外加1个全部正确状态，故 N 位的校验位需要能够表达至少 K + N + 1 个数值，于是有了上述关系。</strong></p>
+<h3 id="海明码的纠错原理"><a href="#海明码的纠错原理" class="headerlink" title="海明码的纠错原理"></a>海明码的纠错原理</h3><p>校验位数的原理清楚了，那么怎么构建校验位不同数值对应的错误位映射关系呢？</p>
+<p>这里直接以7-4海明码为例：</p>
+<ol>
+<li>在 11 位中<strong>将 $2^k$ 位作为校验位</strong>，即 1、2、4、8 位，记为 p1-p4；</li>
+<li>剩下的 7 位作为数据位，记为 d1-d7，来存储有效信息；</li>
+<li>我们需要将数据位分组到每个校验位上，<strong>分组方式是根据二进制各个位置的1值</strong>：</li>
+</ol>
+<p>如下图，如：</p>
+<ul>
+<li>针对位置1的校验位p1，分到该组的数据位就是二进制下第0位为1的所有，包括1（自身）、3、5、7、9、11；</li>
+<li>针对位置4的校验位p3，分到该组的数据位就是二进制下第2位为1的所有，包括4（自身）、5、6、7；</li>
+</ul>
+<ol>
+<li>分好组了，校验位的值可以根据组内位置奇偶校验法得到。</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac50p01.jpg" alt=""></p>
+<p>任何一个数据码出错了，就至少会有对应的两个或者三个校验码对不上，这样我们就能反过来找到是哪一个数据码出错了。</p>
+<p><strong>实际上找出错位方式很简单，即校验位按照 p4-p1 排列二进制的数值。</strong></p>
+<blockquote>
+<p>首先校验位需要按照 p4-p1 的方式来排列成二进制；比如 11 位中，第 3 位bit（即d1）反转了，那么对应上述表格，p1、p2校验位会为 1，即 0011，刚好是第 3 位。再比如第 7 位，那么就是 0111，刚好是7。</p>
+</blockquote>
+<p><em>这里很像一道 coding 问题：1000 瓶药水只有 1 瓶有毒，有 10 个试验用的小白鼠，如何定位有毒的那瓶？</em></p>
+<p>解法：</p>
+<ol>
+<li>10 个小白鼠作为 10 个 bit 位，可以表示 0 到 $2^{10}-1$，能够涵盖 1000；</li>
+<li>1000 瓶药水按照顺序编码，编码对应 bit 位为 1 的药水要给对应位置的小白鼠喝；</li>
+<li>死亡的小白鼠，将对应 bit 位置为 1，那么 10 个 bit 位对应的值就是第几瓶药水有毒。</li>
+</ol>
+<h3 id="海明距离"><a href="#海明距离" class="headerlink" title="海明距离"></a>海明距离</h3><p>对于两个二进制表示的数据，他们之间有差异的位数，我们称之为海明距离。</p>
+<hr>
+<h2 id="51-分布式计算"><a href="#51-分布式计算" class="headerlink" title="51 | 分布式计算"></a>51 | 分布式计算</h2><p>数据中心里一台计算机一般不够，面临3个问题：</p>
+<ol>
+<li>垂直扩展和水平扩展的选择问题；</li>
+<li>如何保持高可用性（High Availability）；</li>
+<li>一致性问题（Consistency）。</li>
+</ol>
+<h3 id="从硬件升级到水平扩展"><a href="#从硬件升级到水平扩展" class="headerlink" title="从硬件升级到水平扩展"></a>从硬件升级到水平扩展</h3><p>假设采买了一台云服务器：1 个 CPU 核心、3.75G 内存以及一块 10G 的 SSD 系统盘。</p>
+<p>当请求增长，性能不足时需要增加资源：</p>
+<ul>
+<li><code>垂直扩展</code>（Scale Up）：换成 2 个 CPU 核心、7.5G 内存；</li>
+<li><code>水平扩展</code>（Scale Out）：买 2 台 1 个 CPU 核心、3.75G 内存。</li>
+</ul>
+<p>垂直扩展总有上限，因为物理机的原因。水平扩展，则需要软件层面改造，进入分布式，需要<code>负载均衡</code>。</p>
+<blockquote>
+<p>分布式，即通过<code>消息传递</code>（Message Passing）而不是<code>共享内存</code>（Shared Memory）的方式，让多台不同的计算机协作起来共同完成任务</p>
+</blockquote>
+<h3 id="理解高可用性和单点故障"><a href="#理解高可用性和单点故障" class="headerlink" title="理解高可用性和单点故障"></a>理解高可用性和单点故障</h3><p><strong>系统的可用性（Avaiability）：系统可以正常服务的时间占比。</strong></p>
+<blockquote>
+<p>如可用性是99.99%，则表示服务计划外的宕机时间&lt;=4.32分钟/月。</p>
+</blockquote>
+<p>水平扩展具有天然的优势，因为负载均衡能够通过<code>健康检测</code>（Health Check）发现坏掉的服务器，自动把其上的流量切换到其他正常服务器上，即<code>故障转移</code>（Failover）。</p>
+<p>单点故障问题（Single Point of Failure，SPOF）：任何一台服务器出错了，整个系统就没法用了。</p>
+<p><strong>解决单点故障问题就是移除单点</strong>，通过水平扩展，使得单台服务器挂了不影响其他正常使用。</p>
+<p>但是，单点可能存在多处，比如虽然服务器水平扩展了，但物理机在一个机房，交换机容易成为单点。这时候就需要<code>异地多活</code>的系统设计和部署。即，服务器分地区采购后部署服务，很多公司都会采用。</p>
+<p>故障转移（Failover）机制的生效，需要服务进行<code>健康监测</code>（Health Check），即每隔很短时间检查一次各服务器是否正常运行，如果有，则将流量转移到其他正常机器。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc40to45.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc40to45.html" itemprop="url">深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-12T00:00:00+08:00">
+                2021-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc40to45.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc40to45.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="40-理解内存（上）"><a href="#40-理解内存（上）" class="headerlink" title="40 | 理解内存（上）"></a>40 | 理解内存（上）</h2><p><strong>虚拟内存地址究竟是怎么转换成物理内存地址?</strong></p>
+<h3 id="简单页表"><a href="#简单页表" class="headerlink" title="简单页表"></a>简单页表</h3><p><code>页表</code>（Page Table）：虚拟内存里面的页，到物理内存里面的页的一一映射。</p>
+<p>一个内存地址分成<code>页号</code>（Directory）和<code>偏移量</code>（Offset）。</p>
+<blockquote>
+<p>一页内存在物理层面是连续的，一般大小是 4K 字节（4KB），需要 20 位的高位，12 位的低位。</p>
+</blockquote>
+<p><strong>内存地址转换步骤</strong>：</p>
+<ol>
+<li>虚拟内存地址，切分成页号、偏移量；</li>
+<li>从页表，查询对应的物理页号；</li>
+<li>物理页号+偏移量，就是物理内存地址。</li>
+</ol>
+<p><strong>页表空间</strong>：</p>
+<blockquote>
+<p>32位地址，高位有20，需要记录$2^{20}$个物理页号的映射，数组形势，一个页号4字节，总计大约4MB。看上去不多，但如每个进程有一份，就很大了。</p>
+</blockquote>
+<h3 id="多级页表"><a href="#多级页表" class="headerlink" title="多级页表"></a>多级页表</h3><p><strong>只需要去存用到的页之间的映射关系。</strong></p>
+<p>虚拟内存占用的地址空间，通常是两段连续的空间，<code>多级页表</code>（Multi-Level Page Table）适用这类。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac40p01.jpg" alt=""></p>
+<p>如上图，一个4级多级页表：</p>
+<ol>
+<li>页号部分（20位）拆成4段（每段5位），对应各级页表索引；</li>
+<li>每级索引对应的是下一级页表的位置；</li>
+<li>最后的1级页表，继续用“页号 + 偏移量”来获取物理内存地址。</li>
+</ol>
+<blockquote>
+<p>因为实际的虚拟内存空间通常是连续的，所以需要的 2、3 级页表很少。</p>
+</blockquote>
+<p>看下空间大小：</p>
+<ul>
+<li>每段索引5bit，1 级页表有$2^5=32$个条目映射，每个条目 4 字节（32bits=4Bytes），该 1 级页表总计 128 字节；</li>
+<li>每个 1 级索引表映射 32 个 4KB 内存快，即 128Kb；</li>
+<li>那么每个填满的2级索引表，对应 32 个 1 级索引表，总计 4MB 内存映射。</li>
+</ul>
+<p>需要存的映射少了，空间节省了，但查询次数多了，一个典型的时间换空间的方案。</p>
+<hr>
+<h2 id="41-理解内存（下）"><a href="#41-理解内存（下）" class="headerlink" title="41 | 理解内存（下）"></a>41 | 理解内存（下）</h2><ul>
+<li><code>地址转换</code>是很高频，怎么解性能问题？</li>
+<li>数据、指令都在内存，怎么解内存安全问题？</li>
+</ul>
+<h3 id="加速地址转换：TLB"><a href="#加速地址转换：TLB" class="headerlink" title="加速地址转换：TLB"></a>加速地址转换：TLB</h3><p>内存访问其实比 Cache 要慢，简单的内存转换，1次变4次。<strong>解法：加缓存。</strong></p>
+<blockquote>
+<p>这块缓存芯片我们称之为 TLB，全称是<code>地址变换高速缓冲</code>（Translation-Lookaside Buffer）。</p>
+</blockquote>
+<p>和 CPU 里的高速缓存类似，用脏标记来实现“写回”等缓存管理策略。为了性能，整个内存转换过程也要由硬件来执行，封装为内存管理单元（MMU，Memory Management Unit）芯片</p>
+<h3 id="安全性与内存保护"><a href="#安全性与内存保护" class="headerlink" title="安全性与内存保护"></a>安全性与内存保护</h3><h4 id="可执行空间保护"><a href="#可执行空间保护" class="headerlink" title="可执行空间保护"></a>可执行空间保护</h4><p>一个进程使用的内存，指令部分设置成“可执行”的，数据等其他部分不给予“可执行”的权限。</p>
+<h4 id="地址空间布局随机化"><a href="#地址空间布局随机化" class="headerlink" title="地址空间布局随机化"></a>地址空间布局随机化</h4><p><strong>核心问题</strong>：其他的人、进程、程序，会去修改掉特定进程的指令、数据，然后，让当前进程去执行这些指令和数据，造成破坏。</p>
+<p>原进程内存空间是固定，容易获取指令位置。地址空间布局随机化之后，无法猜到指令的内存地址，随意修改只会让程序 crash 掉，不会执行危险代码。</p>
+<p>一个经典的随机性应用：<br>用户名称+密码通过hash保护，但泄露太多加密的，容易通过彩虹表等方式推测结果。于是，在hash的时候全部加上<code>盐值</code>（Salt），即使猜出来也无法使用。</p>
+<hr>
+<h2 id="42-总线"><a href="#42-总线" class="headerlink" title="42 | 总线"></a>42 | 总线</h2><p>CPU 和内存、以及外部输入输出设备的通信，计算机是怎么完成的？</p>
+<h3 id="降低复杂性"><a href="#降低复杂性" class="headerlink" title="降低复杂性"></a>降低复杂性</h3><p>假设计算机有 N 个不同的设备需要通信，并且是单独链接，那么复杂度就是 $N^2$。</p>
+<p>优化的方案：不用单独通信，都是用一条公用线路，即<code>总线</code>。</p>
+<p>总线，就是一组线路，英文是 BUS，设计模式是<code>事件总线</code>。<br>事件总线：</p>
+<ul>
+<li>发布者：各模块触发对应的事件，并把事件对象发送到总线上；</li>
+<li>监听者：各模块也注册到总线上，去监听事件，并根据对象类型或内容来决定是否要处理或者响应。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p01.jpg" alt=""></p>
+<h3 id="理解总线"><a href="#理解总线" class="headerlink" title="理解总线"></a>理解总线</h3><p><code>双独立总线</code>（Dual Independent Bus，缩写为 DIB）：</p>
+<ul>
+<li>快速的<code>本地总线</code>（Local Bus）；</li>
+<li>较慢的<code>前端总线</code>（Front-side Bus）。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac42p02.jpg" alt=""></p>
+<p>CPU链接前端总线，即系统总线，与 I/O 桥接器相连，分别连接内存总线和 I/O 总线。</p>
+<p>总线通常有三类线路：</p>
+<ul>
+<li><code>数据线</code>（Data Bus），传输数据；</li>
+<li><code>地址线</code>（Address Bus），数据传输的位置，是内存的某个位置，还是某 I/O 设备。</li>
+<li><code>控制线</code>（Control Bus），用来控制对于总线的访问。</li>
+</ul>
+<hr>
+<h2 id="43-输入输出设备"><a href="#43-输入输出设备" class="headerlink" title="43 | 输入输出设备"></a>43 | 输入输出设备</h2><h3 id="接口和设备"><a href="#接口和设备" class="headerlink" title="接口和设备"></a>接口和设备</h3><p>输入输出设备一般2个部分：</p>
+<ul>
+<li>接口（Interface）；</li>
+<li>实际的 I/O 设备（Actual I/O Device）。</li>
+</ul>
+<p>三类寄存器（在设备的接口电路上）：</p>
+<ul>
+<li>状态寄存器（Status Register）；</li>
+<li>命令寄存器（Command Register）；</li>
+<li>数据寄存器（Data Register）。</li>
+</ul>
+<h3 id="控制-I-O-设备"><a href="#控制-I-O-设备" class="headerlink" title="控制 I/O 设备"></a>控制 I/O 设备</h3><p>设备接口上除了3类寄存器，还有控制电路来控制实际硬件。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac43p01.jpg" alt=""></p>
+<ol>
+<li>数据寄存器（Data Register）。<blockquote>
+<p>CPU 向 I/O 设备写入需要传输的数据。实际上还有数据缓冲区。</p>
+</blockquote>
+</li>
+<li>命令寄存器（Command Register）。<blockquote>
+<p>CPU 发送打印命令给打印机。控制电路两个动作：状态寄存器把状态设置成 not-ready；操作打印机进行打印。</p>
+</blockquote>
+</li>
+<li>状态寄存器（Status Register）。<blockquote>
+<p>告诉 CPU 设备已在工作，其他数据和命令不能执行。直到完成，重新 ready 状态。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="信号和地址"><a href="#信号和地址" class="headerlink" title="信号和地址"></a>信号和地址</h3><p>CPU 往总线上发送的命令具体是什么，才能和 I/O 接口上的设备通信呢？</p>
+<p>答案是<code>机器指令</code>。但 MIPS 并没有专门的 I/O 指令，实际上是使用<code>内存地址</code>。</p>
+<blockquote>
+<p>主内存会映射 I/O 设备的内存地址。CPU 通信时，往这些地址发送数据即可。这种叫内存映射 IO（Memory-Mapped I/O，简称 MMIO）。</p>
+</blockquote>
+<p>Intel CPU 既支持 MMIO，还可以通过特定的指令，来支持端口映射 I/O（Port-Mapped I/O，简称 PMIO）。核心的区别，PMIO 里面访问的设备地址，不再是在内存地址空间里面，而是一个专门的端口（Port）。</p>
+<hr>
+<h2 id="44-理解IO-WAIT"><a href="#44-理解IO-WAIT" class="headerlink" title="44 | 理解IO_WAIT"></a>44 | 理解IO_WAIT</h2><p>并不是所有问题都能靠利用内存或者 CPU Cache 做一层缓存来解决。硬盘使用还是很多的，尤其是大数据场景，那么硬盘的 I/O 性能就很重要。</p>
+<h3 id="IO-性能、顺序访问和随机访问"><a href="#IO-性能、顺序访问和随机访问" class="headerlink" title="IO 性能、顺序访问和随机访问"></a>IO 性能、顺序访问和随机访问</h3><p>硬盘厂商的性能报告：</p>
+<ul>
+<li>响应时间；</li>
+<li>数据传输率。</li>
+</ul>
+<p>硬盘：</p>
+<ul>
+<li>HDD：机械硬盘，SATA 3.0 接口。</li>
+<li>SSD：固态硬盘，SATA 3.0 &amp; PCI Express 接口。</li>
+</ul>
+<p>SATA 3.0，带宽 6Gb/s，“b”是bit，则约768MB/s（$6 \times 1024 / 8 = 768$）。但日常约 200 MS/s。<br>SSD 大约 500 MB/s，如果换成 PCI Express 约 2 GB/s。</p>
+<p>响应时间，HDD 约十毫秒左右，SSD 约几十微妙，差异更大。但，无论哪个，貌似性能还可以，与实际经验不符合。</p>
+<p><strong>在顺序读写和随机读写的情况下，硬盘的性能是完全不同的</strong></p>
+<p><code>IOPS</code>：每秒输入输出操作的次数，去随机读取磁盘上某一个 4KB 大小的数据，一秒之内可以读取到多少数据。</p>
+<p>SSD，随机读写约 40MB/s，即1万次 4KB 数据，即 IOPS。写入的话约90MB/s，IOPS 约2万。<br>而HDD，IOPS 大约为100。</p>
+<h3 id="定位-IO-WAIT"><a href="#定位-IO-WAIT" class="headerlink" title="定位 IO_WAIT"></a>定位 IO_WAIT</h3><p>CPU 的主频通常在 2GHz 以上，也就是每秒可以做 20 亿次操作。即使一条读写指令，需要很多个时钟周期，硬盘完全跟不上。</p>
+<p><strong>通过 top 和 iostat 这些命令，一起来看看 CPU 到底有没有在等待 io 操作。</strong></p>
+<p>top 去看服务的负载，也就是 load average。也可以看 CPU 是否在等待 IO 操作完成。</p>
+<blockquote>
+<p>以 %CPU 开头的行，有一个叫作 wa 的指标，这个指标就代表着 iowait</p>
+</blockquote>
+<p>如果 iostat 很大，可以通过 <code>iostat</code> 查看实际硬盘读写。</p>
+<blockquote>
+<p>其中， tps 指标，其实就对应着我们上面所说的硬盘的 IOPS 性能。而 kB_read/s 和 kB_wrtn/s 指标，就对应着我们的数据传输率的指标</p>
+</blockquote>
+<p>用<code>iotop</code>命令找哪一个进程是这些 I/O 读写的来源。</p>
+<blockquote>
+<p>通过<code>stress -i 2</code>，模拟两个进程往硬盘写数据。top 的输出里面，CPU 就有大量的 sy 和 wa。通过 iostat，里面的 tps 很快就到了 4 万左右。iotop， I/O 占用都来自于 stress 产生的两个进程了。</p>
+</blockquote>
+<hr>
+<h2 id="45-机械硬盘"><a href="#45-机械硬盘" class="headerlink" title="45 | 机械硬盘"></a>45 | 机械硬盘</h2><h3 id="拆解机械硬盘"><a href="#拆解机械硬盘" class="headerlink" title="拆解机械硬盘"></a>拆解机械硬盘</h3><p>前面提过，机械硬盘 IOPS 大约100，这个的原理是什么？</p>
+<p><strong>机械硬盘三个组成部分：盘面、磁头和悬臂。</strong></p>
+<p><code>盘面</code>（Disk Platter）：实际存储数据的，跟光盘类似，铝、玻璃或者陶瓷制成，上有磁性涂层来存储数据。中间有转轴控制转速，RPM（Rotations Per Minute）一般为7200，每秒则120转。</p>
+<p><code>磁头</code>（Drive Head）：从盘面读取数据传输给电路，一个硬盘会有多个堆叠的磁盘，每个磁盘正反面都会各有一个磁头。</p>
+<p><code>悬臂</code>（Actutor Arm）：链接磁头，用来定位磁头到磁道的。</p>
+<p>磁盘会切分不同半径的同心环作为<code>磁道</code>，每个磁道会分成多个<code>扇区</code>，上下不同磁盘但平行的扇区称为一个<code>柱面</code>。所以读取的数据的时候，悬臂需要控制磁头，移动到对应的磁道上，并且盘面需要转转道对应位置，如此磁头才能读取到指定的扇区/柱面。</p>
+<p>硬盘上的随机访问：</p>
+<ul>
+<li><code>平均延时</code>（Average Latency）：盘面旋转，把几何扇区对准悬臂位置的时间。<blockquote>
+<p>7200转/min 硬盘，即 240半圈/s，寻找指定扇区平均需要半圈距离，即 1s / 240 = 4.17ms。</p>
+</blockquote>
+</li>
+<li><code>平均寻道时间</code>（Average Seek Time）：盘面旋转，悬臂定位到扇区的的时间。<blockquote>
+<p>一般在 4-10ms</p>
+</blockquote>
+</li>
+</ul>
+<p>综上，随机访问时间约8-14ms，对应的 IOPS 为 125-70.</p>
+<h3 id="Partial-Stroking"><a href="#Partial-Stroking" class="headerlink" title="Partial Stroking"></a>Partial Stroking</h3><p>提升 HDD 硬盘效率的一个办法就是提高转速，这是很多厂商历史做的事情。</p>
+<p>还有一种，<strong>空间换时间</strong>的方法，来提高硬盘的IOPS，就是 <code>Partial Stroking</code> 或者 <code>Short Stroking</code>。</p>
+<p>一般硬盘的寻道时间都比平均延时要长，如果消除这部分，可以有效提高 IOPS。那就是磁头仅仅用最外道的磁道，或者只用1/4磁道。</p>
+<p>不过这是当年互联网蓬勃发展时，工程师们想要改善性能问题的有偿解法。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc35to39.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc35to39.html" itemprop="url">深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-08T00:00:00+08:00">
+                2021-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc35to39.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc35to39.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k
                 </span>
               
 
@@ -2360,19 +1934,1685 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h2><p>在了解了布隆过滤器的缺点之后，如果想要解决就可以来学习一下布谷鸟过滤器。其最早是在2001年的论文<a href="https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf">《Cuckoo Filter: Practically Better Than Bloom》</a>中提出的。论文中也很直接的抨击布隆过滤器的缺点，表明自己可以有效支持反向删除操作。</p>
-<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><p>先来介绍最简单的<code>布谷鸟过滤器</code>的工作原理。假设我们有：</p>
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="35-存储器层次结构全景"><a href="#35-存储器层次结构全景" class="headerlink" title="35 | 存储器层次结构全景"></a>35 | 存储器层次结构全景</h2><h3 id="理解存储器的层次结构"><a href="#理解存储器的层次结构" class="headerlink" title="理解存储器的层次结构"></a>理解存储器的层次结构</h3><p><code>寄存器</code>：更像 CPU 本身的部分，空间极其有限，但速度非常快，<br><code>CPU Cache</code>：CPU 高速缓存，我们常常简称为“缓存”，使用 SRAM 芯片。</p>
+<h3 id="SRAM"><a href="#SRAM" class="headerlink" title="SRAM"></a>SRAM</h3><p><code>SRAM</code>（Static Random-Access Memory），即静态随机存取存储器。只要处在通电状态，里面的数据就可以保持存在，一断电就丢失。</p>
+<blockquote>
+<p>SRAM 中，1 bit 的数据，需要 6～8 个晶体管。存储密度不高，但电路简单，速度快。</p>
+</blockquote>
+<p>CPU 有 L1、L2、L3 这样<code>三层高速缓存</code>：<br><code>L1 Cache</code>：每个 CPU 有自己的，在CPU内部，分成指令缓存和数据缓存；<br><code>L2 Cache</code>：每个 CPU 有自己的，不在CPU内，速度略慢；<br><code>L3 Cache</code>：多个 CPU 共享，尺寸大，速度更慢。</p>
+<h3 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h3><p>内存和 Cache 不同，用 <code>DRAM</code>（Dynamic Random Access Memory，动态随机存取存储器）芯片。密度高，大容量。</p>
+<p>DRAM 需要靠不断地“刷新”，才能保持数据被存储。1 bit只需要一个晶体管和一个电容就能存储。存储密度大，速度比 SRAM 慢。且电容会漏电，需要定时刷新充电。</p>
+<h3 id="存储器的层级结构"><a href="#存储器的层级结构" class="headerlink" title="存储器的层级结构"></a>存储器的层级结构</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac35p01.png" alt=""></p>
+<p>可以看到，从 Cache 到 HDD，<strong>容量越来越大，价格越来越便宜，速度越来越慢。</strong><br>故，一个完整计算机，会通过不等层级的内存组合，来实现性价比：<br><strong>少量贵的存储保障热数据的速度，大量便宜的存储来提供冷数据存储</strong></p>
+<p>并且，<strong>各个存储器只和相邻的一层存储器打交道</strong>。</p>
+<hr>
+<h2 id="36-局部性原理"><a href="#36-局部性原理" class="headerlink" title="36 | 局部性原理"></a>36 | 局部性原理</h2><p>服务端开发时，数据一般存在数据库，访问数据库性能瓶颈是要点，一般就会用缓存来缓解，</p>
+<h3 id="理解局部性原理"><a href="#理解局部性原理" class="headerlink" title="理解局部性原理"></a>理解局部性原理</h3><blockquote>
+<p>挑战：既要 CPU Cache 的速度，又要内存、硬盘巨大的容量和低廉的价格。</p>
+</blockquote>
+<p>解法便是<code>局部性原理</code>（Principle of Locality）：<code>时间局部性</code>（temporal locality）和<code>空间局部性</code>（spatial locality）</p>
 <ul>
-<li>两个Hash表，T1和T2；</li>
-<li>两个Hash函数，H1和H2。</li>
+<li><code>时间局部性</code>：如果一个数据被访问了，那么它在短时间内还会被再次访问。</li>
+<li><code>空间局部性</code>：如果一个数据被访问了，那么和它相邻的数据也很快会被访问。</li>
 </ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/posts/cuckooFilter.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+<p>使用缓存的时候，例如<code>LRU</code>（Least Recently Used）缓存算法，需要关注<code>缓存命中率</code>，越高说明缓存效果越好。</p>
+<hr>
+<h2 id="37-高速缓存（上）"><a href="#37-高速缓存（上）" class="headerlink" title="37 | 高速缓存（上）"></a>37 | 高速缓存（上）</h2><h3 id="需要高速缓存"><a href="#需要高速缓存" class="headerlink" title="需要高速缓存"></a>需要高速缓存</h3><p>基于摩尔定律，CPU 和 内存的访问速度差异越来越大，为了缓解数据跟不上计算的问题，在CPU中就引入了高速缓存。</p>
+<blockquote>
+<p>在 95% 的情况下，CPU 都只需要访问 L1-L3 Cache，从里面读取指令和数据，而无需访问内存</p>
+</blockquote>
+<p>CPU 从内存中读取数据到 CPU Cache ，是以小块为单位的而不是单个元素，在 CPU Cache 里面，叫作 <code>Cache Line</code>（缓存块），常是 64 字节（Bytes）。</p>
+<h3 id="Cache-的数据结构和读取过程是"><a href="#Cache-的数据结构和读取过程是" class="headerlink" title="Cache 的数据结构和读取过程是"></a>Cache 的数据结构和读取过程是</h3><p>CPU 读取数时：</p>
+<ol>
+<li>先访问 Cache；</li>
+<li>有，则取出；</li>
+<li>没有，再访问内存；</li>
+<li>并将读取的数写入到 Cache。</li>
+</ol>
+<p>问题：CPU 如何知道需要访问的内存数据对应的 Cache 位置呢？<br>答案：<code>直接映射 Cache</code>（Direct Mapped Cache）。<br>思路：CPU 拿到的是数据所在的内存块（Block）的地址，其通过 mod 运算，<strong>固定映射到一个的 CPU Cache 地址（Cache Line）</strong>，作为<code>索引</code>。</p>
+<blockquote>
+<p>mod 运算的技巧：缓存块的数量设置成 2 的 N 次方，直接取地址的低 N 位就是 mod 结果。</p>
+</blockquote>
+<p>这时候，肯定会有多个内存块地址映射到同一个 Cache 地址，<strong>需要辨识当前存储的是哪一块。</strong><br>缓存块中，我们会存储一个<code>组标记</code>（Tag），记录当前缓存块内存储的数据对应的内存块。</p>
+<p>此外，缓存块中还有：</p>
+<ul>
+<li><code>实际存放的数据</code>，一个 Block；</li>
+<li><code>有效位</code>（valid bit），其0/1代表是否可用；</li>
+<li><code>偏移量</code>（Offset），记录需要取的数据在 Block 中哪个位置。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac37p01.png" alt=""></p>
+<p>“索引 + 有效位 + 组标记 + 数据”数据结构，使得 Cache 访问时有4步：</p>
+<ol>
+<li>取内存地址低位，计算 Cache 对应的索引；</li>
+<li>根据有效位，判断 Cache 数据是否可用；</li>
+<li>取内存地址高位，和组标记，确认数据是否符合为目标数据，从 Cache Line 中读取到对应的数据块（Data Block）；</li>
+<li>根据内存地址的 Offset 位，从 Data Block 中，读取希望读取到的字。</li>
+</ol>
+<p>如在 2、3 步骤中发现数据不可用，那 CPU 就会访问内存，并把对应的 Block Data 更新到 Cache Line 中，同时更新有效位和组标记的数据。</p>
+<hr>
+<h2 id="38-高速缓存（下）"><a href="#38-高速缓存（下）" class="headerlink" title="38 | 高速缓存（下）"></a>38 | 高速缓存（下）</h2><h3 id="volatile-关键词"><a href="#volatile-关键词" class="headerlink" title="volatile 关键词"></a>volatile 关键词</h3><p>作者从 java 中“volatile”关键词出发，讨论它的作用和原理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VolatileTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">COUNTER</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ChangeListener</span>().start();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ChangeMaker</span>().start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ChangeListener</span> <span class="keyword">extends</span> <span class="title class_">Thread</span> &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">threadValue</span> <span class="operator">=</span> COUNTER;</span><br><span class="line">            <span class="keyword">while</span> ( threadValue &lt; <span class="number">5</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>( threadValue!= COUNTER)&#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;Got Change for COUNTER : &quot;</span> + COUNTER + <span class="string">&quot;&quot;</span>);</span><br><span class="line">                    threadValue= COUNTER;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// try &#123; </span></span><br><span class="line">                <span class="comment">//     Thread.sleep(5); </span></span><br><span class="line">                <span class="comment">// &#125; catch (InterruptedException e) &#123; e.printStackTrace();&#125;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ChangeMaker</span> <span class="keyword">extends</span> <span class="title class_">Thread</span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">threadValue</span> <span class="operator">=</span> COUNTER;</span><br><span class="line">            <span class="keyword">while</span> (COUNTER &lt;<span class="number">5</span>)&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Incrementing COUNTER to : &quot;</span> + (threadValue+<span class="number">1</span>) + <span class="string">&quot;&quot;</span>);</span><br><span class="line">                COUNTER = ++threadValue;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">500</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123; e.printStackTrace(); &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>先说结果：</p>
+<ul>
+<li>直接运行，ChangeListener 能够监听 COUNTER 变化；</li>
+<li>去掉 volatile 则不行；</li>
+<li>去掉 volatile，但是又让 ChangeListener 每次 sleep 5ms 则又可以。</li>
+</ul>
+<blockquote>
+<p>volatile 会确保我们对于这个变量的读取和写入，都一定会同步到主内存里，而不是从 Cache 里面读取。</p>
+</blockquote>
+<h3 id="写直达（Write-Through）"><a href="#写直达（Write-Through）" class="headerlink" title="写直达（Write-Through）"></a>写直达（Write-Through）</h3><blockquote>
+<p>每一次数据都要写入到主内存里面。</p>
+</blockquote>
+<ul>
+<li>先判断是否在 Cache；</li>
+<li>在，先写 Cache，再写入主内存；</li>
+<li>不在，直接写主内存。</li>
+</ul>
+<h3 id="写回（Write-Back）"><a href="#写回（Write-Back）" class="headerlink" title="写回（Write-Back）"></a>写回（Write-Back）</h3><blockquote>
+<p>只写到 CPU Cache 里。只有当 CPU Cache 里面的数据要被“替换”的时候，我们才把数据写入到主内存里面去。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac38p01.jpg" alt=""></p>
+<p>结合流程图，逻辑比较清晰。重点解释一下其中的“脏”的概念。<br><strong>标记“脏”：就是指这个时候，CPU Cache 里面的这个 Block 的数据，和主内存是不一致的。</strong></p>
+<p>以上2中写法都需要考虑一个问题，就是在多线程/多CPU时缓存一致性的问题。</p>
+<hr>
+<h2 id="39-MESI协议解决缓存一致性"><a href="#39-MESI协议解决缓存一致性" class="headerlink" title="39 | MESI协议解决缓存一致性"></a>39 | MESI协议解决缓存一致性</h2><h3 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h3><p>假设有2核CPU，执行改价格任务，如果核1改了价格，写入到 Cache 中，在 Cache Block 交换出去前不会写入到内存，那么核2在这期间取到的数据就不一致。</p>
+<p>为了解决此，需要做到：</p>
+<ul>
+<li>写传播：Cache 的更新必须同步到其他 CPU 核的 Cache里。</li>
+<li>事务的串行化：按顺序执行修改，防止不同 CPU 核之间乱序。</li>
+</ul>
+<h3 id="总线嗅探机制和-MESI-协议"><a href="#总线嗅探机制和-MESI-协议" class="headerlink" title="总线嗅探机制和 MESI 协议"></a>总线嗅探机制和 MESI 协议</h3><p><strong>总线嗅探（Bus Snooping）</strong>：</p>
+<blockquote>
+<p>把所有的读写请求都通过总线（Bus）<code>广播</code>给所有的 CPU 核心，然后让各个核心去<code>嗅探</code>这些请求，再根据本地的情况进行响应。</p>
+</blockquote>
+<p><strong>写失效（Write Invalidate）协议</strong>：只有一个 CPU 核心负责写入数据，其他的核心，只是同步读取到这个写入。<br><strong>写广播（Write Broadcast）协议</strong>：一个写入请求广播到所有的 CPU 核心，同时更新各个核心里的 Cache，大家一起更新。</p>
+<p>MESI 协议对 Cache Line 有 4 种标记：</p>
+<ul>
+<li><code>M</code>：代表已修改（Modified）；</li>
+<li><code>E</code>：代表独占（Exclesive）；</li>
+<li><code>S</code>：代表共享（Shared）；</li>
+<li><code>I</code>：代表已失效（Invalidated）。</li>
+</ul>
+<p>M 和 I 都代表 Cache 和主内存数据不一致，即“脏”数据。E 和 S 都是一致的，但他们有区别：</p>
+<ul>
+<li>E 代表仅当前 CPU 的 Cache 里加载了这块数据，则可以自由写入；</li>
+<li>S 代表有其他 CPU 也把同一块 Cache Block 从内存加载到其 Cache中，这时候写入就需要向所有 CPU 核广播请求（RFO，Request For Ownership）。</li>
+</ul>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc30to34.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc30to34.html" itemprop="url">深入浅出计算机组成原理——原理篇：处理器（30-34）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-03T00:00:00+08:00">
+                2021-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc30to34.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc30to34.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="30-GPU（上）"><a href="#30-GPU（上）" class="headerlink" title="30 | GPU（上）"></a>30 | GPU（上）</h2><h3 id="GPU-的历史进程"><a href="#GPU-的历史进程" class="headerlink" title="GPU 的历史进程"></a>GPU 的历史进程</h3><p>GPU 是为了改善计算机渲染三维图像，先驱是 <code>SGI</code>（Silicon Graphics Inc.），即硅谷图形公司，创始人 Jim Clark 是斯坦福的教授，图形学专家。</p>
+<p>最早 3D 是大神卡马克开发的著名 Wolfenstein 3D（德军总部 3D），从不同视角看到的是 8 幅不同的贴图，不是真正的3D。直到90年代中期，才出现实时渲染多边形。</p>
+<h3 id="图形渲染的流程"><a href="#图形渲染的流程" class="headerlink" title="图形渲染的流程"></a>图形渲染的流程</h3><p>3D画面实际上是多边形组合出来的。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p01.png" alt=""></p>
+<p>而完成这样的渲染需要5个步骤：</p>
+<ol>
+<li><code>顶点处理</code>（Vertex Processing）</li>
+<li><code>图元处理</code>（Primitive Processing）</li>
+<li><code>栅格化</code>（Rasterization）</li>
+<li><code>片段处理</code>（Fragment Processing）</li>
+<li><code>像素操作</code>（Pixel Operations）</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p02.jpg" alt=""></p>
+<h4 id="顶点处理"><a href="#顶点处理" class="headerlink" title="顶点处理"></a>顶点处理</h4><p>基于当前视角，把三维空间中的顶点转换到屏幕的二维空间上，即投影的过程。是一种通过线性代数计算得来，<strong>顶点坐标的计算无依赖，可并行。</strong></p>
+<h4 id="图元处理"><a href="#图元处理" class="headerlink" title="图元处理"></a>图元处理</h4><p>将顶点处理后的各个顶点链接起来，变成多边形。但是，需要多做一个操作：<strong>剔除和裁剪（Cull and Clip）</strong>，即把不在屏幕里的内容去掉，减少后续工作量。（比如上图图元部分的 v0）</p>
+<h4 id="栅格化"><a href="#栅格化" class="headerlink" title="栅格化"></a>栅格化</h4><p>屏幕分辨率有限，<code>栅格化</code>就是把多边形转成屏幕里的像素（Pixel）点（图元处理后的多边形覆盖的所有像素点）。这里<strong>每一个图元都可以并行独立地栅格化。</strong></p>
+<h4 id="片段处理"><a href="#片段处理" class="headerlink" title="片段处理"></a>片段处理</h4><p>栅格化后的像素点只有黑白色，需要计算每一个像素点的颜色、透明度等进行上色，就是<code>片段处理</code>。</p>
+<h4 id="像素操作"><a href="#像素操作" class="headerlink" title="像素操作"></a>像素操作</h4><p>最后就是将不同的多边形像素点混合到一起，输出到显示设备。</p>
+<blockquote>
+<p>以上5个渲染步骤就是<code>图形流水线</code>（Graphic Pipeline）。</p>
+</blockquote>
+<h3 id="解放图形渲染的-GPU"><a href="#解放图形渲染的-GPU" class="headerlink" title="解放图形渲染的 GPU"></a>解放图形渲染的 GPU</h3><p>计算一下渲染需要的资源：</p>
+<blockquote>
+<p>假设90年代，屏幕640x480，每秒60帧。从栅格化开始每个像素3个流水线步骤，每步即使1个指令。那么：$640 \times 480 \times 60 \times 3 = 54M$。然而，当时的CPU一般主频60MHz，基本上要被上述渲染占满，实际上每个渲染步骤不止一个指令。</p>
+</blockquote>
+<p>解决办法就是 Voodoo FX 这样的图形加速卡的出现。因为渲染流程固定，且计算逻辑简单（不需要流水线停顿、乱序执行等），并行度高，单独造硬件比用 CPU 划算。</p>
+<p>于是，在当时整个顶点处理的过程还是都由 CPU 进行的，<strong>不过后续所有到图元和像素级别的处理都是通过显卡去处理的。</strong></p>
+<hr>
+<h2 id="31-GPU（下）"><a href="#31-GPU（下）" class="headerlink" title="31 | GPU（下）"></a>31 | GPU（下）</h2><h3 id="Shader-和可编程图形处理器"><a href="#Shader-和可编程图形处理器" class="headerlink" title="Shader 和可编程图形处理器"></a>Shader 和可编程图形处理器</h3><p>GPU 也在逐步优化迭代。首先，1999 年 NVidia 推出的 GeForce 256 显卡，就<strong>把顶点处理的计算能力，也从 CPU 里挪到了显卡里</strong>。但渲染过程都是固定管线，程序员不能干预，只能调配置。</p>
+<p>从 2001 年的 Direct3D 8.0 开始，微软第一次引入了<code>可编程管线</code>（Programable Function Pipeline）的概念。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p01.jpg" alt=""></p>
+<p>一开始的可编程管线呢，<strong>仅限于顶点处理（Vertex Processing）和片段处理（Fragment Processing）部分。</strong></p>
+<p>可以编程的接口，我们称之为 <code>Shader</code>，即着色器，由可编程的模块功能决定。统一着色器架构（Unified Shader Architecture）就应运而生了。</p>
+<p>顶点处理和片段处理上的逻辑不太一样，但指令集同一套。Vertex 和 Fragment Shader 分开，虽然设计简单，但资源有浪费，因为硬件串行的。于是，<strong>统一着色器架构（Unified Shader Architecture）就应运而生了。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p02.jpg" alt=""></p>
+<p>将 Shader 变成通用模块，多加一点。如此，可以把 GPU 拿来做各种通用计算的用法，即 GPGPU（General-Purpose Computing on Graphics Processing Units，通用图形处理器）。</p>
+<h3 id="现代-GPU-的三个核心创意"><a href="#现代-GPU-的三个核心创意" class="headerlink" title="现代 GPU 的三个核心创意"></a>现代 GPU 的三个核心创意</h3><h4 id="芯片瘦身"><a href="#芯片瘦身" class="headerlink" title="芯片瘦身"></a>芯片瘦身</h4><p>现代 CPU 里的晶体管变得越来越多，越来越复杂，不是主要为了“计算”这个功能，而是：<strong>拿来处理乱序执行、进行分支预测，以及高速缓存部分。</strong></p>
+<p>GPU 中没有上述那些，只有流式处理。只留下取指令、指令译码、ALU 以及执行这些计算需要的寄存器和缓存即可。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p03.jpg" alt=""></p>
+<h4 id="多核并行和-SIMT"><a href="#多核并行和-SIMT" class="headerlink" title="多核并行和 SIMT"></a>多核并行和 SIMT</h4><p>基于瘦身后，可以在 GPU 中塞多一些并行电路，实现多核并行。</p>
+<p>CPU 里有 SIMD 技术，在做向量计算的时候，我们要执行的指令是一样的，只是同一个指令的数据有所不同而已。</p>
+<p>GPU 就借鉴了 SIMD，做了 SIMT（Single Instruction，Multiple Threads）的技术。比 SIMD 更加灵活，CPU 一次性取出了固定长度的多个数据，放到寄存器里面，用一个指令去执行。而 <strong>SIMT，可以把多条数据，交给不同的线程去处理。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p04.jpg" alt=""></p>
+<p>如上，在取指令和指令译码的阶段，可以给到后面多个不同的 ALU 并行进行运算。这样，就可以放下更多的 ALU，同时进行更多的并行运算了。</p>
+<h4 id="GPU-里的“超线程”"><a href="#GPU-里的“超线程”" class="headerlink" title="GPU 里的“超线程”"></a>GPU 里的“超线程”</h4><p>GPU 的指令可能也遇到流水线停顿，而解决方案类似CPU，可以调度别的计算任务给当前 ALU。一个 Core 里面的执行上下文的数量，需要比 ALU 多。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p05.jpg" alt=""></p>
+<h3 id="GPU-性能差异"><a href="#GPU-性能差异" class="headerlink" title="GPU 性能差异"></a>GPU 性能差异</h3><p>以 NVidia 2080 显卡为例，其算力如何？</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p06.jpg" alt=""></p>
+<blockquote>
+<p>2080 显卡有 46 个 SM（Streaming Multiprocessor，流式处理器），每个 SM（也就是 GPU Core）里有 64 个 Cuda Core（ALU 的数量），也就是 Shader。<br>还有 184 个 TMU，用来做纹理映射的计算单元，另一种 Shader。<br>主频是 1515MHz，如果自动超频（Boost）的话，可以到 1700MHz。每个时钟周期可以执行两条指令。<br>于是，浮点算力：（46 × 64 + 184）× 1700 MHz × 2 = 10.06 TFLOPS</p>
+</blockquote>
+<p>Intel i9 9900K 的性能不到 1TFLOPS，它们的价格却差不多，算力差10倍。</p>
+<hr>
+<h2 id="32-FPGA和ASIC"><a href="#32-FPGA和ASIC" class="headerlink" title="32 | FPGA和ASIC"></a>32 | FPGA和ASIC</h2><p>20 世纪末，计算机世界热衷于硬件的创新，21世纪初则转到了软件上。FPGA 和 ASIC 是2类经典的芯片。</p>
+<h3 id="FPGA"><a href="#FPGA" class="headerlink" title="FPGA"></a>FPGA</h3><p>一个四核 i7 的 Intel CPU，晶体管数量差不多有 20 亿个，设计和制作很困难。周期一般几月到几年，期间还需要各种测试，如果每次重做成本太高。</p>
+<p>于是，编程化思想，能否制作一个硬件，通过不同的程序代码，来操作这个硬件之前的电路连线，以形成需要的芯片？有，<code>FPGA</code>，即<code>现场可编程门阵列</code>（Field-Programmable Gate Array）。</p>
+<p>FPGA 有很多门电路，可以反复烧录，组合实现不同功能芯片。但如何编程呢？<br><strong>1. 用存储换功能实现组合逻辑；</strong></p>
+<blockquote>
+<p>其基本电路不用布线连接，而是通过软件设计真值表，存到LUT（Look-Up Table，查找表）这一存储空间中，其实就是不是真计算，而是存储不同逻辑计算结果映射关系。</p>
+</blockquote>
+<p><strong>2. 对于需要实现的时序逻辑电路，直接放上 D 触发器，作为寄存器。</strong></p>
+<blockquote>
+<p>多个 LUT 的电路和寄存器组合成一个<code>逻辑簇</code>（Logic Cluster）的东西。在 FPGA 里，它也被叫做 CLB（Configurable Logic Block，可配置逻辑块）。基于 CLB 可以搭建我们需要的芯片。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac32p01.jpg" alt=""></p>
+<p><strong>3. FPGA 是通过可编程逻辑布线，来连接各个不同的 CLB 组成芯片功能。</strong></p>
+<blockquote>
+<p>在 CLB 之间留有很多电路开关，通过控制此便可以实现不同 CLB 之间的连接方式。</p>
+</blockquote>
+<h3 id="ASIC"><a href="#ASIC" class="headerlink" title="ASIC"></a>ASIC</h3><p>除了 CPU、GPU、FPGA 这些通用型芯片外，日常中经常需要一些专用芯片处理某些固定任务。比如录音笔的音频芯片，遥控汽车的芯片等。</p>
+<p>这种专用芯片一般称为 <code>ASIC</code>（Application-Specific Integrated Circuit），也就是专用集成电路。往往电路精简、设计简单、功耗低、成本低。</p>
+<p>但，FPGA 成熟，没有硬件研发成本；ASIC 需要仿真、验证，还需要经过流片（Tape out）。单独研发成本也不一定低。</p>
+<hr>
+<h2 id="33-解读TPU"><a href="#33-解读TPU" class="headerlink" title="33 | 解读TPU"></a>33 | 解读TPU</h2><p>TPU 是过去几年比较知名的 ASIC。</p>
+<h3 id="TPU-V1-的来源"><a href="#TPU-V1-的来源" class="headerlink" title="TPU V1 的来源"></a>TPU V1 的来源</h3><p>深度学习火起来后，计算量最大的是模型推理部分，第一代 TPU 便是为了优化此。</p>
+<p>目标：</p>
+<ol>
+<li>响应快；</li>
+<li>功耗低。</li>
+</ol>
+<h3 id="深入理解-TPU-V1"><a href="#深入理解-TPU-V1" class="headerlink" title="深入理解 TPU V1"></a>深入理解 TPU V1</h3><p><strong>TPU 需要快速上线和向前兼容。</strong></p>
+<blockquote>
+<p>TPU 设计成可插拔的板卡，甚至没有取指令的电路，而是通过 CPU，向 TPU 发送需要执行的指令。</p>
+</blockquote>
+<p><strong>专用电路和大量缓存</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac33p01.jpg" alt=""></p>
+<p>其中，</p>
+<ul>
+<li>矩阵乘法单元（Matrix Multiply Unit）；</li>
+<li>累加器（Accumulators）模块；</li>
+<li>激活函数（Activation）模块和归一化 / 池化（Normalization/Pool）模块<br>是顺序串联在一起的。</li>
+</ul>
+<p>控制电路（Control）只占了 2%，没有冒险、分支预测等等。<br>超过一半的 TPU 的面积：作为 <code>本地统一缓冲区</code>（Local Unified Buffer）（29%）和<code>矩阵乘法单元</code>（Matrix Mutliply Unit）(24%)。其中，缓冲区使用 SRAM，比起内存使用的 DRAM 速度要快上很多，利于深度模型推理的高频读写。</p>
+<p><strong>细节优化，使用 8 Bits 数据</strong><br>正常深度模型使用 32Bits 来处理浮点数，而在 TPU 内使用 8Bits。这是一种对深度模型进行 int8 量化的方案，可以使得存储更小，计算更快。</p>
+<blockquote>
+<p>当然，如果对精度比较依赖的话，可能会成为弊端。</p>
+</blockquote>
+<hr>
+<h2 id="34-理解虚拟机"><a href="#34-理解虚拟机" class="headerlink" title="34 | 理解虚拟机"></a>34 | 理解虚拟机</h2><blockquote>
+<p>如何让空闲的机器分时段分大小租给不同需求的用户。</p>
+</blockquote>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多个终端连接同一个主机，会自动给程序或任务分配计算时间。</p>
+<h3 id="公有云"><a href="#公有云" class="headerlink" title="公有云"></a>公有云</h3><p>早期亚马逊租服务器只能整租，起步配置高，且换用户的时候需要清空数据和程序。</p>
+<p><code>虚拟机技术</code>，可以在一台物理服务器上，同时运行多个虚拟服务器，并且可以动态去分配，每个虚拟服务器占用的资源。不需要的可以关闭服务器，并保留数据资源。</p>
+<h3 id="虚拟机的技术变迁"><a href="#虚拟机的技术变迁" class="headerlink" title="虚拟机的技术变迁"></a>虚拟机的技术变迁</h3><p><code>虚拟机</code>（Virtual Machine）技术，在现有硬件的操作系统上，模拟一个计算机系统的技术。</p>
+<p><strong>解释型虚拟机</strong><br>模拟系统最简单的就是兼容这个计算机系统的指令集。</p>
+<p>这种解释执行方式的最大的优势就是，模拟的系统可以跨硬件。</p>
+<p>但，有缺陷：</p>
+<ul>
+<li>无法精确“模拟”；</li>
+<li>性能差。</li>
+</ul>
+<p><strong>虚拟机的性能提升</strong><br>为了克服上述缺陷，又要支持一个操作系统上跑多个完整的操作系统，方案就是<strong>加入一个中间层</strong>。即<code>虚拟机监视器</code>，英文叫 VMM（Virtual Machine Manager）或者 Hypervisor。</p>
+<p>实际的指令是怎么落到硬件上去实际执行？</p>
+<p><code>Type-2 虚拟机</code>：像一个运行在操作系统上的软件。对于最终到硬件的指令，客户机的操作系统-&gt;虚拟机监视器-&gt;宿主机的操作系统。</p>
+<blockquote>
+<p>只是把在模拟器里的指令翻译工作，挪到了虚拟机监视器里。更多是用在我们日常的个人电脑里，而不是用在数据中心里。</p>
+</blockquote>
+<p><code>Type-1 虚拟机</code>：客户机的指令交给虚拟机监视器之后呢，不再需要通过宿主机的操作系统调用硬件，而是可以直接由虚拟机监视器去调用硬件。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p01.jpg" alt=""></p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>Type-1 虚拟机缺点：实际的物理机上，我们可能同时运行了多个的虚拟机，每个都运行了一个属于自己的单独的操作系统。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p02.jpg" alt=""></p>
+<p>不管依赖什么，其实都是跑在 Linux 内核上的。通过 Docker，我们不再需要在操作系统上再跑一个操作系统，而只需要通过容器编排工具（如 Kubernetes），能够进行各个应用之间的<strong>环境和资源隔离就好了。</strong></p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc22to29.html" itemprop="url">深入浅出计算机组成原理——原理篇：处理器（22-29）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-28T00:00:00+08:00">
+                2021-07-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc22to29.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc22to29.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="22-冒险和预测（一）"><a href="#22-冒险和预测（一）" class="headerlink" title="22 | 冒险和预测（一）"></a>22 | 冒险和预测（一）</h2><p>流水线设计需要解决的<code>三大冒险</code>：</p>
+<ul>
+<li>结构冒险（Structural Hazard）；</li>
+<li>数据冒险（Data Hazard）；</li>
+<li>控制冒险（Control Hazard）</li>
+</ul>
+<h3 id="结构冒险"><a href="#结构冒险" class="headerlink" title="结构冒险"></a>结构冒险</h3><p><strong>本质上是一个硬件层面的资源竞争问题。</strong></p>
+<blockquote>
+<p>CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p01.png" alt=""></p>
+<p>如上图所示就是内存读取的结构冒险。因为内存只有一个地址译码器的作为地址输入，在一个时钟周期里面只能读取一条数据。</p>
+<p>一个<strong>直观的方案：内存分成两部分（存放指令的程序内存和存放数据的数据内存），各有各的地址译码器</strong>。这称为<a href="https://en.wikipedia.org/wiki/Harvard_architecture">哈佛架构</a>（Harvard Architecture）。有弊端：没法动态分配内存了。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p02.jpg" alt=""></p>
+<p>然而，现在都是冯·诺依曼体系结构，其参考上述，在 CPU 内部加了高速缓存部分，主要是为了缓解访问内存速度过慢于 CPU。但在这里把高速缓存分成了<code>指令缓存</code>（Instruction Cache）和<code>数据缓存</code>（Data Cache）两部分。CPU 并不会直接读取主内存。它会从主内存把指令和数据加载到高速缓存中，这样后续的访问都是访问高速缓存。<strong>解法的本质都是增加资源。</strong></p>
+<h3 id="数据冒险"><a href="#数据冒险" class="headerlink" title="数据冒险"></a>数据冒险</h3><p>三大类：</p>
+<ul>
+<li><code>先写后读</code>（Read After Write，RAW）——数据依赖；</li>
+<li><code>先读后写</code>（Write After Read，WAR）——反依赖；</li>
+<li><code>写后再写</code>（Write After Write，WAW）——输出依赖。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RAW</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="type">int</span> b = <span class="number">2</span>;</span><br><span class="line">  a = a + <span class="number">2</span>;</span><br><span class="line">  b = a + <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WAR</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="type">int</span> b = <span class="number">2</span>;</span><br><span class="line">  a = b + a;</span><br><span class="line">  b = a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// WAW</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">  a = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="通过流水线停顿解决数据冒险"><a href="#通过流水线停顿解决数据冒险" class="headerlink" title="通过流水线停顿解决数据冒险"></a>通过流水线停顿解决数据冒险</h3><p>冲突：</p>
+<ul>
+<li>流水线架构的核心是在前一个指令还没有结束的时候，后面的指令就要开始执行。</li>
+<li>但，对于同一个寄存器或者内存地址的操作，都有明确强制的顺序要求。</li>
+</ul>
+<p>解法： <code>流水线停顿</code>（Pipeline Stall），或者叫<code>流水线冒泡</code>（Pipeline Bubbling）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p03.jpg" alt=""></p>
+<p>在执行后面的操作步骤前面，插入一个 NOP 操作，也就是执行一个其实什么都不干的操作。</p>
+<hr>
+<h2 id="23-冒险和预测（二）"><a href="#23-冒险和预测（二）" class="headerlink" title="23 | 冒险和预测（二）"></a>23 | 冒险和预测（二）</h2><p>前面两种冒险的解决方案可以归纳为“加资源”和“加时间”。这里介绍一个更有效的方案：<code>操作数前推</code>。</p>
+<h3 id="NOP-操作和指令对齐"><a href="#NOP-操作和指令对齐" class="headerlink" title="NOP 操作和指令对齐"></a>NOP 操作和指令对齐</h3><p>五级流水线：“取指令（IF）- 指令译码（ID）- 指令执行（EX）- 内存访问（MEM）- 数据写回（WB） ”。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p01.jpg" alt=""></p>
+<p>但并不是所有的指令都需要完全的5级流水线，如上表，STORE 和 ADD/SUB 就分别不需要 WB 和 MEM 操作</p>
+<p>但是我们并不能跳过对应的阶段直接执行下一阶段，否则容易出现结构冒险，例如 LOAD 指令和 ADD 先后执行的时候，WB 是在统一时钟周期，所以需要针对确实的阶段进行插入 NOP。</p>
+<h3 id="操作数前推"><a href="#操作数前推" class="headerlink" title="操作数前推"></a>操作数前推</h3><p>插入过多的 NOP 操作，带来的坏处就是浪费了CPU的资源。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add $t0, $s2,$s1</span><br><span class="line">add $s2, $s1,$t0</span><br></pre></td></tr></table></figure>
+<p>上述2行 code 的流水线如下，后者依赖前者计算结果。为了流水线对齐和结构依赖，多了4个 NOP 的操作。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p02.jpg" alt=""></p>
+<p>实际上，第二条指令未必要等待第一条指令写回完成。可将第一条指令的执行结果直接传输给第二条指令的执行阶段。如下图所示，就叫作<code>操作数前推</code>（Operand Forwarding），或者<code>操作数旁路</code>（Operand Bypassing）。</p>
+<blockquote>
+<p>它的实现是 CPU 的硬件里面，再单独拉一根信号传输的线路出来，使得 ALU 的计算结果能够重新回到 ALU 的输入里。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac23p03.jpg" alt=""></p>
+<hr>
+<h2 id="24-冒险和预测（三）"><a href="#24-冒险和预测（三）" class="headerlink" title="24 | 冒险和预测（三）"></a>24 | 冒险和预测（三）</h2><h3 id="填上空闲的-NOP"><a href="#填上空闲的-NOP" class="headerlink" title="填上空闲的 NOP"></a>填上空闲的 NOP</h3><p><strong>流水线停顿的时候，对应的电路闲着，可以先完成后面指令的执行阶段。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = b + c</span><br><span class="line">d = a * e</span><br><span class="line">x = y * z</span><br></pre></td></tr></table></figure>
+<p>如上，后面的指令不依赖前面的，那就不用等，可以先执行。这就是<code>乱序执行</code>（Out-of-Order Execution，OoOE）</p>
+<h3 id="CPU-里的“线程池”"><a href="#CPU-里的“线程池”" class="headerlink" title="CPU 里的“线程池”"></a>CPU 里的“线程池”</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac24p01.jpg" alt=""></p>
+<p>乱序执行的流水线不同于历史的5级流水线，如上图：</p>
+<ol>
+<li>取指令和指令译码没有变化；</li>
+<li>译码后，不直接执行，先分发到<code>保留站</code>（Reservation Stations）；</li>
+<li>这些指令等待依赖的数据，等到后才交到 ALU 执行；；</li>
+<li>结果也不直接写回寄存器，先存在<code>重排缓冲区</code>（Re-Order Buffer，ROB）；</li>
+<li>CPU 按照取指令的顺序，对结果重新排序，从前往后依赖提交完成；</li>
+<li>结果数据也不直接写内存，先写入<code>存储缓冲区</code>(Store Buffer)后再写。</li>
+</ol>
+<blockquote>
+<p><strong>即使执行乱序，但最终结果会排序，确保写入内存和寄存器是有序的</strong></p>
+</blockquote>
+<hr>
+<h2 id="25-冒险和预测（四）"><a href="#25-冒险和预测（四）" class="headerlink" title="25 | 冒险和预测（四）"></a>25 | 冒险和预测（四）</h2><p>所有的流水线停顿都从指令执行开始，但取指令和指令译码不需要任何停顿。当然，<strong>这有一个前提：所有的指令代码都是顺序加载执行的。</strong></p>
+<p>但是，遇到条件分支时就不成立：</p>
+<blockquote>
+<p>要等 jmp 指令执行完成，去更新了 PC 寄存器之后，才能判断是否执行下一条指令，还是跳转到另外内存地址，去取别的指令。</p>
+</blockquote>
+<p>上述提到的就是<code>控制冒险</code>。</p>
+<h3 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h3><h4 id="缩短分支延迟"><a href="#缩短分支延迟" class="headerlink" title="缩短分支延迟"></a>缩短分支延迟</h4><p>可以将条件判断、地址跳转，<strong>都提前到指令译码阶段进行</strong>。CPU 里面设计对应的旁路，在指令译码阶段，就提供对应的判断比较的电路，节省等待时间。<br>但并不能彻底解决问题，跳转指令的比较结果，仍然要在指令执行的时候才能知道。</p>
+<h4 id="分支预测-1"><a href="#分支预测-1" class="headerlink" title="分支预测"></a>分支预测</h4><p>让 CPU 预测下一跳执行指令，无非 2 选 1，最朴素的就是<strong>假装分支不发生</strong>，即<code>静态预测</code>技术。统计学角度，约50%正确率。</p>
+<h4 id="动态分支预测"><a href="#动态分支预测" class="headerlink" title="动态分支预测"></a>动态分支预测</h4><p>上面一种属实太随机，实际上可以<strong>根据之前条件跳转的比较结果来预测</strong>。</p>
+<p>类似于天气预报，如果始终选择跟上次状态一样，便是<code>一级分支预测</code>（One Level Branch Prediction），或者叫 <code>1 比特饱和计数</code>（1-bit saturating counter）。</p>
+<p>进一步提升，我们引入一个<code>状态机</code>（State Machine）如下图，4 个状态，所以需要 2 个比特来记录。这样这整个策略，就可以叫作 <code>2 比特饱和计数</code>，或者叫<code>双模态预测器</code>（Bimodal Predictor）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac25p01.jpg" alt=""></p>
+<h3 id="循环嵌套的改变会影响性能"><a href="#循环嵌套的改变会影响性能" class="headerlink" title="循环嵌套的改变会影响性能"></a>循环嵌套的改变会影响性能</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class BranchPrediction &#123;</span><br><span class="line">    public static void main(String args[]) &#123;        </span><br><span class="line">        long start = System.currentTimeMillis();</span><br><span class="line">        for (int i = 0; i &lt; 100; i++) &#123;</span><br><span class="line">            for (int j = 0; j &lt;1000; j ++) &#123;</span><br><span class="line">                for (int k = 0; k &lt; 10000; k++) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        long end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(&quot;Time spent is &quot; + (end - start));</span><br><span class="line">                </span><br><span class="line">        start = System.currentTimeMillis();</span><br><span class="line">        for (int i = 0; i &lt; 10000; i++) &#123;</span><br><span class="line">            for (int j = 0; j &lt;1000; j ++) &#123;</span><br><span class="line">                for (int k = 0; k &lt; 100; k++) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(&quot;Time spent is &quot; + (end - start) + &quot;ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上述2种嵌套循环代码，性能差异很大，主要是因为：</p>
+<ol>
+<li>每次循环需要 cmp 和 jle 指令，后者就需要分支预测；</li>
+<li>最内层只有最后一次会预测错（跳到外层），故外层循环次数越多，整体预测错的越多。</li>
+</ol>
+<hr>
+<h2 id="26-Superscalar-和-VLIW"><a href="#26-Superscalar-和-VLIW" class="headerlink" title="26 | Superscalar 和 VLIW"></a>26 | Superscalar 和 VLIW</h2><p>程序的 CPU 执行时间 = 指令数 × CPI × Clock Cycle Time</p>
+<p>CPI 的倒数，即 IPC（Instruction Per Clock），也就是一个时钟周期里面能够执行的指令数，代表了 CPU 的<code>吞吐率</code>。</p>
+<p><strong>最佳情况下，IPC 也只能到 1</strong></p>
+<p>即一个时钟周期也只能执行完取一条指令，但有办法突破。</p>
+<h3 id="多发射与超标量"><a href="#多发射与超标量" class="headerlink" title="多发射与超标量"></a>多发射与超标量</h3><p>乱序执行的时候，你会看到，其实指令的执行阶段，是由很多个功能单元（FU）并行（Parallel）进行的。</p>
+<p><em>取指令（IF）和指令译码（ID）部分并不是并行进行的。如何实现并行？</em></p>
+<p>其实只要我们把取指令和指令译码，也一样通过增加硬件的方式。一次性从内存里面取出多条指令，然后分发给多个并行的指令译码器，进行译码，然后对应交给不同的功能单元去处理。</p>
+<p>这种 CPU 设计，我们叫作<code>多发射</code>（Mulitple Issue）和<code>超标量</code>（Superscalar）。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p01.jpg" alt=""></p>
+<p>如此，流水线就会有所变化，</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p02.jpg" alt=""></p>
+<h3 id="Intel-失败的超长指令字"><a href="#Intel-失败的超长指令字" class="headerlink" title="Intel 失败的超长指令字"></a>Intel 失败的超长指令字</h3><p>乱序执行和超标量在硬件层面实现都很复杂，因为要解决依赖冲突问题，所以需要考虑放到软件里面做。</p>
+<p>通过编译器来优化指令数，一个 CPU 设计叫作<code>超长指令字设计</code>（Very Long Instruction Word，VLIW）。即 IA-64 架构的安腾（Itanium）处理器，使用<code>显式并发指令运算</code>（Explicitly Parallel Instruction Computer）。</p>
+<p>在超长指令字架构里，将检测指令的前后依赖关系由 CPU 硬件电路转到了编译器。</p>
+<blockquote>
+<p>让编译器把没有依赖关系的代码位置进行交换。然后，再把多条连续的指令打包成一个指令包，安腾是3.</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p03.jpg" alt=""></p>
+<p>其失败的重要原因——<strong>向前兼容</strong>：</p>
+<ol>
+<li>与x86指令集不同，x86的程序全部要重新编译；</li>
+<li>想要提升并行度，需要增加指令包里的指令数量，就需要重新编译。</li>
+</ol>
+<blockquote>
+<p>在 Intel 的 x86 的 CPU 里，从 Pentium 时代，第一次开始引入超标量技术，整个 CPU 的性能上了一个台阶。依赖于在硬件层面，能够检测到对应的指令的先后依赖关系，解决“冒险”问题。所以，它也使得 CPU 的电路变得更复杂了。</p>
+</blockquote>
+<hr>
+<h2 id="27-SIMD：加速矩阵乘法"><a href="#27-SIMD：加速矩阵乘法" class="headerlink" title="27 | SIMD：加速矩阵乘法"></a>27 | SIMD：加速矩阵乘法</h2><h3 id="超线程"><a href="#超线程" class="headerlink" title="超线程"></a>超线程</h3><p>2002 年底，Intel 在的 3.06GHz 主频的 Pentium 4 CPU 上，第一次引入了<code>超线程</code>（Hyper-Threading）技术。</p>
+<p><strong>朴素思想：找一些没有依赖完全独立的指令来并行运算</strong>。不同的程序貌似天然符合该要求。</p>
+<p>看上去没有什么技术，但实际上我们并没有真正地做到指令的并行运行：</p>
+<blockquote>
+<p>在同一时间点上，一个物理的 CPU 核心只会运行一个线程的指令。</p>
+</blockquote>
+<p>超线程的 CPU，其实是把一个物理层面 CPU 核心，“伪装”成两个逻辑层面的 CPU 核心。硬件上增加很多电路，<strong>使得一个 CPU 维护两个不同线程的指令的状态信息</strong>。其中会有双份的 PC 寄存器、指令寄存器乃至条件码寄存器，不过指令译码器还是 ALU等其他组件没有双份。超线程技术一般也被叫作<code>同时多线程</code>（Simultaneous Multi-Threading，简称 SMT）技术。</p>
+<h3 id="SIMD"><a href="#SIMD" class="headerlink" title="SIMD"></a>SIMD</h3><p>SIMD，中文叫作<code>单指令多数据流</code>（Single Instruction Multiple Data）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> timeit</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = np.array(<span class="built_in">range</span>(<span class="number">1000</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>timeit.timeit(<span class="string">&quot;[i + 1 for i in a]&quot;</span>, setup=<span class="string">&quot;from __main__ import a&quot;</span>, number=<span class="number">1000000</span>)</span><br><span class="line"><span class="number">32.82800309999993</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>timeit.timeit(<span class="string">&quot;np.add(1, b)&quot;</span>, setup=<span class="string">&quot;from __main__ import np, b&quot;</span>, number=<span class="number">1000000</span>)</span><br><span class="line"><span class="number">0.9787889999997788</span></span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>上述两种计算法，性能差30多倍，主要因为：<br><strong>NumPy 直接用到了 SIMD 指令，能够并行进行向量的操作。</strong></p>
+<p><code>SIMD</code> 在获取数据和执行指令的时候，都做到了并行。且在从内存里面读取数据的时候，SIMD 是一次性读取多个数据。</p>
+<p>正是 SIMD 技术的出现，使得我们在 Pentium 时代的个人 PC，开始有了多媒体运算的能力。</p>
+<hr>
+<h2 id="28-异常和中断"><a href="#28-异常和中断" class="headerlink" title="28 | 异常和中断"></a>28 | 异常和中断</h2><h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>这里不是指 Exception 这种“软件异常”，而是和硬件、系统相关的“硬件异常”。</p>
+<p>比如，除以 0，溢出，CPU 运行程序时收到键盘输入信号等。计算机会为每一种可能会发生的异常，分配一个异常代码（Exception Number）。</p>
+<blockquote>
+<p>这些异常代码里，I/O 发出的信号的异常代码，是由操作系统来分配的，也就是由软件来设定的。而像加法溢出这样的异常代码，则是由 CPU 预先分配好的，也就是由硬件来分配的。</p>
+</blockquote>
+<p>内存中有一个<code>异常表</code>（Exception Table），也叫作<code>中断向量表</code>（Interrupt Vector Table），存放的是不同的异常代码对应的异常处理程序（Exception Handler）所在的地址。</p>
+<h3 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h3><ul>
+<li>中断（Interrupt）：程序员执行时被打断，一般来自 I/O 设备。</li>
+<li>陷阱（Trap）：程序员“故意“主动触发的异常，类似断点。</li>
+<li>故障（Fault）：陷阱是我们开发程序的时候刻意触发的异常，而故障通常不是。</li>
+<li>中止（Abort）：CPU 遇到故障无法恢复时需要终止。</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>原因</th>
+<th>示例</th>
+<th>触发时机</th>
+<th>处理后操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中断</td>
+<td>I/O设备信号</td>
+<td>用户键盘输入</td>
+<td>异步</td>
+<td>下一条指令</td>
+</tr>
+<tr>
+<td>陷阱</td>
+<td>程序刻意触发</td>
+<td>程序进行系统调用</td>
+<td>同步</td>
+<td>下一条指令</td>
+</tr>
+<tr>
+<td>故障</td>
+<td>程序执行出错</td>
+<td>程序加载的缺页错误</td>
+<td>同步</td>
+<td>当前指令</td>
+</tr>
+<tr>
+<td>终止</td>
+<td>故障无法恢复</td>
+<td>ECC内存校验失败</td>
+<td>同步</td>
+<td>退出程序</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>异步：中断异常的信号来自系统外部，而不是在程序自己执行的过程中；</li>
+<li>同步：在程序执行的过程中发生的。</li>
+</ul>
+<p><strong>处理流程：保存现场、异常代码查询、异常处理程序调用“</strong></p>
+<h3 id="异常的处理"><a href="#异常的处理" class="headerlink" title="异常的处理"></a>异常的处理</h3><p>切换到异常处理程序，像两个不同的独立进程之间在 CPU 层面的切换，所以这个过程我们称之为<code>上下文切换</code>（Context Switch）。</p>
+<p>难点：</p>
+<ol>
+<li>异常情况往往发生在程序正常执行的预期之外；</li>
+<li>像陷阱类，涉及程序指令在用户态和内核态之间的切换；</li>
+<li>像故障类，在异常处理程序执行完成之后。</li>
+</ol>
+<hr>
+<h2 id="29-CISC和RISC指令集"><a href="#29-CISC和RISC指令集" class="headerlink" title="29 | CISC和RISC指令集"></a>29 | CISC和RISC指令集</h2><p>CPU 的指令集可分：</p>
+<ul>
+<li><code>复杂指令集</code>（Complex Instruction Set Computing，简称 <code>CISC</code>），机器码是固定长度;</li>
+<li><code>精简指令集</code>（Reduced Instruction Set Computing，简称 <code>RISC</code>），机器码是可变长度。</li>
+</ul>
+<h3 id="CISC-VS-RISC"><a href="#CISC-VS-RISC" class="headerlink" title="CISC VS RISC"></a>CISC VS RISC</h3><p>CISC 的挑战：</p>
+<ul>
+<li>在硬件层，支持更多的复杂指令，电路更复杂，设计更困难，散热和功耗更高。</li>
+<li>在软件层，因为指令更多，编译器的优化更困难。</li>
+</ul>
+<p>最早只有 CISC，70年代末，大卫·帕特森（David Patterson）发现<strong>在 CPU 运行的程序里，80% 的时间都是在使用 20% 的简单指令</strong>。于是提出了 RISC。</p>
+<ul>
+<li>CISC 的架构，通过<strong>优化指令数</strong>，来减少 CPU 的执行时间。</li>
+<li>RISC 的架构，在<strong>优化 CPI</strong>，指令简单，需要的时钟周期就比较少。</li>
+</ul>
+<h3 id="微指令架构"><a href="#微指令架构" class="headerlink" title="微指令架构"></a>微指令架构</h3><p>指令集的<strong>向前兼容性</strong>，即历史程序是否废弃，是 Intel 想要放弃 x86 重点要考虑的问题。</p>
+<blockquote>
+<p>x86 下的 64 位的指令集 x86-64，并不是 Intel 发明的，而是 AMD 发明的。</p>
+</blockquote>
+<p>Intel 在微指令架构的 CPU 里面，译码器会把一条机器码，“翻译”成好几条“微指令”，使之变成了固定长度的 RISC 风格的了。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac29p01.jpg" alt=""></p>
+<p>如上，指令译码器变复杂，性能又有浪费。但因为“二八现象”的存在，<strong>对于这种有着很强局部性的问题，常见的解决方案就是使用缓存</strong>。<br>于是，Intel 加了一层 <code>L0 Cache</code> 来保存 CISC 翻译成 RISC 的微指令。不仅优化了性能，因为译码器的晶体管开关动作变少了，还减少了功耗。</p>
+<p>由于 Intel 本身在 CPU 层面做的大量优化，比如乱序执行、分支预测等。故 x86 的 CPU 始终在功耗上还是要远远超过 RISC 架构的 ARM，所以最终在智能手机崛起替代 PC 的时代，落在了 ARM 后面。</p>
+<h3 id="ARM-和-RISC-V"><a href="#ARM-和-RISC-V" class="headerlink" title="ARM 和 RISC-V"></a>ARM 和 RISC-V</h3><p>ARM 能够在移动端战胜 Intel，并不是因为 RISC 架构。</p>
+<p>CISC 和 RISC 的分界已经没有那么明显了。Intel 和 AMD 的 CPU 也都是采用译码成 RISC 风格的微指令来运行。而 ARM 的芯片，一条指令同样需要多个时钟周期，有乱序执行和多发射。</p>
+<p><strong>核心差异是</strong>：</p>
+<ul>
+<li>功耗优先的设计<br>一个 4 核的 Intel i7 的 CPU，设计的功率就是 130W。而 ARM A8 的单个核心的 CPU，设计功率只有 2W。</li>
+<li>低价。<br>ARM 只是进行 CPU 设计，然后产权授权出去。尽管出货量远大于 Intel，但是收入和利润却比不上 Intel。</li>
+</ul>
+<p>图灵奖的得主大卫·帕特森教授从伯克利退休之后，成了 RISC-V 国际开源实验室的负责人，开始推动 RISC-V 这个开源 CPU 的开发。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc17to21.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc17to21.html" itemprop="url">深入浅出计算机组成原理——原理篇：处理器（17-21）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-19T00:00:00+08:00">
+                2021-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc17to21.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc17to21.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="17-建立数据通路（上）"><a href="#17-建立数据通路（上）" class="headerlink" title="17 | 建立数据通路（上）"></a>17 | 建立数据通路（上）</h2><h3 id="指令周期（Instruction-Cycle）"><a href="#指令周期（Instruction-Cycle）" class="headerlink" title="指令周期（Instruction Cycle）"></a>指令周期（Instruction Cycle）</h3><p>一条指令的执行过程：</p>
+<ol>
+<li><strong>Fetch</strong>：取得指令</li>
+<li><strong>Decode</strong>：指令译码</li>
+<li><strong>Execute</strong>：执行指令</li>
+</ol>
+<p>（重复以上步骤）</p>
+<p>上述的一个循环称为<code>指令周期（Instruction Cycle）</code>。</p>
+<p>指令存在<code>存储器</code>，由<code>控制器</code>操作，通过 <code>PC 寄存器</code>和<code>指令寄存器</code>取出指令，<code>控制器</code>也控制<code>解码</code>过程。<br>指令执行则是由<code>算术逻辑单元（ALU）</code>操作的，简单的无条件地址跳转则在控制器内完成。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac17p01.jpg" alt=""></p>
+<p><strong>三个 Cycle：</strong></p>
+<ul>
+<li><code>Instruction Cycle</code> ：指令周期</li>
+<li><code>Machine Cycle</code> ：机器周期/ CPU 周期</li>
+<li><code>Clock Cycle</code> ：也就是时钟周期，机器的主频</li>
+</ul>
+<blockquote>
+<p>一个指令周期由多个机器周期组成，一个机器周期由多个时钟周期（至少2个）组成。</p>
+</blockquote>
+<h3 id="建立数据通路"><a href="#建立数据通路" class="headerlink" title="建立数据通路"></a>建立数据通路</h3><p><strong>数据通路就是我们的处理器单元</strong><br>一类是<code>操作元件</code>：也叫<code>组合逻辑元件</code>（Combinational Element），其实就是我们的 <code>ALU</code>；<br>一类是<code>存储元件</code>：也有叫<code>状态元件</code>（State Element），例如寄存器。</p>
+<p>通过数据总线链接起来进行使用，即建立数据通路。</p>
+<p>控制器，<strong>为了循环完成指令的读取和解码，将结果信号输送给ALU</strong>。例如 CPU 有 2k+ 个指令，即有同样多的控制信号组合。</p>
+<blockquote>
+<p>正是控制器，使得可以“编程”来实现功能，构建“存储程序型计算机”。</p>
+</blockquote>
+<h3 id="CPU-所需要的硬件电路"><a href="#CPU-所需要的硬件电路" class="headerlink" title="CPU 所需要的硬件电路"></a>CPU 所需要的硬件电路</h3><ul>
+<li>ALU：根据输入计算结果输出；</li>
+<li>寄存器：进行状态读写；</li>
+<li>“自动”的电路：按照固定的周期，不停地实现 PC 寄存器自增；</li>
+<li>“译码”的电路：对指令进行 decode。</li>
+</ul>
+<p><code>cpu 满载</code>：如果操作系统调度了一个高优先级的任务，那么cpu就优先执行这个任务即满载，<br><code>Idle 闲置</code>：如果操作系统调度了一个低优先级的idle任务，那么cpu就执行这个优先级最低的简单任务，显示为空闲状态，即假装“没事做”，有其他高优任务时可随时抢占。</p>
+<blockquote>
+<p>idle 进程，优先级最低，仅当其他进程都阻塞时被调度器选中。idle 进程循环执行 HLT 指令，关闭 CPU 大部分功能以降低功耗，收到中断信号时 CPU 恢复正常状态。</p>
+</blockquote>
+<hr>
+<h2 id="18-建立数据通路（中）"><a href="#18-建立数据通路（中）" class="headerlink" title="18 | 建立数据通路（中）"></a>18 | 建立数据通路（中）</h2><p><strong>组合逻辑电路（Combinational Logic Circuit）</strong>：给定输入，就能得到固定的输出。</p>
+<p>光有上述的不足够，更像机械计算机，电子计算机则需要<strong>时序逻辑电路（Sequential Logic Circuit）</strong>，可解决3个问题：</p>
+<ul>
+<li>自动运行</li>
+<li>存储</li>
+<li>时序协调</li>
+</ul>
+<h3 id="时钟信号的硬件"><a href="#时钟信号的硬件" class="headerlink" title="时钟信号的硬件"></a>时钟信号的硬件</h3><blockquote>
+<p>CPU 的主频是由一个<code>晶体振荡器</code>来实现的，而它生成的电路信号，就是<code>时钟信号</code>。</p>
+</blockquote>
+<p><strong>核心：电的磁效应。</strong><br>如下图：<br>开关A：手动控制；<br>开关B：自然状态是合上。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p01.jpg" alt=""></p>
+<p>那么，开关A合上后，由于线圈通电B就会被断开，而后线圈没有磁性B又会弹回，于是又下面的<code>时钟信号</code>，叫做<code>反馈电路</code>：<br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p02.jpg" alt=""></p>
+<p>可简化成如下方式，一个输出结果接回输入的<code>反相器</code>（Inverter），也即<code>非门</code>。<br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p03.jpg" alt=""></p>
+<h3 id="通过-D-触发器实现存储功能"><a href="#通过-D-触发器实现存储功能" class="headerlink" title="通过 D 触发器实现存储功能"></a>通过 D 触发器实现存储功能</h3><p>基于反馈电路构建有记忆的电路，以实现寄存器和存储器。先看如下电路（2个或非门）：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p04.jpg" alt=""></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>NOR</th>
+<th>0</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如上图和表：</p>
+<ol>
+<li>开始R、S断开，A输入0、0，输出则1；B输入0、1，输出则0；电路稳定，Q输出0；</li>
+<li>如R闭合，A输入1、0，输出则0；B输如0，0，输出则1；A输入变成1、1，输出则0；电路稳定，Q输出1；</li>
+<li>如R重断开，A输入1、0，输出则0；B不变；电路稳定；但R、S和步骤1一样，Q却输出1；</li>
+<li>如S闭合，B必然输出0；则Q也输出0。</li>
+</ol>
+<p>上述为<code>触发器</code>（Flip-Flop）：当两个开关都断开的时候，最终的输出结果，取决于之前动作的输出结果，即<code>记忆功能</code>。</p>
+<p>为了实现利用上述写入数据，加入了两个与门和一个时钟信号，看下如电路：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p05.jpg" alt=""></p>
+<ul>
+<li>CLK为低电平的时候，R、S无论开关，其紧邻的与门必然输出0；</li>
+<li>CLK为高电平的时候，R、S状态会控制Q输出。</li>
+</ul>
+<p>再将 R 和 S 用一个反相器连起来，就成为最常用的 <code>D 型触发器</code>，一个输入的数据信号 D，也就是 Data：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac18p06.jpg" alt=""></p>
+<p>图中 Q 表示主输出，!Q 表示 Q 的补码。可以发现：</p>
+<ul>
+<li>CLK 低电平的时候，D 输入无影响，Q 始终 0；</li>
+<li>CLK 高电平的时候，D 的输入会决定 Q 的结果，且信号一致。</li>
+</ul>
+<p>故，一个 <code>D 型触发器</code>控制一个bit读写，N 个并列可做成 N 位触发器。</p>
+<p><strong>因此，程序可以“存储”，而不是靠固定的线路连接或者手工拨动开关，如此便解决。</strong></p>
+<h2 id="19-建立数据通路（下）"><a href="#19-建立数据通路（下）" class="headerlink" title="19 | 建立数据通路（下）"></a>19 | 建立数据通路（下）</h2><p>让计算机“自动”跑起来：<strong>时钟信号-&gt;实现计数器-&gt;PC计数器-&gt;译码器-&gt;CPU。</strong></p>
+<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><blockquote>
+<p><code>PC（Program Counter）寄存器</code>，又叫<code>程序计数器</code>。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac19p01.jpg" alt=""></p>
+<p>如上图所示：<strong>每过一个时钟周期，就能固定自增 1。</strong></p>
+<ul>
+<li>自增之后，可以取D型触发器里的值作为指令地址；</li>
+<li>顺序地存放指令，就是为了能定时地不断执行新指令。</li>
+</ul>
+<p>一条指令，经历程序计数，到获取指令、执行指令，需要在一个时钟周期里，否则可能会出错。<br>设计确保上限即耗时最长的一条 CPU 指令能完成的，我们称之为<code>单指令周期处理器</code>（Single Cycle Processor）。</p>
+<h3 id="读写数据所需要的译码器"><a href="#读写数据所需要的译码器" class="headerlink" title="读写数据所需要的译码器"></a>读写数据所需要的译码器</h3><p>很多 D 型触发器可以组成一块存储空间作为内存。寻址的电路就是译码器。</p>
+<p>先简化，两个地址选一个，成为 2-1 选择器；如下图：</p>
+<ul>
+<li>输入0，则输出和A一致；</li>
+<li>输入1，则输出和B一致。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac19p02.jpg" alt=""></p>
+<p>如果输入信号有3个不同开关，则能选择$2^3$个，称为<code>3-8译码器</code>。现在CPU上64位的，即有$2^{64}$个开关的译码器。</p>
+<h3 id="构造一个最简单的-CPU"><a href="#构造一个最简单的-CPU" class="headerlink" title="构造一个最简单的 CPU"></a>构造一个最简单的 CPU</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac19p03.jpg" alt=""></p>
+<p>CPU通路：</p>
+<ol>
+<li>自动计数器，作为 PC 寄存器；</li>
+<li>连一个地址译码器+内存（大量 D 型触发器）；</li>
+<li>计数器随着时钟主频自增，译码器获取指令的内存地址，写入指令寄存器；</li>
+<li>指令译码器将指令解析成 opcode 和操作数；</li>
+<li>链接 ALU 获取计算结果，写回到寄存器或者内存。</li>
+</ol>
+<p>if…else…电路：</p>
+<blockquote>
+<p>实际上不是控制电路，被拆解成一条 cmp 和一条 jmp 指令；<br>条件跳转指令也是在 ALU 层面执行的，“译码 - 执行 - 更新寄存器“，不需要控制器。</p>
+<p>执行一条计算机指令，其实可以拆分到很多个时钟周期，而不是必须使用单指令周期处理器的设计。</p>
+</blockquote>
+<hr>
+<h2 id="20-面向流水线的指令设计（上）"><a href="#20-面向流水线的指令设计（上）" class="headerlink" title="20 | 面向流水线的指令设计（上）"></a>20 | 面向流水线的指令设计（上）</h2><h3 id="单指令周期处理器"><a href="#单指令周期处理器" class="headerlink" title="单指令周期处理器"></a>单指令周期处理器</h3><blockquote>
+<p>CPU 指令：“取得指令（Fetch）- 指令译码（Decode）- 执行指令（Execute）</p>
+</blockquote>
+<p>如果 CPI = 1，即 1 个时钟周期执行一个指令，叫<code>单指令周期处理器</code>（Single Cycle Processor）。<br>但，由于指令电路复杂程度不一，实际上时间就不一样，<strong>因此就只能取最长的指令运行时间作为时钟周期，造成资源浪费。</strong></p>
+<h3 id="现代处理器的流水线设计"><a href="#现代处理器的流水线设计" class="headerlink" title="现代处理器的流水线设计"></a>现代处理器的流水线设计</h3><p>现代的 CPU 基本都是<code>指令流水线</code>（Instruction Pipeline）：其实就是将不同步骤拆开来执行，同时指令间也不用等待串行。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac20p01.jpg" alt=""></p>
+<p>指令流水线中的每个步骤称为<code>流水线阶段</code>或者<code>流水线级</code>（Pipeline Stage）。例如“取指令 - 指令译码 - ALU 计算（指令执行）- 内存访问 - 数据写回”就是5级。</p>
+<p>虽然流水线会使得指令的时钟周期增加，但复杂指令被拆分成多个小流水线级，就可以提高 CPU 主频了。<strong>只要保障一个最复杂的流水线级的操作，在一个时钟周期内完成就好了。</strong></p>
+<blockquote>
+<p>现代的 ARM 或者 Intel 的 CPU，流水线级数都已经到了 14 级。</p>
+</blockquote>
+<p>该技术下，单指令时间没变，但提升 CPU 的“吞吐率”，同时执行 5 条不同指令的不同阶段。</p>
+<h3 id="性能瓶颈"><a href="#性能瓶颈" class="headerlink" title="性能瓶颈"></a>性能瓶颈</h3><p>流水线级数并不是越高越好。<strong>每增加一级的流水线，就要多一级写入到流水线寄存器的操作</strong>。所以单纯地增加流水线级数，不仅不能提升性能，反而会有更多的 overhead 的开销。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac20p02.jpg" alt=""></p>
+<p><strong>一个 CPU 的时钟周期：可以认为是完成一条最复杂的指令拆分后流水线级的操作时间。</strong></p>
+<hr>
+<h2 id="21-面向流水线的指令设计（下）"><a href="#21-面向流水线的指令设计（下）" class="headerlink" title="21 | 面向流水线的指令设计（下）"></a>21 | 面向流水线的指令设计（下）</h2><h3 id="芯片的主频战争"><a href="#芯片的主频战争" class="headerlink" title="芯片的主频战争"></a>芯片的主频战争</h3><p>Intel 在 2001 年推出 Pentium 4，特点就是高主频，1GHZ，设计的最高是 10GHz。但，在这过程中，使用超长的流水线。</p>
+<blockquote>
+<p>在 Pentium 4 之前的 Pentium III ，流水线的深度是 11 级，当今一般也就 14；<br>而 Pentium 4 是 20 级。</p>
+</blockquote>
+<p>流水线记住不能缩短单指令效应时间，但可以增加吞吐率。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac21p01.jpg" alt=""></p>
+<h3 id="冒险和分支预测"><a href="#冒险和分支预测" class="headerlink" title="冒险和分支预测"></a>冒险和分支预测</h3><p>Pentium 4 为什么失败？</p>
+<ol>
+<li>功耗问题。流水线深度增加，需要更高主频；</li>
+<li>且电路增多，晶体管增加。于是功耗增加；</li>
+<li>性能提升不一定。例如互相有依赖的code，不能分级后并行。</li>
+</ol>
+<p><strong>冒险（Hazard）问题：数据冒险、结构冒险、控制冒险。</strong></p>
+<p>流水线越长，这个冒险的问题就越难以解决。因为级数越高，越难使用乱序执行、分支预测等方案。</p>
+<p>一般用 <code>IPC</code>（Instruction Per Cycle）来衡量 CPU 执行指令的效率。 即 CPI（Cycle Per Instruction）的倒数。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc11to16.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/posts/computerOrgArc11to16.html" itemprop="url">深入浅出计算机组成原理——原理篇：指令和运算（11-16）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-13T00:00:00+08:00">
+                2021-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc11to16.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc11to16.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="11-二进制编码"><a href="#11-二进制编码" class="headerlink" title="11 | 二进制编码"></a>11 | 二进制编码</h2><h3 id="逢二进一"><a href="#逢二进一" class="headerlink" title="逢二进一"></a>逢二进一</h3><p><code>源码</code>表示法（最左侧位的 0/1 代表整体正负）：<br>$0011 = + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 = 3$<br>$1011 = - (0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0) = -3$</p>
+<blockquote>
+<p><code>ASCII 码</code>（American Standard Code for Information Interchange，美国信息交换标准代码）但此时0可以表示成 0000 和 1000，一对多，不合适。</p>
+</blockquote>
+<p><code>补码</code>表示法（最左侧位仅表其位负）：<br>$1011 = -1 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0) = -5$</p>
+<blockquote>
+<p>如此4位的话，可以表示-8到7这16个整数。</p>
+</blockquote>
+<h3 id="字符串的表示"><a href="#字符串的表示" class="headerlink" title="字符串的表示"></a>字符串的表示</h3><p><code>ASCII</code> 码（American Standard Code for Information Interchange，美国信息交换标准代码）。<br><strong>它存储了128个字符和8位二进制数的映射关系，一一对应。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac11p01.png" alt=""></p>
+<p>表示逻辑case：</p>
+<blockquote>
+<p>a：ASCII 里第 97 个，二进制表示为 01100001，而上图映射表中为十六进制表示，每4位一组即可，即0110|0001=61(16进制)=6x16+1=97(10进制)；<br>9：ASCII 里第 57 个（字符9不是整数9），二进制表示为 00111001，而上图映射表中为十六进制表示，每4位一组即可，即0011|1001=39。</p>
+</blockquote>
+<p>一个弊端：<br>如果是int32最大数2147483647，二进制只需要32位，但上述的拆分字符串表示法就需要8x10=80位。</p>
+<p><strong>不管是整数也好，浮点数也好，采用二进制序列化会比存储文本省下不少空间。</strong></p>
+<p>当使用国家多了后，上述的128个字符表示就不够了，就需要其他的字符映射关系。日常说的 Unicode，其实就是一个字符集，包含了 150 种语言的 14 万个不同的字符。其可以用UTF-8 来编码成二进制，当然也可以用GT-32 编码等，只是不同的编码对应关系。</p>
+<hr>
+<h2 id="12-理解电路"><a href="#12-理解电路" class="headerlink" title="12 | 理解电路"></a>12 | 理解电路</h2><h3 id="电报原理"><a href="#电报原理" class="headerlink" title="电报原理"></a>电报原理</h3><p>古时候军队的金和鼓、烽火、灯塔等都是信号传递，通过不同的组合表达不同的意思，但都是二进制的类似。</p>
+<p>电报传输的信号有两种：</p>
+<ul>
+<li>短促点信号（dot 信号），1</li>
+<li>长的划信号（dash 信号），0<br>那么“SOS”就可以表示为111000111。</li>
+</ul>
+<p><strong>电报机本质是“蜂鸣器 + 电线 + 开关”</strong></p>
+<h3 id="理解继电器"><a href="#理解继电器" class="headerlink" title="理解继电器"></a>理解继电器</h3><p>上述电报机的问题：如果电线太长，使得电阻大，蜂鸣器电压不足会不响。<br>解决办法：在路线中，插入一个机器，将接收的信号原模原样的发送出去，这就是继电器。</p>
+<p>继电器一般就用“螺旋线圈 + 磁性开关”构建。通过线圈和开关的组合，也可以创造出“与（AND）”“或（OR）”“非（NOT）”等逻辑电路。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac12p01.jpg" alt=""></p>
+<h2 id="13-加法器"><a href="#13-加法器" class="headerlink" title="13 | 加法器"></a>13 | 加法器</h2><p>门电路图，就是计算机硬件的积木，组合成cpu的核心模块。</p>
+<ul>
+<li>与门：1、1 输出 1，其他 0；</li>
+<li>或门：有任一个 1 输出 1，其他 0；</li>
+<li>非门：1 输出 0，0 输出 1；</li>
+<li>或非门：或门+非门，0、0 输出 1，其他均 0；</li>
+<li>异或门：相同（同 0 或同 1）则输出 1，否则输出 0；</li>
+<li>与非门：与门+非门，1、1 输出 0，其他均 1。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac13p01.jpg" alt=""></p>
+<h3 id="异或门和半加器"><a href="#异或门和半加器" class="headerlink" title="异或门和半加器"></a>异或门和半加器</h3><p>两个二进制无符号整数相加，<strong>对于个位</strong>需要判断的就是<strong>进位与个位</strong>。实际上对应2种门电路：</p>
+<ul>
+<li>个位：异或（XOR）</li>
+<li>进位：与门</li>
+</ul>
+<p>将上述2种电路打包就可以得到一个<code>半加器（Half Adder）</code>。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac13p02.jpg" alt=""></p>
+<h3 id="全加器"><a href="#全加器" class="headerlink" title="全加器"></a>全加器</h3><p>上述强调了个位的加法可以通过半加器（Half Adder）实现，但再往后面的位半加器就不够用了，原因很简单，<em>还需要考虑上一位的进位</em>。</p>
+<p><strong>解法：全加器（Full Adder），用两个半加器和一个或门。</strong></p>
+<ul>
+<li>输入：进位信号、加数和被加数</li>
+<li>输出：进位信号、和</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac13p03.jpg" alt=""></p>
+<p>如此，两个 8 bit 数的加法可以通过8个全加器串联：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac13p04.jpg" alt=""></p>
+<blockquote>
+<p>溢出：整数是没有位置标记溢出的，比如 int32。实际上，计算结果是否溢出是通过加法器的结果中，将溢出输出给到硬件中其他标志位里实现的，也是硬件层面的支持。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我们通过门电路、半加器、全加器可以搭建出类似加法器这样的组建，一般把这些用来做算术逻辑计算的组件叫作 <code>ALU</code>，算术逻辑单元。</p>
+<hr>
+<h2 id="14-乘法器"><a href="#14-乘法器" class="headerlink" title="14 | 乘法器"></a>14 | 乘法器</h2><p>从 $13 \times 9$ 开始，二进制的方式和10进制一样：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac14p01.jpg" alt=""></p>
+<h3 id="顺序乘法"><a href="#顺序乘法" class="headerlink" title="顺序乘法"></a>顺序乘法</h3><p>对于上述乘法过程，只需要简单的加法器、一个可以左移一位的电路和一个右移一位的电路，就能完成整个乘法。过程如下所示：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac14p02.jpg" alt=""></p>
+<blockquote>
+<p>弊端：不同位置间串行，复杂度高。</p>
+</blockquote>
+<h3 id="并行加速"><a href="#并行加速" class="headerlink" title="并行加速"></a>并行加速</h3><p>朴素的思想就是通过并行把 O(N) 的时间复杂度，降低到 O(logN)。</p>
+<p>如下图所示，通过并联更多的 ALU，加上更多的寄存器，让不同位置的乘法并行计算，然后进行结果的合并。<br><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac14p03.jpg" alt=""></p>
+<h3 id="电路并行"><a href="#电路并行" class="headerlink" title="电路并行"></a>电路并行</h3><p>上述的算法并行实际上还是比较慢，前后需要有结果的依赖等待。</p>
+<p>例如每一个全加器，都要等待上一个全加器，把对应的进入输入结果算出来，才能算下一位的输出。这个每一步等待的时间叫<code>门延迟（Gate Delay）</code>，一般作“T”。</p>
+<blockquote>
+<p>一个全加器，其实就已经有了 3T 的延迟（进位需要经过 3 个门电路）。</p>
+</blockquote>
+<p><strong>加速思路：空间换时间</strong></p>
+<blockquote>
+<p>把原来需要较少的，但是有较多层前后计算依赖关系的门电路，展开成需要较多的，但是依赖关系更少的门电路。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac14p04.jpg" alt=""></p>
+<p>如上图，例如一个 4 位整数最高位是否进位，展开门电路图只需要 3T 的延迟就可以拿到进位结果。64 位的整数，多复制上述电路即可。</p>
+<p><strong>计算机通过更多的晶体管，就可以拿到更低的门延迟，以及用更少的时钟周期完成一个计算指令。</strong></p>
+<hr>
+<h2 id="15-浮点数和定点数（上）"><a href="#15-浮点数和定点数（上）" class="headerlink" title="15 | 浮点数和定点数（上）"></a>15 | 浮点数和定点数（上）</h2><blockquote>
+<p>如何用二进制表示所有的实数?</p>
+</blockquote>
+<h3 id="浮点数的不精确性"><a href="#浮点数的不精确性" class="headerlink" title="浮点数的不精确性"></a>浮点数的不精确性</h3><p>看下面代码结果，可以发现计算机简单的计算精度也有丢失。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">0.3</span> + <span class="number">0.6</span> </span><br><span class="line"><span class="number">0.8999999999999999</span></span><br></pre></td></tr></table></figure>
+<p>计算机一般用 16 或 32 位来表示数，32 个比特，只能表示 2 的 32 次方个不同的数，差不多是 40 亿个。而这里必然是使用了其他表示法导致精度丢失。</p>
+<h3 id="定点数"><a href="#定点数" class="headerlink" title="定点数"></a>定点数</h3><p>一个朴素的想法：32位拆成8段4位，每4个bit可以表示0-9整数。那么把前6段作为整数部分，后2段作为小数部分，就可以表示0-999999.99这1亿个数。</p>
+<p>上述叫<code>BCD编码</code>，一般在超市、银行使用。</p>
+<p>缺点：</p>
+<ol>
+<li>浪费；<blockquote>
+<p>32位从40亿的表示能力降为了1亿，且范围不够用。</p>
+</blockquote>
+</li>
+<li>没办法表示更大更小数；<blockquote>
+<p>物理和数学上的高精度需要就不行。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h3><p>解决方案：<code>浮点数</code>（Floating Point），也就是 float 类型。</p>
+<p><strong>思想：科学计数法。</strong></p>
+<p><code>IEEE</code>标准，有2个基本格式：</p>
+<ul>
+<li>32 bit，即 float / float32；</li>
+<li>64 bit，即 double / float64。</li>
+</ul>
+<p>以 float32 为例：</p>
+<ul>
+<li>s：符号位，1 bit，表正负；</li>
+<li>e：指数位，8 bit，用 1～254 映射 -126～127；</li>
+<li>f：有效数位，23 bit。</li>
+</ul>
+<p>表示形式：</p>
+<script type="math/tex; mode=display">(-1)^s \times 1.f \times 2^e</script><p>此外，还有一些<code>特殊值</code>表示：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>e</th>
+<th>f</th>
+<th>s</th>
+<th>浮点数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0 or 1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>!=0</td>
+<td>0 or 1</td>
+<td>0.f</td>
+</tr>
+<tr>
+<td>255</td>
+<td>0</td>
+<td>0</td>
+<td>无穷大</td>
+</tr>
+<tr>
+<td>255</td>
+<td>0</td>
+<td>1</td>
+<td>无穷小</td>
+</tr>
+<tr>
+<td>255</td>
+<td>!=0</td>
+<td>0 or 1</td>
+<td>NAN</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>case：0.5</p>
+<blockquote>
+<p>s = 0,f = 0, e = -1, $(-1)^0 \times 1.0 \times 2^{-1}=0.5$</p>
+</blockquote>
+<p>因此，float32 能表示的绝对值范围是 $1.17 \times 10^{-38} to 3.40 \times 10^{38}$。</p>
+<blockquote>
+<p>上述范围大约由 1.9999999 ^(2^127) 和 1.0000000 ^ (2^-126) 转成科学记数法得到。</p>
+</blockquote>
+<hr>
+<h2 id="16-浮点数和定点数（下）"><a href="#16-浮点数和定点数（下）" class="headerlink" title="16 | 浮点数和定点数（下）"></a>16 | 浮点数和定点数（下）</h2><h3 id="浮点数的二进制转化"><a href="#浮点数的二进制转化" class="headerlink" title="浮点数的二进制转化"></a>浮点数的二进制转化</h3><p>以 9.1 换算成float为例，整数部分9，换算成 1001。</p>
+<p>对于小数部分，先看<strong>二进制小数转10进制</strong>。</p>
+<blockquote>
+<p>把二进制小数点后的每一位，都对应的 2 的 -N 次方。如 0.1001 可转化成</p>
+<script type="math/tex; mode=display">1 \times 2^{-1} + 0 \times 2^{-2} + 0 \times 2^{-3} + 1 \times 2^{-4}=0.5625</script></blockquote>
+<p>反过来，将<strong>十进制的小数转为二进制</strong>：</p>
+<blockquote>
+<p>则和整数的二进制表示采用“除以 2，然后看余数”的方式类似；<br>即乘以 2，记录是否超过 1，剩余差值则是乘积结果（<1）或者 乘积结果-1（>1）.</p>
+</blockquote>
+<p>如下方示例：<br>9.1 拆成 9 和 0.1，前者是 1001，后者通过上述算法（如下表过程） .000110011…(23位)。<br>最终有：$1001.000110011 \times 2^0$   或小数点左移3位后   $1.001000110011 \times 2^3$。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac16p01.jpg" alt=""></p>
+<p>二进制的存储如下：</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac16p02.jpg" alt=""></p>
+<p><strong>注意：指数位 e 是用 1～254 映射 -126～127，所以 3 需要用 3 + 127 = 130 来映射的</strong></p>
+<p>因此，将其再转为十进制，就是9.09999942779541015625，精度有一定损失。</p>
+<h3 id="加法和精度损失"><a href="#加法和精度损失" class="headerlink" title="加法和精度损失"></a>加法和精度损失</h3><p><strong>先对齐、再计算。</strong></p>
+<p>以 0.5 + 0.125 为例，过程如下表所示：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>符号位s</th>
+<th>指数位e</th>
+<th>有效位1.f</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5</td>
+<td>0</td>
+<td>-1</td>
+<td>1.00…</td>
+</tr>
+<tr>
+<td>0.125</td>
+<td>0</td>
+<td>-3</td>
+<td>1.00…</td>
+</tr>
+<tr>
+<td>0.125对齐指数位</td>
+<td>0</td>
+<td>-1</td>
+<td>0.01</td>
+</tr>
+<tr>
+<td>0.5+0.125</td>
+<td>0</td>
+<td>-1</td>
+<td>1.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>问题：<br>在有效位对齐的时候，指数位较小的需要进行右移，会使得最右侧的有效位丢失进而造成<code>精度丢失</code>，除非最右侧丢失的都是0。</strong></p>
+<blockquote>
+<p>case:<br>Java 程序，让一个值为 2000 万的 32 位浮点数和 1 相加，你会发现，+1 这个过程因为精度损失，被“完全抛弃”了。</p>
+</blockquote>
+<h3 id="Kahan-Summation-算法"><a href="#Kahan-Summation-算法" class="headerlink" title="Kahan Summation 算法"></a>Kahan Summation 算法</h3><p>用一个循环相加 2000 万个 1.0f，最终的结果会是 1600 万左右，而不是 2000 万。因为1600w之后精度就丢失了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FloatPrecision</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">float</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0.0f</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">20000000</span>; i++) &#123;</span><br><span class="line">      <span class="type">float</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">1.0f</span>;</span><br><span class="line">      sum += x;      </span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;sum is &quot;</span> + sum);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Kahan Summation 算法</code>可以解决，其原理就是：</p>
+<blockquote>
+<p>在每次的计算过程中，都用一次减法，把当前加法计算中损失的精度记录下来，然后在后面的循环中，把这个精度损失放在要加的小数上，再做一次运算。</p>
+</blockquote>
+<h2 id=""><a href="#" class="headerlink" title=""></a><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KahanSummation</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">float</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0.0f</span>;</span><br><span class="line">    <span class="type">float</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">0.0f</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">20000000</span>; i++) &#123;</span><br><span class="line">      <span class="type">float</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">1.0f</span>;</span><br><span class="line">      <span class="type">float</span> <span class="variable">y</span> <span class="operator">=</span> x - c;</span><br><span class="line">      <span class="type">float</span> <span class="variable">t</span> <span class="operator">=</span> sum + y;</span><br><span class="line">      c = (t-sum)-y;</span><br><span class="line">      sum = t;      </span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;sum is &quot;</span> + sum);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2>
+          
         
       
     </div>
@@ -2418,7 +3658,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&lt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/">&lt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">&gt;</a>
   </nav>
 
 
@@ -2468,7 +3708,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2479,7 +3719,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2490,7 +3730,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">85</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2577,7 +3817,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共285.6k字</span>
+  <span class="post-count">博客全站共314.2k字</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

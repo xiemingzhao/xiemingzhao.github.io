@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="计算机原理,处理器," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  30 | GPU（上）GPU 的历史进程GPU 是为了改善计算机渲染三维图像，先驱是 SGI（Silicon Graphics Inc.），即硅谷图形公司，创始人 Jim Clark 是斯坦福的教授，图形学专家。 最早 3D 是大神卡马克开发的著名 Wolfenstein 3D（德军总部 3D），从不同视角看到的是 8 幅不同的贴图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出计算机组成原理——原理篇：处理器（30-34）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc30to34.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  30 | GPU（上）GPU 的历史进程GPU 是为了改善计算机渲染三维图像，先驱是 SGI（Silicon Graphics Inc.），即硅谷图形公司，创始人 Jim Clark 是斯坦福的教授，图形学专家。 最早 3D 是大神卡马克开发的著名 Wolfenstein 3D（德军总部 3D），从不同视角看到的是 8 幅不同的贴图">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p01.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p02.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p03.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p04.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p05.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p06.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac32p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac33p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p01.jpg">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p02.jpg">
+<meta property="article:published_time" content="2021-08-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-08T16:38:18.634Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="计算机原理">
+<meta property="article:tag" content="处理器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/computerOrgArc30to34.html"/>
+
+
+
+
+
+  <title>深入浅出计算机组成原理——原理篇：处理器（30-34） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc30to34.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出计算机组成原理——原理篇：处理器（30-34）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-03T00:00:00+08:00">
+                2021-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc30to34.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc30to34.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="30-GPU（上）"><a href="#30-GPU（上）" class="headerlink" title="30 | GPU（上）"></a>30 | GPU（上）</h2><h3 id="GPU-的历史进程"><a href="#GPU-的历史进程" class="headerlink" title="GPU 的历史进程"></a>GPU 的历史进程</h3><p>GPU 是为了改善计算机渲染三维图像，先驱是 <code>SGI</code>（Silicon Graphics Inc.），即硅谷图形公司，创始人 Jim Clark 是斯坦福的教授，图形学专家。</p>
+<p>最早 3D 是大神卡马克开发的著名 Wolfenstein 3D（德军总部 3D），从不同视角看到的是 8 幅不同的贴图，不是真正的3D。直到90年代中期，才出现实时渲染多边形。</p>
+<h3 id="图形渲染的流程"><a href="#图形渲染的流程" class="headerlink" title="图形渲染的流程"></a>图形渲染的流程</h3><p>3D画面实际上是多边形组合出来的。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p01.png" alt=""></p>
+<p>而完成这样的渲染需要5个步骤：</p>
+<ol>
+<li><code>顶点处理</code>（Vertex Processing）</li>
+<li><code>图元处理</code>（Primitive Processing）</li>
+<li><code>栅格化</code>（Rasterization）</li>
+<li><code>片段处理</code>（Fragment Processing）</li>
+<li><code>像素操作</code>（Pixel Operations）</li>
+</ol>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac30p02.jpg" alt=""></p>
+<h4 id="顶点处理"><a href="#顶点处理" class="headerlink" title="顶点处理"></a>顶点处理</h4><p>基于当前视角，把三维空间中的顶点转换到屏幕的二维空间上，即投影的过程。是一种通过线性代数计算得来，<strong>顶点坐标的计算无依赖，可并行。</strong></p>
+<h4 id="图元处理"><a href="#图元处理" class="headerlink" title="图元处理"></a>图元处理</h4><p>将顶点处理后的各个顶点链接起来，变成多边形。但是，需要多做一个操作：<strong>剔除和裁剪（Cull and Clip）</strong>，即把不在屏幕里的内容去掉，减少后续工作量。（比如上图图元部分的 v0）</p>
+<h4 id="栅格化"><a href="#栅格化" class="headerlink" title="栅格化"></a>栅格化</h4><p>屏幕分辨率有限，<code>栅格化</code>就是把多边形转成屏幕里的像素（Pixel）点（图元处理后的多边形覆盖的所有像素点）。这里<strong>每一个图元都可以并行独立地栅格化。</strong></p>
+<h4 id="片段处理"><a href="#片段处理" class="headerlink" title="片段处理"></a>片段处理</h4><p>栅格化后的像素点只有黑白色，需要计算每一个像素点的颜色、透明度等进行上色，就是<code>片段处理</code>。</p>
+<h4 id="像素操作"><a href="#像素操作" class="headerlink" title="像素操作"></a>像素操作</h4><p>最后就是将不同的多边形像素点混合到一起，输出到显示设备。</p>
+<blockquote>
+<p>以上5个渲染步骤就是<code>图形流水线</code>（Graphic Pipeline）。</p>
+</blockquote>
+<h3 id="解放图形渲染的-GPU"><a href="#解放图形渲染的-GPU" class="headerlink" title="解放图形渲染的 GPU"></a>解放图形渲染的 GPU</h3><p>计算一下渲染需要的资源：</p>
+<blockquote>
+<p>假设90年代，屏幕640x480，每秒60帧。从栅格化开始每个像素3个流水线步骤，每步即使1个指令。那么：$640 \times 480 \times 60 \times 3 = 54M$。然而，当时的CPU一般主频60MHz，基本上要被上述渲染占满，实际上每个渲染步骤不止一个指令。</p>
+</blockquote>
+<p>解决办法就是 Voodoo FX 这样的图形加速卡的出现。因为渲染流程固定，且计算逻辑简单（不需要流水线停顿、乱序执行等），并行度高，单独造硬件比用 CPU 划算。</p>
+<p>于是，在当时整个顶点处理的过程还是都由 CPU 进行的，<strong>不过后续所有到图元和像素级别的处理都是通过显卡去处理的。</strong></p>
+<hr>
+<h2 id="31-GPU（下）"><a href="#31-GPU（下）" class="headerlink" title="31 | GPU（下）"></a>31 | GPU（下）</h2><h3 id="Shader-和可编程图形处理器"><a href="#Shader-和可编程图形处理器" class="headerlink" title="Shader 和可编程图形处理器"></a>Shader 和可编程图形处理器</h3><p>GPU 也在逐步优化迭代。首先，1999 年 NVidia 推出的 GeForce 256 显卡，就<strong>把顶点处理的计算能力，也从 CPU 里挪到了显卡里</strong>。但渲染过程都是固定管线，程序员不能干预，只能调配置。</p>
+<p>从 2001 年的 Direct3D 8.0 开始，微软第一次引入了<code>可编程管线</code>（Programable Function Pipeline）的概念。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p01.jpg" alt=""></p>
+<p>一开始的可编程管线呢，<strong>仅限于顶点处理（Vertex Processing）和片段处理（Fragment Processing）部分。</strong></p>
+<p>可以编程的接口，我们称之为 <code>Shader</code>，即着色器，由可编程的模块功能决定。统一着色器架构（Unified Shader Architecture）就应运而生了。</p>
+<p>顶点处理和片段处理上的逻辑不太一样，但指令集同一套。Vertex 和 Fragment Shader 分开，虽然设计简单，但资源有浪费，因为硬件串行的。于是，<strong>统一着色器架构（Unified Shader Architecture）就应运而生了。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p02.jpg" alt=""></p>
+<p>将 Shader 变成通用模块，多加一点。如此，可以把 GPU 拿来做各种通用计算的用法，即 GPGPU（General-Purpose Computing on Graphics Processing Units，通用图形处理器）。</p>
+<h3 id="现代-GPU-的三个核心创意"><a href="#现代-GPU-的三个核心创意" class="headerlink" title="现代 GPU 的三个核心创意"></a>现代 GPU 的三个核心创意</h3><h4 id="芯片瘦身"><a href="#芯片瘦身" class="headerlink" title="芯片瘦身"></a>芯片瘦身</h4><p>现代 CPU 里的晶体管变得越来越多，越来越复杂，不是主要为了“计算”这个功能，而是：<strong>拿来处理乱序执行、进行分支预测，以及高速缓存部分。</strong></p>
+<p>GPU 中没有上述那些，只有流式处理。只留下取指令、指令译码、ALU 以及执行这些计算需要的寄存器和缓存即可。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p03.jpg" alt=""></p>
+<h4 id="多核并行和-SIMT"><a href="#多核并行和-SIMT" class="headerlink" title="多核并行和 SIMT"></a>多核并行和 SIMT</h4><p>基于瘦身后，可以在 GPU 中塞多一些并行电路，实现多核并行。</p>
+<p>CPU 里有 SIMD 技术，在做向量计算的时候，我们要执行的指令是一样的，只是同一个指令的数据有所不同而已。</p>
+<p>GPU 就借鉴了 SIMD，做了 SIMT（Single Instruction，Multiple Threads）的技术。比 SIMD 更加灵活，CPU 一次性取出了固定长度的多个数据，放到寄存器里面，用一个指令去执行。而 <strong>SIMT，可以把多条数据，交给不同的线程去处理。</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p04.jpg" alt=""></p>
+<p>如上，在取指令和指令译码的阶段，可以给到后面多个不同的 ALU 并行进行运算。这样，就可以放下更多的 ALU，同时进行更多的并行运算了。</p>
+<h4 id="GPU-里的“超线程”"><a href="#GPU-里的“超线程”" class="headerlink" title="GPU 里的“超线程”"></a>GPU 里的“超线程”</h4><p>GPU 的指令可能也遇到流水线停顿，而解决方案类似CPU，可以调度别的计算任务给当前 ALU。一个 Core 里面的执行上下文的数量，需要比 ALU 多。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p05.jpg" alt=""></p>
+<h3 id="GPU-性能差异"><a href="#GPU-性能差异" class="headerlink" title="GPU 性能差异"></a>GPU 性能差异</h3><p>以 NVidia 2080 显卡为例，其算力如何？</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac31p06.jpg" alt=""></p>
+<blockquote>
+<p>2080 显卡有 46 个 SM（Streaming Multiprocessor，流式处理器），每个 SM（也就是 GPU Core）里有 64 个 Cuda Core（ALU 的数量），也就是 Shader。<br>还有 184 个 TMU，用来做纹理映射的计算单元，另一种 Shader。<br>主频是 1515MHz，如果自动超频（Boost）的话，可以到 1700MHz。每个时钟周期可以执行两条指令。<br>于是，浮点算力：（46 × 64 + 184）× 1700 MHz × 2 = 10.06 TFLOPS</p>
+</blockquote>
+<p>Intel i9 9900K 的性能不到 1TFLOPS，它们的价格却差不多，算力差10倍。</p>
+<hr>
+<h2 id="32-FPGA和ASIC"><a href="#32-FPGA和ASIC" class="headerlink" title="32 | FPGA和ASIC"></a>32 | FPGA和ASIC</h2><p>20 世纪末，计算机世界热衷于硬件的创新，21世纪初则转到了软件上。FPGA 和 ASIC 是2类经典的芯片。</p>
+<h3 id="FPGA"><a href="#FPGA" class="headerlink" title="FPGA"></a>FPGA</h3><p>一个四核 i7 的 Intel CPU，晶体管数量差不多有 20 亿个，设计和制作很困难。周期一般几月到几年，期间还需要各种测试，如果每次重做成本太高。</p>
+<p>于是，编程化思想，能否制作一个硬件，通过不同的程序代码，来操作这个硬件之前的电路连线，以形成需要的芯片？有，<code>FPGA</code>，即<code>现场可编程门阵列</code>（Field-Programmable Gate Array）。</p>
+<p>FPGA 有很多门电路，可以反复烧录，组合实现不同功能芯片。但如何编程呢？<br><strong>1. 用存储换功能实现组合逻辑；</strong></p>
+<blockquote>
+<p>其基本电路不用布线连接，而是通过软件设计真值表，存到LUT（Look-Up Table，查找表）这一存储空间中，其实就是不是真计算，而是存储不同逻辑计算结果映射关系。</p>
+</blockquote>
+<p><strong>2. 对于需要实现的时序逻辑电路，直接放上 D 触发器，作为寄存器。</strong></p>
+<blockquote>
+<p>多个 LUT 的电路和寄存器组合成一个<code>逻辑簇</code>（Logic Cluster）的东西。在 FPGA 里，它也被叫做 CLB（Configurable Logic Block，可配置逻辑块）。基于 CLB 可以搭建我们需要的芯片。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac32p01.jpg" alt=""></p>
+<p><strong>3. FPGA 是通过可编程逻辑布线，来连接各个不同的 CLB 组成芯片功能。</strong></p>
+<blockquote>
+<p>在 CLB 之间留有很多电路开关，通过控制此便可以实现不同 CLB 之间的连接方式。</p>
+</blockquote>
+<h3 id="ASIC"><a href="#ASIC" class="headerlink" title="ASIC"></a>ASIC</h3><p>除了 CPU、GPU、FPGA 这些通用型芯片外，日常中经常需要一些专用芯片处理某些固定任务。比如录音笔的音频芯片，遥控汽车的芯片等。</p>
+<p>这种专用芯片一般称为 <code>ASIC</code>（Application-Specific Integrated Circuit），也就是专用集成电路。往往电路精简、设计简单、功耗低、成本低。</p>
+<p>但，FPGA 成熟，没有硬件研发成本；ASIC 需要仿真、验证，还需要经过流片（Tape out）。单独研发成本也不一定低。</p>
+<hr>
+<h2 id="33-解读TPU"><a href="#33-解读TPU" class="headerlink" title="33 | 解读TPU"></a>33 | 解读TPU</h2><p>TPU 是过去几年比较知名的 ASIC。</p>
+<h3 id="TPU-V1-的来源"><a href="#TPU-V1-的来源" class="headerlink" title="TPU V1 的来源"></a>TPU V1 的来源</h3><p>深度学习火起来后，计算量最大的是模型推理部分，第一代 TPU 便是为了优化此。</p>
+<p>目标：</p>
+<ol>
+<li>响应快；</li>
+<li>功耗低。</li>
+</ol>
+<h3 id="深入理解-TPU-V1"><a href="#深入理解-TPU-V1" class="headerlink" title="深入理解 TPU V1"></a>深入理解 TPU V1</h3><p><strong>TPU 需要快速上线和向前兼容。</strong></p>
+<blockquote>
+<p>TPU 设计成可插拔的板卡，甚至没有取指令的电路，而是通过 CPU，向 TPU 发送需要执行的指令。</p>
+</blockquote>
+<p><strong>专用电路和大量缓存</strong></p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac33p01.jpg" alt=""></p>
+<p>其中，</p>
+<ul>
+<li>矩阵乘法单元（Matrix Multiply Unit）；</li>
+<li>累加器（Accumulators）模块；</li>
+<li>激活函数（Activation）模块和归一化 / 池化（Normalization/Pool）模块<br>是顺序串联在一起的。</li>
+</ul>
+<p>控制电路（Control）只占了 2%，没有冒险、分支预测等等。<br>超过一半的 TPU 的面积：作为 <code>本地统一缓冲区</code>（Local Unified Buffer）（29%）和<code>矩阵乘法单元</code>（Matrix Mutliply Unit）(24%)。其中，缓冲区使用 SRAM，比起内存使用的 DRAM 速度要快上很多，利于深度模型推理的高频读写。</p>
+<p><strong>细节优化，使用 8 Bits 数据</strong><br>正常深度模型使用 32Bits 来处理浮点数，而在 TPU 内使用 8Bits。这是一种对深度模型进行 int8 量化的方案，可以使得存储更小，计算更快。</p>
+<blockquote>
+<p>当然，如果对精度比较依赖的话，可能会成为弊端。</p>
+</blockquote>
+<hr>
+<h2 id="34-理解虚拟机"><a href="#34-理解虚拟机" class="headerlink" title="34 | 理解虚拟机"></a>34 | 理解虚拟机</h2><blockquote>
+<p>如何让空闲的机器分时段分大小租给不同需求的用户。</p>
+</blockquote>
+<h3 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h3><p>多个终端连接同一个主机，会自动给程序或任务分配计算时间。</p>
+<h3 id="公有云"><a href="#公有云" class="headerlink" title="公有云"></a>公有云</h3><p>早期亚马逊租服务器只能整租，起步配置高，且换用户的时候需要清空数据和程序。</p>
+<p><code>虚拟机技术</code>，可以在一台物理服务器上，同时运行多个虚拟服务器，并且可以动态去分配，每个虚拟服务器占用的资源。不需要的可以关闭服务器，并保留数据资源。</p>
+<h3 id="虚拟机的技术变迁"><a href="#虚拟机的技术变迁" class="headerlink" title="虚拟机的技术变迁"></a>虚拟机的技术变迁</h3><p><code>虚拟机</code>（Virtual Machine）技术，在现有硬件的操作系统上，模拟一个计算机系统的技术。</p>
+<p><strong>解释型虚拟机</strong><br>模拟系统最简单的就是兼容这个计算机系统的指令集。</p>
+<p>这种解释执行方式的最大的优势就是，模拟的系统可以跨硬件。</p>
+<p>但，有缺陷：</p>
+<ul>
+<li>无法精确“模拟”；</li>
+<li>性能差。</li>
+</ul>
+<p><strong>虚拟机的性能提升</strong><br>为了克服上述缺陷，又要支持一个操作系统上跑多个完整的操作系统，方案就是<strong>加入一个中间层</strong>。即<code>虚拟机监视器</code>，英文叫 VMM（Virtual Machine Manager）或者 Hypervisor。</p>
+<p>实际的指令是怎么落到硬件上去实际执行？</p>
+<p><code>Type-2 虚拟机</code>：像一个运行在操作系统上的软件。对于最终到硬件的指令，客户机的操作系统-&gt;虚拟机监视器-&gt;宿主机的操作系统。</p>
+<blockquote>
+<p>只是把在模拟器里的指令翻译工作，挪到了虚拟机监视器里。更多是用在我们日常的个人电脑里，而不是用在数据中心里。</p>
+</blockquote>
+<p><code>Type-1 虚拟机</code>：客户机的指令交给虚拟机监视器之后呢，不再需要通过宿主机的操作系统调用硬件，而是可以直接由虚拟机监视器去调用硬件。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p01.jpg" alt=""></p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>Type-1 虚拟机缺点：实际的物理机上，我们可能同时运行了多个的虚拟机，每个都运行了一个属于自己的单独的操作系统。</p>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac34p02.jpg" alt=""></p>
+<p>不管依赖什么，其实都是跑在 Linux 内核上的。通过 Docker，我们不再需要在操作系统上再跑一个操作系统，而只需要通过容器编排工具（如 Kubernetes），能够进行各个应用之间的<strong>环境和资源隔离就好了。</strong></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/computerOrgArc30to34.html">深入浅出计算机组成原理——原理篇：处理器（30-34）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/computerOrgArc30to34.html" title="深入浅出计算机组成原理——原理篇：处理器（30-34）">https://www.xiemingzhao.com/posts/computerOrgArc30to34.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/computerOrgArc30to34.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 计算机原理</a>
+          
+            <a href="/tags/%E5%A4%84%E7%90%86%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 处理器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/computerOrgArc22to29.html" rel="next" title="深入浅出计算机组成原理——原理篇：处理器（22-29）">
+                <i class="fa fa-chevron-left"></i> 深入浅出计算机组成原理——原理篇：处理器（22-29）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/computerOrgArc35to39.html" rel="prev" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）">
+                深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#30-GPU%EF%BC%88%E4%B8%8A%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">30 | GPU（上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU-%E7%9A%84%E5%8E%86%E5%8F%B2%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">GPU 的历史进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2%E6%B8%B2%E6%9F%93%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">图形渲染的流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B6%E7%82%B9%E5%A4%84%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">顶点处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E5%85%83%E5%A4%84%E7%90%86"><span class="nav-number">1.2.2.</span> <span class="nav-text">图元处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%85%E6%A0%BC%E5%8C%96"><span class="nav-number">1.2.3.</span> <span class="nav-text">栅格化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%87%E6%AE%B5%E5%A4%84%E7%90%86"><span class="nav-number">1.2.4.</span> <span class="nav-text">片段处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.5.</span> <span class="nav-text">像素操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%94%BE%E5%9B%BE%E5%BD%A2%E6%B8%B2%E6%9F%93%E7%9A%84-GPU"><span class="nav-number">1.3.</span> <span class="nav-text">解放图形渲染的 GPU</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#31-GPU%EF%BC%88%E4%B8%8B%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">31 | GPU（下）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shader-%E5%92%8C%E5%8F%AF%E7%BC%96%E7%A8%8B%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">Shader 和可编程图形处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3-GPU-%E7%9A%84%E4%B8%89%E4%B8%AA%E6%A0%B8%E5%BF%83%E5%88%9B%E6%84%8F"><span class="nav-number">2.2.</span> <span class="nav-text">现代 GPU 的三个核心创意</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%AF%E7%89%87%E7%98%A6%E8%BA%AB"><span class="nav-number">2.2.1.</span> <span class="nav-text">芯片瘦身</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E6%A0%B8%E5%B9%B6%E8%A1%8C%E5%92%8C-SIMT"><span class="nav-number">2.2.2.</span> <span class="nav-text">多核并行和 SIMT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GPU-%E9%87%8C%E7%9A%84%E2%80%9C%E8%B6%85%E7%BA%BF%E7%A8%8B%E2%80%9D"><span class="nav-number">2.2.3.</span> <span class="nav-text">GPU 里的“超线程”</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU-%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82"><span class="nav-number">2.3.</span> <span class="nav-text">GPU 性能差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#32-FPGA%E5%92%8CASIC"><span class="nav-number">3.</span> <span class="nav-text">32 | FPGA和ASIC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FPGA"><span class="nav-number">3.1.</span> <span class="nav-text">FPGA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASIC"><span class="nav-number">3.2.</span> <span class="nav-text">ASIC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#33-%E8%A7%A3%E8%AF%BBTPU"><span class="nav-number">4.</span> <span class="nav-text">33 | 解读TPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TPU-V1-%E7%9A%84%E6%9D%A5%E6%BA%90"><span class="nav-number">4.1.</span> <span class="nav-text">TPU V1 的来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-TPU-V1"><span class="nav-number">4.2.</span> <span class="nav-text">深入理解 TPU V1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#34-%E7%90%86%E8%A7%A3%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">5.</span> <span class="nav-text">34 | 理解虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%97%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">5.1.</span> <span class="nav-text">分时系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E6%9C%89%E4%BA%91"><span class="nav-number">5.2.</span> <span class="nav-text">公有云</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8F%98%E8%BF%81"><span class="nav-number">5.3.</span> <span class="nav-text">虚拟机的技术变迁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">5.4.</span> <span class="nav-text">Docker</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共314.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

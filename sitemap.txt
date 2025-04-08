@@ -1,3 +1,13 @@
+https://www.xiemingzhao.com/posts/computerOrgArc52to55.html
+https://www.xiemingzhao.com/posts/computerOrgArc40to45.html
+https://www.xiemingzhao.com/posts/computerOrgArc46to51.html
+https://www.xiemingzhao.com/posts/computerOrgArc35to39.html
+https://www.xiemingzhao.com/posts/computerOrgArc30to34.html
+https://www.xiemingzhao.com/posts/computerOrgArc22to29.html
+https://www.xiemingzhao.com/posts/computerOrgArc17to21.html
+https://www.xiemingzhao.com/posts/computerOrgArc11to16.html
+https://www.xiemingzhao.com/posts/computerOrgArc05to10.html
+https://www.xiemingzhao.com/posts/computerOrgArc01to04.html
 https://www.xiemingzhao.com/posts/listwisererank.html
 https://www.xiemingzhao.com/posts/ubsmodel.html
 https://www.xiemingzhao.com/posts/transformer.html
@@ -146,6 +156,10 @@ https://www.xiemingzhao.com/tags/ETA/
 https://www.xiemingzhao.com/tags/SDIM/
 https://www.xiemingzhao.com/tags/TWIN/
 https://www.xiemingzhao.com/tags/TWIN-V2/
+https://www.xiemingzhao.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/
+https://www.xiemingzhao.com/tags/%E5%A4%84%E7%90%86%E5%99%A8/
+https://www.xiemingzhao.com/tags/%E6%8C%87%E4%BB%A4%E5%92%8C%E8%BF%90%E7%AE%97/
+https://www.xiemingzhao.com/tags/%E5%AD%98%E5%82%A8%E4%B8%8EI-O%E7%B3%BB%E7%BB%9F/
 https://www.xiemingzhao.com/categories/ABTest/
 https://www.xiemingzhao.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/
 https://www.xiemingzhao.com/categories/%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B/
@@ -159,3 +173,4 @@ https://www.xiemingzhao.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%
 https://www.xiemingzhao.com/categories/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/
 https://www.xiemingzhao.com/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/%E9%87%8D%E6%8E%92%E6%A8%A1%E5%9E%8B/
 https://www.xiemingzhao.com/categories/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/%E7%B2%BE%E6%8E%92%E6%A8%A1%E5%9E%8B/
+https://www.xiemingzhao.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/

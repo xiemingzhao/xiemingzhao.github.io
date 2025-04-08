@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="计算机原理,存储与I/O系统," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="小火箭的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  35 | 存储器层次结构全景理解存储器的层次结构寄存器：更像 CPU 本身的部分，空间极其有限，但速度非常快，CPU Cache：CPU 高速缓存，我们常常简称为“缓存”，使用 SRAM 芯片。 SRAMSRAM（Static Random-Access Memory），即静态随机存取存储器。只要处在通电状态，里面的数据就可以保持存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出计算机组成原理——原理篇：存储与I&#x2F;O系统（35-39）">
+<meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc35to39.html">
+<meta property="og:site_name" content="小火箭的博客">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  35 | 存储器层次结构全景理解存储器的层次结构寄存器：更像 CPU 本身的部分，空间极其有限，但速度非常快，CPU Cache：CPU 高速缓存，我们常常简称为“缓存”，使用 SRAM 芯片。 SRAMSRAM（Static Random-Access Memory），即静态随机存取存储器。只要处在通电状态，里面的数据就可以保持存">
+<meta property="og:locale">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac35p01.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac37p01.png">
+<meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac38p01.jpg">
+<meta property="article:published_time" content="2021-08-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-08T16:40:22.949Z">
+<meta property="article:author" content="小火箭">
+<meta property="article:tag" content="计算机原理">
+<meta property="article:tag" content="存储与I&#x2F;O系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac35p01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiemingzhao.com/posts/computerOrgArc35to39.html"/>
+
+
+
+
+
+  <title>深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39） | 小火箭的博客</title>
+  
+
+
+
+
+
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<script type="text/javascript"
+color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://github.com/xiemingzhao"><img style="position:absolute;top:0;right:0;border:0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小火箭的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">愿世界和平！！！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言板
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-others">
+          <a href="/others/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-folder"></i> <br />
+            
+            其他
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiemingzhao.com/posts/computerOrgArc35to39.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.postimg.cc/vBxZQfvz/img-0182.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小火箭的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-08T00:00:00+08:00">
+                2021-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机组成原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/computerOrgArc35to39.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/computerOrgArc35to39.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
+</blockquote>
+<h2 id="35-存储器层次结构全景"><a href="#35-存储器层次结构全景" class="headerlink" title="35 | 存储器层次结构全景"></a>35 | 存储器层次结构全景</h2><h3 id="理解存储器的层次结构"><a href="#理解存储器的层次结构" class="headerlink" title="理解存储器的层次结构"></a>理解存储器的层次结构</h3><p><code>寄存器</code>：更像 CPU 本身的部分，空间极其有限，但速度非常快，<br><code>CPU Cache</code>：CPU 高速缓存，我们常常简称为“缓存”，使用 SRAM 芯片。</p>
+<h3 id="SRAM"><a href="#SRAM" class="headerlink" title="SRAM"></a>SRAM</h3><p><code>SRAM</code>（Static Random-Access Memory），即静态随机存取存储器。只要处在通电状态，里面的数据就可以保持存在，一断电就丢失。</p>
+<blockquote>
+<p>SRAM 中，1 bit 的数据，需要 6～8 个晶体管。存储密度不高，但电路简单，速度快。</p>
+</blockquote>
+<p>CPU 有 L1、L2、L3 这样<code>三层高速缓存</code>：<br><code>L1 Cache</code>：每个 CPU 有自己的，在CPU内部，分成指令缓存和数据缓存；<br><code>L2 Cache</code>：每个 CPU 有自己的，不在CPU内，速度略慢；<br><code>L3 Cache</code>：多个 CPU 共享，尺寸大，速度更慢。</p>
+<h3 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h3><p>内存和 Cache 不同，用 <code>DRAM</code>（Dynamic Random Access Memory，动态随机存取存储器）芯片。密度高，大容量。</p>
+<p>DRAM 需要靠不断地“刷新”，才能保持数据被存储。1 bit只需要一个晶体管和一个电容就能存储。存储密度大，速度比 SRAM 慢。且电容会漏电，需要定时刷新充电。</p>
+<h3 id="存储器的层级结构"><a href="#存储器的层级结构" class="headerlink" title="存储器的层级结构"></a>存储器的层级结构</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac35p01.png" alt=""></p>
+<p>可以看到，从 Cache 到 HDD，<strong>容量越来越大，价格越来越便宜，速度越来越慢。</strong><br>故，一个完整计算机，会通过不等层级的内存组合，来实现性价比：<br><strong>少量贵的存储保障热数据的速度，大量便宜的存储来提供冷数据存储</strong></p>
+<p>并且，<strong>各个存储器只和相邻的一层存储器打交道</strong>。</p>
+<hr>
+<h2 id="36-局部性原理"><a href="#36-局部性原理" class="headerlink" title="36 | 局部性原理"></a>36 | 局部性原理</h2><p>服务端开发时，数据一般存在数据库，访问数据库性能瓶颈是要点，一般就会用缓存来缓解，</p>
+<h3 id="理解局部性原理"><a href="#理解局部性原理" class="headerlink" title="理解局部性原理"></a>理解局部性原理</h3><blockquote>
+<p>挑战：既要 CPU Cache 的速度，又要内存、硬盘巨大的容量和低廉的价格。</p>
+</blockquote>
+<p>解法便是<code>局部性原理</code>（Principle of Locality）：<code>时间局部性</code>（temporal locality）和<code>空间局部性</code>（spatial locality）</p>
+<ul>
+<li><code>时间局部性</code>：如果一个数据被访问了，那么它在短时间内还会被再次访问。</li>
+<li><code>空间局部性</code>：如果一个数据被访问了，那么和它相邻的数据也很快会被访问。</li>
+</ul>
+<p>使用缓存的时候，例如<code>LRU</code>（Least Recently Used）缓存算法，需要关注<code>缓存命中率</code>，越高说明缓存效果越好。</p>
+<hr>
+<h2 id="37-高速缓存（上）"><a href="#37-高速缓存（上）" class="headerlink" title="37 | 高速缓存（上）"></a>37 | 高速缓存（上）</h2><h3 id="需要高速缓存"><a href="#需要高速缓存" class="headerlink" title="需要高速缓存"></a>需要高速缓存</h3><p>基于摩尔定律，CPU 和 内存的访问速度差异越来越大，为了缓解数据跟不上计算的问题，在CPU中就引入了高速缓存。</p>
+<blockquote>
+<p>在 95% 的情况下，CPU 都只需要访问 L1-L3 Cache，从里面读取指令和数据，而无需访问内存</p>
+</blockquote>
+<p>CPU 从内存中读取数据到 CPU Cache ，是以小块为单位的而不是单个元素，在 CPU Cache 里面，叫作 <code>Cache Line</code>（缓存块），常是 64 字节（Bytes）。</p>
+<h3 id="Cache-的数据结构和读取过程是"><a href="#Cache-的数据结构和读取过程是" class="headerlink" title="Cache 的数据结构和读取过程是"></a>Cache 的数据结构和读取过程是</h3><p>CPU 读取数时：</p>
+<ol>
+<li>先访问 Cache；</li>
+<li>有，则取出；</li>
+<li>没有，再访问内存；</li>
+<li>并将读取的数写入到 Cache。</li>
+</ol>
+<p>问题：CPU 如何知道需要访问的内存数据对应的 Cache 位置呢？<br>答案：<code>直接映射 Cache</code>（Direct Mapped Cache）。<br>思路：CPU 拿到的是数据所在的内存块（Block）的地址，其通过 mod 运算，<strong>固定映射到一个的 CPU Cache 地址（Cache Line）</strong>，作为<code>索引</code>。</p>
+<blockquote>
+<p>mod 运算的技巧：缓存块的数量设置成 2 的 N 次方，直接取地址的低 N 位就是 mod 结果。</p>
+</blockquote>
+<p>这时候，肯定会有多个内存块地址映射到同一个 Cache 地址，<strong>需要辨识当前存储的是哪一块。</strong><br>缓存块中，我们会存储一个<code>组标记</code>（Tag），记录当前缓存块内存储的数据对应的内存块。</p>
+<p>此外，缓存块中还有：</p>
+<ul>
+<li><code>实际存放的数据</code>，一个 Block；</li>
+<li><code>有效位</code>（valid bit），其0/1代表是否可用；</li>
+<li><code>偏移量</code>（Offset），记录需要取的数据在 Block 中哪个位置。</li>
+</ul>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac37p01.png" alt=""></p>
+<p>“索引 + 有效位 + 组标记 + 数据”数据结构，使得 Cache 访问时有4步：</p>
+<ol>
+<li>取内存地址低位，计算 Cache 对应的索引；</li>
+<li>根据有效位，判断 Cache 数据是否可用；</li>
+<li>取内存地址高位，和组标记，确认数据是否符合为目标数据，从 Cache Line 中读取到对应的数据块（Data Block）；</li>
+<li>根据内存地址的 Offset 位，从 Data Block 中，读取希望读取到的字。</li>
+</ol>
+<p>如在 2、3 步骤中发现数据不可用，那 CPU 就会访问内存，并把对应的 Block Data 更新到 Cache Line 中，同时更新有效位和组标记的数据。</p>
+<hr>
+<h2 id="38-高速缓存（下）"><a href="#38-高速缓存（下）" class="headerlink" title="38 | 高速缓存（下）"></a>38 | 高速缓存（下）</h2><h3 id="volatile-关键词"><a href="#volatile-关键词" class="headerlink" title="volatile 关键词"></a>volatile 关键词</h3><p>作者从 java 中“volatile”关键词出发，讨论它的作用和原理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VolatileTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">COUNTER</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ChangeListener</span>().start();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ChangeMaker</span>().start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ChangeListener</span> <span class="keyword">extends</span> <span class="title class_">Thread</span> &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">threadValue</span> <span class="operator">=</span> COUNTER;</span><br><span class="line">            <span class="keyword">while</span> ( threadValue &lt; <span class="number">5</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>( threadValue!= COUNTER)&#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;Got Change for COUNTER : &quot;</span> + COUNTER + <span class="string">&quot;&quot;</span>);</span><br><span class="line">                    threadValue= COUNTER;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// try &#123; </span></span><br><span class="line">                <span class="comment">//     Thread.sleep(5); </span></span><br><span class="line">                <span class="comment">// &#125; catch (InterruptedException e) &#123; e.printStackTrace();&#125;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ChangeMaker</span> <span class="keyword">extends</span> <span class="title class_">Thread</span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">threadValue</span> <span class="operator">=</span> COUNTER;</span><br><span class="line">            <span class="keyword">while</span> (COUNTER &lt;<span class="number">5</span>)&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Incrementing COUNTER to : &quot;</span> + (threadValue+<span class="number">1</span>) + <span class="string">&quot;&quot;</span>);</span><br><span class="line">                COUNTER = ++threadValue;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">500</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123; e.printStackTrace(); &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>先说结果：</p>
+<ul>
+<li>直接运行，ChangeListener 能够监听 COUNTER 变化；</li>
+<li>去掉 volatile 则不行；</li>
+<li>去掉 volatile，但是又让 ChangeListener 每次 sleep 5ms 则又可以。</li>
+</ul>
+<blockquote>
+<p>volatile 会确保我们对于这个变量的读取和写入，都一定会同步到主内存里，而不是从 Cache 里面读取。</p>
+</blockquote>
+<h3 id="写直达（Write-Through）"><a href="#写直达（Write-Through）" class="headerlink" title="写直达（Write-Through）"></a>写直达（Write-Through）</h3><blockquote>
+<p>每一次数据都要写入到主内存里面。</p>
+</blockquote>
+<ul>
+<li>先判断是否在 Cache；</li>
+<li>在，先写 Cache，再写入主内存；</li>
+<li>不在，直接写主内存。</li>
+</ul>
+<h3 id="写回（Write-Back）"><a href="#写回（Write-Back）" class="headerlink" title="写回（Write-Back）"></a>写回（Write-Back）</h3><blockquote>
+<p>只写到 CPU Cache 里。只有当 CPU Cache 里面的数据要被“替换”的时候，我们才把数据写入到主内存里面去。</p>
+</blockquote>
+<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac38p01.jpg" alt=""></p>
+<p>结合流程图，逻辑比较清晰。重点解释一下其中的“脏”的概念。<br><strong>标记“脏”：就是指这个时候，CPU Cache 里面的这个 Block 的数据，和主内存是不一致的。</strong></p>
+<p>以上2中写法都需要考虑一个问题，就是在多线程/多CPU时缓存一致性的问题。</p>
+<hr>
+<h2 id="39-MESI协议解决缓存一致性"><a href="#39-MESI协议解决缓存一致性" class="headerlink" title="39 | MESI协议解决缓存一致性"></a>39 | MESI协议解决缓存一致性</h2><h3 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h3><p>假设有2核CPU，执行改价格任务，如果核1改了价格，写入到 Cache 中，在 Cache Block 交换出去前不会写入到内存，那么核2在这期间取到的数据就不一致。</p>
+<p>为了解决此，需要做到：</p>
+<ul>
+<li>写传播：Cache 的更新必须同步到其他 CPU 核的 Cache里。</li>
+<li>事务的串行化：按顺序执行修改，防止不同 CPU 核之间乱序。</li>
+</ul>
+<h3 id="总线嗅探机制和-MESI-协议"><a href="#总线嗅探机制和-MESI-协议" class="headerlink" title="总线嗅探机制和 MESI 协议"></a>总线嗅探机制和 MESI 协议</h3><p><strong>总线嗅探（Bus Snooping）</strong>：</p>
+<blockquote>
+<p>把所有的读写请求都通过总线（Bus）<code>广播</code>给所有的 CPU 核心，然后让各个核心去<code>嗅探</code>这些请求，再根据本地的情况进行响应。</p>
+</blockquote>
+<p><strong>写失效（Write Invalidate）协议</strong>：只有一个 CPU 核心负责写入数据，其他的核心，只是同步读取到这个写入。<br><strong>写广播（Write Broadcast）协议</strong>：一个写入请求广播到所有的 CPU 核心，同时更新各个核心里的 Cache，大家一起更新。</p>
+<p>MESI 协议对 Cache Line 有 4 种标记：</p>
+<ul>
+<li><code>M</code>：代表已修改（Modified）；</li>
+<li><code>E</code>：代表独占（Exclesive）；</li>
+<li><code>S</code>：代表共享（Shared）；</li>
+<li><code>I</code>：代表已失效（Invalidated）。</li>
+</ul>
+<p>M 和 I 都代表 Cache 和主内存数据不一致，即“脏”数据。E 和 S 都是一致的，但他们有区别：</p>
+<ul>
+<li>E 代表仅当前 CPU 的 Cache 里加载了这块数据，则可以自由写入；</li>
+<li>S 代表有其他 CPU 也把同一块 Cache Block 从内存加载到其 Cache中，这时候写入就需要向所有 CPU 核广播请求（RFO，Request For Ownership）。</li>
+</ul>
+<hr>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/posts/computerOrgArc35to39.html">深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
+  <p><span>原始链接:</span><a href="/posts/computerOrgArc35to39.html" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（35-39）">https://www.xiemingzhao.com/posts/computerOrgArc35to39.html</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://www.xiemingzhao.com/posts/computerOrgArc35to39.html"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 计算机原理</a>
+          
+            <a href="/tags/%E5%AD%98%E5%82%A8%E4%B8%8EI-O%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 存储与I/O系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/computerOrgArc30to34.html" rel="next" title="深入浅出计算机组成原理——原理篇：处理器（30-34）">
+                <i class="fa fa-chevron-left"></i> 深入浅出计算机组成原理——原理篇：处理器（30-34）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/computerOrgArc40to45.html" rel="prev" title="深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45）">
+                深入浅出计算机组成原理——原理篇：存储与I/O系统（40-45） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.postimg.cc/vBxZQfvz/img-0182.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">85</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xiemingzhao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="514829265@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#35-%E5%AD%98%E5%82%A8%E5%99%A8%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84%E5%85%A8%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">35 | 存储器层次结构全景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">理解存储器的层次结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SRAM"><span class="nav-number">1.2.</span> <span class="nav-text">SRAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DRAM"><span class="nav-number">1.3.</span> <span class="nav-text">DRAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.</span> <span class="nav-text">存储器的层级结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#36-%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">36 | 局部性原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">理解局部性原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#37-%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98%EF%BC%88%E4%B8%8A%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">37 | 高速缓存（上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">3.1.</span> <span class="nav-text">需要高速缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E8%AF%BB%E5%8F%96%E8%BF%87%E7%A8%8B%E6%98%AF"><span class="nav-number">3.2.</span> <span class="nav-text">Cache 的数据结构和读取过程是</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#38-%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98%EF%BC%88%E4%B8%8B%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">38 | 高速缓存（下）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile-%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">4.1.</span> <span class="nav-text">volatile 关键词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E7%9B%B4%E8%BE%BE%EF%BC%88Write-Through%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">写直达（Write-Through）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%9B%9E%EF%BC%88Write-Back%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">写回（Write-Back）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#39-MESI%E5%8D%8F%E8%AE%AE%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">39 | MESI协议解决缓存一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">5.1.</span> <span class="nav-text">缓存一致性问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%97%85%E6%8E%A2%E6%9C%BA%E5%88%B6%E5%92%8C-MESI-%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.2.</span> <span class="nav-text">总线嗅探机制和 MESI 协议</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小火箭</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">信仰</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+<!--
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共314.2k字</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 网站运行时间的设置 -->
+<!--
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>  Sometimes your whole life boils down to one insame move.
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/09/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'TpMiFGGr4T8FnG248uRRaf4H-gzGzoHsz',
+        appKey: 'NYRTcUPshFEJWpUk54Bfu4nX',
+        placeholder: '朋友记得留下昵称和邮箱，我会尽快回复您的！',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
