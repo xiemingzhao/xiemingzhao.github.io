@@ -461,8 +461,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          
-            <blockquote>
+          <blockquote>
 <p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
 </blockquote>
 <h2 id="05-计算机指令"><a href="#05-计算机指令" class="headerlink" title="05 | 计算机指令"></a>05 | 计算机指令</h2><p>最早是“打孔卡（Punched Card）”来使用计算机的，即输入一系列0/1。</p>
@@ -472,188 +471,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <blockquote>
 <p>非存储程序型，比如用电线和插口组装某种固定程序的计算机，类似一次性的。</p>
 </blockquote>
-<h3 id="编译到汇编"><a href="#编译到汇编" class="headerlink" title="编译到汇编"></a>编译到汇编</h3><p>一段C程序需要<code>编译</code>（Compile）成<code>汇编语言</code>（ASM，Assembly Language）才能在 Linux 上 run。</p>
-<p>可以使用 gcc 和 objdump 把对应的汇编代码和机器码打印出来。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -g -c test.c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">objdump -d -M intel -S test.o</span></span><br></pre></td></tr></table></figure></p>
-<p>如下所示：</p>
-<ul>
-<li>左侧有一堆数字，这些就是一条条<code>机器码</code>；</li>
-<li>右边有一系列的 push、mov、add、pop 等，这些就是对应的<code>汇编代码</code>。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">test.o:     file format elf64-x86<span class="number">-64</span></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"><span class="number">0000000000000000</span> &lt;main&gt;:</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="number">0</span>:   <span class="number">55</span>                      push   rbp</span><br><span class="line">   <span class="number">1</span>:   <span class="number">48</span> <span class="number">89</span> e5                mov    rbp,rsp</span><br><span class="line">  <span class="type">int</span> a = <span class="number">1</span>; </span><br><span class="line">   <span class="number">4</span>:   c7 <span class="number">45</span> fc <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>    mov    DWORD PTR [rbp<span class="number">-0x4</span>],<span class="number">0x1</span></span><br><span class="line">  <span class="type">int</span> b = <span class="number">2</span>;</span><br><span class="line">   b:   c7 <span class="number">45</span> f8 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>    mov    DWORD PTR [rbp<span class="number">-0x8</span>],<span class="number">0x2</span></span><br><span class="line">  a = a + b;</span><br><span class="line">  <span class="number">12</span>:   <span class="number">8b</span> <span class="number">45</span> f8                mov    eax,DWORD PTR [rbp<span class="number">-0x8</span>]</span><br><span class="line">  <span class="number">15</span>:   <span class="number">01</span> <span class="number">45</span> fc                add    DWORD PTR [rbp<span class="number">-0x4</span>],eax</span><br><span class="line">&#125;</span><br><span class="line">  <span class="number">18</span>:   <span class="number">5</span>d                      pop    rbp</span><br><span class="line">  <span class="number">19</span>:   c3                      ret    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>实际上，机器码和汇编代码是一一对应的，之所以需要后者就是为了程序员使用方便。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac05p01.png" alt=""></p>
-<h3 id="解析指令和机器码"><a href="#解析指令和机器码" class="headerlink" title="解析指令和机器码"></a>解析指令和机器码</h3><p>指令非常多，例如Intel就有2k多，但一般分为<strong>5大类</strong>：</p>
-<ol>
-<li>算数类；（加减乘除）</li>
-<li>数据传输类；（赋值、读写）</li>
-<li>逻辑类；（与或非）</li>
-<li>条件分支类；（if/else）</li>
-<li>无条件跳转。（函数调用）</li>
-</ol>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac05p02.jpg" alt=""></p>
-<p>例如，使用上面的 MIPS 指令集将下列的code转为机器码。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add $t0,$s2,$s1</span><br></pre></td></tr></table></figure>
-<p>如下转换过程：</p>
-<ol>
-<li>opcode=0，rs表示寄存器1地址是17，rt表示寄存器2地址是18，rd表示临时寄存器地址8，位移是0；</li>
-<li>二进制则是每个code码对应结果；</li>
-<li>二进制code转为16进制，方式如下（结果对应4行打孔带）<blockquote>
-<p>000000  10001 10010 01000 00000 100000<br>=0000 0010 0011 0010 0100 0000 0010 0000（每4个一组分配，对应纵向打孔带）<br>=0X02324020</p>
-</blockquote>
-</li>
-</ol>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac05p03.jpg" alt=""></p>
-<hr>
-<h2 id="06-指令跳转"><a href="#06-指令跳转" class="headerlink" title="06 | 指令跳转"></a>06 | 指令跳转</h2><h3 id="CPU-是如何执行指令"><a href="#CPU-是如何执行指令" class="headerlink" title="CPU 是如何执行指令"></a>CPU 是如何执行指令</h3><p>指令很复杂，CPU 在软件层面已经为我们做好了封装，程序转为指令后是按顺序执行。</p>
-<p>CPU 其实就是由一堆<code>寄存器</code>组成的。而寄存器由多个触发器（Flip-Flop）或者锁存器（Latches）组成的简单电路。</p>
-<blockquote>
-<p>触发器和锁存器，其实就是两种不同原理的数字电路组成的逻辑门。</p>
-</blockquote>
-<p><strong>N 个触发器或者锁存器，就可以组成一个 N 位（Bit）的寄存器，能够保存 N 位的数据。</strong></p>
-<blockquote>
-<p>比方说，我们用的 64 位 Intel 服务器，寄存器就是 64 位的。</p>
-</blockquote>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac06p01.jpg" alt=""></p>
-<p>介绍最重要的3种特殊寄存器：</p>
-<ol>
-<li><p><code>PC 寄存器</code>（Program Counter Register）。</p>
-<blockquote>
-<p>我们也叫指令地址寄存器（Instruction Address Register），用来存放下一条需要执行的计算机指令的内存地址。</p>
-</blockquote>
-</li>
-<li><p><code>指令寄存器</code>（Instruction Register）</p>
-<blockquote>
-<p>用来存放当前正在执行的指令。</p>
-</blockquote>
-</li>
-<li><p><code>条件码寄存器</code>（Status Register）</p>
-<blockquote>
-<p>用里面的一个一个标记位（Flag），存放 CPU 进行算术或者逻辑计算的结果。</p>
-</blockquote>
-</li>
-</ol>
-<p><strong>实际上还有很多寄存器：整数寄存器、浮点数寄存器、向量寄存器和地址寄存器等等，甚至还有通用寄存器。</strong></p>
-<p>一个程序的一条条指令，在内存里面是连续保存的，也会一条条顺序加载。</p>
-<p>如下图，简单的if/else程序执行case：</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac06p02.jpg" alt=""></p>
-<p>注释：<br>cmp：比较前后的值，结果存入条件码寄存器<br>DWORD PTR：表示操作数据类型int32<br>[rbp-0x4]：表示变量r的地址<br>ZF：零标志码，在cmp指令运行后置为1<br>mov eax, 0x0，默认为0的返回值到累加器</p>
-<h3 id="实现循环"><a href="#实现循环" class="headerlink" title="实现循环"></a>实现循环</h3><p>如下，是一个for循环的代码过程：</p>
-<blockquote>
-<p>循环也是用 1e 这个地址上的 cmp 比较指令；<br>结合jle 条件跳转指令来实现；<br>往前跳转使得条件满足的时候，PC 寄存器会把指令地址设置到之前执行过的指令位置；</p>
-</blockquote>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac06p03.jpg" alt=""></p>
-<hr>
-<h2 id="07-函数调用"><a href="#07-函数调用" class="headerlink" title="07 | 函数调用"></a>07 | 函数调用</h2><p><strong>Stack Overflow 的名字来自于一个常见的报错，就是栈溢出（stack overflow）。</strong></p>
-<h3 id="需要程序栈"><a href="#需要程序栈" class="headerlink" title="需要程序栈"></a>需要程序栈</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// function_example.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="type">static</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">    <span class="type">int</span> y = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> u = add(x, y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面程序开始，通过下述编译将code转为汇编代码。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -g -c function_example.c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">objdump -d -M intel -S function_example.o</span></span><br></pre></td></tr></table></figure></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">static</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="number">0</span>:   <span class="number">55</span>                      push   rbp</span><br><span class="line">   <span class="number">1</span>:   <span class="number">48</span> <span class="number">89</span> e5                mov    rbp,rsp</span><br><span class="line">   <span class="number">4</span>:   <span class="number">89</span> <span class="number">7</span>d fc                mov    DWORD PTR [rbp<span class="number">-0x4</span>],edi</span><br><span class="line">   <span class="number">7</span>:   <span class="number">89</span> <span class="number">75</span> f8                mov    DWORD PTR [rbp<span class="number">-0x8</span>],esi</span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">   a:   <span class="number">8b</span> <span class="number">55</span> fc                mov    edx,DWORD PTR [rbp<span class="number">-0x4</span>]</span><br><span class="line">   d:   <span class="number">8b</span> <span class="number">45</span> f8                mov    eax,DWORD PTR [rbp<span class="number">-0x8</span>]</span><br><span class="line">  <span class="number">10</span>:   <span class="number">01</span> d0                   add    eax,edx</span><br><span class="line">&#125;</span><br><span class="line">  <span class="number">12</span>:   <span class="number">5</span>d                      pop    rbp</span><br><span class="line">  <span class="number">13</span>:   c3                      ret    </span><br><span class="line"><span class="number">0000000000000014</span> &lt;main&gt;:</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="number">14</span>:   <span class="number">55</span>                      push   rbp</span><br><span class="line">  <span class="number">15</span>:   <span class="number">48</span> <span class="number">89</span> e5                mov    rbp,rsp</span><br><span class="line">  <span class="number">18</span>:   <span class="number">48</span> <span class="number">83</span> ec <span class="number">10</span>             sub    rsp,<span class="number">0x10</span></span><br><span class="line">    <span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">  <span class="number">1</span>c:   c7 <span class="number">45</span> fc <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>    mov    DWORD PTR [rbp<span class="number">-0x4</span>],<span class="number">0x5</span></span><br><span class="line">    <span class="type">int</span> y = <span class="number">10</span>;</span><br><span class="line">  <span class="number">23</span>:   c7 <span class="number">45</span> f8 <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>    mov    DWORD PTR [rbp<span class="number">-0x8</span>],<span class="number">0xa</span></span><br><span class="line">    <span class="type">int</span> u = add(x, y);</span><br><span class="line">  <span class="number">2</span>a:   <span class="number">8b</span> <span class="number">55</span> f8                mov    edx,DWORD PTR [rbp<span class="number">-0x8</span>]</span><br><span class="line">  <span class="number">2</span>d:   <span class="number">8b</span> <span class="number">45</span> fc                mov    eax,DWORD PTR [rbp<span class="number">-0x4</span>]</span><br><span class="line">  <span class="number">30</span>:   <span class="number">89</span> d6                   mov    esi,edx</span><br><span class="line">  <span class="number">32</span>:   <span class="number">89</span> c7                   mov    edi,eax</span><br><span class="line">  <span class="number">34</span>:   e8 c7 ff ff ff          call   <span class="number">0</span> &lt;add&gt;</span><br><span class="line">  <span class="number">39</span>:   <span class="number">89</span> <span class="number">45</span> f4                mov    DWORD PTR [rbp<span class="number">-0xc</span>],eax</span><br><span class="line">  <span class="number">3</span>c:   b8 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    eax,<span class="number">0x0</span></span><br><span class="line">&#125;</span><br><span class="line">  <span class="number">41</span>:   c9                      leave  </span><br><span class="line">  <span class="number">42</span>:   c3                      ret    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：代码先执行了一条 push 指令和一条 mov 指令，结束后执行了一条 pop 和一条 ret 指令。  这就是压栈（Push）和出栈（Pop）操作。</p>
-</blockquote>
-<p>如果使用寄存器记录函数调用的指令地址，寄存器数量的限制是卡点。在内存里面开辟一段空间，用栈这个后进先出（LIFO，Last In First Out）的数据结构。以此来记录，调用函数前将返回地址压栈，执行完将最上面的地址进行出栈。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac07p01.jpg" alt=""></p>
-<p>实际上，栈不仅存返回地址，还要存参数，整个函数的空间就是<code>栈帧</code>（Stack Frame）。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac07p02.jpg" alt=""></p>
-<p>注释：</p>
-<ul>
-<li>rbp： register base pointer 栈基址寄存器（栈帧指针），指向当前栈帧的栈底地址。</li>
-<li>rsp： register stack pointer 栈顶寄存器（栈指针），指向栈顶元素。</li>
-</ul>
-<p>结合前面的汇编代码，过程：</p>
-<ol>
-<li>main 的 34 行 call 会调用 0 行的 add， push rbp 就是压栈；</li>
-<li>接着， mov rbp, rsp 则是把 rsp 这个栈指针（Stack Pointer）的值复制到 rbp 里，而 rsp 始终会指向栈顶；</li>
-<li>add 执行完成后，又会分别调用第 12 行的 pop rbp 来将当前的栈顶出栈；</li>
-<li>最后 13 行的 ret 指令，将下一条指令出栈到 PC 寄存器中，控制权返回到出栈后的栈顶。</li>
-</ol>
-<h3 id="stack-overflow"><a href="#stack-overflow" class="headerlink" title="stack overflow"></a>stack overflow</h3><p>对于递归调用，只需要使用好 rbp 和 rsp（两个维护栈顶所在地址的寄存器）。</p>
-<p>不过，栈的大小也是有限的。如果函数调用层数太多，就会遇到栈溢出的错误，这就是大名鼎鼎的“stack overflow”。</p>
-<h2 id="函数内联进行性能优化"><a href="#函数内联进行性能优化" class="headerlink" title="函数内联进行性能优化"></a>函数内联进行性能优化</h2><blockquote>
-<p>函数内联（Inline）：把一个实际调用的函数产生的指令，直接插入到调用的位置。</p>
-</blockquote>
-<p><code>内联优化</code>：<strong>CPU 需要执行的指令数变少了，根据地址跳转的过程不需要了，压栈和出栈的过程也不用了。</strong></p>
-<p><code>内联代价</code>：<strong>复用的程序指令在调用它的地方完全展开了。展开次数越多，整个程序占用的空间就会越大。</strong></p>
-<p>没有调用其他函数，只会被调用的函数，我们一般称之为<strong>叶子函数（或叶子过程）。</strong></p>
-<hr>
-<h2 id="08-ELF和静态链接"><a href="#08-ELF和静态链接" class="headerlink" title="08 | ELF和静态链接"></a>08 | ELF和静态链接</h2><blockquote>
-<p>既然程序最终都被变成了一条条机器码去执行，那为什么程序需要区分 Linux 或 Windows 操作系统才能执行呢？</p>
-</blockquote>
-<h3 id="编译、链接和装载：拆解程序执行"><a href="#编译、链接和装载：拆解程序执行" class="headerlink" title="编译、链接和装载：拆解程序执行"></a>编译、链接和装载：拆解程序执行</h3><p>前面提过C语言转为机器码后CPU可以执行，那么怎么转的呢？</p>
-<p>gcc 命令可以将<code>*.c</code>文件编译成<code>*.o</code>文件，但他们都不是可执行文件（Executable Program），称为<code>目标文件</code>（Object Faile），因为地址都是从 0 开始的。通过 gcc 的 -o 参数即可以生产可执行文件。</p>
-<p>在<em>C 语言代码 - 汇编代码 - 机器码</em>过程中，实际是2步：</p>
-<ol>
-<li>由编译（Compile）、汇编（Assemble）以及链接（Link）三个阶段，生产可执行文件；</li>
-<li>装载器（Loader）把可执行文件装载（Load）到内存中，CPU 从内存中读指令和数据来执行。</li>
-</ol>
-<h3 id="ELF-格式和链接"><a href="#ELF-格式和链接" class="headerlink" title="ELF 格式和链接"></a>ELF 格式和链接</h3><p>可执行代码比目标代码复杂，使用<code>ELF</code>（Execuatable and Linkable File Format）格式，即可执行与可链接文件格式，存放指令和数据。</p>
-<p><code>符号表</code>：关联变量等名称和地址。</p>
-<p><code>ELF</code> 文件格式如下所示：</p>
-<blockquote>
-<ol>
-<li>代码段（Code Section），.text Section，保存程序的代码和指令；</li>
-<li>数据段（Data Section），.data Section，保存初始化数据；</li>
-<li>重定位表（Relocation Table），.rel.text Secion，保存跳转地址；</li>
-<li>符号表（Symbol Table），.symtab Section，保留定义的函数名称和对应地址的地址簿。</li>
-</ol>
-</blockquote>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac08p01.jpg" alt=""></p>
-<p>链接器将目标文件转为可执行文件（参考下图）：</p>
-<ol>
-<li>收集符号表信息，构建全局符号表；</li>
-<li>基于重定位表，修正需要跳转的地址代码；</li>
-<li>将所有目标文件对应段合并。</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">readelf -s link_example.o //查看符号表</span><br><span class="line">objdump -r link_example.o //查看重定位表</span><br></pre></td></tr></table></figure>
-<p>基于ELF文件，装载起就不需要考虑跳转地址问题，只需要加载指令和数据让那个CPU执行即可。windows 则是 PE 文件。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac08p02.jpg" alt=""></p>
-<p><strong>总结：两个操作系统下可执行文件的格式不一样，导致程序不能直接跨系统执行。</strong></p>
-<hr>
-<h2 id="09-程序装载"><a href="#09-程序装载" class="headerlink" title="09 | 程序装载"></a>09 | 程序装载</h2><p>比尔·盖茨在上世纪 80 年代说的“640K ought to be enough for anyone”.</p>
-<h3 id="程序装载面临的挑战"><a href="#程序装载面临的挑战" class="headerlink" title="程序装载面临的挑战"></a>程序装载面临的挑战</h3><p><code>装载器</code>要满足两个要求：</p>
-<ul>
-<li>可执行程序加载后占用的内存空间应该是连续的，以顺序执行。</li>
-<li>我们需要同时加载很多个程序，并且不能让程序自己规定在内存中加载的位置。</li>
-</ul>
-<p><strong>方案：开辟一段物理内存空间，映射给程序指定的虚拟内存地址。</strong></p>
-<p><code>虚拟内存地址</code>（Virtual Memory Address）：指令里用到的内存地址；<br><code>物理内存地址</code>（Physical Memory Address）：实际在内存硬件里面的空间地址；</p>
-<p>因此，只需要维护映射关系的起始地址和对应的空间大小，相当于<code>分段映射</code>。</p>
-<h3 id="内存分段"><a href="#内存分段" class="headerlink" title="内存分段"></a>内存分段</h3><p><code>分段</code>（Segmentation）：找出一段连续的物理内存和虚拟内存地址进行映射的方法。</p>
-<p><strong>内存碎片（Memory Fragmentation）是分段的问题。</strong></p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac09p01.png" alt=""></p>
-<p><strong>解决的办法：内存交换（Memory Swapping）</strong></p>
-<blockquote>
-<p>即将大程序先存到硬盘再读回内存连续空间。如上图，蓝色部分读回时紧邻黄色部分，就可以腾出连续的256m内存。但效率慢。</p>
-</blockquote>
-<h3 id="内存分页"><a href="#内存分页" class="headerlink" title="内存分页"></a>内存分页</h3><p>另一个思路是少出现一些内存碎片，当需要进行内存交换的时候，让涉及的数据更少一点，就叫作<code>内存分页（Paging）</code>。</p>
-<p><code>分段</code>：根据程序需要，分配一整段连续的空间；<br><code>分页</code>：把整个物理内存空间提前切成一段段固定尺寸的大小（页-Page），后续均匀使用。</p>
-<blockquote>
-<p>页的尺寸一般很小，<strong>在 Linux 下一般 4KB</strong>。可以通过下属code查看。</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">getconf PAGE_SIZE</span></span><br></pre></td></tr></table></figure>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac09p02.png" alt=""></p>
-<p>页都能使用，如果需要交换，也可以很少的与磁盘交互，程序运行的时候可以只加载需要运行的部分。整个页的使用通过引入一个间接层做映射即可，开发者感知不到。</p>
-<blockquote>
-<p>回到开头，内存是不是640K就够了?<br>原则上，CPU 只需要执行当前的指令，极限下内存也只需要加载一页。在需要用到对应的数据和指令的时候，从硬盘上交换到内存里面来就好。</p>
-</blockquote>
-<p><strong>那一提到和磁盘交互，必然性能是瓶颈，所以实际中内存增加还是很重要。</strong></p>
-<hr>
-<h2 id="10-动态链接"><a href="#10-动态链接" class="headerlink" title="10 | 动态链接"></a>10 | 动态链接</h2><p>程序的链接，是把对应的不同文件内的代码段，合并到一起，成为最后的可执行文件。</p>
-<p>如此同样的功能开发一次，其他地方都能复用。</p>
-<h3 id="链接可以分动、静，共享运行省内存"><a href="#链接可以分动、静，共享运行省内存" class="headerlink" title="链接可以分动、静，共享运行省内存"></a>链接可以分动、静，共享运行省内存</h3><p>在内存空间有限的大背景下，<br><code>动态链接</code>（Dynamic Link）：同样功能的代码能够在不同程序里面复用，通过加载到内存中的共享库；<br><code>静态链接</code>（Static Link）：把对应的不同文件内的代码段合并到一起。</p>
-<p>共享库：<br>windows：共享库文件就是.dll，也就是 Dynamic-Link Libary（DLL，动态链接库）；<br>linux：.so 文件，也就是 Shared Object。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac10p01.jpg" alt=""></p>
-<h3 id="地址无关-amp-相对地址"><a href="#地址无关-amp-相对地址" class="headerlink" title="地址无关&amp;相对地址"></a>地址无关&amp;相对地址</h3><p>共享代码要求机器码必须<code>地址无关</code>，<strong>实际上大部分函数库其实都可以做到地址无关。</strong><br>常见的地址相关的代码，比如绝对地址代码（Absolute Code）、利用重定位表的代码等等。</p>
-<p><code>相对地址</code>（Relative Address）：各种指令中使用到的内存地址，给出的不是一个绝对的地址空间，而是一个相对于当前指令偏移量的内存地址。</p>
-<p><strong>因为整个共享库是放在一段连续的虚拟内存地址中的，无论装载到哪一段地址，不同指令之间的相对地址都是不变的。</strong></p>
-<h3 id="PLT-和-GOT"><a href="#PLT-和-GOT" class="headerlink" title="PLT 和 GOT"></a>PLT 和 GOT</h3><p><code>PLT</code>：Procedure Link Table，程序链接表，存放要调用函数的地址；<br><code>GOT</code>：Global Offset Table，全局偏移表，查当前运行程序的虚拟内存里的对应位置。</p>
-<p>在共享库的 data section 里面，保存了 GOT。虽然共享库的代码部分的物理内存是共享的，只加载同一份。但是数据部分是各个动态链接它的应用程序里面各加载一份的，故通过各个可执行程序在加载时，生成的各不相同的 GOT 表，来找到它需要调用到的外部变量和函数的地址。</p>
-<p>因此，<strong>函数调用-&gt;PLT查GOT地址-&gt;查虚拟内存地址-&gt;查真实内存地址。</strong></p>
-<blockquote>
-<p>加了一层PLT是为了做<code>延迟绑定</code>：如果函数没有实际被调用到，就不需要更新GOT里面的数值。因为很多动态装载的函数库都是不会被实际调用到的。</p>
-</blockquote>
-<hr>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/computerOrgArc05to10.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -854,8 +678,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 
       
         
-          
-            <blockquote>
+          <blockquote>
 <p>全文内容主要来自对课程<a href="https://time.geekbang.org/column/article/91427">《深入浅出计算机组成原理》</a>的学习笔记。</p>
 </blockquote>
 <h2 id="01-冯·诺依曼体系结构"><a href="#01-冯·诺依曼体系结构" class="headerlink" title="01 | 冯·诺依曼体系结构"></a>01 | 冯·诺依曼体系结构</h2><h3 id="计算机的基本硬件组成"><a href="#计算机的基本硬件组成" class="headerlink" title="计算机的基本硬件组成"></a>计算机的基本硬件组成</h3><p><strong>三大件：CPU、内存和主板。</strong></p>
@@ -870,124 +693,13 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li><code>硬盘</code>：让各种数据才能持久地保存下来。</li>
 <li><code>显卡（Graphics Card）</code>：是另一个“处理器”，也就是 GPU（Graphics Processing Unit，图形处理器）。</li>
 </ul>
-<h3 id="冯·诺依曼体系结构"><a href="#冯·诺依曼体系结构" class="headerlink" title="冯·诺依曼体系结构"></a>冯·诺依曼体系结构</h3><p>手机制造商们选择把 CPU、内存、网络通信，乃至摄像头芯片，都封装到一个芯片，然后再嵌入到手机主板上。这种方式叫 <code>SoC</code>，也就是 <code>System on a Chip</code>（系统芯片）。</p>
-<p>实际上都遵从冯·诺依曼体系结构（Von Neumann architecture），也叫<code>存储程序计算机</code>。<strong>两个概念: 一个是“可编程”计算机，一个是“存储”计算机。</strong></p>
-<p>基于当时在秘密开发的 EDVAC 写了一篇报告<a href="https://en.wikipedia.org/wiki/First_Draft_of_a_Report_on_the_EDVAC">《First Draft of a Report on the EDVAC》</a>，描述了他心目中的一台计算机应该长什么样。这篇报告在历史上有个很特殊的简称，叫 <code>First Draft</code>，翻译成中文，其实就是《第一份草案》。现代计算机的发展就从这开始了。</p>
-<ol>
-<li>包含算术逻辑单元（Arithmetic Logic Unit，ALU）和处理器寄存器（Processor Register）的处理器单元（Processing Unit），</li>
-<li>包含指令寄存器（Instruction Register）和程序计数器（Program Counter）的控制器单元（Control Unit/CU），用来控制程序的流程，通常就是不同条件下的分支和跳转。</li>
-<li>大容量的外部存储，磁带、硬盘。</li>
-<li>各种输入和输出设备，</li>
-</ol>
-<p>任何一台计算机的任何一个部件都可以归到<strong>运算器、控制器、存储器、输入设备和输出设备</strong>中。</p>
-<p><strong>图灵机与冯诺依曼机的概念区别</strong>：</p>
-<ul>
-<li>图灵机是一种思想模型（计算机的基本理论基础），是一种有穷的、构造性的问题的问题求解思路，图灵认为凡是能用算法解决的问题也一定能用图灵机解决；</li>
-<li>冯诺依曼提出了“存储程序”的计算机设计思想，并“参照”图灵模型设计了历史上第一台电子计算机，即冯诺依曼机。</li>
-</ul>
-<hr>
-<h2 id="02-计算机组成原理学习路线"><a href="#02-计算机组成原理学习路线" class="headerlink" title="02 | 计算机组成原理学习路线"></a>02 | 计算机组成原理学习路线</h2><p>如下图所示，整个计算机组成原理，就是围绕着计算机是如何组织运作展开的。</p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac02p01.jpg" alt=""></p>
-<h3 id="计算机组成原理知识地图"><a href="#计算机组成原理知识地图" class="headerlink" title="计算机组成原理知识地图"></a>计算机组成原理知识地图</h3><p><strong>计算机的基本组成-五大组件</strong></p>
-<ul>
-<li>运算器</li>
-<li>控制器</li>
-<li>存储器</li>
-<li>输入设备</li>
-<li>输出设备</li>
-</ul>
-<p><strong>2个核心指标</strong></p>
-<ul>
-<li>性能</li>
-<li>功耗</li>
-</ul>
-<p><strong>计算机的指令和计算</strong></p>
-<ul>
-<li>指令执行的控制过程就是<code>控制器</code>来控制的。</li>
-<li>实现加法、乘法这些运算功能的 <code>ALU</code> （Arithmetic Logic Unit/ALU），也就是算术逻辑单元，就是<code>运算器</code>。</li>
-<li>最后需要了解<code>存储器</code>的原理，例如 CPU 高速缓存、内存、SSD 硬盘和机械硬盘的工作原理。</li>
-</ul>
-<h3 id="入门书籍"><a href="#入门书籍" class="headerlink" title="入门书籍"></a>入门书籍</h3><blockquote>
-<ol>
-<li>《计算机是怎样跑起来的》</li>
-<li>《程序是怎样跑起来的》</li>
-<li>Coursera 上的北京大学免费公开课《Computer Organization》</li>
-<li>《计算机组成与设计：硬件 / 软件接口》，<a href="https://www.bilibili.com/video/av24540152/">配套视频</a></li>
-<li>《深入理解计算机系统》，<a href="https://www.youtube.com/playlist?list=PLmBgoRqEQCWy58EIwLSWwMPfkwLOLRM5R">配套视频</a></li>
-<li>操作系统大神塔能鲍姆（Andrew S. Tanenbaum）的《计算机组成：结构化方法》</li>
-<li>《计算机体系结构：量化研究方法》。</li>
-</ol>
-</blockquote>
-<hr>
-<h2 id="03-CPU主频和“性能”"><a href="#03-CPU主频和“性能”" class="headerlink" title="03 | CPU主频和“性能”"></a>03 | CPU主频和“性能”</h2><h3 id="性能-时间的倒数"><a href="#性能-时间的倒数" class="headerlink" title="性能=时间的倒数"></a>性能=时间的倒数</h3><p>性能的衡量标准（2个）：</p>
-<ul>
-<li><code>响应时间</code>（Response time）或者叫执行时间（Execution time）</li>
-<li><code>吞吐率</code>（Throughput）或者带宽（Bandwidth）</li>
-</ul>
-<p>一般定义：<strong>性能 = 1/响应时间</strong></p>
-<h3 id="计算机的计时单位：CPU-时钟"><a href="#计算机的计时单位：CPU-时钟" class="headerlink" title="计算机的计时单位：CPU 时钟"></a>计算机的计时单位：CPU 时钟</h3><p>要想准确统计某个程序运行时间来对比实际性能，我们得把cpu在程序间切换和磁盘取数等时间刨除掉。</p>
-<p>Linux的<code>time</code>命令为例，有3种time：</p>
-<ul>
-<li><code>real time</code>：程序整个运行花掉的自然时间；</li>
-<li><code>user time</code>：用户态运行指令的 cpu 时间；</li>
-<li><code>sys time</code>： 操作系统内核里运行指令的 cpu 时间。</li>
-</ul>
-<p><strong>程序实际花费的 CPU 执行时间（CPU Time），就是 user time 加上 sys time。</strong></p>
-<p>如下面case，实际上只有0.031+0.016=0.047s是真正用来运行程序的。<br>注意：如果在多个cpu上测试，user time 和 sys time 是它们的和，大概率会 realtime &lt; user time + sys time。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="keyword">time</span> <span class="built_in">seq</span> 1000000 | <span class="built_in">wc</span> -l</span></span><br><span class="line">1000000</span><br><span class="line"></span><br><span class="line">real  0m0.101s</span><br><span class="line">user  0m0.031s</span><br><span class="line">sys   0m0.016s</span><br></pre></td></tr></table></figure></p>
-<p><strong>程序的 CPU 执行时间 =CPU 时钟周期数×时钟周期时间</strong></p>
-<p><code>时钟周期时间（Clock Cycle）</code>：CPU内部有晶体振荡器（Oscillator Crystal），简称为晶振，其每一次“滴答”就是时钟周期时间。</p>
-<blockquote>
-<p>电脑的主频（Frequency/Clock Rate），例如2.8GHz就是在1s内执行的简单指令的数量是 2.8G 条。那么该cpu的始终周期时间就是 1/2.8G 。(1G=10亿)</p>
-</blockquote>
-<p>cpu 的超频就是时钟周期时间调快了，但功耗大散热压力大，容易崩溃。</p>
-<p><strong>程序的 CPU 执行时间 =CPU 时钟周期数×时钟周期时间</strong></p>
-<blockquote>
-<p>提升cpu性能的最简单方案就是提升主频，从而使得时钟周期时间变小。</p>
-</blockquote>
-<p>CPU 时钟周期数=指令数×每条指令的平均时钟周期数（Cycles Per Instruction，简称 CPI）。</p>
-<p><strong>程序的 CPU 执行时间 = 指令数×CPI×Clock Cycle Time</strong></p>
-<p>所以优化性能主要有：</p>
-<ol>
-<li>降低时钟周期时间，就是计算机主频；</li>
-<li>减少每条指令的平均时钟周期数 CPI；</li>
-<li>减少指令数；</li>
-</ol>
-<hr>
-<h2 id="04-提升“性能”"><a href="#04-提升“性能”" class="headerlink" title="04 | 提升“性能”"></a>04 | 提升“性能”</h2><p><strong>程序的 CPU 执行时间 = 指令数×CPI×Clock Cycle Time</strong></p>
-<p>简单看就3条路：指令数、CPI 以及 CPU 主频。</p>
-<h3 id="功耗：CPU-的极限"><a href="#功耗：CPU-的极限" class="headerlink" title="功耗：CPU 的极限"></a>功耗：CPU 的极限</h3><p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac04p01.png" alt=""></p>
-<p>CPU的主频变化，在奔腾4时代进入瓶颈期。高频的cpu实际性能很低。原因就是<strong>功耗</strong>。<br>为了性能，CPU 里，要么增加晶体管密度，要么提升主频（晶体管开关更快），但这2项操作都会增加功耗。</p>
-<blockquote>
-<p><strong>功耗 ~= 1/2 ×负载电容×电压的平方×开关频率×晶体管数量</strong></p>
-</blockquote>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac04p02.jpg" alt=""><br>根据公式，为了降低功耗，降低电压是一个办法。</p>
-<blockquote>
-<p>从 5MHz 主频的 8086 到 5GHz 主频的 Intel i9，CPU 的电压已经从 5V 左右下降到了 1V 左右。</p>
-</blockquote>
-<h3 id="阿姆达尔定律"><a href="#阿姆达尔定律" class="headerlink" title="阿姆达尔定律"></a>阿姆达尔定律</h3><ul>
-<li>从奔腾 4 开始，通过提升主频比较“难”去实现性能提升。</li>
-<li>多核 CPU，通过提升“吞吐率”也可以提升性能。</li>
-</ul>
-<p>多核CPU，即并行提高性能，但不是所有计算任务都可以，需要满足：</p>
-<ol>
-<li>计算本身可以拆分成独立并行的任务；</li>
-<li>计算可分解，结果可以合并；</li>
-<li>汇总的时候无法完全并行。</li>
-</ol>
-<p><strong>阿姆达尔定律（Amdahl’s Law）： 优化后的执行时间 = 受优化影响的执行时间 / 加速倍数 + 不受影响的执行时间</strong></p>
-<p><img src="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac04p03.jpg" alt=""></p>
-<p>在“摩尔定律”和“并行计算”之外，几个原则性的性能提升方法：</p>
-<ol>
-<li><p><strong>加速大概率事件</strong><br>例如：缓存机制；矩阵运算使用 GPU 替换 CPU。</p>
-</li>
-<li><p><strong>通过流水线提高性能</strong><br>例如：串行改并行；大 sql 拆分为多个小 sql。</p>
-</li>
-<li><p><strong>通过预测提高性能</strong><br>例如：预计算。</p>
-</li>
-</ol>
-<hr>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/posts/computerOrgArc01to04.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

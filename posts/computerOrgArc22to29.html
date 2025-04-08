@@ -92,12 +92,12 @@
 
 
 
-<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。  CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。   如上">
+<meta name="description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入浅出计算机组成原理——原理篇：处理器（22-29）">
 <meta property="og:url" content="https://www.xiemingzhao.com/posts/computerOrgArc22to29.html">
 <meta property="og:site_name" content="小火箭的博客">
-<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。  CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。   如上">
+<meta property="og:description" content="全文内容主要来自对课程《深入浅出计算机组成原理》的学习笔记。  22 | 冒险和预测（一）流水线设计需要解决的三大冒险：  结构冒险（Structural Hazard）； 数据冒险（Data Hazard）； 控制冒险（Control Hazard）  结构冒险本质上是一个硬件层面的资源竞争问题。">
 <meta property="og:locale">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p01.png">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac22p02.jpg">
@@ -112,7 +112,7 @@
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac26p03.jpg">
 <meta property="og:image" content="https://mzxie-image.oss-cn-hangzhou.aliyuncs.com/computeroa/computeroac29p01.jpg">
 <meta property="article:published_time" content="2021-07-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-08T16:34:44.076Z">
+<meta property="article:modified_time" content="2025-04-08T17:16:33.512Z">
 <meta property="article:author" content="小火箭">
 <meta property="article:tag" content="计算机原理">
 <meta property="article:tag" content="处理器">
@@ -489,6 +489,7 @@ color="0,0,0" opacity='0.5' zIndex="-1" count="150" src="//cdn.bootcss.com/canva
 <li>控制冒险（Control Hazard）</li>
 </ul>
 <h3 id="结构冒险"><a href="#结构冒险" class="headerlink" title="结构冒险"></a>结构冒险</h3><p><strong>本质上是一个硬件层面的资源竞争问题。</strong></p>
+<span id="more"></span>
 <blockquote>
 <p>CPU 在同一个时钟周期，同时运行两条指令的不同阶段。但是可能会用到同样的硬件电路。</p>
 </blockquote>
